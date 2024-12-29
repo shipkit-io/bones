@@ -1,0 +1,19 @@
+node_modules
+.next
+build
+dist
+
+# These folders are auto-generated and not type-checked
+src/components/blocks
+src/components/ui
+src/lib
+
+# Shadcn UI components
+src/hooks/use-toast.tsx
+src/hooks/use-copy-to-clipboard.ts
+src/hooks/use-mobile.tsx
+src/hooks/use-mutation-observer.ts
+src/hooks/use-sidebar.tsx
+
+# Demo pages
+src/app/\(demo\)/**/*

@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./public/workers",
+    "target": "ES6",
+    "module": "preserve",
+    "moduleResolution": "Bundler",
+    "lib": ["webworker", "DOM", "ES6"],
+    "strict": false,
+    "sourceMap": true,
+    "types": ["node", "ws"],
+    "downlevelIteration": true,
+    "isolatedModules": false,
+    "noEmit": false
+  },
+  "include": ["src/workers/**/*.ts"],
+  "exclude": ["node_modules"]
+}
