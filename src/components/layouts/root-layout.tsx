@@ -30,15 +30,10 @@ const fontSerif = FontSerif({
 });
 
 const fontSans = FontSans({
+	display: "swap",
 	subsets: ["latin"],
 	variable: "--font-sans",
 });
-
-// const fontSud = localFont({
-// 	src: "../../fonts/sud.woff2",
-// 	display: "swap",
-// 	variable: "--font-sud",
-// });
 
 export function RootLayout({ children }: { children: ReactNode }) {
 	return (

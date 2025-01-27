@@ -116,10 +116,17 @@ let nextConfig: NextConfig = {
 	webpack: (config, { isServer }) => {
 		// Add custom webpack configuration for handling binary files
 		config.module.rules.push({
-			test: /\.node$/,
+			test: /\.(node|bin|html)$/,
 			use: "raw-loader",
 		});
 
+		// Existing webpack fallbacks if any
+		if (!isServer) {
+			config.resolve.fallback = {
+				...config.resolve.fallback,
+
+			};
+		}
 		return config;
 	},
 };

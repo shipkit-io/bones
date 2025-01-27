@@ -25,7 +25,7 @@ export function AuthForm({
 	...props
 }: AuthFormProps) {
 	const isSignIn = mode === "sign-in";
-	const title = isSignIn ? "Welcome back" : "Create an account";
+	const title = "Try Shipkit for free";
 	const description = isSignIn
 		? "Login with your favorite provider"
 		: "Sign up with your favorite provider";
