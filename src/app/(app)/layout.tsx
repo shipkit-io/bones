@@ -15,6 +15,10 @@ const navLinks = [
 		href: "/cli",
 	},
 	{
+		label: "UI",
+		href: "https://ui.shipkit.io",
+	},
+	{
 		label: "Log",
 		href: "https://log.bones.sh",
 	},
