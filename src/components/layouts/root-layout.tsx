@@ -4,7 +4,6 @@ import {
 	Space_Grotesk as FontSans,
 	Noto_Serif as FontSerif,
 } from "next/font/google";
-// import localFont from "next/font/local";
 
 import { Analytics } from "@/components/primitives/analytics";
 import { ErrorToast } from "@/components/primitives/error-toast";
@@ -52,7 +51,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
 				<body
 					className={cn(
 						"min-h-screen antialiased",
-						"font-normal leading-relaxed",
+						"font-sans font-normal leading-relaxed",
 						fontSans.variable,
 						fontSerif.variable,
 					)}
