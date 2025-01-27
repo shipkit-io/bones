@@ -26,9 +26,9 @@ const navLinks = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<div className="bg-gray-900 min-h-screen relative">
+		<div className="relative min-h-screen bg-gray-900">
 			<div className="flex flex-row flex-wrap items-center justify-center py-4">
-				<VercelNavigation navLinks={navLinks} className="flex-1" />
+				<VercelNavigation navLinks={navLinks} className="" />
 			</div>
 			{children}
 		</div>

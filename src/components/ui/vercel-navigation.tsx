@@ -26,26 +26,28 @@ const navigationVariants = cva(
 		defaultVariants: {
 			variant: "hover",
 		},
-	}
+	},
 );
 
 const buttonVariants = cva(
 	// Base styles
-	"relative inline-flex w-fit whitespace-nowrap rounded px-2 py-1 font-medium text-sm text-neutral-500",
+	"relative z-10 flex w-fit whitespace-nowrap rounded px-2 py-1 font-medium text-sm text-neutral-500",
 	{
 		variants: {
 			variant: {
 				hover: "",
-				click: "transition-colors hover:text-neutral-600 dark:hover:text-neutral-400",
+				click:
+					"transition-colors hover:text-neutral-600 dark:hover:text-neutral-400",
 			},
 		},
 		defaultVariants: {
 			variant: "hover",
 		},
-	}
+	},
 );
 
-interface VercelNavigationProps extends VariantProps<typeof navigationVariants> {
+interface VercelNavigationProps
+	extends VariantProps<typeof navigationVariants> {
 	navLinks?: NavLink[];
 	className?: string;
 }
@@ -61,7 +63,9 @@ export const VercelNavigation = ({
 	],
 	className,
 }: VercelNavigationProps) => {
-	const [elementFocused, setElementFocused] = useState<number | null>(variant === "hover" ? null : 0);
+	const [elementFocused, setElementFocused] = useState<number | null>(
+		variant === "hover" ? null : 0,
+	);
 
 	const handleInteraction = (index: number | null) => {
 		setElementFocused(index);
@@ -77,12 +81,14 @@ export const VercelNavigation = ({
 			{navLinks.map((link, index) => (
 				<LinkOrButton
 					href={link.href}
-					className={buttonVariants({ variant })}
+					className={cn(
+						buttonVariants({ variant }),
+						"items-center justify-center",
+					)}
 					key={uuidv4()}
 					{...(variant === "hover"
 						? { onMouseEnter: () => handleInteraction(index) }
-						: { onClick: () => handleInteraction(index) }
-					)}
+						: { onClick: () => handleInteraction(index) })}
 					type="button"
 				>
 					{link.label}
@@ -90,14 +96,14 @@ export const VercelNavigation = ({
 						{elementFocused === index && (
 							<motion.div
 								animate={{ opacity: 1, scale: 1 }}
-								className="-z-10 absolute top-0 right-0 bottom-0 left-0 rounded-md bg-neutral-200 dark:bg-neutral-800"
+								className="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-md bg-neutral-200 dark:bg-neutral-800"
 								exit={{ opacity: 0, scale: 0.9 }}
 								initial={{ opacity: 0, scale: 0.95 }}
 								layout={true}
 								layoutId="focused-element"
 								transition={{
 									duration: variant === "hover" ? 0.2 : 0.3,
-									ease: variant === "hover" ? "easeOut" : "easeInOut"
+									ease: variant === "hover" ? "easeOut" : "easeInOut",
 								}}
 							/>
 						)}
