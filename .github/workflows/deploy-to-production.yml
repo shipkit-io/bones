@@ -1,0 +1,59 @@
+name: Deploy to Production
+
+# This workflow can be triggered manually from the GitHub Actions tab
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    # Add permissions for the default GITHUB_TOKEN
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          # version: 9
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # - name: Run linting
+      #   run: pnpm lint
+
+      # - name: Run tests
+      #   run: pnpm test
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Create rollback branch
+        run: |
+          ROLLBACK_BRANCH_NAME="rollback-$(date +%Y-%m-%d-%H)"
+          git checkout -b $ROLLBACK_BRANCH_NAME
+          git push origin $ROLLBACK_BRANCH_NAME
+
+      - name: Merge main into production
+        env:
+          GITHUB_TOKEN: ${{ github.token }} # This uses the default token
+        run: |
+          git checkout production
+          git merge main --no-ff -m "Merge main into production"
+          git push origin production

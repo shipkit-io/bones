@@ -26,6 +26,7 @@ const querySchema = z.object({
 export const GET = async (request: NextRequest): Promise<NextResponse> => {
 	const { searchParams } = new URL(request.url);
 
+	// Parse any parameters from the URL
 	const result = querySchema.safeParse({
 		[SEARCH_PARAM_KEYS.statusCode]: searchParams.get(
 			SEARCH_PARAM_KEYS.statusCode,
@@ -33,6 +34,11 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
 		[SEARCH_PARAM_KEYS.nextUrl]: searchParams.get(SEARCH_PARAM_KEYS.nextUrl),
 	});
 
+	await signOut({ redirect: false }).catch((error: Error) => {
+		logger.error(`sign-out-in/route.ts - Sign out error: ${error.message}`);
+	});
+
+	// If the parameters are not valid, redirect to the sign in page
 	if (!result.success) {
 		return routeRedirectWithCode(routes.auth.signIn, {
 			code: STATUS_CODES.AUTH_REFRESH.code,
@@ -43,9 +49,6 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
 	const { code = STATUS_CODES.AUTH_REFRESH.code, nextUrl } = result.data;
 
 	logger.info(`sign-out-in/route.ts - Signing out with code: ${code}`);
-	await signOut({ redirect: false }).catch((error: Error) => {
-		logger.error(`sign-out-in/route.ts - Sign out error: ${error.message}`);
-	});
 
 	return routeRedirectWithCode(nextUrl ?? routes.auth.signIn, {
 		code,

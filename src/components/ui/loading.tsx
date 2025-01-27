@@ -1,4 +1,4 @@
-import { LoaderAtoms } from "@/components/ui/loaders/loader-atoms";
+import { LoaderAtoms } from "@/components/ui/loader-atoms";
 import { cn } from "@/lib/utils";
 import * as React from "react";
 
@@ -68,7 +68,7 @@ export const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 					"flex items-center justify-center",
 					fullPage && "fixed inset-0 z-50",
 					backdrop && "bg-background/80 backdrop-blur-sm",
-					fade && "animate-in fade-in duration-300",
+					fade && "duration-300 animate-in fade-in",
 					className,
 				)}
 				{...props}

@@ -16,9 +16,9 @@ export default function MainLayout({
 }) {
 	return (
 		<>
-			<div className={cn("flex min-h-screen flex-col", className)}>
+			<div className={cn("", className)}>
 				{header || <Header />}
-				<main className="grid grow">{children}</main>
+				{children}
 				{footer || <Footer />}
 			</div>
 		</>

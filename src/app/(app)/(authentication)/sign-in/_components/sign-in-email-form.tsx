@@ -1,8 +1,8 @@
 "use client";
 
-import { Link } from "@/components/primitives/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { routes } from "@/config/routes";
-import { signInSchema } from "@/schemas/auth";
+import { signInSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 

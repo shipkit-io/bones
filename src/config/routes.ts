@@ -1,9 +1,9 @@
 import type { Route } from "next";
 import { siteConfig } from "./site";
 type ParamValue = string | number | null;
-type RouteParams = Record<string, ParamValue>;
+export type RouteParams = Record<string, ParamValue>;
 
-interface RouteObject {
+export interface RouteObject {
 	path: Route;
 	params?: RouteParams;
 }
@@ -23,7 +23,7 @@ export const routes = {
 	home: "/",
 	docs: "/docs",
 	blog: "/blog",
-	support: "/support",
+	support: `mailto:support@${siteConfig.url}`,
 
 	// Legal routes
 	terms: "/terms-of-service",
@@ -34,7 +34,6 @@ export const routes = {
 	features: "/features",
 	pricing: "/pricing",
 	launch: "/launch",
-	getStarted: "/get-started",
 
 	// App routes
 	download: "/download",
@@ -93,6 +92,7 @@ export const routes = {
 
 	// API routes
 	api: {
+		download: "/api/download",
 		apiKeys: "/api/api-keys",
 		apiKey: createRoute("/api/api-keys/:key", { key: null }),
 		live: "/api/live-logs",
@@ -100,6 +100,8 @@ export const routes = {
 		sendTestLog: "/api/send-test-log",
 		activityStream: "/api/activity/stream",
 		logger: "/v1",
+		githubConnect: "/api/github/connect",
+		githubDisconnect: "/api/github/disconnect",
 	},
 
 	// Worker routes
@@ -113,7 +115,12 @@ export const routes = {
 
 	// External links
 	external: {
+		shipkit: "https://shipkit.io",
+		bones: "https://bones.sh",
+		log: "https://log.bones.sh",
+		ui: "https://ui.bones.sh",
 		buy: siteConfig.store.format.buyUrl("muscles"),
+		discord: "https://discord.gg/XxKrKNvEje",
 		twitter: siteConfig.links.twitter,
 		twitter_follow: siteConfig.links.twitter_follow,
 		x: siteConfig.links.x,
@@ -122,8 +129,10 @@ export const routes = {
 		docs: "/docs",
 		email: `mailto:${siteConfig.creator.email}`,
 		github: siteConfig.repo.url,
-		vercel:
-			'https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit&env=NEXT_PUBLIC_BUILDER_API_KEY&envDescription=Builder.io%20API&envLink=https%3A%2F%2Fwww.builder.io%2F&project-name=my-app&repository-name=my-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fconnect%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=https%3A%2F%2Fshipkit.io%2Fimages%2Fvercel%2Fdemo.png&stores=%5B%7B"type"%3A"postgres"%7D%2C%7B"type"%3A"kv"%7D%5D',
+		vercelDeployBones:
+			"https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fbones&env=NEXT_PUBLIC_BUILDER_API_KEY&envDescription=Builder.io%20API&envLink=https%3A%2F%2Fwww.builder.io%2F&project-name=bones-app&repository-name=bones-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fconnect%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=%2F%2Fshipkit.io%2Fimages%2Fvercel%2Fdemo.png", // &stores=%5B%7B"type"%3A"postgres"%7D%2C%7B"type"%3A"kv"%7D%5D
+		vercelDeployShipkit:
+			"https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit&env=NEXT_PUBLIC_BUILDER_API_KEY&envDescription=Builder.io%20API&envLink=https%3A%2F%2Fwww.builder.io%2F&project-name=shipkit-app&repository-name=shipkit-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fconnect%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=%2F%2Fshipkit.io%2Fimages%2Fvercel%2Fdemo.png", // &stores=%5B%7B"type"%3A"postgres"%7D%2C%7B"type"%3A"kv"%7D%5D
 	},
 };
 

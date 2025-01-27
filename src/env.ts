@@ -1,6 +1,10 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+/*
+ * Environment variable configuration using T3 Env
+ * @see https://env.t3.gg
+ */
 export const env = createEnv({
 	/**
 	 * Specify your server-side environment variables schema here. This way you can ensure the app
@@ -44,7 +48,7 @@ export const env = createEnv({
 		LEMONSQUEEZY_WEBHOOK_SECRET: z.string().optional(),
 
 		// Resend
-		RESEND_API_KEY: z.string().optional(),
+		AUTH_RESEND_KEY: z.string().optional(),
 		RESEND_AUDIENCE_ID: z.string().optional(),
 
 		// Payload
@@ -96,7 +100,7 @@ export const env = createEnv({
 		LEMONSQUEEZY_API_KEY: process.env.LEMONSQUEEZY_API_KEY,
 		LEMONSQUEEZY_STORE_ID: process.env.LEMONSQUEEZY_STORE_ID,
 		LEMONSQUEEZY_WEBHOOK_SECRET: process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
-		RESEND_API_KEY: process.env.RESEND_API_KEY,
+		AUTH_RESEND_KEY: process.env.AUTH_RESEND_KEY,
 		RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID,
 		DISABLE_BUILDER: process.env.DISABLE_BUILDER,
 		DISABLE_PAYLOAD: process.env.DISABLE_PAYLOAD,

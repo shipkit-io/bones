@@ -37,7 +37,7 @@ export async function updateProfile(data: ProfileData) {
 		}
 
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				name: data.name,
 				bio: data.bio,
@@ -69,7 +69,7 @@ export async function updateSettings(data: SettingsData) {
 		console.log("Processed emailNotifications:", emailNotifications);
 
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				theme: data.theme,
 				emailNotifications,
@@ -92,7 +92,7 @@ export async function deleteAccount() {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db.delete(users).where(eq(users.id, session.user.id));
+		await db?.delete(users).where(eq(users.id, session.user.id));
 		return { success: true, message: "Account deleted successfully" };
 	} catch (error) {
 		console.error("Failed to delete account:", error);
@@ -108,7 +108,7 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
 		}
 
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				theme,
 				updatedAt: new Date(),

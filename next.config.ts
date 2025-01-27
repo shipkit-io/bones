@@ -1,5 +1,10 @@
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
+import BuilderDevTools from "@builder.io/dev-tools/next";
+import createMDX from "@next/mdx";
+import { withPayload } from "@payloadcms/next/withPayload";
+import type { NextConfig } from "next";
+
 /**
  * Validate environment variables
  *
@@ -7,17 +12,8 @@ import { redirects } from "@/config/routes";
  * for Docker builds.
  */
 import { env } from "@/env";
-import BuilderDevTools from "@builder.io/dev-tools/next";
-import createMDX from "@next/mdx";
-import { withPayload } from "@payloadcms/next/withPayload";
-import type { NextConfig } from "next";
 
-const config: NextConfig = {
-	/*
-	 * React configuration
-	 */
-	reactStrictMode: true,
-
+let nextConfig: NextConfig = {
 	/*
 	 * Redirects are located in the `src/config/routes.ts` file
 	 */
@@ -34,11 +30,22 @@ const config: NextConfig = {
 			{ hostname: "2.gravatar.com" }, // @dev: for testing
 			{ hostname: "avatars.githubusercontent.com" }, // @dev: github avatars
 			{ hostname: "vercel.com" }, // @dev: vercel button
+			{
+				protocol: "https",
+				hostname: "**.vercel.app",
+			},
 		],
 	},
 
-	// Configure `pageExtensions` to include markdown and MDX files
-	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+	/*
+	 * React configuration
+	 */
+	reactStrictMode: true,
+
+	/*
+	 * Source maps
+	 */
+	productionBrowserSourceMaps: true,
 
 	/*
 	 * Lint configuration
@@ -59,26 +66,22 @@ const config: NextConfig = {
 		*/
 		ignoreBuildErrors: true,
 	},
-	/*
-	 * Logging configuration
-	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
-	 */
-	logging: {
-		fetches: {
-			fullUrl: true, // This will log the full URL of the fetch request even if cached
-			// hmrRefreshes: true,
-		},
-	},
+
+	// Configure `pageExtensions` to include markdown and MDX files
+	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+
 	/*
 	 * Experimental configuration
 	 */
 	experimental: {
+		// esmExternals: true,
 		// mdxRs: true,
 		// mdxRs: {
 		// 	jsxRuntime: "automatic",
 		// 	jsxImportSource: "jsx-runtime",
 		// 	mdxType: "gfm",
 		// },
+
 		nextScriptWorkers: true,
 		serverActions: {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
@@ -89,19 +92,37 @@ const config: NextConfig = {
 	 * Miscellaneous configuration
 	 */
 	devIndicators: {
-		buildActivityPosition: "bottom-right" as const,
+		// buildActivityPosition: "bottom-right" as const,
 	},
-	// @see https://nextjs.org/docs/app/api-reference/next-config-js/bundlePagesRouterDependencies
-	bundlePagesRouterDependencies: true,
+
+	/*
+	 * Logging configuration
+	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
+	 */
+	logging: {
+		fetches: {
+			fullUrl: true, // This will log the full URL of the fetch request even if cached
+			// hmrRefreshes: true,
+		},
+	},
+
 	compiler: {
 		// Remove all console logs
 		// removeConsole: true
 		// Remove console logs only in production, excluding error logs
 		// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
 	},
-};
 
-let nextConfig = config;
+	webpack: (config, { isServer }) => {
+		// Add custom webpack configuration for handling binary files
+		config.module.rules.push({
+			test: /\.node$/,
+			use: "raw-loader",
+		});
+
+		return config;
+	},
+};
 
 /*
  * Configurations
@@ -110,13 +131,13 @@ let nextConfig = config;
 
 // Builder config
 nextConfig =
-	!env?.NEXT_PUBLIC_BUILDER_API_KEY || env?.DISABLE_BUILDER === "true"
-		? config
-		: BuilderDevTools()(config);
+	!env?.NEXT_PUBLIC_BUILDER_API_KEY || !!env?.DISABLE_BUILDER
+		? nextConfig
+		: BuilderDevTools()(nextConfig);
 
 // Payload config
 nextConfig =
-	!env?.DATABASE_URL || env?.DISABLE_PAYLOAD === "true"
+	!env?.DATABASE_URL || !!env?.DISABLE_PAYLOAD
 		? nextConfig
 		: withPayload(nextConfig);
 
@@ -128,7 +149,9 @@ nextConfig =
 // });
 // nextConfig = withPWA(nextConfig);
 
-// MDX config
+/*
+ * MDX config
+ */
 const withMDX = createMDX({
 	extension: /\.mdx?$/,
 	options: {
@@ -149,10 +172,12 @@ const withMDX = createMDX({
 });
 nextConfig = withMDX(nextConfig);
 
-// Logflare config
-// /** @type {import("./withLogFlare.js").LogFlareOptions} */
+/*
+ * Logflare config
+ */
+/** @type {import("./withLogFlare.js").LogFlareOptions} */
 // const logFlareOptions = {
-// 	apiKey: "sk_tk4XH5TBd76VPKWEkDQ7706z9WReI7sQK9bSelC5", // Move to env
+// 	// apiKey: "sk_tk4XH5TBd76VPKWEkDQ7706z9WReI7sQK9bSelC5", // Move to env
 // 	prefix: "[LogFlare]",
 // 	logLevel: process.env.NODE_ENV === "production" ? "log" : "debug",
 // 	logToFile: true,
@@ -168,7 +193,6 @@ nextConfig = withMDX(nextConfig);
 // 		debug: "🔍",
 // 	},
 // };
-
 // nextConfig = withLogFlare(logFlareOptions)(nextConfig);
 
 export default nextConfig;

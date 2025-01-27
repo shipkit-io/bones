@@ -11,7 +11,7 @@ import {
 	users,
 	verificationTokens,
 } from "@/server/db/schema";
-import { type UserRole } from "@/types/user";
+import type { UserRole } from "@/types/user";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import { cache } from "react";
@@ -31,13 +31,14 @@ const {
 	unstable_update: update,
 } = NextAuth({
 	...authOptions,
-	adapter: env?.DATABASE_URL
+	secret: env.AUTH_SECRET ?? "supersecretshipkit",
+	adapter: env?.DATABASE_URL && db
 		? DrizzleAdapter(db, {
-				usersTable: users,
-				accountsTable: accounts,
-				sessionsTable: sessions,
-				verificationTokensTable: verificationTokens,
-			})
+			usersTable: users,
+			accountsTable: accounts,
+			sessionsTable: sessions,
+			verificationTokensTable: verificationTokens,
+		})
 		: undefined,
 	logger: {
 		error: (code: Error, ...message: any[]) => logger.error(code, message),

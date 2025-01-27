@@ -1,10 +1,11 @@
+import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
 import { SignUpForm } from "@/app/(app)/(authentication)/sign-up/_components/sign-up-form";
-import { Link } from "@/components/primitives/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import {
 	CardContent,
 	CardDescription,
 	CardHeader,
-	CardTitle
+	CardTitle,
 } from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { AuthenticationCard } from "../../_components/authentication-card";
@@ -22,7 +23,7 @@ export function SignUpCard() {
 				<CardContent>
 					<div className="grid gap-4">
 						<SignUpForm />
-						{/* <OAuthButtons /> */}
+						<OAuthButtons />
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Already have an account?{" "}

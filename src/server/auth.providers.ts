@@ -1,9 +1,28 @@
+import { siteConfig } from "@/config/site";
 import type { NextAuthConfig } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-
+import Resend from "next-auth/providers/resend";
 export const providers: NextAuthConfig["providers"] = [
+	// Magic Link Provider
+	// !resend
+	Resend({
+		from: siteConfig.email.support,
+	}),
+
+	// Credentials({
+	// 	name: "credentials", // Used by Oauth buttons to determine the active sign-in options
+	// 	credentials: {
+	// 		email: { label: "Email", type: "email" },
+	// 		password: { label: "Password", type: "password" },
+	// 	},
+	// 	async authorize(credentials, request) {
+	// 		// TODO: Implement credentials auth
+	// 		// return await AuthService.validateCredentials(credentials);
+	// 		return null;
+	// 	},
+	// }),
 	Discord({
 		clientId: process.env.AUTH_DISCORD_ID ?? "",
 		clientSecret: process.env.AUTH_DISCORD_SECRET ?? "",
@@ -24,7 +43,6 @@ export const providers: NextAuthConfig["providers"] = [
 				email: profile.email,
 				emailVerified: null,
 				image: profile.avatar_url,
-
 				githubUsername: profile.login,
 			};
 		},
@@ -37,7 +55,7 @@ export const providers: NextAuthConfig["providers"] = [
 	}),
 ].filter(Boolean) as NextAuthConfig["providers"];
 
-export const providerMap = providers.map(
+export const authProviders = providers.map(
 	(provider: NextAuthConfig["providers"][number]) => {
 		if (typeof provider === "function") {
 			const providerData = provider as () => { id: string; name: string };
@@ -46,4 +64,8 @@ export const providerMap = providers.map(
 
 		return { id: provider.id, name: provider.name };
 	},
+);
+
+export const authProvidersArray = authProviders.map(
+	(provider) => provider.id ?? provider.name.toLowerCase(),
 );

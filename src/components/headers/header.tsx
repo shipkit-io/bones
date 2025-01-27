@@ -1,15 +1,9 @@
 "use client";
 
-import { Link } from "@/components/primitives/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { UserMenu } from "@/components/ui/user-menu";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
@@ -21,10 +15,9 @@ import { useSession } from "next-auth/react";
 import type React from "react";
 import { useMemo } from "react";
 
-import { Search as S } from "@/components/search";
+import { Logo } from "@/components/images/logo";
 import { Search } from "@/components/search/search";
 import styles from "@/styles/header.module.css";
-import { BoxesIcon } from "lucide-react";
 import { BuyButton } from "../buttons/buy-button";
 
 interface NavLink {
@@ -48,31 +41,32 @@ const defaultNavLinks = [
 	{ href: routes.pricing, label: "Pricing", isCurrent: false },
 ];
 
-const headerVariants = cva(
-	"translate-z-0 z-50 p-md",
-	{
-		variants: {
-			variant: {
-				default: "relative",
-				floating: "sticky top-0 h-24",
-				sticky: "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-			},
+const headerVariants = cva("translate-z-0 z-50 p-md", {
+	variants: {
+		variant: {
+			default: "relative",
+			floating: "sticky top-0 h-24",
+			sticky:
+				"sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
 		},
-		defaultVariants: {
-			variant: "default",
-		},
-	}
-);
+	},
+	defaultVariants: {
+		variant: "default",
+	},
+});
 
 export const Header: React.FC<HeaderProps> = ({
 	logoHref = routes.home,
-	logoIcon = <BoxesIcon className="h-5 w-5" />,
+	logoIcon = <Logo />,
 	logoText = siteConfig.name,
 	navLinks = defaultNavLinks,
 	variant = "default",
 }) => {
 	const [{ y }] = useWindowScroll();
-	const isOpaque = useMemo(() => variant === "floating" && y && y > 100, [y, variant]);
+	const isOpaque = useMemo(
+		() => variant === "floating" && y && y > 100,
+		[y, variant],
+	);
 	const { data: session } = useSession();
 
 	return (
@@ -82,7 +76,9 @@ export const Header: React.FC<HeaderProps> = ({
 					headerVariants({ variant }),
 					variant === "floating" && styles.header,
 					variant === "floating" && isOpaque && styles.opaque,
-					variant === "floating" && isOpaque && "-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
+					variant === "floating" &&
+						isOpaque &&
+						"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
 				)}
 			>
 				{variant === "floating" && <div className="h-[12px] w-full" />}
@@ -97,8 +93,6 @@ export const Header: React.FC<HeaderProps> = ({
 							<span className="sr-only">{logoText}</span>
 						</Link>
 						<Search />
-						<S />
-
 					</div>
 
 					<Sheet>
@@ -186,7 +180,7 @@ export const Header: React.FC<HeaderProps> = ({
 									key={routes.docs}
 									href={routes.docs}
 									className={cn(
-										"transition-colors text-muted-foreground hover:text-foreground",
+										"text-muted-foreground transition-colors hover:text-foreground",
 									)}
 								>
 									Documentation
@@ -208,33 +202,17 @@ export const Header: React.FC<HeaderProps> = ({
 							))}
 						</div>
 						<div className="flex items-center gap-2">
-							{session ? (
-								<UserMenu size="sm" />
-							) : (<>
-								<ThemeToggle variant="ghost" size="icon" />
-								<TooltipProvider delayDuration={0}>
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<div className="relative -m-4 p-4">
-												<BuyButton />
-											</div>
-										</TooltipTrigger>
-										<TooltipContent
-											side="bottom"
-											sideOffset={3}
-											className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
-										>
-											<Link
-												href={routes.auth.signIn}
-												className="hover:text-foreground"
-											>
-												or Login
-											</Link>
-										</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</>
+							{!session && (
+								<ThemeToggle
+									variant="ghost"
+									size="icon"
+									className="rounded-full"
+								/>
 							)}
+
+							<UserMenu size="sm" />
+
+							{!session && <BuyButton />}
 						</div>
 					</div>
 				</nav>

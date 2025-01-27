@@ -1,4 +1,4 @@
-import { Link } from "@/components/primitives/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
@@ -7,12 +7,11 @@ import { type VariantProps, cva } from "class-variance-authority";
 import type React from "react";
 import { v4 as uuid } from "uuid";
 
-
 type FooterItem =
 	| {
-		label: string;
-		href: string;
-	}
+			label: string;
+			href: string;
+	  }
 	| React.ReactNode;
 
 interface FooterGroup {
@@ -36,17 +35,19 @@ const defaultGroups: FooterElement[] = [
 				{ href: routes.home, label: "Home" },
 				{ href: routes.features, label: "Features" },
 				{ href: routes.pricing, label: "Pricing" },
+				{ href: routes.external.bones, label: "Bones" },
 			],
 		},
 	},
 	{
 		type: "group",
 		content: {
-			header: { label: "Resources", href: "#" },
+			header: { label: "Resources" },
 			items: [
 				{ href: routes.docs, label: "Documentation" },
 				{ href: routes.blog, label: "Blog" },
 				{ href: routes.support, label: "Support" },
+				{ href: routes.auth.signIn, label: "Sign in" },
 			],
 		},
 	},
@@ -127,16 +128,18 @@ export const Footer: React.FC<FooterProps> = ({
 
 	return (
 		<footer className={cn(footerStyles({ variant }), className)} {...rest}>
-			<div className="container relative flex md:min-h-80 w-full flex-col items-stretch gap-2xl py-2xl">
-				<div className="flex flex-col lg:flex-row justify-between gap-2xl">
+			<div className="container relative flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
+				<div className="flex flex-col justify-between gap-2xl lg:flex-row">
 					<div className="flex flex-col gap-2xl">
-						<h1 className="text-4xl font-bold">{siteConfig.name}</h1>
+						<Link href={routes.home}>
+							<h1 className="text-4xl font-bold">{siteConfig.name}</h1>
+						</Link>
 					</div>
-					<div className="flex flex-col md:flex-row flex-wrap lg:gap-20">
+					<div className="flex flex-col flex-wrap md:flex-row lg:gap-20">
 						{groupElements}
 					</div>
 				</div>
 			</div>
-		</footer >
+		</footer>
 	);
 };

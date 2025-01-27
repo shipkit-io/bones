@@ -1,10 +1,20 @@
-import { Link } from "@/components/primitives/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { Button } from "@/components/ui/button";
 import type React from "react";
+import type { ReactNode } from "react";
 
-type LinkOrButtonProps = React.ComponentProps<typeof Link> &
-    React.ComponentProps<typeof Button>;
+type CommonProps = {
+	className?: string;
+	children: ReactNode;
+};
 
-export const LinkOrButton = ({ href, ...props }: LinkOrButtonProps) => {
-    return href ? <Link href={href} {...props} /> : <Button {...props} />;
+type LinkProps = CommonProps & {
+	href: string;
+} & Omit<React.ComponentProps<typeof Link>, "href" | "className" | "children">;
+type ButtonProps = CommonProps & Omit<React.ComponentProps<typeof Button>, "className" | "children">;
+
+type LinkOrButtonProps = LinkProps | ButtonProps;
+
+export const LinkOrButton = (props: LinkOrButtonProps) => {
+	return "href" in props ? <Link {...props} /> : <Button {...props} />;
 };

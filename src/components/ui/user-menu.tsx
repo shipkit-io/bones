@@ -1,8 +1,8 @@
 "use client";
 
-import { Link } from "@/components/primitives/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import * as React from "react";
@@ -131,9 +132,15 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	// Not authenticated
 	if (!session?.user) {
 		return (
-			<Button variant="ghost" asChild>
-				<Link href={routes.auth.signIn}>Sign In</Link>
-			</Button>
+			<Link
+				href={routes.auth.signIn}
+				className={cn(
+					buttonVariants({ variant: "ghost", size: "icon" }),
+					"rounded-full",
+				)}
+			>
+				<UserIcon className="size-4" />
+			</Link>
 		);
 	}
 
@@ -142,6 +149,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			<DropdownMenuTrigger asChild>
 				<Button
 					variant="ghost"
+					size="icon"
 					className={cn(
 						"relative rounded-full",
 						size === "sm" ? "h-6 w-6" : "h-8 w-8",

@@ -22,7 +22,6 @@ interface SiteConfig {
 	};
 	store: {
 		domain: string;
-		product: string;
 		products: {
 			[key: string]: string;
 		};
@@ -76,9 +75,9 @@ export const siteConfig: SiteConfig = {
 	},
 
 	name: "Shipkit",
-	title: "Shipkit - Launch your app today",
+	title: "Launch your app today",
 	url: "https://shipkit.io",
-	ogImage: "https://shipkit.io/api/og",
+	ogImage: "https://shipkit.io/og",
 	description:
 		"Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
 	links: {
@@ -127,8 +126,8 @@ export const siteConfig: SiteConfig = {
 			bones: "eb159dba-96a3-40f2-a97b-7b9117e635a1",
 			muscles: "4d259175-0a79-486a-b0f8-b77404ee68df",
 			brains: "7935a386-7cd0-47fe-83c8-cab101323591",
+			shipkit: "20b5b59e-b4c4-43b0-9979-545f90c76f28",
 		},
-		product: "20b5b59e-b4c4-43b0-9979-545f90c76f28",
 		format: {
 			buyUrl: (product: keyof typeof siteConfig.store.products) =>
 				`https://${siteConfig.store.domain}/checkout/buy/${siteConfig.store.products[product]}`,

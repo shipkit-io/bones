@@ -14,8 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { forgotPasswordSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
-import { forgotPasswordSchema } from "@/schemas/auth";
 import { forgotPasswordAction } from "@/server/actions/auth";
 import { toast } from "sonner";
 

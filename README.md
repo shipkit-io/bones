@@ -10,7 +10,7 @@ Get started with ShipKit in three easy steps:
 2. **Connect to Vercel**
 3. **Follow the Setup Wizard**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit&env=NEXT_PUBLIC_BUILDER_API_KEY&envLink=https%3A%2F%2Fwww.builder.io%2F&project-name=shipkit-app&repository-name=my-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fconnect%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=https%3A%2F%2Fshipkit.io%2Fimages%2Fvercel%2Fdemo.png&envDescription=API%20keys%20and%20integrations&stores=%5B%7B"type"%3A"postgres"%7D%2C%7B"type"%3A"kv"%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fbones&project-name=bones-app&repository-name=bones-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fconnect%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=%2F%2Fshipkit.io%2Fimages%2Fvercel%2Fdemo.png)
 
 No environment variables needed to start! Our setup wizard will guide you through the configuration after deployment.
 
@@ -28,10 +28,13 @@ No environment variables needed to start! Our setup wizard will guide you throug
 ## Quick Start Guide
 
 ### 1. Deploy to Vercel
+
 Click the "Deploy with Vercel" button above and follow the prompts.
 
 ### 2. Run Setup Wizard
+
 After deployment, you'll be guided through setting up:
+
 - Database connection
 - Authentication providers
 - Payment processing
@@ -39,7 +42,9 @@ After deployment, you'll be guided through setting up:
 - Optional services
 
 ### 3. Start Building
+
 Once setup is complete, you're ready to:
+
 - Customize your UI
 - Add content
 - Configure payments
@@ -48,7 +53,8 @@ Once setup is complete, you're ready to:
 ## Development Tools
 
 Built with modern technologies:
-- ⚡️ [Next.js 14](https://nextjs.org) - React Framework
+
+- ⚡️ [Next.js 15](https://nextjs.org) - React Framework
 - 🎨 [Tailwind CSS](https://tailwindcss.com) - Styling
 - 🔧 [Shadcn/UI](https://ui.shadcn.com) - Components
 - 🛠 [Drizzle](https://orm.drizzle.team) - Database ORM
@@ -131,4 +137,3 @@ npx shadcn-ui@latest add
 ```
 
 ### [MagicUI](https://magicui.design/)
-

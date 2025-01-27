@@ -15,18 +15,20 @@ import { Check, Copy } from "lucide-react";
 
 interface CopyButtonProps {
 	value: string;
+	successTitle?: string;
+	successDescription?: string;
 	className?: string;
 	timeout?: number;
 }
 
-export const CopyButton = ({ value, className, timeout = 2000, ...props }: CopyButtonProps) => {
+export const CopyButton = ({ value, className, timeout = 2000, successTitle = "Copied", successDescription = "Copied to clipboard", ...props }: CopyButtonProps) => {
 	const { toast } = useToast();
 	const { isCopied, copyToClipboard } = useCopyToClipboard({
 		timeout: 2000,
 		onCopy: () => {
 			toast({
-				title: "Copied!",
-				description: "API key copied to clipboard",
+				title: successTitle,
+				description: successDescription,
 			});
 		},
 	});
@@ -38,8 +40,9 @@ export const CopyButton = ({ value, className, timeout = 2000, ...props }: CopyB
 					<Button
 						variant="ghost"
 						size="icon"
-						className={cn("h-8 w-8 relative", className)}
 						onClick={() => copyToClipboard(value)}
+						{...props}
+						className={cn("h-8 w-8 relative", className)}
 					>
 						<AnimatePresence mode="wait">
 							<motion.div
@@ -53,7 +56,7 @@ export const CopyButton = ({ value, className, timeout = 2000, ...props }: CopyB
 									damping: 30,
 									mass: 0.5,
 								}}
-								className="absolute inset-0 flex items-center justify-center"
+							// className="absolute inset-0 flex items-center justify-center"
 							>
 								{isCopied ? (
 									<Check className="h-4 w-4 text-green-500" />
@@ -65,7 +68,7 @@ export const CopyButton = ({ value, className, timeout = 2000, ...props }: CopyB
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent>
-					<p>{isCopied ? "Copied!" : "Copy API key"}</p>
+					<p>{isCopied ? successTitle : "Copy to clipboard"}</p>
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
