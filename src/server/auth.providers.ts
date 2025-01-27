@@ -1,17 +1,17 @@
 import { siteConfig } from "@/config/site";
-import { env } from "@/env";
 import type { NextAuthConfig } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
+
 export const providers: NextAuthConfig["providers"] = [
 	// Magic Link Provider
-	// !resend
-	env.AUTH_RESEND_KEY && env.DATABASE_URL && Resend({
+	process.env.AUTH_RESEND_KEY &&
+	process.env.DATABASE_URL &&
+	Resend({
 		from: siteConfig.email.support,
 	}),
-
 	// Credentials({
 	// 	name: "credentials", // Used by Oauth buttons to determine the active sign-in options
 	// 	credentials: {
@@ -24,12 +24,12 @@ export const providers: NextAuthConfig["providers"] = [
 	// 		return null;
 	// 	},
 	// }),
-	env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET && Discord({
+	Discord({
 		clientId: process.env.AUTH_DISCORD_ID ?? "",
 		clientSecret: process.env.AUTH_DISCORD_SECRET ?? "",
 		allowDangerousEmailAccountLinking: true,
 	}),
-	env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET && GitHub({
+	GitHub({
 		clientId: process.env.AUTH_GITHUB_ID ?? "",
 		clientSecret: process.env.AUTH_GITHUB_SECRET ?? "",
 		authorization: {
@@ -49,7 +49,7 @@ export const providers: NextAuthConfig["providers"] = [
 		},
 		allowDangerousEmailAccountLinking: true,
 	}),
-	env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET && Google({
+	Google({
 		clientId: process.env.AUTH_GOOGLE_ID ?? "",
 		clientSecret: process.env.AUTH_GOOGLE_SECRET ?? "",
 		allowDangerousEmailAccountLinking: true,
