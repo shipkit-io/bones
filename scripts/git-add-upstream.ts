@@ -67,6 +67,26 @@ async function main() {
 	console.log("Starting upstream sync process...");
 
 	try {
+		// Make sure we're on main branch first
+		console.log("\nSwitching to main branch...");
+		git("checkout main");
+
+		// Delete existing temp branch if it exists
+		console.log("\nCleaning up existing temp branch...");
+		try {
+			git("branch -D temp");
+		} catch {
+			// Ignore error if branch doesn't exist
+		}
+
+		// Force cleanup any other temp state
+		try {
+			git("clean -fd");  // Clean untracked files and directories
+			git("reset --hard"); // Reset any uncommitted changes
+		} catch {
+			// Ignore cleanup errors
+		}
+
 		// Step 1: Save current files to temp directory
 		console.log("\nSaving current files to temp directory...");
 		await copyFiles(sourceDir, tempDir);
@@ -122,6 +142,9 @@ async function main() {
 		console.log("git push");
 	} catch (error) {
 		console.error("Failed to sync with upstream:", error);
+		if (error instanceof Error) {
+			console.error("Error details:", error.message);
+		}
 		process.exit(1);
 	}
 }
