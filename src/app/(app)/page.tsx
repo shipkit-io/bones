@@ -9,6 +9,7 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
+import { IconBrandGithub } from "@tabler/icons-react";
 import { Barrio, Stick } from "next/font/google";
 
 const fontStick = Stick({
@@ -33,7 +34,7 @@ export default function Page() {
 					<PageHeaderHeading
 						className={cn(
 							"font-bold md:text-[8rem]",
-							Math.random() > 0.5 ? fontBarrio.className : fontStick.className
+							Math.random() > 0.5 ? fontBarrio.className : fontStick.className,
 						)}
 					>
 						Bones
@@ -52,7 +53,7 @@ export default function Page() {
 						href={"https://github.com/shipkit-io/bones"}
 						className={buttonVariants({ variant: "outline", size: "lg" })}
 					>
-						Learn More
+						<IconBrandGithub className="mr-2 h-4 w-4" /> View on GitHub
 					</Link>
 					<DeployToVercelButton href={routes.external.vercelDeployBones} />
 				</div>
