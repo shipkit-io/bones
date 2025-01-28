@@ -62,19 +62,24 @@ export function createPullRequest(options: {
 			runCommand('gh --version');
 		} catch (error) {
 			// GitHub CLI not installed - provide manual instructions
-			console.log('\n✨ Pull request ready to be created:');
-			console.log('GitHub CLI not found. Please either:');
+			console.log('\n==================================');
+			console.log('✨  PULL REQUEST CREATION INSTRUCTIONS');
+			console.log('==================================');
+			console.log('\nGitHub CLI not found. You have two options:');
 			console.log('\n1. Install GitHub CLI (recommended):');
 			console.log('   brew install gh    # macOS');
 			console.log('   winget install GitHub.cli    # Windows');
-			console.log('   Then authenticate: gh auth login');
-			console.log('\n2. Or create PR manually:');
-			console.log(`   • Visit: ${getRepoUrl()}/compare/${options.base}...${options.head}`);
+			console.log('   Then run: gh auth login');
+			console.log('\n2. Create PR manually:');
+			console.log('   Open this URL in your browser:');
+			console.log(`   ${getRepoUrl()}/compare/${options.base}...${options.head}`);
+			console.log('\n   Then fill in these details:');
 			console.log(`   • Title: ${options.title}`);
-			console.log(`   • Body: ${options.body}`);
+			console.log(`   • Description: ${options.body}`);
 			if (options.labels?.length) {
 				console.log(`   • Labels: ${options.labels.join(', ')}`);
 			}
+			console.log('\n==================================\n');
 			return;
 		}
 
@@ -92,14 +97,19 @@ export function createPullRequest(options: {
 		if (error instanceof Error) {
 			console.debug('Error details:', error.message);
 		}
-		// Provide manual instructions as fallback
-		console.log('\n❌ Failed to create PR automatically. Please create it manually:');
-		console.log(`1. Visit: ${getRepoUrl()}/compare/${options.base}...${options.head}`);
-		console.log(`2. Title: ${options.title}`);
-		console.log(`3. Body: ${options.body}`);
+		console.log('\n==================================');
+		console.log('❌  PULL REQUEST CREATION FAILED');
+		console.log('==================================');
+		console.log('\nPlease create the PR manually:');
+		console.log('\n1. Open this URL in your browser:');
+		console.log(`   ${getRepoUrl()}/compare/${options.base}...${options.head}`);
+		console.log('\n2. Fill in these details:');
+		console.log(`   • Title: ${options.title}`);
+		console.log(`   • Description: ${options.body}`);
 		if (options.labels?.length) {
-			console.log(`4. Labels: ${options.labels.join(', ')}`);
+			console.log(`   • Labels: ${options.labels.join(', ')}`);
 		}
+		console.log('\n==================================\n');
 	}
 }
 
