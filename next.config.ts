@@ -124,14 +124,6 @@ let nextConfig: NextConfig = {
 			// Don't attempt to bundle native modules on client-side
 			config.resolve.fallback = {
 				...config.resolve.fallback,
-				bcrypt: false,
-				"node-gyp": false,
-				npm: false,
-				fs: false,
-				net: false,
-				ts: false,
-				child_process: false,
-				"@mapbox/node-pre-gyp": false
 			};
 		} else {
 			// Externalize native modules on server-side
