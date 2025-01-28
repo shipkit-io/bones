@@ -1,7 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
 import type { Registry, RegistryFilters, RegistryItem } from "../_lib/types";
 
-export type StyleMode = "brutalist" | "modern" | "minimalist";
+export type StyleMode = "brutalist" | "modern";
 export type PreviewMode = "none" | "single" | "all";
 
 export interface ComponentCardProps {

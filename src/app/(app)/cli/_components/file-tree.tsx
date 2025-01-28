@@ -1,60 +1,60 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
-import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import { File, Folder } from 'lucide-react'
-import { useState } from 'react'
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import { File, Folder } from "lucide-react";
+import { useState } from "react";
 
 interface FileTreeProps {
 	files: {
-		path: string
-		type: string
-		content?: string
-	}[]
-	onFileSelect?: (file: { path: string; content?: string }) => void
-	selectedFile?: string
-	currentStyle?: 'brutalist' | 'modern' | 'minimalist'
+		path: string;
+		type: string;
+		content?: string;
+	}[];
+	onFileSelect?: (file: { path: string; content?: string }) => void;
+	selectedFile?: string;
+	currentStyle?: "brutalist" | "modern";
 }
 
 interface TreeNode {
-	name: string
-	path: string
-	type: 'file' | 'directory'
-	content?: string
-	children: Record<string, TreeNode>
+	name: string;
+	path: string;
+	type: "file" | "directory";
+	content?: string;
+	children: Record<string, TreeNode>;
 }
 
-function buildTree(files: FileTreeProps['files']): TreeNode {
+function buildTree(files: FileTreeProps["files"]): TreeNode {
 	const root: TreeNode = {
-		name: 'root',
-		path: '',
-		type: 'directory',
+		name: "root",
+		path: "",
+		type: "directory",
 		children: {},
-	}
+	};
 
 	for (const file of files) {
-		console.log(file)
-		const parts = file?.path?.split('/') || []
-		let current = root
+		console.log(file);
+		const parts = file?.path?.split("/") || [];
+		let current = root;
 
 		for (const part of parts) {
-			const path = parts.slice(0, parts.indexOf(part) + 1).join('/')
+			const path = parts.slice(0, parts.indexOf(part) + 1).join("/");
 			if (!current.children[part]) {
 				current.children[part] = {
 					name: part,
 					path,
-					type: part === parts[parts.length - 1] ? 'file' : 'directory',
+					type: part === parts[parts.length - 1] ? "file" : "directory",
 					content: part === parts[parts.length - 1] ? file.content : undefined,
 					children: {},
-				}
+				};
 			}
-			current = current.children[part]
+			current = current.children[part];
 		}
 	}
 
-	return root
+	return root;
 }
 
 function TreeNode({
@@ -64,16 +64,16 @@ function TreeNode({
 	level = 0,
 	currentStyle,
 }: {
-	node: TreeNode
-	onFileSelect?: FileTreeProps['onFileSelect']
-	selectedFile?: string
-	level?: number
-	currentStyle?: 'brutalist' | 'modern' | 'minimalist'
+	node: TreeNode;
+	onFileSelect?: FileTreeProps["onFileSelect"];
+	selectedFile?: string;
+	level?: number;
+	currentStyle?: "brutalist" | "modern";
 }) {
-	const [isExpanded, setIsExpanded] = useState(true)
-	const hasChildren = Object.keys(node.children).length > 0
+	const [isExpanded, setIsExpanded] = useState(true);
+	const hasChildren = Object.keys(node.children).length > 0;
 
-	if (node.name === 'root') {
+	if (node.name === "root") {
 		return (
 			<div className="space-y-1">
 				{Object.values(node.children).map((child) => (
@@ -87,7 +87,7 @@ function TreeNode({
 					/>
 				))}
 			</div>
-		)
+		);
 	}
 
 	return (
@@ -98,29 +98,29 @@ function TreeNode({
 				className={cn(
 					"h-8 justify-start px-2 hover:bg-muted",
 					selectedFile === node.path && "bg-muted",
-					currentStyle === 'brutalist' && "rounded-none"
+					currentStyle === "brutalist" && "rounded-none",
 				)}
 				style={{ paddingLeft: `${(level + 1) * 12}px` }}
 				onClick={() => {
-					if (node.type === 'directory') {
-						setIsExpanded(!isExpanded)
+					if (node.type === "directory") {
+						setIsExpanded(!isExpanded);
 					} else if (onFileSelect) {
-						onFileSelect(node)
+						onFileSelect(node);
 					}
 				}}
 			>
 				<div className="flex items-center">
-					{node.type === 'directory' ? (
+					{node.type === "directory" ? (
 						<>
 							{isExpanded ? (
-								<ChevronDownIcon className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+								<ChevronDownIcon className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
 							) : (
-								<ChevronRightIcon className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+								<ChevronRightIcon className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
 							)}
-							<Folder className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+							<Folder className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
 						</>
 					) : (
-						<File className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+						<File className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
 					)}
 					<span className="truncate">{node.name}</span>
 				</div>
@@ -140,11 +140,16 @@ function TreeNode({
 				</div>
 			)}
 		</div>
-	)
+	);
 }
 
-export function FileTree({ files, onFileSelect, selectedFile, currentStyle }: FileTreeProps) {
-	const tree = buildTree(files)
+export function FileTree({
+	files,
+	onFileSelect,
+	selectedFile,
+	currentStyle,
+}: FileTreeProps) {
+	const tree = buildTree(files);
 
 	return (
 		<ScrollArea className="h-[400px]">
@@ -155,6 +160,5 @@ export function FileTree({ files, onFileSelect, selectedFile, currentStyle }: Fi
 				currentStyle={currentStyle}
 			/>
 		</ScrollArea>
-	)
+	);
 }
-

@@ -35,7 +35,8 @@
 		"test:node": "vitest --config=vitest.config.node.ts",
 		"typecheck": "tsc --noEmit",
 		"build:registry": "tsx src/registry/generate-registry.ts",
-		"build:blocks": "tsx scripts/generate-registry.ts -i src/registry/blocks -o public/registry -t"
+		"build:blocks": "tsx scripts/generate-registry.ts -i src/registry/blocks -o public/registry -t",
+		"sync-upstream": "tsx scripts/sync-upstream.ts"
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "1.7.4",
@@ -267,7 +268,9 @@
 		"zod": "3.24.1",
 		"zsa": "0.6.0",
 		"zsa-react": "0.2.3",
-		"zustand": "5.0.2"
+		"zustand": "5.0.2",
+		"commander": "^11.1.0",
+		"date-fns": "^3.3.1"
 	},
 	"devDependencies": {
 		"@babel/parser": "^7.24.0",
