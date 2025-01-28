@@ -268,7 +268,9 @@
 		"zod": "3.24.1",
 		"zsa": "0.6.0",
 		"zsa-react": "0.2.3",
-		"zustand": "5.0.2"
+		"zustand": "5.0.2",
+		"@mapbox/node-pre-gyp": "^1.0.11",
+		"node-gyp": "^9.0.0"
 	},
 	"devDependencies": {
 		"@babel/parser": "^7.24.0",

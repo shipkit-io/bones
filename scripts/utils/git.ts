@@ -46,7 +46,7 @@ export function deleteBranch(branchName: string, remote = 'origin'): void {
 }
 
 /**
- * Create a pull request using GitHub CLI
+ * Create a pull request using GitHub CLI or provide manual instructions
  * @param options - Pull request options
  */
 export function createPullRequest(options: {
@@ -57,6 +57,28 @@ export function createPullRequest(options: {
 	labels?: string[];
 }): void {
 	try {
+		// Check if gh CLI is installed
+		try {
+			runCommand('gh --version');
+		} catch (error) {
+			// GitHub CLI not installed - provide manual instructions
+			console.log('\n✨ Pull request ready to be created:');
+			console.log('GitHub CLI not found. Please either:');
+			console.log('\n1. Install GitHub CLI (recommended):');
+			console.log('   brew install gh    # macOS');
+			console.log('   winget install GitHub.cli    # Windows');
+			console.log('   Then authenticate: gh auth login');
+			console.log('\n2. Or create PR manually:');
+			console.log(`   • Visit: ${getRepoUrl()}/compare/${options.base}...${options.head}`);
+			console.log(`   • Title: ${options.title}`);
+			console.log(`   • Body: ${options.body}`);
+			if (options.labels?.length) {
+				console.log(`   • Labels: ${options.labels.join(', ')}`);
+			}
+			return;
+		}
+
+		// GitHub CLI is installed - create PR
 		const labelArgs = options.labels?.length
 			? options.labels.map(label => `--label "${label}"`).join(' ')
 			: '';
@@ -65,14 +87,41 @@ export function createPullRequest(options: {
 			`gh pr create --title "${options.title}" --body "${options.body}" ` +
 			`--base ${options.base} --head ${options.head} ${labelArgs}`
 		);
-		console.log('Pull request created successfully');
+		console.log('✨ Pull request created successfully');
 	} catch (error) {
-		console.log('GitHub CLI not available. Please create PR manually:');
-		console.log(`1. Visit your repository's website`);
-		console.log(`2. Create a new PR from '${options.head}' into '${options.base}'`);
 		if (error instanceof Error) {
 			console.debug('Error details:', error.message);
 		}
+		// Provide manual instructions as fallback
+		console.log('\n❌ Failed to create PR automatically. Please create it manually:');
+		console.log(`1. Visit: ${getRepoUrl()}/compare/${options.base}...${options.head}`);
+		console.log(`2. Title: ${options.title}`);
+		console.log(`3. Body: ${options.body}`);
+		if (options.labels?.length) {
+			console.log(`4. Labels: ${options.labels.join(', ')}`);
+		}
+	}
+}
+
+/**
+ * Get the repository URL
+ * @returns Repository URL or empty string if not found
+ */
+function getRepoUrl(): string {
+	try {
+		// Get the remote URL
+		const remoteUrl = runCommand('git remote get-url origin').trim();
+
+		// Convert SSH URL to HTTPS URL if necessary
+		if (remoteUrl.startsWith('git@github.com:')) {
+			return `https://github.com/${remoteUrl.slice(15).replace('.git', '')}`;
+		}
+
+		// Clean up HTTPS URL if necessary
+		return remoteUrl.replace('.git', '').replace(/\n/g, '');
+	} catch (error) {
+		console.error('Failed to get repository URL:', error);
+		return '';
 	}
 }
 
