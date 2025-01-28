@@ -89,9 +89,7 @@ const config = {
     				accent: 'hsl(var(--sidebar-accent))',
     				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
     				border: 'hsl(var(--sidebar-border))',
-    				ring: 'hsl(var(--sidebar-ring))',
-    				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-    				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))'
+    				ring: 'hsl(var(--sidebar-ring))'
     			},
     			'color-1': 'hsl(var(--color-1))',
     			'color-2': 'hsl(var(--color-2))',
@@ -258,22 +256,6 @@ const config = {
     					opacity: '1',
     					transform: 'translateY(0)'
     				}
-    			},
-    			'accordion-down': {
-    				from: {
-    					height: '0'
-    				},
-    				to: {
-    					height: 'var(--radix-accordion-content-height)'
-    				}
-    			},
-    			'accordion-up': {
-    				from: {
-    					height: 'var(--radix-accordion-content-height)'
-    				},
-    				to: {
-    					height: '0'
-    				}
     			}
     		},
     		animation: {
@@ -294,9 +276,7 @@ const config = {
     			spotlight: 'spotlight 2s ease .75s 1 forwards',
     			'galaxy-shimmer': 'galaxy-shimmer 20s ease-in-out infinite 3s',
     			aurora: 'aurora 60s linear infinite',
-    			fadeDown: 'fadeDown 0.2s ease-out',
-    			'accordion-down': 'accordion-down 0.2s ease-out',
-    			'accordion-up': 'accordion-up 0.2s ease-out'
+    			fadeDown: 'fadeDown 0.2s ease-out'
     		},
     		spacing: {
     			'2xs': '0.25rem',
