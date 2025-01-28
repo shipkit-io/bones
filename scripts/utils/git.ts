@@ -58,10 +58,17 @@ export function createPullRequest(options: {
 }): void {
 	try {
 		// Check if gh CLI is installed
+		let hasGhCli = false;
 		try {
 			runCommand('gh --version');
+			hasGhCli = true;
 		} catch (error) {
-			// GitHub CLI not installed - provide manual instructions
+			// Let this error fall through to the manual instructions
+			hasGhCli = false;
+		}
+
+		// If GitHub CLI is not installed, show manual instructions
+		if (!hasGhCli) {
 			console.log('\n==================================');
 			console.log('✨  PULL REQUEST CREATION INSTRUCTIONS');
 			console.log('==================================');
