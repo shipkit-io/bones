@@ -11,10 +11,12 @@ export function runCommand(command: string): string {
 		if (error instanceof Error) {
 			console.error(`Error executing command: ${command}`);
 			console.error((error as { stderr?: string }).stderr || error.message);
+			throw error;
 		} else {
-			console.error(`Unknown error occurred while executing command: ${command}`);
+			const genericError = new Error(`Unknown error occurred while executing command: ${command}`);
+			console.error(genericError.message);
+			throw genericError;
 		}
-		process.exit(1);
 	}
 }
 
