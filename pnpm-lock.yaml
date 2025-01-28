@@ -421,8 +421,8 @@ importers:
         specifier: 1.0.1
         version: 1.0.1
       date-fns:
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: ^3.3.1
+        version: 3.6.0
       debug:
         specifier: 4.4.0
         version: 4.4.0
@@ -569,7 +569,7 @@ importers:
         version: 19.0.0
       react-day-picker:
         specifier: 8.10.1
-        version: 8.10.1(date-fns@4.1.0)(react@19.0.0)
+        version: 8.10.1(date-fns@3.6.0)(react@19.0.0)
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
@@ -811,6 +811,9 @@ importers:
       color:
         specifier: ^4.2.3
         version: 4.2.3
+      commander:
+        specifier: ^11.1.0
+        version: 11.1.0
       concurrently:
         specifier: ^9.1.0
         version: 9.1.2
@@ -7935,6 +7938,10 @@ packages:
   commander@10.0.1:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
     engines: {node: '>=14'}
+
+  commander@11.1.0:
+    resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
+    engines: {node: '>=16'}
 
   commander@12.1.0:
     resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
@@ -24173,6 +24180,8 @@ snapshots:
 
   commander@10.0.1: {}
 
+  commander@11.1.0: {}
+
   commander@12.1.0: {}
 
   commander@2.20.3: {}
@@ -30162,11 +30171,6 @@ snapshots:
   react-day-picker@8.10.1(date-fns@3.6.0)(react@19.0.0):
     dependencies:
       date-fns: 3.6.0
-      react: 19.0.0
-
-  react-day-picker@8.10.1(date-fns@4.1.0)(react@19.0.0):
-    dependencies:
-      date-fns: 4.1.0
       react: 19.0.0
 
   react-devtools-inline@4.4.0:

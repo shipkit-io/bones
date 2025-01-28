@@ -175,7 +175,7 @@
 		"contentlayer": "^0.3.4",
 		"cross-env": "7.0.3",
 		"crypto": "1.0.1",
-		"date-fns": "4.1.0",
+		"date-fns": "^3.3.1",
 		"debug": "4.4.0",
 		"dompurify": "^3.2.3",
 		"drizzle-orm": "0.38.2",
@@ -268,9 +268,7 @@
 		"zod": "3.24.1",
 		"zsa": "0.6.0",
 		"zsa-react": "0.2.3",
-		"zustand": "5.0.2",
-		"commander": "^11.1.0",
-		"date-fns": "^3.3.1"
+		"zustand": "5.0.2"
 	},
 	"devDependencies": {
 		"@babel/parser": "^7.24.0",
@@ -309,6 +307,7 @@
 		"buffer": "6.0.3",
 		"chromedriver": "131.0.4",
 		"color": "^4.2.3",
+		"commander": "^11.1.0",
 		"concurrently": "^9.1.0",
 		"copyfiles": "2.4.1",
 		"crypto-browserify": "3.12.1",
