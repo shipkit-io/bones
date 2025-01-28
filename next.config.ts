@@ -124,7 +124,10 @@ let nextConfig: NextConfig = {
 		if (!isServer) {
 			config.resolve.fallback = {
 				...config.resolve.fallback,
-
+				// Add bcrypt-related fallbacks
+				bcrypt: false,
+				"node-gyp": false,
+				npm: false,
 			};
 		}
 		return config;

@@ -5,8 +5,9 @@ import { signInSchema } from "@/lib/schemas/auth";
 import { signIn, signOut } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { compare, hash } from "bcrypt";
+import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
+import "server-only";
 
 /**
  * Authentication service for handling user authentication and authorization
@@ -74,7 +75,7 @@ export const AuthService = {
 			}
 
 			// Hash password
-			const hashedPassword = await hash(password, 10);
+			const hashedPassword = await bcrypt.hash(password, 10);
 
 			// Create new user
 			const result = await db
@@ -142,7 +143,7 @@ export const AuthService = {
 				throw new Error("Invalid credentials");
 			}
 
-			const isValidPassword = await compare(password, user.password);
+			const isValidPassword = await bcrypt.compare(password, user.password);
 
 			if (!isValidPassword) {
 				throw new Error("Invalid credentials");
