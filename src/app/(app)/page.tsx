@@ -1,4 +1,3 @@
-import { Attribution } from "@/components/blocks/attribution";
 import { DeployToVercelButton } from "@/components/buttons/vercel-deploy-button-2";
 import { Link } from "@/components/primitives/link-with-transition";
 import {
@@ -6,6 +5,7 @@ import {
 	PageHeaderDescription,
 	PageHeaderHeading,
 } from "@/components/primitives/page-header";
+import { Attribution } from "@/components/ui/attribution";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
