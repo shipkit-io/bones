@@ -120,6 +120,17 @@ let nextConfig: NextConfig = {
 			use: "raw-loader",
 		});
 
+		if (!isServer) {
+			// Don't attempt to bundle native modules on client-side
+			config.resolve.fallback = {
+				...config.resolve.fallback,
+				fs: false,
+				tls: false,
+				net: false,
+				child_process: false,
+			};
+		}
+
 		// if (!isServer) {
 		// 	// Don't attempt to bundle native modules on client-side
 		// 	config.resolve.fallback = {

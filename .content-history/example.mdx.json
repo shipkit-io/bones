@@ -2,34 +2,34 @@
   "filePath": "/Users/lmorrow/repo/sk-bones/src/app/example/content/example.mdx",
   "sections": [
     {
-      "id": "ff8f78f7cf7fefe94e2cf87ac5067ed9",
-      "originalContent": "# Example Contentsx\n\n\nWelcome to the floating editor example! This content is editable when edit mode is enabled.\n",
-      "currentContent": "# Example Contentsx\n\n\nWelcome to the floating editor example! This content is editable when edit mode is enabled.\n",
-      "lastModified": "2025-01-29T18:08:12.826Z",
+      "id": "fad5f6f4e956deb6c1333e8901642bd7",
+      "originalContent": "# Example Conteasfdasf\nWelcome to the floating editor example! This content is editable when edit mode is enabled.\n",
+      "currentContent": "# Example Conteasfdasf\nWelcome to the floating editor example! This content is editable when edit mode is enabled.\n",
+      "lastModified": "2025-01-29T20:59:54.163Z",
       "path": [
-        "Example Contentsx"
+        "Example Conteasfdasf"
       ]
     },
     {
-      "id": "df3a8cd8b03648bad5daeda0680e5d31",
-      "originalContent": "## Features\n\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes are automatically committed\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n",
-      "currentContent": "## Features\n\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes are automatically committed\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n",
-      "lastModified": "2025-01-29T18:08:12.826Z",
+      "id": "aabf2570f5f6440ee797cd27a30a021a",
+      "originalContent": "## Features\nsdxg\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes asfrare automatically committedaasd\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n",
+      "currentContent": "## Features\nsdxg\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes asfrare automatically committedaasd\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n",
+      "lastModified": "2025-01-29T20:59:54.163Z",
       "path": [
-        "Example Contentsx",
+        "Example Conteasfdasf",
         "Features"
       ]
     },
     {
-      "id": "b7bba052eec4c62b4bcd42a75b5bf89c",
+      "id": "608e52b36c92d367d6df04e90c5f7dca",
       "originalContent": "## Try it out!\n\n1. Enable edit mode using the toggle button\n2. Click anywhere in this content to start editing\n3. Make some changes and click save\n4. Check your Git history to see the commit\n",
       "currentContent": "## Try it out!\n\n1. Enable edit mode using the toggle button\n2. Click anywhere in this content to start editing\n3. Make some changes and click save\n4. Check your Git history to see the commit\n",
-      "lastModified": "2025-01-29T18:08:12.826Z",
+      "lastModified": "2025-01-29T20:59:54.163Z",
       "path": [
-        "Example Contentsx",
+        "Example Conteasfdasf",
         "Try it out!"
       ]
     }
   ],
-  "lastModified": "2025-01-29T18:08:12.826Z"
+  "lastModified": "2025-01-29T20:59:54.163Z"
 }

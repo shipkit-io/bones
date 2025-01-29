@@ -1,10 +1,11 @@
 {
-  "recommendations": [
+	"recommendations": [
 		"esbenp.prettier-vscode",
 		"dbaeumer.vscode-eslint",
 		"foxundermoon.shell-format",
 		"ms-azuretools.vscode-docker",
 		"biomejs.biome",
-		"dexxiez.shadcn-color-preview"
+		"dexxiez.shadcn-color-preview",
+		"aaron-bond.better-comments"
 	]
 }
