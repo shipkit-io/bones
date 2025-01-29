@@ -120,15 +120,15 @@ let nextConfig: NextConfig = {
 			use: "raw-loader",
 		});
 
-		if (!isServer) {
-			// Don't attempt to bundle native modules on client-side
-			config.resolve.fallback = {
-				...config.resolve.fallback,
-			};
-		} else {
-			// Externalize native modules on server-side
-			config.externals = [...(config.externals || []), "bcrypt"];
-		}
+		// if (!isServer) {
+		// 	// Don't attempt to bundle native modules on client-side
+		// 	config.resolve.fallback = {
+		// 		...config.resolve.fallback,
+		// 	};
+		// } else {
+		// 	// Externalize native modules on server-side
+		// 	config.externals = [...(config.externals || []), "bcrypt"];
+		// }
 
 		return config;
 	},

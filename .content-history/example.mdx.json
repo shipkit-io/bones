@@ -1,0 +1,35 @@
+{
+  "filePath": "/Users/lmorrow/repo/sk-bones/src/app/example/content/example.mdx",
+  "sections": [
+    {
+      "id": "ff8f78f7cf7fefe94e2cf87ac5067ed9",
+      "originalContent": "# Example Contentsx\n\n\nWelcome to the floating editor example! This content is editable when edit mode is enabled.\n",
+      "currentContent": "# Example Contentsx\n\n\nWelcome to the floating editor example! This content is editable when edit mode is enabled.\n",
+      "lastModified": "2025-01-29T18:08:12.826Z",
+      "path": [
+        "Example Contentsx"
+      ]
+    },
+    {
+      "id": "df3a8cd8b03648bad5daeda0680e5d31",
+      "originalContent": "## Features\n\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes are automatically committed\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n",
+      "currentContent": "## Features\n\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes are automatically committed\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n",
+      "lastModified": "2025-01-29T18:08:12.826Z",
+      "path": [
+        "Example Contentsx",
+        "Features"
+      ]
+    },
+    {
+      "id": "b7bba052eec4c62b4bcd42a75b5bf89c",
+      "originalContent": "## Try it out!\n\n1. Enable edit mode using the toggle button\n2. Click anywhere in this content to start editing\n3. Make some changes and click save\n4. Check your Git history to see the commit\n",
+      "currentContent": "## Try it out!\n\n1. Enable edit mode using the toggle button\n2. Click anywhere in this content to start editing\n3. Make some changes and click save\n4. Check your Git history to see the commit\n",
+      "lastModified": "2025-01-29T18:08:12.826Z",
+      "path": [
+        "Example Contentsx",
+        "Try it out!"
+      ]
+    }
+  ],
+  "lastModified": "2025-01-29T18:08:12.826Z"
+}

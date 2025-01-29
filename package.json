@@ -46,6 +46,7 @@
 		"@builder.io/sdk": "6.0.0",
 		"@electric-sql/pglite": "^0.2.16",
 		"@faker-js/faker": "9.3.0",
+		"@floating-ui/react": "^0.27.3",
 		"@formkit/auto-animate": "0.8.2",
 		"@fortawesome/fontawesome-svg-core": "6.7.2",
 		"@fortawesome/free-solid-svg-icons": "6.7.2",
