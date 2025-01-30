@@ -14,6 +14,52 @@ import { Check, Pencil, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
 
+interface Section {
+	id: string;
+	content: string;
+	level: number;
+	path: string[];
+}
+
+function parseSections(content: string): Section[] {
+	const lines = content.split("\n");
+	const sections: Section[] = [];
+	let currentSection: string[] = [];
+	let currentPath: string[] = [];
+	let currentLevel = 0;
+
+	function addSection() {
+		if (currentSection.length > 0) {
+			const content = currentSection.join("\n");
+			sections.push({
+				id: `${currentPath.join("/")}/${content.slice(0, 20)}`,
+				content,
+				level: currentLevel,
+				path: [...currentPath],
+			});
+			currentSection = [];
+		}
+	}
+
+	for (const line of lines) {
+		const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+		if (headingMatch) {
+			addSection();
+			const level = headingMatch[1].length;
+			const heading = headingMatch[2];
+			currentPath = currentPath.slice(0, level - 1);
+			currentPath[level - 1] = heading;
+			currentLevel = level;
+			currentSection = [line];
+		} else {
+			currentSection.push(line);
+		}
+	}
+
+	addSection();
+	return sections;
+}
+
 export interface FloatingEditorProps {
 	/**
 	 * The current text content
@@ -54,116 +100,155 @@ export function FloatingEditor({
 	isMarkdown = false,
 	isEditModeEnabled = false,
 }: FloatingEditorProps) {
-	const [isOpen, setIsOpen] = React.useState(false);
-	const [editedContent, setEditedContent] = React.useState(content);
+	const [sections, setSections] = React.useState<Section[]>([]);
+	const [editingSectionId, setEditingSectionId] = React.useState<string | null>(
+		null,
+	);
+	const [editedContent, setEditedContent] = React.useState("");
 	const [isSaving, setIsSaving] = React.useState(false);
-	const containerRef = React.useRef<HTMLDivElement>(null);
-	const [transform, setTransform] = React.useState({
-		rotate: { x: 0, y: 0 },
-		scale: 1,
-		translate: { x: 0, y: 0 },
-	});
+	const sectionRefs = React.useRef<Map<string, HTMLDivElement>>(new Map());
+	const sectionsRef = React.useRef<Section[]>([]);
+	const [hasChanges, setHasChanges] = React.useState(false);
+	const [transforms, setTransforms] = React.useState<
+		Map<
+			string,
+			{
+				rotate: { x: number; y: number };
+				scale: number;
+				translate: { x: number; y: number };
+			}
+		>
+	>(new Map());
 
 	const { textareaRef, adjustHeight } = useAutoResizeTextarea({
 		minHeight: 100,
 		maxHeight: 500,
 	});
 
-	// Reset edited content when content prop changes
+	// Keep sectionsRef in sync with sections state
 	React.useEffect(() => {
-		setEditedContent(content);
-	}, [content]);
+		sectionsRef.current = sections;
+	}, [sections]);
 
-	// Reset edited content when popover opens
+	// Parse content into sections only when the prop changes
 	React.useEffect(() => {
-		if (isOpen) {
-			setEditedContent(content);
-			// Wait for next tick to adjust height
-			setTimeout(() => adjustHeight(), 0);
-		}
-	}, [isOpen, content, adjustHeight]);
+		const parsedSections = parseSections(content);
+		setSections(parsedSections);
+		sectionsRef.current = parsedSections;
+	}, [content]);
 
 	// Handle mouse movement for 3D effect
 	const handleMouseMove = React.useCallback(
 		(e: MouseEvent) => {
-			if (!containerRef.current || !isEditModeEnabled) return;
+			if (!isEditModeEnabled) return;
 
-			const rect = containerRef.current.getBoundingClientRect();
-			const centerX = rect.left + rect.width / 2;
-			const centerY = rect.top + rect.height / 2;
+			const newTransforms = new Map(transforms);
+			sectionRefs.current.forEach((element, sectionId) => {
+				const rect = element.getBoundingClientRect();
+				const centerX = rect.left + rect.width / 2;
+				const centerY = rect.top + rect.height / 2;
 
-			// Calculate distance from center
-			const distanceX = e.clientX - centerX;
-			const distanceY = e.clientY - centerY;
+				const distanceX = e.clientX - centerX;
+				const distanceY = e.clientY - centerY;
 
-			// Calculate distance from element
-			const elementDistance = Math.sqrt(
-				(e.clientX - (rect.left + rect.width / 2)) ** 2 +
-					(e.clientY - (rect.top + rect.height / 2)) ** 2,
-			);
+				const elementDistance = Math.sqrt(
+					(e.clientX - (rect.left + rect.width / 2)) ** 2 +
+						(e.clientY - (rect.top + rect.height / 2)) ** 2,
+				);
 
-			// Maximum rotation in degrees
-			const maxRotation = 10;
-			// Maximum translation in pixels
-			const maxTranslation = 5;
-			// Distance at which the element starts to "attract" to the cursor
-			const attractionRadius = 300;
+				const maxRotation = 10;
+				const maxTranslation = 5;
+				const attractionRadius = 300;
 
-			// Calculate rotation based on mouse position
-			const rotateX = -(distanceY / rect.height) * maxRotation;
-			const rotateY = (distanceX / rect.width) * maxRotation;
+				const rotateX = -(distanceY / rect.height) * maxRotation;
+				const rotateY = (distanceX / rect.width) * maxRotation;
 
-			// Calculate attraction effect
-			const attractionStrength = Math.max(
-				0,
-				1 - elementDistance / attractionRadius,
-			);
-			const translateX =
-				(distanceX / attractionRadius) * maxTranslation * attractionStrength;
-			const translateY =
-				(distanceY / attractionRadius) * maxTranslation * attractionStrength;
+				const attractionStrength = Math.max(
+					0,
+					1 - elementDistance / attractionRadius,
+				);
+				const translateX =
+					(distanceX / attractionRadius) * maxTranslation * attractionStrength;
+				const translateY =
+					(distanceY / attractionRadius) * maxTranslation * attractionStrength;
 
-			// Calculate scale based on distance (closer = larger)
-			const scale = 1 + attractionStrength * 0.05;
+				const scale = 1 + attractionStrength * 0.05;
 
-			setTransform({
-				rotate: { x: rotateX, y: rotateY },
-				scale,
-				translate: { x: translateX, y: translateY },
+				newTransforms.set(sectionId, {
+					rotate: { x: rotateX, y: rotateY },
+					scale,
+					translate: { x: translateX, y: translateY },
+				});
 			});
+
+			setTransforms(newTransforms);
 		},
-		[isEditModeEnabled],
+		[isEditModeEnabled, transforms],
 	);
 
-	// Reset transform on mouse leave
+	// Reset transforms on mouse leave
 	const handleMouseLeave = React.useCallback(() => {
-		setTransform({
-			rotate: { x: 0, y: 0 },
-			scale: 1,
-			translate: { x: 0, y: 0 },
-		});
+		setTransforms(new Map());
 	}, []);
 
 	// Add and remove mouse event listeners
 	React.useEffect(() => {
-		const container = containerRef.current;
-		if (container && isEditModeEnabled) {
+		if (isEditModeEnabled) {
 			window.addEventListener("mousemove", handleMouseMove);
-			container.addEventListener("mouseleave", handleMouseLeave);
+			document.addEventListener("mouseleave", handleMouseLeave);
 		}
 		return () => {
 			window.removeEventListener("mousemove", handleMouseMove);
-			if (container) {
-				container.removeEventListener("mouseleave", handleMouseLeave);
-			}
+			document.removeEventListener("mouseleave", handleMouseLeave);
 		};
 	}, [handleMouseMove, handleMouseLeave, isEditModeEnabled]);
 
+	const handleEdit = (sectionId: string) => {
+		if (isEditModeEnabled) {
+			const section = sectionsRef.current.find((s) => s.id === sectionId);
+			if (section) {
+				setEditingSectionId(sectionId);
+				setEditedContent(section.content);
+				setHasChanges(false);
+				setTimeout(() => adjustHeight(), 0);
+			}
+		}
+	};
+
+	const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		const newContent = e.target.value;
+		const currentSection = sectionsRef.current.find(
+			(s) => s.id === editingSectionId,
+		);
+
+		setEditedContent(newContent);
+		setHasChanges(
+			currentSection ? newContent !== currentSection.content : false,
+		);
+
+		// Update the section in the list to show live preview
+		setSections((prevSections) =>
+			prevSections.map((section) =>
+				section.id === editingSectionId
+					? { ...section, content: newContent }
+					: section,
+			),
+		);
+
+		adjustHeight();
+	};
+
 	const handleSave = async () => {
+		if (!editingSectionId || !hasChanges) return;
+
 		try {
 			setIsSaving(true);
-			await onSave(editedContent);
-			setIsOpen(false);
+			const newContent = sections
+				.map((section) => section.content)
+				.join("\n\n");
+			await onSave(newContent);
+			setEditingSectionId(null);
+			setHasChanges(false);
 			toast({
 				title: "Changes saved",
 				description: "Your changes have been saved successfully.",
@@ -182,110 +267,142 @@ export function FloatingEditor({
 		}
 	};
 
-	const handleEdit = () => {
-		if (isEditModeEnabled) {
-			setIsOpen(true);
+	const handleCancel = () => {
+		if (editingSectionId) {
+			const originalSection = sectionsRef.current.find(
+				(s) => s.id === editingSectionId,
+			);
+			if (originalSection) {
+				setSections((prevSections) =>
+					prevSections.map((section) =>
+						section.id === editingSectionId
+							? { ...section, content: originalSection.content }
+							: section,
+					),
+				);
+			}
 		}
+		setEditingSectionId(null);
+		setEditedContent("");
+		setHasChanges(false);
 	};
 
 	return (
-		<div
-			ref={containerRef}
-			className={cn(
-				"perspective-1000 group relative transition-all duration-200",
-				isEditModeEnabled && "hover:z-10",
-				className,
-			)}
-			style={{
-				perspective: "1000px",
-			}}
-		>
-			<button
-				type="button"
-				className={cn(
-					"prose w-full max-w-none rounded-md text-left transition-all duration-200",
-					isEditModeEnabled && "cursor-pointer p-2",
-					!isEditModeEnabled && "pointer-events-none",
-					contentClassName,
-				)}
-				onClick={handleEdit}
-				disabled={!isEditModeEnabled}
-				style={{
-					transform: isEditModeEnabled
-						? `
-							rotate3d(1, 0, 0, ${transform.rotate.x}deg)
-							rotate3d(0, 1, 0, ${transform.rotate.y}deg)
-							scale(${transform.scale})
-							translate(${transform.translate.x}px, ${transform.translate.y}px)
-						`
-						: undefined,
-					transformStyle: "preserve-3d",
-					transition: "transform 0.1s ease-out",
-				}}
-			>
-				<div
-					className={cn(
-						"relative",
-						isEditModeEnabled &&
-							"before:absolute before:inset-0 before:rounded-md before:opacity-0 before:shadow-[0_0_15px_rgba(0,0,0,0.1)] before:transition-opacity group-hover:before:opacity-100",
-					)}
-				>
-					{isMarkdown ? <ReactMarkdown>{content}</ReactMarkdown> : content}
-				</div>
-			</button>
+		<div className={cn("space-y-4", className)}>
+			{sections.map((section) => {
+				const transform = transforms.get(section.id);
+				const isEditing = editingSectionId === section.id;
 
-			{isEditModeEnabled && (
-				<Popover open={isOpen} onOpenChange={setIsOpen}>
-					<PopoverTrigger asChild>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="absolute -right-8 top-0 opacity-0 transition-opacity group-hover:opacity-100"
-						>
-							<Pencil className="h-4 w-4" />
-						</Button>
-					</PopoverTrigger>
-					<PopoverContent
-						className={cn("w-[400px] p-4", popoverClassName)}
-						align="start"
-						sideOffset={5}
+				return (
+					<div
+						key={section.id}
+						ref={(el) => {
+							if (el) sectionRefs.current.set(section.id, el);
+							else sectionRefs.current.delete(section.id);
+						}}
+						className={cn(
+							"perspective-1000 group relative transition-all duration-200",
+							isEditModeEnabled && "hover:z-10",
+						)}
+						style={{
+							perspective: "1000px",
+							paddingLeft: `${section.level * 1}rem`,
+						}}
 					>
-						<div className="space-y-4">
-							<Textarea
-								ref={textareaRef}
-								value={editedContent}
-								onChange={(e) => {
-									setEditedContent(e.target.value);
-									adjustHeight();
-								}}
-								className="min-h-[100px] resize-none"
-								placeholder="Enter your content..."
-							/>
-							<div className="flex justify-end gap-2">
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => {
-										setIsOpen(false);
-										setEditedContent(content);
-									}}
-								>
-									<X className="mr-2 h-4 w-4" />
-									Cancel
-								</Button>
-								<Button
-									size="sm"
-									onClick={handleSave}
-									disabled={isSaving || editedContent === content}
-								>
-									<Check className="mr-2 h-4 w-4" />
-									Save
-								</Button>
+						<button
+							type="button"
+							className={cn(
+								"prose w-full max-w-none rounded-md text-left transition-all duration-200",
+								isEditModeEnabled && "cursor-pointer p-2",
+								!isEditModeEnabled && "pointer-events-none",
+								contentClassName,
+							)}
+							onClick={() => handleEdit(section.id)}
+							disabled={!isEditModeEnabled}
+							style={{
+								transform:
+									isEditModeEnabled && transform
+										? `
+										rotate3d(1, 0, 0, ${transform.rotate.x}deg)
+										rotate3d(0, 1, 0, ${transform.rotate.y}deg)
+										scale(${transform.scale})
+										translate(${transform.translate.x}px, ${transform.translate.y}px)
+									`
+										: undefined,
+								transformStyle: "preserve-3d",
+								transition: "transform 0.1s ease-out",
+							}}
+						>
+							<div
+								className={cn(
+									"relative",
+									isEditModeEnabled &&
+										"before:absolute before:inset-0 before:rounded-md before:opacity-0 before:shadow-[0_0_15px_rgba(0,0,0,0.1)] before:transition-opacity group-hover:before:opacity-100",
+								)}
+							>
+								{isMarkdown ? (
+									<ReactMarkdown>{section.content}</ReactMarkdown>
+								) : (
+									section.content
+								)}
 							</div>
-						</div>
-					</PopoverContent>
-				</Popover>
-			)}
+						</button>
+
+						{isEditModeEnabled && (
+							<Popover
+								open={isEditing}
+								onOpenChange={(open) => !open && handleCancel()}
+							>
+								<PopoverTrigger asChild>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="absolute -right-8 top-0 opacity-0 transition-opacity group-hover:opacity-100"
+									>
+										<Pencil className="h-4 w-4" />
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent
+									className={cn("w-[400px] p-4", popoverClassName)}
+									align="start"
+									sideOffset={5}
+								>
+									<div className="space-y-4">
+										<div className="text-sm text-muted-foreground">
+											{section.path.join(" > ")}
+										</div>
+										<Textarea
+											ref={textareaRef}
+											value={editedContent}
+											onChange={handleContentChange}
+											className="min-h-[100px] resize-none"
+											placeholder="Enter your content..."
+										/>
+										<div className="flex justify-end gap-2">
+											<Button
+												variant="outline"
+												size="sm"
+												onClick={handleCancel}
+											>
+												<X className="mr-2 h-4 w-4" />
+												Cancel
+											</Button>
+											<Button
+												size="sm"
+												onClick={handleSave}
+												disabled={isSaving || !hasChanges}
+											>
+												<Check className="mr-2 h-4 w-4" />
+												Save
+											</Button>
+										</div>
+									</div>
+								</PopoverContent>
+							</Popover>
+						)}
+					</div>
+				);
+			})}
 		</div>
 	);
 }
