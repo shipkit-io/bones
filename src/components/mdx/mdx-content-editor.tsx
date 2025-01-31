@@ -5,15 +5,21 @@ import { EditModeController } from "@/components/ui/edit-mode-controller";
 import { FloatingEditor } from "@/components/ui/floating-editor";
 import { saveContent } from "@/server/actions/content-actions";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface MDXContentEditorProps {
 	raw: string;
 	filePath: string;
+	children: React.ReactNode;
 }
 
 const EDIT_MODE_KEY = "floating-editor-edit-mode";
 
-export function MDXContentEditor({ raw, filePath }: MDXContentEditorProps) {
+export function MDXContentEditor({
+	raw,
+	filePath,
+	children,
+}: MDXContentEditorProps) {
 	const [isEditMode, setIsEditMode] = React.useState(() => {
 		if (typeof window !== "undefined") {
 			const stored = localStorage.getItem(EDIT_MODE_KEY);
@@ -65,12 +71,30 @@ export function MDXContentEditor({ raw, filePath }: MDXContentEditorProps) {
 			/>
 
 			<div className="relative">
-				<FloatingEditor
-					content={raw}
-					onSave={handleSave}
-					isEditModeEnabled={isEditMode}
-					isMarkdown
-				/>
+				{/* Original MDX content */}
+				<div
+					className={cn(
+						"mdx-content transition-opacity duration-200",
+						isEditMode && "pointer-events-none opacity-0",
+					)}
+				>
+					{children}
+				</div>
+
+				{/* Floating editor */}
+				<div
+					className={cn(
+						"absolute inset-0 transition-opacity duration-200",
+						!isEditMode && "pointer-events-none opacity-0",
+					)}
+				>
+					<FloatingEditor
+						content={raw}
+						onSave={handleSave}
+						isEditModeEnabled={isEditMode}
+						isMarkdown
+					/>
+				</div>
 
 				<div className="mt-8 rounded-lg border">
 					<h2 className="border-b p-4 text-lg font-medium">Content History</h2>

@@ -2,15 +2,6 @@
   "filePath": "/Users/lmorrow/repo/sk-bones/src/app/(app)/(legal)/privacy-policy/page.mdx",
   "sections": [
     {
-      "id": "820948434a6044c3129531b439dbe139",
-      "originalContent": "# Privacy Policyasfasdasdfasf\n\nLast updated: January 27, 2024\n\n",
-      "currentContent": "# Privacy Policyasfasdasdfasf\n\nLast updated: January 27, 2024\n\n",
-      "lastModified": "2025-01-31T08:48:15.982Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf"
-      ]
-    },
-    {
       "id": "ba330f5ca09f4482e0a748130e419803",
       "originalContent": "## Introduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\n",
       "currentContent": "## Introduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\n",
@@ -79,7 +70,16 @@
         "Privacy Policyasfasdasdfasf",
         "Important Disclaimersasfd"
       ]
+    },
+    {
+      "id": "d8b2897ce1afea41dc2d7839cde91958",
+      "originalContent": "# Privacy Policyasfasdasdfasf\nasfd\nLast updated: January 27, 2024\n\n",
+      "currentContent": "# Privacy Policyasfasdasdfasf\nasfd\nLast updated: January 27, 2024\n\n",
+      "lastModified": "2025-01-31T08:55:32.160Z",
+      "path": [
+        "Privacy Policyasfasdasdfasf"
+      ]
     }
   ],
-  "lastModified": "2025-01-31T08:49:28.740Z"
+  "lastModified": "2025-01-31T08:55:32.160Z"
 }
