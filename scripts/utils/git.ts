@@ -2,21 +2,30 @@ import { execSync } from 'child_process';
 import { format } from 'date-fns';
 
 /**
+ * Escape a string for shell command usage
+ */
+function escapeShellArg(arg: string): string {
+	// Wrap the entire argument in single quotes and escape any existing single quotes
+	return `'${arg.replace(/'/g, "'\\''")}'`;
+}
+
+/**
  * Git command execution utilities
  */
 export function runCommand(command: string): string {
 	try {
-		return execSync(command, { encoding: 'utf8', stdio: 'pipe' });
+		// If this is a git add command, escape the file path
+		const finalCommand = command.startsWith('git add ')
+			? `git add ${escapeShellArg(command.slice('git add '.length))}`
+			: command;
+
+		return execSync(finalCommand, { encoding: 'utf8', stdio: 'pipe' });
 	} catch (error) {
+		console.error(`Error executing command: ${command}`);
 		if (error instanceof Error) {
-			console.error(`Error executing command: ${command}`);
 			console.error((error as { stderr?: string }).stderr || error.message);
-			throw error;
-		} else {
-			const genericError = new Error(`Unknown error occurred while executing command: ${command}`);
-			console.error(genericError.message);
-			throw genericError;
 		}
+		throw error;
 	}
 }
 

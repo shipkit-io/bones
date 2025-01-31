@@ -1,6 +1,5 @@
 "use server";
 
-import { execSync } from "child_process";
 import { Octokit } from "@octokit/rest";
 import { runCommand } from "../../../scripts/utils/git";
 
@@ -9,6 +8,14 @@ interface CommitOptions {
 	createPR?: boolean;
 	prTitle?: string;
 	prBody?: string;
+}
+
+/**
+ * Escape a string for shell command usage
+ */
+function escapeShellArg(arg: string): string {
+	// Wrap the entire argument in single quotes and escape any existing single quotes
+	return `'${arg.replace(/'/g, "'\\''")}'`;
 }
 
 // Initialize Octokit with the GitHub token
@@ -59,9 +66,10 @@ export async function commitFileChange(
 		}
 
 		// Stage and commit the changes
-		runCommand(`git add ${filePath}`);
+		const escapedPath = escapeShellArg(filePath);
+		runCommand(`git add ${escapedPath}`);
 		runCommand(
-			`git commit -m "${options.message || `update: ${filePath}`}"`,
+			`git commit -m ${escapeShellArg(options.message || `update: ${filePath}`)}`
 		);
 
 		// Push the changes
@@ -100,9 +108,10 @@ export async function commitFileChange(
 		console.error("Git operation failed:", error);
 		// Try to commit changes anyway, even if PR creation fails
 		try {
-			runCommand(`git add ${filePath}`);
+			const escapedPath = escapeShellArg(filePath);
+			runCommand(`git add ${escapedPath}`);
 			runCommand(
-				`git commit -m "${options.message || `update: ${filePath}`}"`,
+				`git commit -m ${escapeShellArg(options.message || `update: ${filePath}`)}`
 			);
 			runCommand("git push origin HEAD");
 		} catch (commitError) {

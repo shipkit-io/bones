@@ -177,18 +177,18 @@ const withMDX = createMDX({
 	extension: /\.mdx?$/,
 	options: {
 		remarkPlugins: [
-			[
-				// @ts-expect-error
-				"remark-frontmatter",
-				{
-					type: "yaml",
-					marker: "-",
-				},
-			],
-			// @ts-expect-error
+			["remark-gfm", {}],
+			["remark-frontmatter", { type: "yaml", marker: "-" }],
 			["remark-mdx-frontmatter", {}],
-		],
-		rehypePlugins: [],
+		] as any[],
+		rehypePlugins: [
+			["rehype-prism-plus", {}],
+		] as any[],
+		// Use our local MDX components
+		providerImportSource: "@/mdx-components",
+		format: "mdx",
+		jsx: true,
+		jsxRuntime: "automatic",
 	},
 });
 nextConfig = withMDX(nextConfig);

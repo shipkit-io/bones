@@ -2,8 +2,8 @@
 
 import fs from "fs/promises";
 import path from "path";
+import { getContentHistory, revertSection, trackContentChanges } from "../services/content-history-service";
 import { commitFileChange } from "../services/git-service";
-import { trackContentChanges, getContentHistory, revertSection } from "../services/content-history-service";
 
 interface SaveContentOptions {
 	createPR?: boolean;
@@ -21,7 +21,7 @@ export async function saveContent(
 ) {
 	try {
 		// Get the absolute path to the source file
-		const filePath = path.join(process.cwd(), "src", fileName);
+		const filePath = path.join(process.cwd(), fileName);
 
 		// Write the content to the file
 		await fs.writeFile(filePath, content, "utf-8");
