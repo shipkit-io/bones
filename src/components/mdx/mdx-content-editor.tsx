@@ -46,20 +46,44 @@ export function MDXContentEditor({
 		);
 
 		// Add edit mode styles to sections
+		const styles: HTMLStyleElement[] = [];
+
 		for (const section of sections) {
 			const el = section as HTMLElement;
 
-			// Always maintain border space to prevent layout shift
-			el.style.border = "2px solid transparent";
-			el.style.padding = "2px";
-			el.style.borderRadius = "2px";
-
 			if (isEditMode) {
-				el.style.cursor = "pointer";
-				el.style.transition =
-					"border-color 0.15s ease, background-color 0.15s ease";
+				// Make content editable without changing layout
 				el.contentEditable = "true";
 				el.style.outline = "none";
+				el.style.cursor = "pointer";
+
+				// Use pseudo-element for hover/focus indication
+				const style = document.createElement("style");
+				const className = `editable-${Math.random().toString(36).slice(2)}`;
+				el.classList.add(className);
+
+				style.textContent = `
+					.${className} {
+						position: relative;
+					}
+					.${className}::before {
+						content: '';
+						position: absolute;
+						inset: -2px;
+						border: 2px solid transparent;
+						border-radius: 2px;
+						pointer-events: none;
+						transition: border-color 0.15s ease;
+					}
+					.${className}:hover::before {
+						border-color: rgba(147, 51, 234, 0.5);
+					}
+					.${className}:focus::before {
+						border-color: rgb(147, 51, 234);
+					}
+				`;
+				document.head.appendChild(style);
+				styles.push(style);
 
 				// Handle content changes
 				el.addEventListener("input", () => {
@@ -68,30 +92,13 @@ export function MDXContentEditor({
 					clearTimeout(saveTimeoutRef.current);
 				});
 
-				// Handle hover effect
-				el.addEventListener("mouseenter", () => {
-					if (el !== editingSection) {
-						el.style.borderColor = "rgba(147, 51, 234, 0.5)";
-					}
-				});
-
-				el.addEventListener("mouseleave", () => {
-					if (el !== editingSection) {
-						el.style.borderColor = "transparent";
-					}
-				});
-
 				// Handle focus/blur for editing state
 				el.addEventListener("focus", () => {
 					setEditingSection(el);
-					el.style.borderColor = "rgb(147, 51, 234)";
-					el.style.background = "rgba(147, 51, 234, 0.05)";
 				});
 
 				el.addEventListener("blur", () => {
 					setEditingSection(null);
-					el.style.borderColor = "transparent";
-					el.style.background = "transparent";
 				});
 
 				// Prevent default behaviors
@@ -105,19 +112,27 @@ export function MDXContentEditor({
 
 		return () => {
 			// Clean up styles
+			for (const style of styles) {
+				document.head.removeChild(style);
+			}
+
 			for (const section of sections) {
 				const el = section as HTMLElement;
 				if (isEditMode) {
-					el.style.cursor = "";
-					el.style.transition = "";
 					el.contentEditable = "false";
+					el.style.cursor = "";
 					el.style.outline = "";
-					el.style.background = "";
+					// Remove all classes that start with 'editable-'
+					const editableClass = Array.from(el.classList).find((c) =>
+						c.startsWith("editable-"),
+					);
+					if (editableClass) {
+						el.classList.remove(editableClass);
+					}
 				}
-				// Don't remove border/padding to prevent layout shift when toggling edit mode
 			}
 		};
-	}, [isEditMode, editingSection]);
+	}, [isEditMode]);
 
 	// Persist edit mode state
 	React.useEffect(() => {
