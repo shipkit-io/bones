@@ -56,6 +56,7 @@ export function MDXContentEditor({
 				el.contentEditable = "true";
 				el.style.outline = "none";
 				el.style.cursor = "pointer";
+				el.style.padding = "2px";
 
 				// Use pseudo-element for hover/focus indication
 				const style = document.createElement("style");
@@ -65,15 +66,20 @@ export function MDXContentEditor({
 				style.textContent = `
 					.${className} {
 						position: relative;
+						box-sizing: border-box;
 					}
 					.${className}::before {
 						content: '';
 						position: absolute;
-						inset: -2px;
+						top: 0;
+						right: 0;
+						bottom: 0;
+						left: 0;
 						border: 2px solid transparent;
 						border-radius: 2px;
 						pointer-events: none;
 						transition: border-color 0.15s ease;
+						box-sizing: border-box;
 					}
 					.${className}:hover::before {
 						border-color: rgba(147, 51, 234, 0.5);
@@ -169,36 +175,54 @@ export function MDXContentEditor({
 				onToggle={() => setIsEditMode(!isEditMode)}
 			/>
 
-			<div className="relative">
-				<div ref={contentRef} className="relative">
+			<div className="relative overflow-x-hidden">
+				<div
+					ref={contentRef}
+					className="relative [&>*]:relative [&>*]:box-border [&>*]:p-0.5"
+				>
 					{children}
 				</div>
 
-				{/* Floating save button */}
-				{isEditMode && hasChanges && (
-					<div className="fixed bottom-4 right-4 z-50 flex items-center gap-2">
+				{/* Floating save button - now independent of edit mode */}
+				{hasChanges && (
+					<div className="fixed bottom-4 right-4 z-[100] flex items-center gap-2">
 						<Button
 							onClick={handleSave}
 							disabled={isSaving}
 							className={cn(
-								"shadow-lg transition-all duration-200",
-								saveSuccess && "bg-green-500 hover:bg-green-600",
+								"shadow-lg transition-all duration-300",
+								saveSuccess
+									? "bg-green-500 text-white hover:bg-green-600"
+									: "bg-primary hover:bg-primary/90",
 							)}
+							size="lg"
 						>
 							{isSaving ? (
 								<>
-									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+									<Loader2 className="mr-2 h-5 w-5 animate-spin" />
 									Saving...
 								</>
 							) : saveSuccess ? (
 								<>
-									<Check className="mr-2 h-4 w-4" />
+									<Check className="mr-2 h-5 w-5" />
 									Saved!
 								</>
 							) : (
 								"Save Changes"
 							)}
 						</Button>
+					</div>
+				)}
+
+				{/* Show success state independently */}
+				{saveSuccess && !hasChanges && (
+					<div className="fixed bottom-4 right-4 z-[100] flex items-center gap-2">
+						<div className="rounded-md bg-green-500 px-4 py-2 text-white shadow-lg transition-all duration-300">
+							<div className="flex items-center">
+								<Check className="mr-2 h-5 w-5" />
+								Saved Successfully!
+							</div>
+						</div>
 					</div>
 				)}
 
