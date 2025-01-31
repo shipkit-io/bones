@@ -2,84 +2,84 @@
   "filePath": "/Users/lmorrow/repo/sk-bones/src/app/(app)/(legal)/privacy-policy/page.mdx",
   "sections": [
     {
-      "id": "77132f2e837f4112947f3b3dac6b102e",
-      "originalContent": "# Privacy Policyasfasd\n\nLast updated: January 27, 2024\n\n",
-      "currentContent": "# Privacy Policyasfasd\n\nLast updated: January 27, 2024\n\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "id": "820948434a6044c3129531b439dbe139",
+      "originalContent": "# Privacy Policyasfasdasdfasf\n\nLast updated: January 27, 2024\n\n",
+      "currentContent": "# Privacy Policyasfasdasdfasf\n\nLast updated: January 27, 2024\n\n",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd"
+        "Privacy Policyasfasdasdfasf"
       ]
     },
     {
-      "id": "27e5204293c283c4783991392acdf06a",
+      "id": "ba330f5ca09f4482e0a748130e419803",
       "originalContent": "## Introduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\n",
       "currentContent": "## Introduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd",
+        "Privacy Policyasfasdasdfasf",
         "Introduction"
       ]
     },
     {
-      "id": "1ac20eaa3ad48107ab0a96e798ea07fd",
+      "id": "1afd7290157588224442e2b100c016c9",
       "originalContent": "## Information We Collect\n\nWe collect the following types of information:\n\n- **Personal Information**\n- : Name, email address, and contact details\n- **Usage Data**\n- : How you interact with our services\n- **Technical Data**\n- : IP address, browser type, and device information\n\n",
       "currentContent": "## Information We Collect\n\nWe collect the following types of information:\n\n- **Personal Information**\n- : Name, email address, and contact details\n- **Usage Data**\n- : How you interact with our services\n- **Technical Data**\n- : IP address, browser type, and device information\n\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd",
+        "Privacy Policyasfasdasdfasf",
         "Information We Collect"
       ]
     },
     {
-      "id": "63bd60236a1fbb24096aa941b5214a58",
+      "id": "5655fae8d880aa21a10ae972c712da55",
       "originalContent": "## How We Use Your Information\n\nWe use your information to:\n\n1. Provide and improve our services\n2. Communicate with you\n3. Analyze usage patterns\n4. Ensure security and prevent fraud\n\n",
       "currentContent": "## How We Use Your Information\n\nWe use your information to:\n\n1. Provide and improve our services\n2. Communicate with you\n3. Analyze usage patterns\n4. Ensure security and prevent fraud\n\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd",
+        "Privacy Policyasfasdasdfasf",
         "How We Use Your Information"
       ]
     },
     {
-      "id": "c4cedcf6674129d431e2605b1666e1dd",
+      "id": "7277b4558eeff657d68911575ed1f6d7",
       "originalContent": "## Data Protection\n\nWe implement various security measures to protect your data, including:\n\n- Encryption of sensitive data\n- Regular security audits\n- Access controls and authentication\n- Secure data storage practices\n\n",
       "currentContent": "## Data Protection\n\nWe implement various security measures to protect your data, including:\n\n- Encryption of sensitive data\n- Regular security audits\n- Access controls and authentication\n- Secure data storage practices\n\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd",
+        "Privacy Policyasfasdasdfasf",
         "Data Protection"
       ]
     },
     {
-      "id": "0227dcaf989435014524a8954f18076d",
+      "id": "96313a11824ac184660888302f912dc2",
       "originalContent": "## Your Rightscv\n\nYou have the right to:\n\n- Access your personal data\n- Request corrections\n- Delete your data\n- Opt-out of marketing communications\n\n",
       "currentContent": "## Your Rightscv\n\nYou have the right to:\n\n- Access your personal data\n- Request corrections\n- Delete your data\n- Opt-out of marketing communications\n\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd",
+        "Privacy Policyasfasdasdfasf",
         "Your Rightscv"
       ]
     },
     {
-      "id": "937c203d0519170c4a97be31e3914d92",
+      "id": "10dbb3587baac25d9c964a22a73de36e",
       "originalContent": "## Contact Usasfdas\n\nIf you have any questions about this Privacy Policy, please contact us at:\n\nEmail:\n[privacy@example.com](mailto:privacy@example.com)\nAddress: 123 Privacy Street, Security City, 12345\n\n",
       "currentContent": "## Contact Usasfdas\n\nIf you have any questions about this Privacy Policy, please contact us at:\n\nEmail:\n[privacy@example.com](mailto:privacy@example.com)\nAddress: 123 Privacy Street, Security City, 12345\n\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd",
+        "Privacy Policyasfasdasdfasf",
         "Contact Usasfdas"
       ]
     },
     {
-      "id": "30f5671bfa17bf924ead0a35fef66f23",
+      "id": "50271584416f14eca6208057abdedea4",
       "originalContent": "## Important Disclaimers\n\n- This policy is intentionally written to be both compliant and noncommittal\n- We make no guarantees about data privacy beyond what's legally required\n- The internet is inherently public, and we suggest treating it as such\n- If you're looking for absolute privacy, we recommend writing your thoughts in a journal and burying it in your backyard\n\nBy using our Services, you acknowledge that privacy is more of a guideline than a guarantee in the digital age.\n",
       "currentContent": "## Important Disclaimers\n\n- This policy is intentionally written to be both compliant and noncommittal\n- We make no guarantees about data privacy beyond what's legally required\n- The internet is inherently public, and we suggest treating it as such\n- If you're looking for absolute privacy, we recommend writing your thoughts in a journal and burying it in your backyard\n\nBy using our Services, you acknowledge that privacy is more of a guideline than a guarantee in the digital age.\n",
-      "lastModified": "2025-01-31T08:46:06.323Z",
+      "lastModified": "2025-01-31T08:48:15.982Z",
       "path": [
-        "Privacy Policyasfasd",
+        "Privacy Policyasfasdasdfasf",
         "Important Disclaimers"
       ]
     }
   ],
-  "lastModified": "2025-01-31T08:46:06.323Z"
+  "lastModified": "2025-01-31T08:48:15.982Z"
 }

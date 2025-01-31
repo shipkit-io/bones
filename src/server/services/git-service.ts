@@ -14,8 +14,8 @@ interface CommitOptions {
  * Escape a string for shell command usage
  */
 function escapeShellArg(arg: string): string {
-	// Wrap the entire argument in single quotes and escape any existing single quotes
-	return `'${arg.replace(/'/g, "'\\''")}'`;
+	// For paths with special characters, just escape them with backslashes
+	return arg.replace(/([()[\]<> "'$&;])/g, "\\$1");
 }
 
 // Initialize Octokit with the GitHub token
