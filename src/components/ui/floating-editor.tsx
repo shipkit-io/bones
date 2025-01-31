@@ -312,7 +312,6 @@ export function FloatingEditor({
 						<button
 							type="button"
 							className={cn(
-								"prose w-full max-w-none rounded-md text-left transition-all duration-200",
 								isEditModeEnabled && "cursor-pointer p-2",
 								!isEditModeEnabled && "pointer-events-none",
 								contentClassName,

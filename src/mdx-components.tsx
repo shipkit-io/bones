@@ -70,7 +70,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			}
 
 			return (
-				<MDXContentWrapper raw={raw} filePath={filePath}>
+				<MDXContentWrapper
+					raw={raw}
+					filePath={filePath}
+					className="bg-gray-900"
+				>
 					{children}
 				</MDXContentWrapper>
 			);

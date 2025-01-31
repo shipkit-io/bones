@@ -2,84 +2,12 @@
   "filePath": "/Users/lmorrow/repo/sk-bones/src/app/(app)/(legal)/privacy-policy/page.mdx",
   "sections": [
     {
-      "id": "ba330f5ca09f4482e0a748130e419803",
-      "originalContent": "## Introduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\n",
-      "currentContent": "## Introduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\n",
-      "lastModified": "2025-01-31T08:48:15.982Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf",
-        "Introduction"
-      ]
-    },
-    {
-      "id": "1afd7290157588224442e2b100c016c9",
-      "originalContent": "## Information We Collect\n\nWe collect the following types of information:\n\n- **Personal Information**\n- : Name, email address, and contact details\n- **Usage Data**\n- : How you interact with our services\n- **Technical Data**\n- : IP address, browser type, and device information\n\n",
-      "currentContent": "## Information We Collect\n\nWe collect the following types of information:\n\n- **Personal Information**\n- : Name, email address, and contact details\n- **Usage Data**\n- : How you interact with our services\n- **Technical Data**\n- : IP address, browser type, and device information\n\n",
-      "lastModified": "2025-01-31T08:48:15.982Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf",
-        "Information We Collect"
-      ]
-    },
-    {
-      "id": "5655fae8d880aa21a10ae972c712da55",
-      "originalContent": "## How We Use Your Information\n\nWe use your information to:\n\n1. Provide and improve our services\n2. Communicate with you\n3. Analyze usage patterns\n4. Ensure security and prevent fraud\n\n",
-      "currentContent": "## How We Use Your Information\n\nWe use your information to:\n\n1. Provide and improve our services\n2. Communicate with you\n3. Analyze usage patterns\n4. Ensure security and prevent fraud\n\n",
-      "lastModified": "2025-01-31T08:48:15.982Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf",
-        "How We Use Your Information"
-      ]
-    },
-    {
-      "id": "7277b4558eeff657d68911575ed1f6d7",
-      "originalContent": "## Data Protection\n\nWe implement various security measures to protect your data, including:\n\n- Encryption of sensitive data\n- Regular security audits\n- Access controls and authentication\n- Secure data storage practices\n\n",
-      "currentContent": "## Data Protection\n\nWe implement various security measures to protect your data, including:\n\n- Encryption of sensitive data\n- Regular security audits\n- Access controls and authentication\n- Secure data storage practices\n\n",
-      "lastModified": "2025-01-31T08:48:15.982Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf",
-        "Data Protection"
-      ]
-    },
-    {
-      "id": "96313a11824ac184660888302f912dc2",
-      "originalContent": "## Your Rightscv\n\nYou have the right to:\n\n- Access your personal data\n- Request corrections\n- Delete your data\n- Opt-out of marketing communications\n\n",
-      "currentContent": "## Your Rightscv\n\nYou have the right to:\n\n- Access your personal data\n- Request corrections\n- Delete your data\n- Opt-out of marketing communications\n\n",
-      "lastModified": "2025-01-31T08:48:15.982Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf",
-        "Your Rightscv"
-      ]
-    },
-    {
-      "id": "10dbb3587baac25d9c964a22a73de36e",
-      "originalContent": "## Contact Usasfdas\n\nIf you have any questions about this Privacy Policy, please contact us at:\n\nEmail:\n[privacy@example.com](mailto:privacy@example.com)\nAddress: 123 Privacy Street, Security City, 12345\n\n",
-      "currentContent": "## Contact Usasfdas\n\nIf you have any questions about this Privacy Policy, please contact us at:\n\nEmail:\n[privacy@example.com](mailto:privacy@example.com)\nAddress: 123 Privacy Street, Security City, 12345\n\n",
-      "lastModified": "2025-01-31T08:48:15.982Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf",
-        "Contact Usasfdas"
-      ]
-    },
-    {
-      "id": "9e6a144bd07067380b14e0164a9a0543",
-      "originalContent": "## Important Disclaimersasfd\n\n- This policy is intentionally written to be both compliant and noncommittal\n- We make no guarantees about data privacy beyond what's legally required\n- The internet is inherently public, and we suggest treating it as such\n- If you're looking for absolute privacy, we recommend writing your thoughts in a journal and burying it in your backyard\n\nBy using our Services, you acknowledge that privacy is more of a guideline than a guarantee in the digital age.\n",
-      "currentContent": "## Important Disclaimersasfd\n\n- This policy is intentionally written to be both compliant and noncommittal\n- We make no guarantees about data privacy beyond what's legally required\n- The internet is inherently public, and we suggest treating it as such\n- If you're looking for absolute privacy, we recommend writing your thoughts in a journal and burying it in your backyard\n\nBy using our Services, you acknowledge that privacy is more of a guideline than a guarantee in the digital age.\n",
-      "lastModified": "2025-01-31T08:49:28.740Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf",
-        "Important Disclaimersasfd"
-      ]
-    },
-    {
-      "id": "d8b2897ce1afea41dc2d7839cde91958",
-      "originalContent": "# Privacy Policyasfasdasdfasf\nasfd\nLast updated: January 27, 2024\n\n",
-      "currentContent": "# Privacy Policyasfasdasdfasf\nasfd\nLast updated: January 27, 2024\n\n",
-      "lastModified": "2025-01-31T08:55:32.160Z",
-      "path": [
-        "Privacy Policyasfasdasdfasf"
-      ]
+      "id": "130fc83d1c172c6f4bc388d56deb32d9",
+      "originalContent": "Privacy Policyasfasdasdfasf\n\nasfd\nLast updated: Januarasfy 27, 2024\n\nIntroduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\nInformation We Collect\n\nWe collect the following types of information:\n\nPersonal Information\n: Name, emasdail address, and contact details\nUsage Data\n: How asfyou intafaeract with our services\nTechnical Data\n: IP address, browser type, and device information\n\nHow We Use Your Information\n\nWe use your information to:\n\nProvide and improve our services\nCommunicate with you\nAnalyze usage patterns\nEnsure security and prevent fraud\n\nData Protection\n\nWe implement various security measures to protect your data, including:\n\nEncryption of sensitive data\nRegular security audits\nAccess controls and authentication\nSecure data storage practices\n\nYour Rightscv\n\nYou have the right to:\n\nAccess your personal data\nRequest corrections\nDelete your data\nOpt-out of marketing communications\n\nContact Usasfdas\n\nIf you have any questions about this Privacy Policy, please contact us at:\n\nEmail:\nprivacy@example.com\nAddress: 123 Privacy Street, Security City, 12345\n\nImportant Disclaimersasfd\n\nThis policy is intentionally written to be both compliant and noncommittal\nWe make no guarantees about data privacy beyond what's legally required\nThe internet is inherently public, and we suggest treating it as such\nIf you're looking for absolute privacy, we recommend writing your thoughts in a journal and burying it in your backyard\n\nBy using our Services, you acknowledge that privacy is more of a guideline than a guarantee in the digital age.",
+      "currentContent": "Privacy Policyasfasdasdfasf\n\nasfd\nLast updated: Januarasfy 27, 2024\n\nIntroduction\n\nWelcome to our Privacy Policy. This document explains how we collect, use, and protect your personal information.\n\nInformation We Collect\n\nWe collect the following types of information:\n\nPersonal Information\n: Name, emasdail address, and contact details\nUsage Data\n: How asfyou intafaeract with our services\nTechnical Data\n: IP address, browser type, and device information\n\nHow We Use Your Information\n\nWe use your information to:\n\nProvide and improve our services\nCommunicate with you\nAnalyze usage patterns\nEnsure security and prevent fraud\n\nData Protection\n\nWe implement various security measures to protect your data, including:\n\nEncryption of sensitive data\nRegular security audits\nAccess controls and authentication\nSecure data storage practices\n\nYour Rightscv\n\nYou have the right to:\n\nAccess your personal data\nRequest corrections\nDelete your data\nOpt-out of marketing communications\n\nContact Usasfdas\n\nIf you have any questions about this Privacy Policy, please contact us at:\n\nEmail:\nprivacy@example.com\nAddress: 123 Privacy Street, Security City, 12345\n\nImportant Disclaimersasfd\n\nThis policy is intentionally written to be both compliant and noncommittal\nWe make no guarantees about data privacy beyond what's legally required\nThe internet is inherently public, and we suggest treating it as such\nIf you're looking for absolute privacy, we recommend writing your thoughts in a journal and burying it in your backyard\n\nBy using our Services, you acknowledge that privacy is more of a guideline than a guarantee in the digital age.",
+      "lastModified": "2025-01-31T10:11:12.545Z",
+      "path": []
     }
   ],
-  "lastModified": "2025-01-31T08:55:32.160Z"
+  "lastModified": "2025-01-31T10:11:12.546Z"
 }

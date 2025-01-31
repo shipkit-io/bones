@@ -9,9 +9,11 @@ interface MDXContentWrapperProps {
 	children: ReactNode;
 	raw: string;
 	filePath: string;
+	className?: string;
 }
 
 export function MDXContentWrapper({
+	className,
 	children,
 	raw,
 	filePath,
@@ -19,7 +21,7 @@ export function MDXContentWrapper({
 	return (
 		<MDXProviderClient>
 			{/* Editor with MDX content */}
-			<div className="relative">
+			<div className={className}>
 				<MDXContentEditor raw={raw} filePath={filePath}>
 					{children}
 				</MDXContentEditor>
