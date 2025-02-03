@@ -12,6 +12,7 @@ import type { NextConfig } from "next";
  * for Docker builds.
  */
 import { env } from "@/env";
+import dynamic from "next/dynamic";
 
 let nextConfig: NextConfig = {
 	/*
@@ -180,6 +181,7 @@ const withMDX = createMDX({
 			["remark-gfm", {}],
 			["remark-frontmatter", { type: "yaml", marker: "-" }],
 			["remark-mdx-frontmatter", {}],
+			[require.resolve("./src/components/mdx-editor/plugins/remark-file-path"), {}],
 		] as any[],
 		rehypePlugins: [
 			["rehype-prism-plus", {}],

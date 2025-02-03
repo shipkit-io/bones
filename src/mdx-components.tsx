@@ -1,10 +1,11 @@
 import { Card } from "@/components/mdx/card";
 import { CardGroup } from "@/components/mdx/card-group";
-import { MDXContentWrapper } from "@/components/mdx/mdx-content-wrapper";
+import { MDXEditor } from "@/components/mdx-editor";
 import { promises as fs } from "fs";
 import type { MDXComponents } from "mdx/types";
 import { headers } from "next/headers";
 import path from "path";
+import type { MDXFrontmatter } from "@/components/mdx-editor/types";
 
 // This file is a server component that only handles the initial wrapping
 // All client-side MDX components are defined in mdx-provider.tsx
@@ -47,20 +48,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			// Get the raw content by traversing the MDX tree
 			const raw = extractMDXContent(children);
 
-			// Extract file path from MDX component
-			const fn = children?.type;
-			let filePath = "";
-			let fileMatch: RegExpMatchArray | null = null;
-
-			// Try to get the file path from the component's source
-			if (typeof fn === "function") {
-				const fnString = fn.toString();
-				fileMatch = fnString.match(/fileName: "(?:\[project\]\/)?(.+?)"/);
-				if (fileMatch?.[1]) {
-					// Convert .mdx.tsx path to .mdx
-					filePath = fileMatch[1].replace(/\.mdx\.tsx$/, ".mdx");
-				}
-			}
+			// Get file path from frontmatter
+			const frontmatter = children?.type?._payload?._result
+				?.frontmatter as MDXFrontmatter;
+			let filePath = frontmatter?.filePath || "";
 
 			// Fallback to request path if no file path found
 			if (!filePath) {
@@ -70,13 +61,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			}
 
 			return (
-				<MDXContentWrapper
-					raw={raw}
-					filePath={filePath}
-					className="bg-gray-900"
-				>
+				<MDXEditor raw={raw} filePath={filePath}>
 					{children}
-				</MDXContentWrapper>
+				</MDXEditor>
 			);
 		},
 		// Merge custom components last to allow overrides
@@ -184,14 +171,4 @@ function extractMDXContent(node: any): string {
 	}
 
 	return "";
-}
-
-// Add test helper at the bottom of the file
-async function testPath(filePath: string) {
-	try {
-		await fs.access(path.join(process.cwd(), filePath));
-		return true;
-	} catch {
-		return false;
-	}
 }
