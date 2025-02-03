@@ -1,5 +1,0 @@
-{
-  "id": "wise-dolphin-893c",
-  "originalContent": "## Features\n\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes are automatically committed\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n{/* /section:features */}\n\n{/* section:tutorial */}",
-  "timestamp": "2025-01-29T17:43:18.579Z"
-}

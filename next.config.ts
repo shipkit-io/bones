@@ -12,7 +12,6 @@ import type { NextConfig } from "next";
  * for Docker builds.
  */
 import { env } from "@/env";
-import dynamic from "next/dynamic";
 
 let nextConfig: NextConfig = {
 	/*
@@ -125,22 +124,11 @@ let nextConfig: NextConfig = {
 			// Don't attempt to bundle native modules on client-side
 			config.resolve.fallback = {
 				...config.resolve.fallback,
-				fs: false,
-				tls: false,
-				net: false,
-				child_process: false,
 			};
+		} else {
+			// Externalize native modules on server-side
+			config.externals = [...(config.externals || []), "bcrypt"];
 		}
-
-		// if (!isServer) {
-		// 	// Don't attempt to bundle native modules on client-side
-		// 	config.resolve.fallback = {
-		// 		...config.resolve.fallback,
-		// 	};
-		// } else {
-		// 	// Externalize native modules on server-side
-		// 	config.externals = [...(config.externals || []), "bcrypt"];
-		// }
 
 		return config;
 	},
@@ -178,19 +166,18 @@ const withMDX = createMDX({
 	extension: /\.mdx?$/,
 	options: {
 		remarkPlugins: [
-			["remark-gfm", {}],
-			["remark-frontmatter", { type: "yaml", marker: "-" }],
+			[
+				// @ts-expect-error
+				"remark-frontmatter",
+				{
+					type: "yaml",
+					marker: "-",
+				},
+			],
+			// @ts-expect-error
 			["remark-mdx-frontmatter", {}],
-			[require.resolve("./src/components/mdx-editor/plugins/remark-file-path"), {}],
-		] as any[],
-		rehypePlugins: [
-			["rehype-prism-plus", {}],
-		] as any[],
-		// Use our local MDX components
-		providerImportSource: "@/mdx-components",
-		format: "mdx",
-		jsx: true,
-		jsxRuntime: "automatic",
+		],
+		rehypePlugins: [],
 	},
 });
 nextConfig = withMDX(nextConfig);

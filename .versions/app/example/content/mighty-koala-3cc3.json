@@ -1,5 +1,0 @@
-{
-  "id": "mighty-koala-3cc3",
-  "originalContent": "# Example Contentasd\n{/* section:intro */}\nWelcome to the floating editor example! This content is editable when edit mode is enabled.\n{/* /section:intro */}\n{/* section:features */}\n## Features\n- **Markdown Support**: Write content using markdown syntax\n- **Git Integration**: Changes are automatically committed\n- **Pull Request Creation**: Significant changes create PRs\n- **Edit Mode Toggle**: Enable/disable editing with a click\n{/* /section:features */}\n{/* section:tutorial */}\n## Try it out!\n1. Enable edit mode using the toggle button\n2. Click anywhere in this content to start editing\n3. Make some changes and click save\n4. Check your Git history to see the commit\n{/* /section:tutorial */}",
-  "timestamp": "2025-01-29T17:18:34.909Z"
-}
