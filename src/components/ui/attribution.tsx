@@ -1,51 +1,51 @@
-'use client'
-import { LinkOrButton } from '@/components/primitives/link-or-button'
-import { Link } from '@/components/primitives/link-with-transition'
-import { Button, buttonVariants } from '@/components/ui/button'
+"use client";
+import { LinkOrButton } from "@/components/primitives/link-or-button";
+import { Link } from "@/components/primitives/link-with-transition";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
-	CardHeader
-} from '@/components/ui/card'
-import { LOCAL_STORAGE_KEYS } from '@/config/local-storage-keys'
-import { cn } from '@/lib/utils'
-import { type VariantProps, cva } from 'class-variance-authority'
-import { X } from 'lucide-react'
-import type React from 'react'
-import { useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
+	CardHeader,
+} from "@/components/ui/card";
+import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
+import { cn } from "@/lib/utils";
+import { type VariantProps, cva } from "class-variance-authority";
+import { X } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 const builtByVariants = cva(
-	'fixed z-50 flex items-center justify-between text-sm animate-in fade-in-0 transition-opacity duration-500 delay-1000',
+	"fixed z-50 flex items-center justify-between text-sm animate-in fade-in-0 transition-opacity duration-500 delay-1000",
 	{
 		variants: {
 			variant: {
-				banner: 'inset-x-0 bottom-0 p-4 bg-primary text-primary-foreground',
-				popover: 'bottom-md right-md max-w-sm rounded-lg shadow-lg',
+				banner: "inset-x-0 bottom-0 p-4 bg-primary text-primary-foreground",
+				popover: "bottom-md right-md max-w-sm rounded-lg shadow-lg pt-2",
 			},
 		},
 		defaultVariants: {
-			variant: 'banner',
+			variant: "banner",
 		},
-	}
-)
+	},
+);
 
 export interface AttributionProps
 	extends React.HTMLAttributes<HTMLDivElement>,
-	VariantProps<typeof builtByVariants> {
-	title?: string
-	description?: string
-	onClose?: () => void
-	onClick?: () => void
-	open?: boolean
-	href?: string
+		VariantProps<typeof builtByVariants> {
+	title?: string;
+	description?: string;
+	onClose?: () => void;
+	onClick?: () => void;
+	open?: boolean;
+	href?: string;
 }
 
 export function Attribution({
 	children,
 	className,
-	variant = 'banner',
+	variant = "banner",
 	title,
 	description,
 	open = true,
@@ -54,21 +54,38 @@ export function Attribution({
 	onClose,
 	...props
 }: AttributionProps) {
-	const [wasClosed, setWasClosed] = useLocalStorage(LOCAL_STORAGE_KEYS.attributionClosed, false)
-	const [isOpen, setIsOpen] = useState(wasClosed ? false : open)
+	const [wasClosed, setWasClosed] = useLocalStorage(
+		LOCAL_STORAGE_KEYS.attributionClosed,
+		false,
+	);
+	const [isOpen, setIsOpen] = useState(wasClosed ? false : open);
 
 	const handleClose = () => {
-		setIsOpen(false)
-		setWasClosed(true)
-		onClose?.()
-	}
+		setIsOpen(false);
+		setWasClosed(true);
+		onClose?.();
+	};
 
 	const Content = () => (
 		<>
 			{(title || description) && (
 				<div>
-					{title && (href ? <Link href={href}><h3 className="font-semibold">{title}</h3></Link> : <h3 className="font-semibold">{title}</h3>)}
-					{description && (href ? <Link href={href}><p className="text-xs">{description}</p></Link> : <p className="text-xs">{description}</p>)}
+					{title &&
+						(href ? (
+							<Link href={href}>
+								<h3 className="font-semibold">{title}</h3>
+							</Link>
+						) : (
+							<h3 className="font-semibold">{title}</h3>
+						))}
+					{description &&
+						(href ? (
+							<Link href={href}>
+								<p className="text-xs">{description}</p>
+							</Link>
+						) : (
+							<p className="text-xs">{description}</p>
+						))}
 				</div>
 			)}
 			{onClose && (
@@ -81,49 +98,65 @@ export function Attribution({
 					<X className="h-4 w-4" />
 					<span className="sr-only">Close</span>
 				</Button>
-
 			)}
 		</>
-	)
+	);
 
-	if (variant === 'banner' && isOpen) {
+	if (variant === "banner" && isOpen) {
 		return (
 			<div className={cn(builtByVariants({ variant }), className)} {...props}>
 				<div className="container flex items-center justify-between">
 					<Content />
 					{children}
-					<button onClick={handleClose} type="button" className="absolute top-2 right-2"><X className="h-4 w-4" /></button>
+					<button
+						onClick={handleClose}
+						type="button"
+						className="absolute right-1.5 top-1.5"
+					>
+						<X className="h-4 w-4" />
+					</button>
 				</div>
 			</div>
-		)
+		);
 	}
 
-	if (variant === 'popover' && isOpen) {
+	if (variant === "popover" && isOpen) {
 		return (
 			<Card className={cn(builtByVariants({ variant }), className)} {...props}>
-				<button onClick={handleClose} type="button" className="absolute top-2 right-2"><X className="h-4 w-4" /></button>
-
-				<CardHeader>
+				<CardHeader className="p-3">
 					<Content />
 				</CardHeader>
-				<CardContent className="flex gap-2 justify-end mt-auto">
-					{children}
-				</CardContent>
-				<CardFooter className="mt-auto">
-					{href && <LinkOrButton
-						href={href}
-						className={cn(buttonVariants({ variant: 'outline' }), 'w-full')}
-						variant="outline"
-						onClick={() => onClick?.()}
-					>
-						More...
-					</LinkOrButton>
-					}
-				</CardFooter>
+				{children && (
+					<CardContent className="mt-auto flex justify-end gap-2 p-3">
+						{children}
+					</CardContent>
+				)}
+				{href && (
+					<CardFooter className="mt-auto p-3">
+						<LinkOrButton
+							href={href}
+							className={cn(
+								buttonVariants({ variant: "outline", size: "sm" }),
+								"w-full",
+							)}
+							variant="outline"
+							onClick={() => onClick?.()}
+						>
+							Learn more...
+						</LinkOrButton>
+					</CardFooter>
+				)}
+
+				<button
+					onClick={handleClose}
+					type="button"
+					className="absolute right-1.5 top-1.5"
+				>
+					<X className="h-4 w-4" />
+				</button>
 			</Card>
-		)
+		);
 	}
 
-	return null
+	return null;
 }
-

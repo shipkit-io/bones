@@ -16,8 +16,8 @@ export default function Home() {
 							Run this command in your Next.js project after setting up{" "}
 							<Link href={"https://ui.shadcn.com/docs/"}>ShadCN UI</Link>.
 							<br />
-							Want a Next.js starter with good bones? Get{" "}
-							<Link href={routes.external.bones}>Bones Starter</Link>.
+							The Next.js starter for Shadcn/UI is{" "}
+							<Link href={routes.external.bones}>Shipkit Bones</Link>.
 						</p>
 						<Link
 							href={routes.external.shipkit}

@@ -53,7 +53,7 @@ export default function Page() {
 						href={"https://github.com/shipkit-io/bones"}
 						className={buttonVariants({ variant: "outline", size: "lg" })}
 					>
-						<IconBrandGithub className="mr-2 h-4 w-4" /> View on GitHub
+						<IconBrandGithub className="mr-2 h-5 w-5" /> View on GitHub
 					</Link>
 					<DeployToVercelButton href={routes.external.vercelDeployBones} />
 				</div>
@@ -67,7 +67,12 @@ export default function Page() {
 					</Link>
 				</div>
 			</div>
-			<Attribution variant="popover" />
+			<Attribution
+				variant="popover"
+				title="Built with Shipkit"
+				description="The best way to build with Shadcn/UI."
+				href="https://shipkit.io"
+			/>
 		</>
 	);
 }

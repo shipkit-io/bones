@@ -91,9 +91,9 @@ let nextConfig: NextConfig = {
 	/*
 	 * Miscellaneous configuration
 	 */
-	devIndicators: {
-		// buildActivityPosition: "bottom-right" as const,
-	},
+	// devIndicators: {
+	// buildActivityPosition: "bottom-right" as const,
+	// },
 
 	/*
 	 * Logging configuration
@@ -106,32 +106,32 @@ let nextConfig: NextConfig = {
 		},
 	},
 
-	compiler: {
-		// Remove all console logs
-		// removeConsole: true
-		// Remove console logs only in production, excluding error logs
-		// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
-	},
+	// compiler: {
+	// Remove all console logs
+	// removeConsole: true
+	// Remove console logs only in production, excluding error logs
+	// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
+	// },
 
-	webpack: (config, { isServer }) => {
-		// Add custom webpack configuration for handling binary files
-		config.module.rules.push({
-			test: /\.(node|bin|html)$/,
-			use: "raw-loader",
-		});
+	// 	webpack: (config, { isServer }) => {
+	// 		// Add custom webpack configuration for handling binary files
+	// 		config.module.rules.push({
+	// 			test: /\.(node|bin|html)$/,
+	// 			use: "raw-loader",
+	// 		});
 
-		if (!isServer) {
-			// Don't attempt to bundle native modules on client-side
-			config.resolve.fallback = {
-				...config.resolve.fallback,
-			};
-		} else {
-			// Externalize native modules on server-side
-			config.externals = [...(config.externals || []), "bcrypt"];
-		}
+	// 		if (!isServer) {
+	// 			// Don't attempt to bundle native modules on client-side
+	// 			config.resolve.fallback = {
+	// 				...config.resolve.fallback,
+	// 			};
+	// 		} else {
+	// 			// Externalize native modules on server-side
+	// 			config.externals = [...(config.externals || []), "bcrypt"];
+	// 		}
 
-		return config;
-	},
+	// 		return config;
+	// 	},
 };
 
 /*
