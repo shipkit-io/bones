@@ -106,7 +106,37 @@ export function Attribution({
 		return (
 			<div className={cn(builtByVariants({ variant }), className)} {...props}>
 				<div className="container flex items-center justify-between">
-					<Content />
+					{(title || description) && (
+						<div>
+							{title &&
+								(href ? (
+									<Link href={href}>
+										<h3 className="font-semibold">{title}</h3>
+									</Link>
+								) : (
+									<h3 className="font-semibold">{title}</h3>
+								))}
+							{description &&
+								(href ? (
+									<Link href={href}>
+										<p className="text-xs">{description}</p>
+									</Link>
+								) : (
+									<p className="text-xs">{description}</p>
+								))}
+						</div>
+					)}
+					{onClose && (
+						<Button
+							variant="ghost"
+							size="icon"
+							className="shrink-0"
+							onClick={handleClose}
+						>
+							<X className="h-4 w-4" />
+							<span className="sr-only">Close</span>
+						</Button>
+					)}
 					{children}
 					<button
 						onClick={handleClose}
@@ -124,7 +154,23 @@ export function Attribution({
 		return (
 			<Card className={cn(builtByVariants({ variant }), className)} {...props}>
 				<CardHeader className="p-3">
-					<Content />
+					{(title || description) && (
+						<div>
+							{title && <h3 className="font-semibold">{title}</h3>}
+							{description && <p className="text-xs">{description}</p>}
+						</div>
+					)}
+					{onClose && (
+						<Button
+							variant="ghost"
+							size="icon"
+							className="shrink-0"
+							onClick={handleClose}
+						>
+							<X className="h-4 w-4" />
+							<span className="sr-only">Close</span>
+						</Button>
+					)}
 				</CardHeader>
 				{children && (
 					<CardContent className="mt-auto flex justify-end gap-2 p-3">
