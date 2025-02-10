@@ -13,7 +13,7 @@
 		"db:migrate": "drizzle-kit migrate",
 		"db:push": "drizzle-kit push",
 		"db:studio": "drizzle-kit studio",
-		"db:drop": "dotenv -e .env -- tsx scripts/drop-db.ts",
+		"db:drop": "dotenv -e .env -- tsx scripts/db-drop.ts",
 		"db:reset": "npm run db:drop && npm run db:generate && npm run db:migrate && npm run db:push",
 		"db:sync": "dotenv -e .env -- tsx scripts/sync-db.ts",
 		"db:seed": "dotenv -e .env -- tsx scripts/seed.ts",

@@ -63,7 +63,7 @@ export const posts = createTable(
 	{
 		id: serial("id").primaryKey(),
 		name: varchar("name", { length: 256 }),
-		createdById: varchar("created_by", { length: 255 })
+		createdById: varchar("createdById", { length: 255 })
 			.notNull()
 			.references(() => users.id),
 		createdAt: timestamp("created_at", { withTimezone: true })
@@ -74,10 +74,13 @@ export const posts = createTable(
 		),
 	},
 	(example) => ({
-		createdByIdIdx: index("created_by_idx").on(example.createdById),
+		createdByIdIdx: index("createdById_idx").on(example.createdById),
 		nameIndex: index("name_idx").on(example.name),
 	}),
 );
+
+export type NewPost = typeof posts.$inferInsert;
+export type Post = typeof posts.$inferSelect;
 
 export const users = createTable("user", {
 	id: varchar("id", { length: 255 })
