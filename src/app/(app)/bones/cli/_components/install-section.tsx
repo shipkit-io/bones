@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { routes } from "@/config/routes";

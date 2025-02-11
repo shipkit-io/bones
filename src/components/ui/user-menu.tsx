@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {

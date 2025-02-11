@@ -1,5 +1,5 @@
 import { Logo } from "@/components/images/logo";
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { AuthForm } from "../_components/login-form";

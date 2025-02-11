@@ -1,6 +1,6 @@
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
 import { SignUpForm } from "@/app/(app)/(authentication)/sign-up/_components/sign-up-form";
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import {
 	CardContent,
 	CardDescription,

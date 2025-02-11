@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import { routes } from "@/config/routes";
 import { signInSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";

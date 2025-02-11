@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { cn } from "@/lib/utils";

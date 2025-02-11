@@ -1,5 +1,5 @@
 import { DeployToVercelButton } from "@/components/buttons/vercel-deploy-button-2";
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import {
 	PageHeader,
 	PageHeaderDescription,

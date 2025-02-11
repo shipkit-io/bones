@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import {
 	Card,
 	CardContent,

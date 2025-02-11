@@ -1,6 +1,6 @@
 "use client";
 import { LinkOrButton } from "@/components/primitives/link-or-button";
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Card,
