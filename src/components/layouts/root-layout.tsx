@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import Head from "next/head";
 
 import { Space_Grotesk as FontSans, Noto_Serif as FontSerif } from "next/font/google";
 
@@ -31,14 +32,11 @@ const fontSans = FontSans({
 export function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<ViewTransitions>
+			<Head>
+				{/* React Scan */}
+				<script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
+			</Head>
 			<html lang="en" suppressHydrationWarning>
-				{process.env.NODE_ENV === "development" && (
-					<head>
-						{/* React Scan */}
-						<script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
-					</head>
-				)}
-
 				<body
 					className={cn(
 						"min-h-screen antialiased",

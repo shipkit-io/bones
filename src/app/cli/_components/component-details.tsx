@@ -18,7 +18,6 @@ import { BookOpen, Copy, FileJson, X } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { useState } from "react";
 import { getDocumentationUrl, getInstallCommand } from "../_lib/registry-service";
-import type { RegistryItem } from "../_lib/types";
 import { getColor } from "./colors";
 import { ComponentStats } from "./component-stats";
 import { FileTree } from "./file-tree";

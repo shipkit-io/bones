@@ -3,7 +3,7 @@
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 interface ProfileData {

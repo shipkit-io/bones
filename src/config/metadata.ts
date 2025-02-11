@@ -138,14 +138,14 @@ export const constructMetadata = ({
 	...metadata,
 	openGraph: {
 		...defaultOpenGraph,
-		title: metadata.title ? metadata.title : defaultOpenGraph.title,
-		description: metadata.description ? metadata.description : defaultOpenGraph.description,
+		title: metadata.title ?? defaultOpenGraph.title,
+		description: metadata.description ?? defaultOpenGraph.description,
 		images: images.length > 0 ? images : defaultOpenGraph.images,
 	},
 	twitter: {
 		...defaultTwitter,
-		title: metadata.title ? metadata.title : defaultTwitter.title,
-		description: metadata.description ? metadata.description : defaultTwitter.description,
+		title: metadata.title ?? defaultTwitter.title,
+		description: metadata.description ?? defaultTwitter.description,
 		images: images.length > 0 ? images : defaultTwitter.images,
 	},
 	robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,

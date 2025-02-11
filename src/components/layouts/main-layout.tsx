@@ -17,9 +17,9 @@ export default function MainLayout({
 	return (
 		<>
 			<div className={cn("", className)}>
-				{header || <Header />}
+				{header ?? <Header />}
 				{children}
-				{footer || <Footer />}
+				{footer ?? <Footer />}
 			</div>
 		</>
 	);
