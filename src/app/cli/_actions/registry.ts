@@ -51,7 +51,7 @@ export async function getDependencies(): Promise<{
 			dependencies: packageJson.dependencies || {},
 			devDependencies: packageJson.devDependencies || {},
 		};
-	} catch (_error) {
+	} catch {
 		throw new Error("Failed to read package.json");
 	}
 }

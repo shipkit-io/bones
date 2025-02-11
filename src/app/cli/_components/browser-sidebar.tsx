@@ -13,31 +13,44 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
-import type { RegistryFilters, RegistryItem } from "../_lib/types";
+import { forwardRef, useState } from "react";
+import type { Registry, RegistryFilters, RegistryItem } from "../_lib/types";
 import { getColor } from "./colors";
 import type { StyleMode } from "./types";
 
 export interface BrowserSidebarProps {
 	currentStyle: StyleMode;
-	searchTerm: string;
-	setSearchTerm: (term: string) => void;
-	filters: RegistryFilters;
-	setFilters: (filters: RegistryFilters) => void;
+	currentRegistry?: Registry;
+	selectedComponent: RegistryItem | null;
+	onClose: () => void;
+	onInstall: (component: RegistryItem) => void;
+	isInstalled: boolean;
+	onOverwriteChange: (value: boolean) => void;
+	overwrite: boolean;
 	categories: string[];
 	types: string[];
 	filteredItems: RegistryItem[];
 }
 
-export function BrowserSidebar({
+export const BrowserSidebar = forwardRef<HTMLDivElement, BrowserSidebarProps>(({
 	currentStyle,
-	searchTerm,
-	setSearchTerm,
-	filters,
-	setFilters,
+	currentRegistry: _currentRegistry,
+	selectedComponent: _selectedComponent,
+	onClose: _onClose,
+	onInstall: _onInstall,
+	isInstalled: _isInstalled,
+	onOverwriteChange: _onOverwriteChange,
+	overwrite: _overwrite,
 	categories,
-	types,
+	types: _types,
 	filteredItems,
-}: BrowserSidebarProps) {
+}, ref) => {
+	const [searchTerm, setSearchTerm] = useState("");
+	const [filters, setFilters] = useState<RegistryFilters>({
+		type: "all",
+		category: "all",
+	});
+
 	// Count components by type
 	const componentCount = filteredItems.filter((item) => item.type === "registry:ui").length;
 	const blockCount = filteredItems.filter((item) => item.type === "registry:block").length;
@@ -53,157 +66,107 @@ export function BrowserSidebar({
 
 	return (
 		<div
+			ref={ref}
 			className={cn(
-				"w-full md:w-72 border-r border-border p-4 flex flex-col",
-				currentStyle === "brutalist" && "border-r-2 border-primary"
+				"w-full border-b bg-card p-4 md:w-80 md:border-b-0 md:border-r",
+				currentStyle === "brutalist" ? "border-2 border-primary" : "border border-border"
 			)}
 		>
-			<div className="space-y-6">
-				<div>
-					<div className="flex items-center justify-between mb-2">
-						<Label htmlFor="search" className="text-sm font-medium">
-							Search
-						</Label>
-						<Badge variant="secondary" className="font-mono">
-							{filteredItems.length} results
-						</Badge>
-					</div>
-					<div className="relative">
-						<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							id="search"
-							placeholder="Search components..."
-							className={cn(
-								"pl-8",
-								currentStyle === "brutalist"
-									? "border-2 border-primary rounded-none"
-									: "border rounded-md"
-							)}
-							value={searchTerm}
-							onChange={(e) => {
-								setSearchTerm(e.target.value);
-								// Reset filters when searching to show all results
-								setFilters({
-									...filters,
-									type: "all",
-									category: "all",
-								});
-							}}
-						/>
-					</div>
+			<div className="space-y-4">
+				<div className="relative">
+					<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+					<Input
+						placeholder="Search components..."
+						className="pl-8"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
 				</div>
 
-				<div>
-					<Label htmlFor="type" className="text-sm font-medium mb-2 block">
-						Type
-					</Label>
-					<Select
-						value={filters.type}
-						onValueChange={(value) =>
-							setFilters({ ...filters, type: value as RegistryFilters["type"] })
-						}
-					>
-						<SelectTrigger
-							id="type"
-							className={cn(
-								currentStyle === "brutalist"
-									? "border-2 border-primary rounded-none"
-									: "border rounded-md"
-							)}
+				<div className="space-y-4">
+					<div className="space-y-2">
+						<Label>Type</Label>
+						<Select
+							value={filters.type}
+							onValueChange={(value: "all" | "components" | "blocks") => setFilters({ ...filters, type: value })}
 						>
-							<SelectValue placeholder="Select type" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All Types</SelectItem>
-							<SelectItem value="components" className="flex items-center justify-between">
-								<span>Components</span>
-								<Badge variant="secondary" className="ml-2 font-mono">
-									{componentCount}
-								</Badge>
-							</SelectItem>
-							<SelectItem value="blocks" className="flex items-center justify-between">
-								<span>Blocks</span>
-								<Badge variant="secondary" className="ml-2 font-mono">
-									{blockCount}
-								</Badge>
-							</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
-
-				<div>
-					<Label htmlFor="category" className="text-sm font-medium mb-2 block">
-						Category
-					</Label>
-					<Select
-						value={filters.category}
-						onValueChange={(value) => setFilters({ ...filters, category: value })}
-					>
-						<SelectTrigger
-							id="category"
-							className={cn(
-								currentStyle === "brutalist"
-									? "border-2 border-primary rounded-none"
-									: "border rounded-md"
-							)}
-						>
-							<div className="flex items-center gap-2">
-								{filters.category && filters.category !== "all" && (
-									<div
-										className="w-2 h-2 rounded-full"
-										style={{ backgroundColor: getColor(filters.category) }}
-									/>
-								)}
-								<SelectValue placeholder="Select category" />
-							</div>
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All Categories</SelectItem>
-							{categories.map((category) => (
-								<SelectItem
-									key={category}
-									value={category}
-									className="flex items-center justify-between"
-								>
-									<div className="flex items-center gap-2">
-										<div
-											className="w-2 h-2 rounded-full"
-											style={{ backgroundColor: getColor(category) }}
-										/>
-										{category}
-									</div>
-									<Badge variant="secondary" className="ml-2 font-mono">
-										{categoryCount[category]}
-									</Badge>
+							<SelectTrigger>
+								<SelectValue placeholder="Select type" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">All</SelectItem>
+								<SelectItem value="components">
+									Components ({componentCount})
 								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
+								<SelectItem value="blocks">Blocks ({blockCount})</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
+
+					<div className="space-y-2">
+						<Label>Category</Label>
+						<Select
+							value={filters.category}
+							onValueChange={(value) => setFilters({ ...filters, category: value })}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder="Select category" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">All</SelectItem>
+								{categories.map((category) => (
+									<SelectItem key={category} value={category}>
+										{category} ({categoryCount[category]})
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
 				</div>
 
-				<Separator className="my-4" />
+				<Separator />
 
-				<div className="text-sm text-muted-foreground space-y-2">
-					<div className="flex items-center justify-between">
-						<span>Total Components</span>
-						<Badge variant="secondary" className="font-mono">
-							{filteredItems.length}
-						</Badge>
-					</div>
-					<div className="flex items-center justify-between">
-						<span>Types</span>
-						<Badge variant="secondary" className="font-mono">
-							{types.length}
-						</Badge>
-					</div>
-					<div className="flex items-center justify-between">
-						<span>Categories</span>
-						<Badge variant="secondary" className="font-mono">
-							{categories.length}
-						</Badge>
+				<div className="space-y-2">
+					<Label>Active Filters</Label>
+					<div className="flex flex-wrap gap-2">
+						{filters.type !== "all" && (
+							<Badge
+								variant="outline"
+								className={cn(
+									"cursor-pointer",
+									currentStyle === "brutalist"
+										? "rounded-none border-2 border-primary"
+										: "rounded-full"
+								)}
+								onClick={() => setFilters({ ...filters, type: "all" })}
+								style={{ backgroundColor: `${getColor("type")}70`, color: "#fff" }}
+							>
+								{filters.type}
+							</Badge>
+						)}
+						{filters.category !== "all" && (
+							<Badge
+								variant="outline"
+								className={cn(
+									"cursor-pointer",
+									currentStyle === "brutalist"
+										? "rounded-none border-2 border-primary"
+										: "rounded-full"
+								)}
+								onClick={() => setFilters({ ...filters, category: "all" })}
+								style={{
+									backgroundColor: `${getColor(filters.category ?? "default")}70`,
+									color: "#fff",
+								}}
+							>
+								{filters.category}
+							</Badge>
+						)}
 					</div>
 				</div>
 			</div>
 		</div>
 	);
-}
+});
+
+BrowserSidebar.displayName = "BrowserSidebar";

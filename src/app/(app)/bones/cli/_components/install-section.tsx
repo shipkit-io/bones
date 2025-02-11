@@ -35,7 +35,7 @@ export function InstallSection() {
 	};
 
 	const copyToClipboard = () => {
-		navigator.clipboard.writeText(installCommand);
+		void navigator.clipboard.writeText(installCommand);
 		setCopied(true);
 		setTimeout(() => setCopied(false), 2000);
 	};

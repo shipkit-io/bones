@@ -14,45 +14,45 @@ const isServer = typeof window === "undefined";
 
 const _createLogger =
 	(level: LogLevel) =>
-	(...args: unknown[]): void => {
-		const logData: LogData = {
-			apiKey: process.env.NEXT_PUBLIC_LOGFLARE_KEY,
-			prefix: "logger",
-			emoji: "🌐",
-			level,
-			message: args
-				.map((arg) => (typeof arg === "object" ? JSON.stringify(arg) : String(arg)))
-				.join(" "),
-			timestamp: new Date().toISOString(),
-			url: isServer ? "server" : window.location.href,
-			userAgent: isServer ? "server" : navigator.userAgent,
-		};
+		(...args: unknown[]): void => {
+			const logData: LogData = {
+				apiKey: process.env.NEXT_PUBLIC_LOGFLARE_KEY,
+				prefix: "logger",
+				emoji: "🌐",
+				level,
+				message: args
+					.map((arg) => (typeof arg === "object" ? JSON.stringify(arg) : String(arg)))
+					.join(" "),
+				timestamp: new Date().toISOString(),
+				url: isServer ? "server" : window.location.href,
+				userAgent: isServer ? "server" : navigator.userAgent,
+			};
 
-		// Send server-side logs to your logging service or database
-		void fetch("http://localhost:3000/v1", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(logData),
-		});
-		if (isServer) {
-			console[level](...args);
+			// Send server-side logs to your logging service or database
+			void fetch("http://localhost:3000/v1", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(logData),
+			});
+			if (isServer) {
+				console[level](...args);
 
-			// TODO: Implement logging service
-			if (logData?.apiKey) {
-				// Send server-side logs to your logging service or database
-				void fetch("http://localhost:3000/v1", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(logData),
-				});
+				// TODO: Implement logging service
+				if (logData?.apiKey) {
+					// Send server-side logs to your logging service or database
+					void fetch("http://localhost:3000/v1", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(logData),
+					});
+				}
+			} else {
+				console[level](...args);
+				// if (loggerWorker) {
+				// 	loggerWorker.postMessage({ logData });
+				// }
 			}
-		} else {
-			console[level](...args);
-			// if (loggerWorker) {
-			// 	loggerWorker.postMessage({ logData });
-			// }
-		}
-	};
+		};
 
 export const logger = console;
 // export const logger = {
@@ -75,32 +75,38 @@ export const logger = console;
 // });
 /* End of Logger */
 
-/* From the Next.js source code https://github.com/vercel/next.js/blob/canary/packages/next/lib/console.ts */
-export const prefixes = {
-	wait: white(bold("○")),
-	error: red(bold("⨯")),
-	warn: yellow(bold("⚠")),
-	ready: "▲", // no color
-	info: white(bold(" ")),
-	event: green(bold("✓")),
-	trace: magenta(bold("»")),
+const prefixes = {
+	info: white("ℹ"),
+	warn: yellow("⚠"),
+	error: red("✖"),
+	wait: magenta("○"),
+	ready: green("✓"),
+	event: magenta("◆"),
+	trace: white("›"),
 } as const;
 
 const LOGGING_METHOD = {
-	log: "log",
+	info: "info",
 	warn: "warn",
 	error: "error",
+	wait: "info",
+	ready: "info",
+	event: "info",
+	trace: "trace",
 } as const;
 
-function prefixedLog(prefixType: keyof typeof prefixes, ...message) {
+type PrefixType = keyof typeof prefixes;
+type LoggingMethod = keyof typeof LOGGING_METHOD;
+
+function prefixedLog(prefixType: PrefixType, ...message: unknown[]) {
 	if ((message[0] === "" || message[0] === undefined) && message.length === 1) {
 		message.shift();
 	}
 
-	const consoleMethod: keyof typeof LOGGING_METHOD =
+	const consoleMethod: LoggingMethod =
 		prefixType in LOGGING_METHOD
-			? LOGGING_METHOD[prefixType as keyof typeof LOGGING_METHOD]
-			: "log";
+			? LOGGING_METHOD[prefixType]
+			: "info";
 
 	const prefix = prefixes[prefixType];
 	// If there's no message, don't print the prefix but a new line
@@ -111,43 +117,45 @@ function prefixedLog(prefixType: keyof typeof prefixes, ...message) {
 	}
 }
 
-export function bootstrap(...message) {
-	console.info(" ", ...message);
-}
-
-export function wait(...message) {
-	prefixedLog("wait", ...message);
-}
-
-export function error(...message) {
-	prefixedLog("error", ...message);
-}
-
-export function warn(...message) {
-	prefixedLog("warn", ...message);
-}
-
-export function ready(...message) {
-	prefixedLog("ready", ...message);
-}
-
-export function info(...message) {
+export function info(...message: unknown[]) {
 	prefixedLog("info", ...message);
 }
 
-export function event(...message) {
+export function warn(...message: unknown[]) {
+	prefixedLog("warn", ...message);
+}
+
+export function error(...message: unknown[]) {
+	prefixedLog("error", ...message);
+}
+
+export function wait(...message: unknown[]) {
+	prefixedLog("wait", ...message);
+}
+
+export function ready(...message: unknown[]) {
+	prefixedLog("ready", ...message);
+}
+
+export function event(...message: unknown[]) {
 	prefixedLog("event", ...message);
 }
 
-export function trace(...message) {
+export function trace(...message: unknown[]) {
 	prefixedLog("trace", ...message);
 }
 
 const warnOnceMessages = new Set();
-export function warnOnce(...message) {
-	if (!warnOnceMessages.has(message[0])) {
-		warnOnceMessages.add(message.join(" "));
 
+export function warnOnce(...message: unknown[]) {
+	const key = JSON.stringify(message);
+	if (!warnOnceMessages.has(key)) {
+		warnOnceMessages.add(key);
 		warn(...message);
 	}
+}
+
+export function panic(...message: unknown[]) {
+	error(...message);
+	process.exit(1);
 }

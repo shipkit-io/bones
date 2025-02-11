@@ -47,7 +47,7 @@ export async function updateProfile(data: ProfileData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Profile updated successfully" };
 	} catch (error) {
 		console.error("Failed to update profile:", error);
@@ -74,7 +74,7 @@ export async function updateSettings(data: SettingsData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Settings updated successfully" };
 	} catch (error) {
 		console.error("Failed to update settings:", error);
@@ -113,7 +113,7 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Theme updated successfully" };
 	} catch (error) {
 		console.error("Failed to update theme:", error);

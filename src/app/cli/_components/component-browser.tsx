@@ -50,7 +50,7 @@ interface ComponentBrowserProps {
 }
 
 const _copyToClipboard = (text: string) => {
-	navigator.clipboard.writeText(text);
+	void navigator.clipboard.writeText(text);
 	toast({
 		title: "Copied to clipboard",
 		description: "The content has been copied to your clipboard.",
@@ -133,11 +133,7 @@ const ComponentCard = ({
 							onClick={(e) => {
 								e.stopPropagation();
 								const installCommand = getInstallCommand(component, currentRegistry);
-								navigator.clipboard.writeText(installCommand);
-								toast({
-									title: "Copied to clipboard",
-									description: "Install command has been copied to your clipboard.",
-								});
+								void _copyToClipboard(installCommand);
 							}}
 							currentStyle={currentStyle}
 						/>
@@ -189,21 +185,19 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
 		currentRegistry,
 		loading,
 		error,
-		filters,
-		searchQuery,
 		setCurrentRegistry: setCurrentRegistryBase,
-		setFilters,
-		setSearchQuery,
-		getCategories,
-		getTypes,
 		setRegistries,
 		filteredItems,
+		getCategories,
+		getTypes,
 	} = useRegistry();
 
 	// Wrap setCurrentRegistry to handle null case
 	const setCurrentRegistry = (registry: Registry | null) => {
-		setCurrentRegistryBase(registry || undefined);
+		setCurrentRegistryBase(registry ?? undefined);
 	};
+
+	// const defaultRegistry = registries.find((r) => !r.custom) ?? registries[0];
 
 	useEffect(() => {
 		const checkInstallations = async () => {
@@ -256,51 +250,51 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
 		if (!registry) {
 			toast({
 				title: "Error",
-				description: "Registry not found",
+				description: "Could not find registry for component",
 				variant: "destructive",
 			});
 			return;
 		}
 
-		setSelectedComponent(component);
+		const installCommand = getInstallCommand(component, registry);
+		const componentUrl = installCommand.split('"')[1]; // Extract URL from command
+		if (!componentUrl) {
+			toast({
+				title: "Error",
+				description: "Could not parse install command",
+				variant: "destructive",
+			});
+			return;
+		}
+
 		setInstallationProgress({ status: "installing" });
-
-		void (async () => {
-			try {
-				const stream = await installComponent(component.name, {
-					overwrite,
-					style: currentStyle,
-				});
-
-				const reader = stream.getReader();
+		installComponent(componentUrl, { overwrite })
+			.then(async (stream) => {
 				let log = "";
-
+				const reader = stream.getReader();
 				while (true) {
-					const { done, value } = await reader.read();
+					const { done, value } = await reader.read() as { done: boolean; value: BufferSource };
 					if (done) break;
-
-					const text = new TextDecoder().decode(value);
-					log += text;
-					setInstallationProgress((prev) => ({
-						...prev,
+					log += new TextDecoder().decode(value);
+					setInstallationProgress({
+						status: "installing",
 						log,
-					}));
+					});
 				}
-
-				const components = await getInstalledComponents();
-				setInstalledComponents(components);
-
 				setInstallationProgress({
 					status: "success",
 					log,
+					message: "Component installed successfully!",
 				});
-			} catch (error) {
+				const components = await getInstalledComponents();
+				setInstalledComponents(components);
+			})
+			.catch((error) => {
 				setInstallationProgress({
 					status: "error",
-					log: error instanceof Error ? error.message : "Unknown error occurred",
+					message: error instanceof Error ? error.message : "Failed to install component",
 				});
-			}
-		})();
+			});
 	};
 
 	const hideInstallation = () => {
@@ -308,26 +302,56 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
 	};
 
 	const renderComponentGrid = (_registry: string) => {
-		const allFilteredItems = filteredItems();
-
+		const items = filteredItems();
 		return (
-			<div
-				className={cn("p-4", "grid grid-cols-1 gap-4 overflow-auto sm:grid-cols-2 lg:grid-cols-3")}
-			>
-				{allFilteredItems.map((component: RegistryItem) => (
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{items.map((component) => (
 					<ComponentCard
 						key={component.name}
 						component={component}
 						currentStyle={currentStyle}
 						currentRegistry={currentRegistry}
 						onOpenSidebar={openSidebar}
+						showPreview={true}
 						onInstall={handleInstall}
 						isInstalled={installedComponents.includes(component.name)}
-						showPreview={true}
 					/>
 				))}
 			</div>
 		);
+	};
+
+	const handleAddRegistry = async (registry: Registry) => {
+		try {
+			const registryWithCustom = { ...registry, custom: true };
+			await addCustomRegistry(registryWithCustom);
+			setRegistries((prev: Registry[]) => [...prev, registryWithCustom]);
+			setCurrentRegistry(registryWithCustom);
+		} catch (error) {
+			toast({
+				title: "Failed to add registry",
+				description: error instanceof Error ? error.message : "Unknown error occurred",
+				variant: "destructive",
+			});
+		}
+	};
+
+	const handleRemoveRegistry = (name: string) => {
+		try {
+			void removeCustomRegistry(name);
+			const updatedRegistries = registries.filter((r) => r.name !== name);
+			setRegistries(updatedRegistries);
+			if (currentRegistry?.name === name) {
+				const defaultRegistry = updatedRegistries.find((r) => !r.custom) ?? updatedRegistries[0];
+				setCurrentRegistry(defaultRegistry);
+			}
+		} catch (error) {
+			toast({
+				title: "Failed to remove registry",
+				description: error instanceof Error ? error.message : "Unknown error occurred",
+				variant: "destructive",
+			});
+		}
 	};
 
 	if (error) {
@@ -343,4 +367,115 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
 
 	return (
 		<div
-			className={`${containerStyles({ style: currentStyle })} relative h-full bg-background text-foreground`
+			className={`${containerStyles({ style: currentStyle })} relative h-full bg-background text-foreground`}
+		>
+			<BrowserHeader
+				currentStyle={currentStyle}
+				registries={registries}
+				currentRegistry={currentRegistry}
+				onRegistryChange={setCurrentRegistry}
+				overwrite={overwrite}
+				onOverwriteChange={setOverwrite}
+				onAddRegistry={handleAddRegistry}
+				onRemoveRegistry={handleRemoveRegistry}
+				onStyleChange={toggleStyle}
+			/>
+			<div className="relative flex flex-1 flex-col overflow-hidden md:flex-row">
+				<BrowserSidebar
+					onClose={closeSidebar}
+					ref={sidebarRef}
+					selectedComponent={selectedComponent}
+					currentRegistry={currentRegistry}
+					currentStyle={currentStyle}
+					onInstall={handleInstall}
+					isInstalled={selectedComponent ? installedComponents.includes(selectedComponent.name) : false}
+					onOverwriteChange={setOverwrite}
+					overwrite={overwrite}
+					categories={getCategories()}
+					types={getTypes()}
+					filteredItems={filteredItems()}
+				/>
+				<div className="flex-1 overflow-auto">
+					{loading ? (
+						<div className="flex h-full items-center justify-center">
+							<div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
+						</div>
+					) : (
+						<div className="space-y-8">{renderComponentGrid("all")}</div>
+					)}
+				</div>
+			</div>
+
+			{/* Installation output overlay */}
+			{installationProgress.status !== "idle" && (
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					exit={{ opacity: 0, y: 20 }}
+					className="fixed bottom-4 right-4 z-50 w-[500px]"
+				>
+					<Card className="border-black/10 bg-[#1E1E1E] shadow-2xl">
+						<div className="relative">
+							<div className="flex h-8 items-center justify-between rounded-t-lg bg-[#323233] px-3">
+								<div className="absolute left-3 flex items-center gap-2 text-xs">
+									{installationProgress.status === "installing" ? (
+										<div className="flex items-center gap-2 rounded-full bg-blue-500/10 px-2 py-1 text-blue-400">
+											<ReloadIcon className="h-3 w-3 animate-spin" />
+											Installing...
+										</div>
+									) : installationProgress.status === "success" ? (
+										<div className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-2 py-1 text-emerald-400">
+											<CheckIcon className="h-3 w-3" />
+											Complete
+										</div>
+									) : (
+										<div className="flex items-center gap-2 rounded-full bg-red-500/10 px-2 py-1 text-red-400">
+											<Cross2Icon className="h-3 w-3" />
+											Error
+										</div>
+									)}
+								</div>
+								<span className="w-full text-center text-xs font-medium text-zinc-400">
+									Console Output
+								</span>
+								<Button
+									type="button"
+									variant="ghost"
+									size="sm"
+									className="absolute right-1 top-1 z-10 h-6 w-6 p-0 text-zinc-400 hover:text-zinc-300"
+									onClick={hideInstallation}
+									disabled={installationProgress.status === "installing"}
+								>
+									<Cross2Icon className="h-4 w-4" />
+								</Button>
+							</div>
+							<div className="pt-8">
+								{installationProgress.log ? (
+									<Terminal
+										output={installationProgress.log.split("\n")}
+										className="h-[300px] rounded-b-lg"
+									/>
+								) : (
+									<div className="flex h-[300px] items-center justify-center text-zinc-400">
+										<ReloadIcon className="h-6 w-6 animate-spin" />
+									</div>
+								)}
+							</div>
+						</div>
+					</Card>
+				</motion.div>
+			)}
+
+			{selectedComponent && (
+				<ComponentDetails
+					component={selectedComponent}
+					currentStyle={currentStyle}
+					currentRegistry={currentRegistry}
+					onClose={closeSidebar}
+					installationProgress={installationProgress}
+					onInstall={handleInstall}
+				/>
+			)}
+		</div>
+	);
+}

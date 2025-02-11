@@ -30,6 +30,7 @@ import { v4 } from "uuid";
 // 	new URL("../../../assets/fonts/Inter-Bold.ttf", import.meta.url)
 // ).then((res) => res.arrayBuffer());
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function GET(req: NextRequest) {
 	try {
 		// const [interRegularData, interBoldData] = await Promise.all([

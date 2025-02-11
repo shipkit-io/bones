@@ -20,7 +20,7 @@ import { validateRegistry } from "../_lib/registry-service";
 import type { Registry } from "../_lib/types";
 
 interface AddRegistryDialogProps {
-	onAdd: (registry: Registry) => void;
+	onAdd: (registry: Registry) => Promise<void>;
 }
 
 export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {

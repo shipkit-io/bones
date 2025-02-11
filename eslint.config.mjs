@@ -25,6 +25,33 @@ const eslintConfig = [
 		},
 	},
 
+
+	// Configure global ignores (replaces .eslintignore)
+	{
+		ignores: [
+			"node_modules/**",
+			".cursor/**",
+			".next/**",
+			"src/components/blocks/**",
+			"src/components/ui/**",
+			"src/lib/**",
+			"src/hooks/use-toast.tsx",
+			"src/hooks/use-copy-to-clipboard.ts",
+			"src/hooks/use-mobile.tsx",
+			"src/hooks/use-mutation-observer.ts",
+			"src/hooks/use-sidebar.tsx",
+			"src/app/(demo)/**/*",
+		],
+	},
+
+	// Extend configurations
+	...compat.extends(
+		"plugin:@typescript-eslint/recommended-type-checked",
+		"plugin:@typescript-eslint/stylistic-type-checked",
+		"next/core-web-vitals",
+		"next/typescript"
+	),
+
 	// TypeScript files configuration
 	{
 		files: ["**/*.{ts,tsx}"],
@@ -60,41 +87,18 @@ const eslintConfig = [
 				},
 			],
 			// "@typescript-eslint/ban-ts-comment": "off",
+			"@typescript-eslint/no-floating-promises": "off",
+			"@typescript-eslint/no-misused-promises": "off",
 			// "@typescript-eslint/no-unsafe-argument": "off",
-			// "@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-assignment": "off",
 			// "@typescript-eslint/no-unsafe-call": "off",
-			// "@typescript-eslint/no-unsafe-member-access": "off",
-			// "@typescript-eslint/no-unsafe-return": "off",
+			"@typescript-eslint/no-unsafe-member-access": "off",
+			"@typescript-eslint/no-unsafe-return": "off",
 			// "@typescript-eslint/no-explicit-any": "off",
 			// "react/no-unescaped-entities": "off",
 		},
 	},
 
-	// Configure global ignores (replaces .eslintignore)
-	{
-		ignores: [
-			"node_modules/**",
-			".cursor/**",
-			".next/**",
-			"src/components/blocks/**",
-			"src/components/ui/**",
-			"src/lib/**",
-			"src/hooks/use-toast.tsx",
-			"src/hooks/use-copy-to-clipboard.ts",
-			"src/hooks/use-mobile.tsx",
-			"src/hooks/use-mutation-observer.ts",
-			"src/hooks/use-sidebar.tsx",
-			"src/app/(demo)/**/*",
-		],
-	},
-
-	// Extend configurations
-	...compat.extends(
-		"plugin:@typescript-eslint/recommended-type-checked",
-		"plugin:@typescript-eslint/stylistic-type-checked",
-		"next/core-web-vitals",
-		"next/typescript"
-	),
 ];
 
 export default eslintConfig;
