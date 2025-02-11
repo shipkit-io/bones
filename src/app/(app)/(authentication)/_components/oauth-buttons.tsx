@@ -2,7 +2,7 @@
 
 import { Icons } from "@/components/images/icons";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { cn } from "@/lib/utils";
 import { signInWithOAuthAction } from "@/server/actions/auth";

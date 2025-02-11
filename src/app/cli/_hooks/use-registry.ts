@@ -19,7 +19,7 @@ export function useRegistry() {
 	useEffect(() => {
 		const loadRegistries = async () => {
 			try {
-				const registries = await getRegistries();
+				const registries = getRegistries();
 				setRegistries(registries);
 			} catch (error) {
 				setError(error instanceof Error ? error : new Error("Failed to load registries"));

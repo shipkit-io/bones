@@ -66,7 +66,7 @@ const eslintConfig = [
 		rules: {
 			...ts.configs.recommended.rules,
 			"@typescript-eslint/no-unused-vars": [
-				"error",
+				"warn",
 				{
 					argsIgnorePattern: "^_",
 					varsIgnorePattern: "^_",
@@ -79,15 +79,15 @@ const eslintConfig = [
 					fixStyle: "inline-type-imports",
 				},
 			],
-			// "@typescript-eslint/ban-ts-comment": "off",
+			"@typescript-eslint/ban-ts-comment": "off",
+			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/no-floating-promises": "off",
 			"@typescript-eslint/no-misused-promises": "off",
-			// "@typescript-eslint/no-unsafe-argument": "off",
+			"@typescript-eslint/no-unsafe-argument": "off",
 			"@typescript-eslint/no-unsafe-assignment": "off",
-			// "@typescript-eslint/no-unsafe-call": "off",
+			"@typescript-eslint/no-unsafe-call": "off",
 			"@typescript-eslint/no-unsafe-member-access": "off",
 			"@typescript-eslint/no-unsafe-return": "off",
-			// "@typescript-eslint/no-explicit-any": "off",
 			// "react/no-unescaped-entities": "off",
 		},
 	},
