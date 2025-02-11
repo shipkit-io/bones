@@ -98,7 +98,7 @@ export async function getInstalledComponents(): Promise<string[]> {
 
 			return components;
 		} catch (error) {
-			if (error instanceof Error && 'code' in error && error.code === "ENOENT") {
+			if (error instanceof Error && "code" in error && error.code === "ENOENT") {
 				console.error("UI components directory does not exist:", componentsDir);
 			} else {
 				console.error("Error reading UI components directory:", error);

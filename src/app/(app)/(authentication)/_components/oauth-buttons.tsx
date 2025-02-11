@@ -75,14 +75,12 @@ export function OAuthButtons({ variant = "default", className }: OAuthButtonsPro
 						}}
 					>
 						{variant === "icons" ? (
-							<TooltipProvider delayDuration={80}>
-								<Tooltip>
-									<TooltipTrigger asChild>{button}</TooltipTrigger>
-									<TooltipContent>
-										<p>Sign in with {name}</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>{button}</TooltipTrigger>
+								<TooltipContent>
+									<p>Sign in with {name}</p>
+								</TooltipContent>
+							</Tooltip>
 						) : (
 							button
 						)}

@@ -38,8 +38,8 @@ export default function NotFound() {
 					<PageHeader className="bg-background/30 backdrop-blur-sm">
 						<PageHeaderHeading className="w-full text-center">Lost in space</PageHeaderHeading>
 						<PageHeaderDescription className="mb-8">
-							The page you&apos;re looking for has drifted into deep space. Let&apos;s get you back to
-							familiar territory.
+							The page you&apos;re looking for has drifted into deep space. Let&apos;s get you back
+							to familiar territory.
 						</PageHeaderDescription>
 					</PageHeader>
 					<Link

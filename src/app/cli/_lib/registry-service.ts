@@ -83,7 +83,9 @@ export async function validateRegistry(registry: Registry): Promise<void> {
 			throw new Error(`Failed to fetch registry: ${response.statusText}`);
 		}
 	} catch (error) {
-		throw new Error(`Invalid registry URL: ${error instanceof Error ? error.message : "Unknown error"}`);
+		throw new Error(
+			`Invalid registry URL: ${error instanceof Error ? error.message : "Unknown error"}`
+		);
 	}
 }
 
@@ -110,7 +112,10 @@ export function removeCustomRegistry(name: string): void {
  * Get a registry by name
  */
 export function getRegistry(name: RegistryName): Registry {
-	return [...BUILT_IN_REGISTRIES, ...getCustomRegistries()].find((r) => r.name === name) ?? BUILT_IN_REGISTRIES[0];
+	return (
+		[...BUILT_IN_REGISTRIES, ...getCustomRegistries()].find((r) => r.name === name) ??
+		BUILT_IN_REGISTRIES[0]
+	);
 }
 
 /**
@@ -191,14 +196,17 @@ export function categorizeItems(items: RegistryItem[]): Record<string, RegistryI
  * Group items by their categories
  */
 export function groupItemsByType(items: RegistryItem[]): Record<string, RegistryItem[]> {
-	const types = items.reduce((acc, item) => {
-		const type = item.type ?? "component";
-		if (!acc[type]) {
-			acc[type] = [];
-		}
-		acc[type].push(item);
-		return acc;
-	}, {} as Record<string, RegistryItem[]>);
+	const types = items.reduce(
+		(acc, item) => {
+			const type = item.type ?? "component";
+			if (!acc[type]) {
+				acc[type] = [];
+			}
+			acc[type].push(item);
+			return acc;
+		},
+		{} as Record<string, RegistryItem[]>
+	);
 
 	return types;
 }

@@ -36,7 +36,7 @@ export const CopyButton = ({
 	});
 
 	return (
-		<TooltipProvider>
+
 			<Tooltip>
 				<TooltipTrigger asChild>
 					<Button
@@ -73,6 +73,6 @@ export const CopyButton = ({
 					<p>{isCopied ? successTitle : "Copy to clipboard"}</p>
 				</TooltipContent>
 			</Tooltip>
-		</TooltipProvider>
+
 	);
 };

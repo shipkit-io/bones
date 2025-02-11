@@ -25,7 +25,6 @@ const eslintConfig = [
 		},
 	},
 
-
 	// Configure global ignores (replaces .eslintignore)
 	{
 		ignores: [
@@ -92,7 +91,6 @@ const eslintConfig = [
 			// "react/no-unescaped-entities": "off",
 		},
 	},
-
 ];
 
 export default eslintConfig;

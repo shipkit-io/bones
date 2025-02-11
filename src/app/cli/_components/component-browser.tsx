@@ -49,7 +49,7 @@ interface ComponentBrowserProps {
 	currentStyle?: StyleMode;
 }
 
-const _copyToClipboard = (text: string) => {
+const copyToClipboard = (text: string) => {
 	void navigator.clipboard.writeText(text);
 	toast({
 		title: "Copied to clipboard",
@@ -133,7 +133,7 @@ const ComponentCard = ({
 							onClick={(e) => {
 								e.stopPropagation();
 								const installCommand = getInstallCommand(component, currentRegistry);
-								void _copyToClipboard(installCommand);
+								void copyToClipboard(installCommand);
 							}}
 							currentStyle={currentStyle}
 						/>
@@ -273,7 +273,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
 				let log = "";
 				const reader = stream.getReader();
 				while (true) {
-					const { done, value } = await reader.read() as { done: boolean; value: BufferSource };
+					const { done, value } = (await reader.read()) as { done: boolean; value: BufferSource };
 					if (done) break;
 					log += new TextDecoder().decode(value);
 					setInstallationProgress({
@@ -388,7 +388,9 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
 					currentRegistry={currentRegistry}
 					currentStyle={currentStyle}
 					onInstall={handleInstall}
-					isInstalled={selectedComponent ? installedComponents.includes(selectedComponent.name) : false}
+					isInstalled={
+						selectedComponent ? installedComponents.includes(selectedComponent.name) : false
+					}
 					onOverwriteChange={setOverwrite}
 					overwrite={overwrite}
 					categories={getCategories()}

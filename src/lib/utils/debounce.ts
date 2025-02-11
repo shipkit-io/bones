@@ -1,8 +1,6 @@
 // @ts-nocheck
 /* eslint-disable-all */
-/* eslint-disable no-undef */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-case-declarations */
+
 // Remove the import statement for Timeout
 // import { Timeout } from 'node';
 
