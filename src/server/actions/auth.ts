@@ -19,14 +19,7 @@ interface AuthOptions {
 	errorCode?: string;
 }
 
-interface SignInData {
-	email: string;
-	password: string;
-	redirect?: boolean;
-	redirectTo?: string;
-}
-
-interface SignUpData {
+interface SignUpInData {
 	email: string;
 	password: string;
 	redirect?: boolean;
@@ -57,7 +50,7 @@ export const signInAction = createServerAction()
 
 export const signInWithCredentialsAction = validatedAction(
 	signInActionSchema,
-	async (data: SignInData, _formData: FormData) => {
+	async (data: SignUpInData, _formData: FormData) => {
 		await AuthService.signInWithCredentials({
 			email: data.email,
 			password: data.password,
@@ -69,7 +62,7 @@ export const signInWithCredentialsAction = validatedAction(
 
 export const signUpWithCredentialsAction = validatedAction(
 	signUpSchema,
-	async (data: SignUpData) => {
+	async (data: SignUpInData) => {
 		return await AuthService.signUpWithCredentials({
 			email: data.email,
 			password: data.password,
@@ -86,6 +79,6 @@ export const signOutAction = async (options?: AuthOptions) => {
 // Todo: Implement forgot password
 export const forgotPasswordAction = createServerAction()
 	.input(forgotPasswordSchema)
-	.handler(async () => {
+	.handler(async ({ input: _input }) => {
 		// return await forgotPassword(input);
 	});

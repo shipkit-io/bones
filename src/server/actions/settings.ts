@@ -36,15 +36,16 @@ export async function updateProfile(data: ProfileData) {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db?.execute(sql`
-			UPDATE ${users}
-			SET name = ${data.name},
-				bio = ${data.bio ?? null},
-				github_username = ${data.githubUsername ?? null},
-				metadata = ${data.metadata ? JSON.stringify(data.metadata) : null},
-				updated_at = ${new Date()}
-			WHERE id = ${session.user.id}
-		`);
+		await db
+			?.update(users)
+			.set({
+				name: data.name,
+				bio: data.bio,
+				githubUsername: data.githubUsername,
+				metadata: data.metadata ? JSON.stringify(data.metadata) : null,
+				updatedAt: new Date(),
+			})
+			.where(eq(users.id, session.user.id));
 
 		revalidatePath("/settings");
 		return { success: true, message: "Profile updated successfully" };
@@ -64,13 +65,14 @@ export async function updateSettings(data: SettingsData) {
 		// Ensure boolean type
 		const emailNotifications = Boolean(data.emailNotifications);
 
-		await db?.execute(sql`
-			UPDATE ${users}
-			SET theme = ${data.theme},
-				email_notifications = ${emailNotifications},
-				updated_at = ${new Date()}
-			WHERE id = ${session.user.id}
-		`);
+		await db
+			?.update(users)
+			.set({
+				theme: data.theme,
+				emailNotifications,
+				updatedAt: new Date(),
+			})
+			.where(eq(users.id, session.user.id));
 
 		revalidatePath("/settings");
 		return { success: true, message: "Settings updated successfully" };
@@ -87,10 +89,8 @@ export async function deleteAccount() {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db?.execute(sql`
-			DELETE FROM ${users}
-			WHERE id = ${session.user.id}
-		`);
+		await db?.delete(users).where(eq(users.id, session.user.id));
+
 		return { success: true, message: "Account deleted successfully" };
 	} catch (error) {
 		console.error("Failed to delete account:", error);

@@ -79,6 +79,7 @@ export const posts = createTable(
 	}),
 );
 
+export type NewPost = typeof posts.$inferInsert;
 export type Post = typeof posts.$inferSelect;
 
 export const users = createTable("user", {
