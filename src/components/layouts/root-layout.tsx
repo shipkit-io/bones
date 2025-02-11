@@ -56,7 +56,6 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						fontSerif.variable,
 					)}
 				>
-					<JsonLd organization website />
 					<HolyLoader
 						showSpinner
 						height={"3px"}
@@ -67,21 +66,12 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						<TRPCReactProvider>
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
-									{/* Web Vitals - Above children to avoid blocking */}
-									<WebVitals />
 
 									{children}
-
-									{/* Metrics - Below children to avoid blocking */}
-									<Analytics />
 
 									{/* Toasts */}
 									<Toaster />
 									<SonnerToaster />
-
-									<Suspense>
-										<ErrorToast />
-									</Suspense>
 								</TooltipProvider>
 							</ThemeProvider>
 						</TRPCReactProvider>
