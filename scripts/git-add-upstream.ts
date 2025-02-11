@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import { copyFile, mkdir, readdir, rm } from "fs/promises";
-import { join, relative } from "path";
+import { execSync } from "node:child_process";
+import { copyFile, mkdir, readdir, rm } from "node:fs/promises";
+import { join, relative } from "node:path";
 
 const EXCLUDED_DIRS = [
 	"node_modules",
@@ -11,7 +11,6 @@ const EXCLUDED_DIRS = [
 	"temp",
 ];
 const upstreamUrl = "https://github.com/shipkit-io/bones.git";
-
 
 /*
  * Executes a git command and returns the output
@@ -41,7 +40,7 @@ async function copyFiles(sourcePath: string, targetPath: string) {
 
 			// Skip excluded directories
 			if (EXCLUDED_DIRS.includes(entry.name)) {
-				console.log(`Skipping excluded directory: ${entry.name}`);
+				console.info(`Skipping excluded directory: ${entry.name}`);
 				continue;
 			}
 
@@ -51,7 +50,7 @@ async function copyFiles(sourcePath: string, targetPath: string) {
 			} else {
 				// Copy individual files
 				await copyFile(sourceFilePath, targetFilePath);
-				console.log(`Copied: ${relative(process.cwd(), targetFilePath)}`);
+				console.info(`Copied: ${relative(process.cwd(), targetFilePath)}`);
 			}
 		}
 	} catch (error) {
@@ -64,15 +63,15 @@ async function main() {
 	const sourceDir = process.cwd();
 	const tempDir = join(sourceDir, "temp");
 
-	console.log("Starting upstream sync process...");
+	console.info("Starting upstream sync process...");
 
 	try {
 		// Make sure we're on main branch first
-		console.log("\nSwitching to main branch...");
+		console.info("\nSwitching to main branch...");
 		git("checkout main");
 
 		// Delete existing temp branch if it exists
-		console.log("\nCleaning up existing temp branch...");
+		console.info("\nCleaning up existing temp branch...");
 		try {
 			git("branch -D temp");
 		} catch {
@@ -81,18 +80,18 @@ async function main() {
 
 		// Force cleanup any other temp state
 		try {
-			git("clean -fd");  // Clean untracked files and directories
+			git("clean -fd"); // Clean untracked files and directories
 			git("reset --hard"); // Reset any uncommitted changes
 		} catch {
 			// Ignore cleanup errors
 		}
 
 		// Step 1: Save current files to temp directory
-		console.log("\nSaving current files to temp directory...");
+		console.info("\nSaving current files to temp directory...");
 		await copyFiles(sourceDir, tempDir);
 
 		// Step 2: Clean working directory (except temp)
-		console.log("\nCleaning working directory...");
+		console.info("\nCleaning working directory...");
 		const entries = await readdir(sourceDir, { withFileTypes: true });
 		for (const entry of entries) {
 			if (
@@ -106,7 +105,7 @@ async function main() {
 		}
 
 		// Step 3: Setup upstream remote
-		console.log("\nSetting up upstream remote...");
+		console.info("\nSetting up upstream remote...");
 		try {
 			git("remote remove up");
 		} catch {
@@ -116,30 +115,30 @@ async function main() {
 		git("fetch up");
 
 		// Step 4: Create temp branch from upstream
-		console.log("\nCreating temp branch from upstream...");
+		console.info("\nCreating temp branch from upstream...");
 		git("checkout up/main");
 		git("switch -c temp");
 
 		// Step 5: Copy files back from temp
-		console.log("\nCopying files back from temp...");
+		console.info("\nCopying files back from temp...");
 		await copyFiles(tempDir, sourceDir);
 		await rm(tempDir, { recursive: true, force: true });
 
 		// Step 6: Commit the changes
-		console.log("\nCommitting changes...");
+		console.info("\nCommitting changes...");
 		git("add .");
 		git('commit -m "merge upstream changes"');
 
 		// Step 7: Checkout main and merge changes
-		console.log("\nChecking out main and merging changes...");
+		console.info("\nChecking out main and merging changes...");
 		git("checkout main");
 		git("merge temp --allow-unrelated-histories");
 
-		console.log("\nProcess completed successfully!");
-		console.log("Please resolve any merge conflicts, then run:");
-		console.log("git add .");
-		console.log('git commit -m "added upstream"');
-		console.log("git push");
+		console.info("\nProcess completed successfully!");
+		console.info("Please resolve any merge conflicts, then run:");
+		console.info("git add .");
+		console.info('git commit -m "added upstream"');
+		console.info("git push");
 	} catch (error) {
 		console.error("Failed to sync with upstream:", error);
 		if (error instanceof Error) {

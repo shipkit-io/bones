@@ -32,7 +32,7 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/public/*": ["./public/*"],
-			"@/*": ["./src/*"],
+			"@/*": ["./src/*"]
 		}
 	},
 	"include": [

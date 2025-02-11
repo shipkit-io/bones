@@ -1,9 +1,9 @@
-import { routes, type RouteObject, type RouteParams } from "@/config/routes";
+import { type RouteObject, type RouteParams, routes } from "@/config/routes";
 import type { Route } from "next";
 
 export const getRoutePath = (
 	route: Route | RouteObject,
-	params: RouteParams = {}
+	params: RouteParams = {},
 ): Route => {
 	if (typeof route === "string") {
 		return route;
@@ -37,7 +37,7 @@ export const rx = <T extends RoutePath>(
 		? (typeof routes)[T] extends RouteObject
 			? Required<(typeof routes)[T]["params"]>
 			: never
-		: RouteParams = {} as any
+		: RouteParams = {} as any,
 ): Route => {
 	const parts = path?.split(".") ?? [];
 	let current: unknown = routes;

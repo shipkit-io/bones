@@ -1,13 +1,12 @@
+import crypto from "node:crypto";
+import { promisify } from "node:util";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
 import { signInSchema } from "@/lib/schemas/auth";
 import { signIn, signOut } from "@/server/auth";
 import { db } from "@/server/db";
-import { users, type NewUser } from "@/server/db/schema";
-import { promisify } from "util";
-import crypto from "crypto";
-import { eq } from "drizzle-orm";
+import { users } from "@/server/db/schema";
 import "server-only";
 
 // Constants for password hashing
@@ -126,7 +125,7 @@ export const AuthService = {
 		try {
 			// Check if user already exists
 			const existingUser = await db?.query.users.findFirst({
-				where: eq(users.email, email),
+				where: (users, { eq }) => eq(users.email, email),
 			});
 
 			if (existingUser) {
@@ -137,13 +136,14 @@ export const AuthService = {
 			const hashedPassword = await hashPassword(password);
 
 			// Create new user
-			const newUser: NewUser = {
+			const newUser = {
 				email,
 				password: hashedPassword,
 				role: "user",
 			};
 
-			const [result] = (await db?.insert(users).values(newUser).returning()) ?? [];
+			const [result] =
+				(await db?.insert(users).values(newUser).returning()) ?? [];
 
 			if (!result) {
 				throw new Error("Failed to create user");
@@ -191,7 +191,7 @@ export const AuthService = {
 			const { email, password } = parsedCredentials.data;
 
 			const user = await db?.query.users.findFirst({
-				where: eq(users.email, email),
+				where: (users, { eq }) => eq(users.email, email),
 			});
 
 			if (!user?.password) {

@@ -5,9 +5,11 @@
 import { Loading } from "@/components/ui/loading";
 
 export default function LoadingComponent() {
-	return <Loading
-		fullPage   // Makes the loading spinner take up the full viewport
-		backdrop   // Adds a semi-transparent background overlay
-		fade      // Enables a smooth fade in/out animation
-	/>;
+	return (
+		<Loading
+			fullPage // Makes the loading spinner take up the full viewport
+			backdrop // Adds a semi-transparent background overlay
+			fade // Enables a smooth fade in/out animation
+		/>
+	);
 }

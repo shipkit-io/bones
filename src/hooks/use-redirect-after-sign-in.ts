@@ -8,25 +8,25 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export const useRedirectAfterSignIn = (error: Error) => {
-  const router = useRouter();
-  const pathname = usePathname();
+	const router = useRouter();
+	const pathname = usePathname();
 
-  useEffect(() => {
-    const redirectToSignIn = () => {
-      redirectWithCode(routes.auth.signIn, {
-        code: STATUS_CODES.AUTH.code,
-        nextUrl: pathname,
-      });
-    };
+	useEffect(() => {
+		const redirectToSignIn = () => {
+			redirectWithCode(routes.auth.signIn, {
+				code: STATUS_CODES.AUTH.code,
+				nextUrl: pathname,
+			});
+		};
 
-    if (error instanceof AuthenticationError) {
-      logger.info(
-        "ErrorBoundary: Authentication error, redirecting to sign in",
-      );
-      redirectToSignIn();
-    }
+		if (error instanceof AuthenticationError) {
+			logger.info(
+				"ErrorBoundary: Authentication error, redirecting to sign in",
+			);
+			redirectToSignIn();
+		}
 
-    // Optionally log the error to an error reporting service
-    logger.error("ErrorBoundary", error);
-  }, [error, router, pathname]);
+		// Optionally log the error to an error reporting service
+		logger.error("ErrorBoundary", error);
+	}, [error, router, pathname]);
 };

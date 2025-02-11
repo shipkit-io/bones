@@ -11,7 +11,8 @@ type CommonProps = {
 type LinkProps = CommonProps & {
 	href: string;
 } & Omit<React.ComponentProps<typeof Link>, "href" | "className" | "children">;
-type ButtonProps = CommonProps & Omit<React.ComponentProps<typeof Button>, "className" | "children">;
+type ButtonProps = CommonProps &
+	Omit<React.ComponentProps<typeof Button>, "className" | "children">;
 
 type LinkOrButtonProps = LinkProps | ButtonProps;
 

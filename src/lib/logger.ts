@@ -6,7 +6,7 @@ import {
 	white,
 	yellow,
 } from "@/lib/utils/pico-colors";
-import { type LogData, type LogLevel } from "@/types/logger";
+import type { LogData, LogLevel } from "@/types/logger";
 
 // let loggerWorker: Worker | null = null;
 
@@ -19,7 +19,7 @@ import { type LogData, type LogLevel } from "@/types/logger";
 
 const isServer = typeof window === "undefined";
 
-const createLogger =
+const _createLogger =
 	(level: LogLevel) =>
 	(...args: unknown[]): void => {
 		const logData: LogData = {
@@ -121,7 +121,7 @@ function prefixedLog(prefixType: keyof typeof prefixes, ...message: any[]) {
 }
 
 export function bootstrap(...message: any[]) {
-	console.log(" ", ...message);
+	console.info(" ", ...message);
 }
 
 export function wait(...message: any[]) {

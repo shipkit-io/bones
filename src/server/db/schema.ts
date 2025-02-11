@@ -9,7 +9,7 @@ import {
 	serial,
 	text,
 	timestamp,
-	varchar
+	varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -79,7 +79,6 @@ export const posts = createTable(
 	}),
 );
 
-export type NewPost = typeof posts.$inferInsert;
 export type Post = typeof posts.$inferSelect;
 
 export const users = createTable("user", {

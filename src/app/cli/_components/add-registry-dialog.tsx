@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -9,29 +9,29 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { toast } from '@/hooks/use-toast'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { PlusCircle } from 'lucide-react'
-import { type FormEvent, useState } from 'react'
-import { validateRegistry } from '../_lib/registry-service'
-import type { Registry } from '../_lib/types'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { PlusCircle } from "lucide-react";
+import { type FormEvent, useState } from "react";
+import { validateRegistry } from "../_lib/registry-service";
+import type { Registry } from "../_lib/types";
 
 interface AddRegistryDialogProps {
-	onAdd: (registry: Registry) => void
+	onAdd: (registry: Registry) => void;
 }
 
 export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
-	const [open, setOpen] = useState(false)
-	const [name, setName] = useState('')
-	const [url, setUrl] = useState('')
-	const [loading, setLoading] = useState(false)
+	const [open, setOpen] = useState(false);
+	const [name, setName] = useState("");
+	const [url, setUrl] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault()
-		setLoading(true)
+		e.preventDefault();
+		setLoading(true);
 
 		try {
 			const registry = {
@@ -40,27 +40,28 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
 				baseComponentUrl: url,
 				baseBlockUrl: url,
 				baseDocsUrl: url,
-			}
+			};
 
-			await validateRegistry(registry)
-			await onAdd(registry)
-			setOpen(false)
-			setName('')
-			setUrl('')
+			await validateRegistry(registry);
+			await onAdd(registry);
+			setOpen(false);
+			setName("");
+			setUrl("");
 			toast({
 				title: "Registry added",
 				description: `Successfully added registry "${name}"`,
-			})
+			});
 		} catch (error) {
 			toast({
 				title: "Failed to add registry",
-				description: error instanceof Error ? error.message : "Unknown error occurred",
+				description:
+					error instanceof Error ? error.message : "Unknown error occurred",
 				variant: "destructive",
-			})
+			});
 		} finally {
-			setLoading(false)
+			setLoading(false);
 		}
-	}
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -82,7 +83,8 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
 				<DialogHeader>
 					<DialogTitle>Add Custom Registry</DialogTitle>
 					<DialogDescription>
-						Add a custom component registry to browse and install components from.
+						Add a custom component registry to browse and install components
+						from.
 					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit}>
@@ -118,12 +120,12 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
 									Validating...
 								</>
 							) : (
-								'Add Registry'
+								"Add Registry"
 							)}
 						</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>
 		</Dialog>
-	)
+	);
 }

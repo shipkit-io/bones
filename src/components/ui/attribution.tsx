@@ -66,7 +66,7 @@ export function Attribution({
 		onClose?.();
 	};
 
-	const Content = () => (
+	const _Content = () => (
 		<>
 			{(title || description) && (
 				<div>

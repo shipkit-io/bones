@@ -32,14 +32,15 @@ const {
 } = NextAuth({
 	...authOptions,
 	secret: env.AUTH_SECRET ?? "supersecretshipkit",
-	adapter: env?.DATABASE_URL && db
-		? DrizzleAdapter(db, {
-			usersTable: users,
-			accountsTable: accounts,
-			sessionsTable: sessions,
-			verificationTokensTable: verificationTokens,
-		})
-		: undefined,
+	adapter:
+		env?.DATABASE_URL && db
+			? DrizzleAdapter(db, {
+					usersTable: users,
+					accountsTable: accounts,
+					sessionsTable: sessions,
+					verificationTokensTable: verificationTokens,
+				})
+			: undefined,
 	logger: {
 		error: (code: Error, ...message: any[]) => logger.error(code, message),
 		warn: (code: string, ...message: any[]) => logger.warn(code, message),

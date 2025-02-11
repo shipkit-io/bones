@@ -15,7 +15,11 @@ export const Link = ({
 	...props
 }: React.ComponentProps<typeof NextLink>) => {
 	if (siteConfig?.behavior?.pageTransitions) {
-		return <TransitionsLink prefetch {...props}>{children}</TransitionsLink>;
+		return (
+			<TransitionsLink prefetch {...props}>
+				{children}
+			</TransitionsLink>
+		);
 	}
 
 	return <NextLink {...props}>{children}</NextLink>;

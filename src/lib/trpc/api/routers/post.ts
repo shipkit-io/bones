@@ -5,7 +5,7 @@ import {
 	protectedProcedure,
 	publicProcedure,
 } from "@/lib/trpc/api/trpc";
-import { posts, type NewPost } from "@/server/db/schema";
+import { posts } from "@/server/db/schema";
 
 export const postRouter = createTRPCRouter({
 	hello: publicProcedure
@@ -19,7 +19,7 @@ export const postRouter = createTRPCRouter({
 	create: protectedProcedure
 		.input(z.object({ name: z.string().min(1) }))
 		.mutation(async ({ ctx, input }) => {
-			const newPost: NewPost = {
+			const newPost = {
 				name: input.name,
 				createdById: ctx.session.user.id,
 			};

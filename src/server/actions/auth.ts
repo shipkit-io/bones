@@ -33,7 +33,7 @@ export const signInAction = createServerAction()
 
 export const signInWithCredentialsAction = validatedAction(
 	signInActionSchema,
-	async (data: any, formData: FormData) => {
+	async (data: any, _formData: FormData) => {
 		await AuthService.signInWithCredentials({
 			email: data.email,
 			password: data.password,

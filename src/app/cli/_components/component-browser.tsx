@@ -60,7 +60,7 @@ interface ComponentBrowserProps {
 	currentStyle?: StyleMode;
 }
 
-const copyToClipboard = (text: string) => {
+const _copyToClipboard = (text: string) => {
 	navigator.clipboard.writeText(text);
 	toast({
 		title: "Copied to clipboard",
@@ -202,13 +202,13 @@ export function ComponentBrowser({
 	const [currentStyle, setCurrentStyle] = useState<StyleMode>(initialStyle);
 	const [selectedComponent, setSelectedComponent] =
 		useState<RegistryItem | null>(null);
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+	const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [installationProgress, setInstallationProgress] =
 		useState<InstallationProgress>({
 			status: "idle",
 		});
 	const [installedComponents, setInstalledComponents] = useState<string[]>([]);
-	const [showInstallation, setShowInstallation] = useState(false);
+	const [_showInstallation, _setShowInstallation] = useState(false);
 	const [overwrite, setOverwrite] = useState(false);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -344,9 +344,9 @@ export function ComponentBrowser({
 		setInstallationProgress({ status: "idle" });
 	};
 
-	const renderComponentGrid = (registry: string) => {
+	const renderComponentGrid = (_registry: string) => {
 		const allFilteredItems = filteredItems();
-		console.log("Registry:", registry, "Filtered Items:", allFilteredItems); // Debug log
+
 		return (
 			<div
 				className={cn(

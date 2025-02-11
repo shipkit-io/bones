@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
-import { type z } from "zod";
+import type { z } from "zod";
 
 export const SignInEmailForm = () => {
 	// const searchParams = useSearchParams();

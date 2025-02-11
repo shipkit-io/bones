@@ -3,7 +3,7 @@
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 interface ProfileData {
@@ -36,16 +36,15 @@ export async function updateProfile(data: ProfileData) {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db
-			?.update(users)
-			.set({
-				name: data.name,
-				bio: data.bio,
-				githubUsername: data.githubUsername,
-				metadata: data.metadata ? JSON.stringify(data.metadata) : null,
-				updatedAt: new Date(),
-			})
-			.where(eq(users.id, session.user.id));
+		await db?.execute(sql`
+			UPDATE ${users}
+			SET name = ${data.name},
+				bio = ${data.bio ?? null},
+				github_username = ${data.githubUsername ?? null},
+				metadata = ${data.metadata ? JSON.stringify(data.metadata) : null},
+				updated_at = ${new Date()}
+			WHERE id = ${session.user.id}
+		`);
 
 		revalidatePath("/settings");
 		return { success: true, message: "Profile updated successfully" };
@@ -62,20 +61,16 @@ export async function updateSettings(data: SettingsData) {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		console.log("Server action received data:", data);
-
 		// Ensure boolean type
 		const emailNotifications = Boolean(data.emailNotifications);
-		console.log("Processed emailNotifications:", emailNotifications);
 
-		await db
-			?.update(users)
-			.set({
-				theme: data.theme,
-				emailNotifications,
-				updatedAt: new Date(),
-			})
-			.where(eq(users.id, session.user.id));
+		await db?.execute(sql`
+			UPDATE ${users}
+			SET theme = ${data.theme},
+				email_notifications = ${emailNotifications},
+				updated_at = ${new Date()}
+			WHERE id = ${session.user.id}
+		`);
 
 		revalidatePath("/settings");
 		return { success: true, message: "Settings updated successfully" };
@@ -92,7 +87,10 @@ export async function deleteAccount() {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db?.delete(users).where(eq(users.id, session.user.id));
+		await db?.execute(sql`
+			DELETE FROM ${users}
+			WHERE id = ${session.user.id}
+		`);
 		return { success: true, message: "Account deleted successfully" };
 	} catch (error) {
 		console.error("Failed to delete account:", error);
@@ -107,13 +105,12 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db
-			?.update(users)
-			.set({
-				theme,
-				updatedAt: new Date(),
-			})
-			.where(eq(users.id, session.user.id));
+		await db?.execute(sql`
+			UPDATE ${users}
+			SET theme = ${theme},
+				updated_at = ${new Date()}
+			WHERE id = ${session.user.id}
+		`);
 
 		revalidatePath("/settings");
 		return { success: true, message: "Theme updated successfully" };

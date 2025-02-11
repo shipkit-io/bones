@@ -3,7 +3,7 @@ import {
 	CardContent,
 	CardDescription,
 	CardHeader,
-	CardTitle
+	CardTitle,
 } from "@/components/ui/card";
 import { AuthenticationCard } from "../_components/authentication-card";
 

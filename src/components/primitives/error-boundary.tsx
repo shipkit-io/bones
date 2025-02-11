@@ -5,19 +5,19 @@ import { Button } from "@/components/ui/button";
 import { useRedirectAfterSignIn } from "@/hooks/use-redirect-after-sign-in";
 
 export default function ErrorBoundary({
-  error,
-  resetAction,
+	error,
+	resetAction,
 }: {
-  error: Error & { digest?: string };
-  resetAction: () => void;
+	error: Error & { digest?: string };
+	resetAction: () => void;
 }) {
-  useRedirectAfterSignIn(error);
+	useRedirectAfterSignIn(error);
 
-  return (
-    <Boundary title="Something went wrong." description={error.message}>
-      <Button type="button" onClick={resetAction}>
-        Try again
-      </Button>
-    </Boundary>
-  );
+	return (
+		<Boundary title="Something went wrong." description={error.message}>
+			<Button type="button" onClick={resetAction}>
+				Try again
+			</Button>
+		</Boundary>
+	);
 }

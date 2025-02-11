@@ -75,10 +75,9 @@ export function JsonLd({
 					caption: siteConfig.name,
 				},
 				image: { "@id": `${siteConfig.url}/#logo` },
-				sameAs: [
-					siteConfig.links.twitter,
-					siteConfig.links.github,
-				].filter(Boolean),
+				sameAs: [siteConfig.links.twitter, siteConfig.links.github].filter(
+					Boolean,
+				),
 			},
 			website && {
 				"@type": "WebSite",
@@ -176,23 +175,23 @@ export function JsonLd({
 					},
 				}),
 				...(localBusiness.openingHours && {
-					openingHoursSpecification: localBusiness.openingHours.map((hours) => ({
-						"@type": "OpeningHoursSpecification",
-						dayOfWeek: hours,
-					})),
+					openingHoursSpecification: localBusiness.openingHours.map(
+						(hours) => ({
+							"@type": "OpeningHoursSpecification",
+							dayOfWeek: hours,
+						}),
+					),
 				}),
-				...(localBusiness.priceRange && { priceRange: localBusiness.priceRange }),
+				...(localBusiness.priceRange && {
+					priceRange: localBusiness.priceRange,
+				}),
 				image: { "@id": `${siteConfig.url}/#logo` },
 			},
 		].filter(Boolean),
 	};
 
 	return (
-		<Script
-			id="json-ld"
-			type="application/ld+json"
-			strategy="worker"
-		>
+		<Script id="json-ld" type="application/ld+json" strategy="worker">
 			{`${JSON.stringify(structuredData)}`}
 		</Script>
 	);

@@ -5,7 +5,7 @@ import {
 	buttonVariants,
 } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import React from "react";
+import type React from "react";
 import styles from "./animated-button.module.css";
 
 // Extend the ButtonHTMLAttributes to include all possible button props
@@ -58,7 +58,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 		<div
 			className={cn(
 				styles.buttonWrapper,
-				`relative z-0 flex min-h-9 items-center justify-center overflow-hidden rounded-md text-black/95 [--background:#fafafc] dark:text-white/95 dark:[--background:#000000]`,
+				"relative z-0 flex min-h-9 items-center justify-center overflow-hidden rounded-md text-black/95 [--background:#fafafc] dark:text-white/95 dark:[--background:#000000]",
 				className,
 			)}
 		>

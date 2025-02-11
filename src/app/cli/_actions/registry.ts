@@ -1,9 +1,9 @@
 "use server";
 
-import { exec } from "child_process";
-import { readFileSync, readdirSync, statSync } from "fs";
-import path from "path";
-import { promisify } from "util";
+import { exec } from "node:child_process";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import path from "node:path";
+import { promisify } from "node:util";
 import { z } from "zod";
 
 const execAsync = promisify(exec);
@@ -27,7 +27,7 @@ async function getProjectRoot(): Promise<string> {
 	try {
 		const { stdout } = await execAsync("git rev-parse --show-toplevel");
 		return stdout.trim();
-	} catch (error) {
+	} catch (_error) {
 		throw new Error("Not in a git repository");
 	}
 }
@@ -51,7 +51,7 @@ export async function getDependencies(): Promise<{
 			dependencies: packageJson.dependencies || {},
 			devDependencies: packageJson.devDependencies || {},
 		};
-	} catch (error) {
+	} catch (_error) {
 		throw new Error("Failed to read package.json");
 	}
 }
@@ -65,7 +65,7 @@ async function getComponentsConfig(): Promise<ComponentsConfig> {
 		const configPath = path.join(projectRoot, "components.json");
 		const config = JSON.parse(readFileSync(configPath, "utf-8"));
 		return ComponentsConfigSchema.parse(config);
-	} catch (error) {
+	} catch (_error) {
 		throw new Error("Failed to read components.json");
 	}
 }

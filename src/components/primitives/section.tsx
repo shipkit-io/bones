@@ -17,7 +17,7 @@ const sectionStyles = cva(
 				default: "w-full",
 				narrow: "max-w-2xl",
 				wide: "max-w-4xl",
-				full: "w-full"
+				full: "w-full",
 			},
 		},
 		defaultVariants: {
@@ -29,7 +29,7 @@ const sectionStyles = cva(
 
 export interface SectionProps
 	extends React.HTMLAttributes<HTMLElement>,
-	VariantProps<typeof sectionStyles> {
+		VariantProps<typeof sectionStyles> {
 	children: React.ReactNode;
 }
 
@@ -55,7 +55,13 @@ export const SectionBadge = ({
 	children: React.ReactNode;
 	className?: string;
 }) => (
-	<Badge variant="secondary" className={cn("rounded-full px-4 py-1 text-sm inline-flex gap-2", className)}>
+	<Badge
+		variant="secondary"
+		className={cn(
+			"rounded-full px-4 py-1 text-sm inline-flex gap-2",
+			className,
+		)}
+	>
 		{children}
 	</Badge>
 );

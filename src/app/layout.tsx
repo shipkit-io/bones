@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
-import type React from 'react';
+import type { Metadata } from "next";
+import type React from "react";
 
-import { RootLayout } from '@/components/layouts/root-layout';
-import { metadata as defaultMetadata } from '@/config/metadata';
+import { RootLayout } from "@/components/layouts/root-layout";
+import { metadata as defaultMetadata } from "@/config/metadata";
 
 export const metadata: Metadata = defaultMetadata;
 

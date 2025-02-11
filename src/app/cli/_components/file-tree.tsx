@@ -35,7 +35,6 @@ function buildTree(files: FileTreeProps["files"]): TreeNode {
 	};
 
 	for (const file of files) {
-		console.log(file);
 		const parts = file?.path?.split("/") || [];
 		let current = root;
 

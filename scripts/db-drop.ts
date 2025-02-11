@@ -2,11 +2,11 @@ import { db } from "@/server/db";
 import { sql } from "drizzle-orm";
 
 async function dropDatabase() {
-	console.log("🗑️  Starting database cleanup...");
+	console.info("🗑️  Starting database cleanup...");
 
 	try {
 		// Drop all tables in the public schema
-		console.log("📦 Dropping all tables...");
+		console.info("📦 Dropping all tables...");
 
 		// Drop Payload tables
 		await db?.execute(sql`
@@ -47,7 +47,7 @@ async function dropDatabase() {
 			END $$;
 		`);
 
-		console.log("✅ Database cleanup completed");
+		console.info("✅ Database cleanup completed");
 		process.exit(0);
 	} catch (error) {
 		console.error("❌ Error cleaning up database:", error);

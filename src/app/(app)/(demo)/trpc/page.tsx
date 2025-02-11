@@ -1,12 +1,11 @@
 import { Link } from "@/components/primitives/link-with-transition";
 
-import { HydrateClient, api } from "@/lib/trpc/server";
-import { auth } from "@/server/auth";
-import { LatestPost } from "./_components/post";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-
+import { HydrateClient, api } from "@/lib/trpc/server";
+import { auth } from "@/server/auth";
+import { LatestPost } from "./_components/post";
 
 export default async function Home() {
 	const hello = await api.post.hello({ text: "from tRPC" });
@@ -68,7 +67,6 @@ export default async function Home() {
 							<p className="text-center text-2xl text-white">
 								{session && <span>Logged in as {session.user?.name}</span>}
 							</p>
-
 						</div>
 					</div>
 					<SignInOutButton />

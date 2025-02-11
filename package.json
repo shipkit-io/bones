@@ -21,7 +21,7 @@
 		"lint:biome": "biome lint .",
 		"lint:eslint": "next lint --dir src",
 		"lint:fix": "npm run lint:fix:biome && npm run lint:fix:eslint",
-		"lint:fix:biome": "biome check --apply .",
+		"lint:fix:biome": "biome check --write .",
 		"lint:fix:eslint": "next lint --fix --dir src",
 		"start": "next start",
 		"pull": "node --experimental-strip-types ./scripts/sync-upstream.ts",
@@ -129,13 +129,8 @@
 		"initVersion": "7.37.0"
 	},
 	"lint-staged": {
-		"*.{js,jsx,ts,tsx}": [
-			"eslint --fix",
-			"prettier --write"
-		],
-		"*.{json,md,yml}": [
-			"prettier --write"
-		]
+		"*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+		"*.{json,md,yml}": ["prettier --write"]
 	},
 	"volta": {
 		"node": "22.11.0"
