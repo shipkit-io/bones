@@ -80,8 +80,8 @@
 		"class-variance-authority": "0.7.1",
 		"clsx": "2.1.1",
 		"cmdk": "1.0.0",
-		"drizzle-orm": "0.38.2",
 		"drizzle-kit": "0.30.1",
+		"drizzle-orm": "0.38.2",
 		"framer-motion": "12.0.0-alpha.0",
 		"geist": "1.3.1",
 		"holy-loader": "2.3.11",
@@ -104,10 +104,10 @@
 		"tailwind-merge": "2.6.0",
 		"tailwindcss-animate": "1.0.7",
 		"usehooks-ts": "^3.1.0",
+		"uuid": "^9.0.1",
 		"zod": "3.24.1",
 		"zsa": "0.6.0",
-		"zustand": "5.0.2",
-		"uuid": "^9.0.1"
+		"zustand": "5.0.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
@@ -119,8 +119,10 @@
 		"@typescript-eslint/eslint-plugin": "^7.0.0",
 		"@typescript-eslint/parser": "^7.0.0",
 		"autoprefixer": "10.4.20",
-		"eslint": "^8.56.0",
+		"eslint": "^9",
 		"eslint-config-next": "15.1.6",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-prettier": "^5.2.3",
 		"postcss": "8.4.49",
 		"tailwindcss": "3.4.17",
 		"typescript": "^5"
@@ -129,8 +131,13 @@
 		"initVersion": "7.37.0"
 	},
 	"lint-staged": {
-		"*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
-		"*.{json,md,yml}": ["prettier --write"]
+		"*.{js,jsx,ts,tsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,md,yml}": [
+			"prettier --write"
+		]
 	},
 	"volta": {
 		"node": "22.11.0"

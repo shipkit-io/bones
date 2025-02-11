@@ -20,7 +20,7 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { BookOpen, Copy, FileJson, X } from "lucide-react";
-import type { KeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent } from "react";
 import { useState } from "react";
 import {
 	getDocumentationUrl,
@@ -31,6 +31,7 @@ import { ComponentStats } from "./component-stats";
 import { FileTree } from "./file-tree";
 import { Terminal } from "./terminal";
 import type { ComponentDetailsProps } from "./types";
+import type { RegistryItem } from "../_lib/types";
 
 const copyToClipboard = (text: string) => {
 	navigator.clipboard.writeText(text);
@@ -46,9 +47,8 @@ export function ComponentDetails({
 	onClose,
 	installationProgress,
 	onInstall,
-	onHideInstallation,
 	currentRegistry,
-}: ComponentDetailsProps) {
+}: Omit<ComponentDetailsProps, "onHideInstallation">) {
 	const [selectedFile, setSelectedFile] = useState<string>();
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -67,15 +67,10 @@ export function ComponentDetails({
 		copyToClipboard(json);
 	};
 
-	const _handleInstall = (e: MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault();
-		onInstall(component);
-	};
-
 	return (
 		<>
 			<div
-				className="absolute inset-0 bg-background/50 z-40"
+				className="absolute inset-0 z-40 bg-background/50"
 				onClick={onClose}
 				onKeyDown={handleKeyDown}
 				role="button"
@@ -87,18 +82,18 @@ export function ComponentDetails({
 				exit={{ opacity: 0, scale: 0.95 }}
 				transition={{ duration: 0.2, ease: "easeOut" }}
 				className={cn(
-					"fixed right-4 top-4 bottom-4 w-[600px] z-50 bg-background shadow-2xl",
-					currentStyle === "brutalist"
-						? "border-2 border-primary"
-						: "border rounded-lg",
+					"fixed bottom-4 right-4 top-4 z-50 w-[600px] bg-background shadow-2xl",
+					currentStyle === "modern"
+						? "rounded-lg border"
+						: "border-2 border-primary",
 				)}
 			>
-				<div className="flex flex-col h-full">
-					<div className="flex items-center justify-between p-4 border-b">
+				<div className="flex h-full flex-col">
+					<div className="flex items-center justify-between border-b p-4">
 						<div className="flex items-center gap-4">
 							<div className="flex items-center gap-2">
 								<div
-									className="w-2 h-2 rounded-full"
+									className="h-2 w-2 rounded-full"
 									style={{
 										backgroundColor: getColor(component.registry || ""),
 									}}
@@ -109,9 +104,9 @@ export function ComponentDetails({
 								<Badge
 									variant="outline"
 									className={cn(
-										currentStyle === "brutalist"
-											? "border-2 border-primary rounded-none"
-											: "border rounded-full text-xs",
+										currentStyle === "modern"
+											? "rounded-none border-2 border-primary"
+											: "rounded-full border text-xs",
 									)}
 								>
 									{component.type === "registry:ui" ? "Component" : "Block"}
@@ -121,9 +116,9 @@ export function ComponentDetails({
 										key={category}
 										variant="outline"
 										className={cn(
-											currentStyle === "brutalist"
-												? "border-2 border-primary rounded-none"
-												: "border rounded-full text-xs",
+											currentStyle === "modern"
+												? "rounded-none border-2 border-primary"
+												: "rounded-full border text-xs",
 										)}
 										style={{
 											backgroundColor: getColor(category),
@@ -141,7 +136,7 @@ export function ComponentDetails({
 							onClick={onClose}
 							className={cn(
 								"h-8 w-8",
-								currentStyle === "brutalist"
+								currentStyle === "modern"
 									? "hover:bg-primary/20"
 									: "hover:bg-accent",
 							)}
@@ -150,7 +145,7 @@ export function ComponentDetails({
 						</Button>
 					</div>
 
-					<div className="flex items-center justify-end gap-2 p-4 border-b">
+					<div className="flex items-center justify-end gap-2 border-b p-4">
 						<TooltipProvider delayDuration={0}>
 							<Tooltip>
 								<TooltipTrigger asChild>
@@ -159,8 +154,8 @@ export function ComponentDetails({
 										size="icon"
 										className={cn(
 											"h-8 w-8",
-											currentStyle === "brutalist"
-												? "border-2 border-primary rounded-none"
+											currentStyle === "modern"
+												? "rounded-none border-2 border-primary"
 												: "",
 										)}
 										onClick={handleCopyInstall}
@@ -182,8 +177,8 @@ export function ComponentDetails({
 										size="icon"
 										className={cn(
 											"h-8 w-8",
-											currentStyle === "brutalist"
-												? "border-2 border-primary rounded-none"
+											currentStyle === "modern"
+												? "rounded-none border-2 border-primary"
 												: "",
 										)}
 										onClick={handleCopyJson}
@@ -202,8 +197,8 @@ export function ComponentDetails({
 								variant="outline"
 								size="sm"
 								className={cn(
-									currentStyle === "brutalist"
-										? "border-2 border-primary rounded-none"
+									currentStyle === "modern"
+										? "rounded-none border-2 border-primary"
 										: "",
 								)}
 								asChild
@@ -221,15 +216,15 @@ export function ComponentDetails({
 					</div>
 
 					<div className="flex-1 overflow-auto p-4">
-						<p className="text-sm text-muted-foreground mb-4">
+						<p className="mb-4 text-sm text-muted-foreground">
 							{component.description}
 						</p>
-						<Tabs defaultValue="usage" className="flex-1 flex flex-col">
+						<Tabs defaultValue="usage" className="flex flex-1 flex-col">
 							<TabsList
 								className={cn(
 									"grid w-full grid-cols-4 text-sm font-medium",
-									currentStyle === "brutalist"
-										? "border-2 border-primary rounded-none"
+									currentStyle === "modern"
+										? "rounded-none border-2 border-primary"
 										: "border-b border-muted-foreground",
 								)}
 							>
@@ -258,9 +253,9 @@ export function ComponentDetails({
 																<pre
 																	className={cn(
 																		"p-2",
-																		currentStyle === "brutalist"
-																			? "bg-muted/50 rounded-none"
-																			: "bg-primary/10 rounded-md",
+																		currentStyle === "modern"
+																			? "rounded-none bg-muted/50"
+																			: "rounded-md bg-primary/10",
 																	)}
 																>
 																	<code>
@@ -354,8 +349,8 @@ export function ComponentDetails({
 										<CardContent>
 											<pre
 												className={cn(
-													"bg-muted p-4 overflow-x-auto",
-													currentStyle === "brutalist"
+													"overflow-x-auto bg-muted p-4",
+													currentStyle === "modern"
 														? "rounded-none"
 														: "rounded-md",
 												)}

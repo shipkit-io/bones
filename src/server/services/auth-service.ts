@@ -7,7 +7,17 @@ import { signInSchema } from "@/lib/schemas/auth";
 import { signIn, signOut } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
+import type { UserRole } from "@/types/user";
 import "server-only";
+
+interface AuthOptions {
+	redirectTo?: string;
+	redirect?: boolean;
+	protect?: boolean;
+	role?: UserRole;
+	nextUrl?: string;
+	errorCode?: string;
+}
 
 // Constants for password hashing
 const SALT_LENGTH = 32;
@@ -74,7 +84,7 @@ export const AuthService = {
 	/**
 	 * Sign in with OAuth provider
 	 */
-	async signInWithOAuth(providerId: string, options?: any) {
+	async signInWithOAuth(providerId: string, options?: AuthOptions) {
 		await signIn(
 			providerId,
 			{
@@ -167,7 +177,7 @@ export const AuthService = {
 	/**
 	 * Sign out the current user
 	 */
-	async signOut(options?: any) {
+	async signOut(options?: AuthOptions) {
 		await signOut({
 			redirectTo: `${routes.home}?${SEARCH_PARAM_KEYS.statusCode}=${STATUS_CODES.LOGOUT.code}`,
 			redirect: true,

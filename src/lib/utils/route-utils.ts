@@ -23,10 +23,10 @@ export const getRoutePath = (
 
 type NestedPaths<T, P extends string = ""> = T extends object
 	? {
-			[K in keyof T]: T[K] extends object
-				? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`>
-				: `${P}${P extends "" ? "" : "."}${K & string}`;
-		}[keyof T]
+		[K in keyof T]: T[K] extends object
+		? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`>
+		: `${P}${P extends "" ? "" : "."}${K & string}`;
+	}[keyof T]
 	: never;
 
 type RoutePath = NestedPaths<typeof routes>;
@@ -35,8 +35,9 @@ export const rx = <T extends RoutePath>(
 	path: T,
 	params: T extends keyof typeof routes
 		? (typeof routes)[T] extends RouteObject
-			? Required<(typeof routes)[T]["params"]>
-			: never
+		? Required<(typeof routes)[T]["params"]>
+		: never
+		// biome-ignore lint/suspicious/noExplicitAny: workaround for type inference
 		: RouteParams = {} as any,
 ): Route => {
 	const parts = path?.split(".") ?? [];

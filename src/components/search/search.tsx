@@ -87,7 +87,7 @@ export function Search({ ...props }: DialogProps) {
 									key={navItem.href}
 									value={navItem.title}
 									onSelect={() => {
-										runCommand(() => router.push(navItem.href!));
+										runCommand(() => router.push(navItem.href));
 									}}
 								>
 									<FileIcon className="mr-2 h-4 w-4" />
@@ -102,7 +102,7 @@ export function Search({ ...props }: DialogProps) {
 									key={navItem.href}
 									value={navItem.title}
 									onSelect={() => {
-										runCommand(() => router.push(navItem.href!));
+										runCommand(() => router.push(navItem.href));
 									}}
 								>
 									<div className="mr-2 flex h-4 w-4 items-center justify-center">

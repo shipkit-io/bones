@@ -6,7 +6,8 @@ import type { z } from "zod";
 export interface ActionState {
 	error?: string;
 	success?: string;
-	[key: string]: any; // This allows for additional properties
+	// biome-ignore lint/suspicious/noExplicitAny: This allows for additional properties
+	[key: string]: any;
 }
 
 const parseFormErrors = (errors: z.ZodError) => {

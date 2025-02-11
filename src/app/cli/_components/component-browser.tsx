@@ -20,6 +20,7 @@ import {
 	useEffect,
 	useRef,
 	useState,
+	useCallback,
 } from "react";
 import { installComponent } from "../_actions/install";
 import { getInstalledComponents } from "../_actions/registry";
@@ -202,20 +203,17 @@ export function ComponentBrowser({
 	const [currentStyle, setCurrentStyle] = useState<StyleMode>(initialStyle);
 	const [selectedComponent, setSelectedComponent] =
 		useState<RegistryItem | null>(null);
-	const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [installationProgress, setInstallationProgress] =
 		useState<InstallationProgress>({
 			status: "idle",
 		});
 	const [installedComponents, setInstalledComponents] = useState<string[]>([]);
-	const [_showInstallation, _setShowInstallation] = useState(false);
 	const [overwrite, setOverwrite] = useState(false);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
 	const {
 		registries,
 		currentRegistry,
-		items,
 		loading,
 		error,
 		filters,
@@ -242,22 +240,22 @@ export function ComponentBrowser({
 		checkInstallations();
 	}, []);
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				sidebarRef.current &&
-				!sidebarRef.current.contains(event.target as Node)
-			) {
-				setSelectedComponent(null);
-				setIsSidebarOpen(false);
-			}
-		};
-
-		document.addEventListener("mousedown", handleClickOutside as any);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside as any);
-		};
+	// Type-safe event handler
+	const handleClickOutside = useCallback((event: globalThis.MouseEvent) => {
+		if (
+			sidebarRef.current &&
+			!sidebarRef.current.contains(event.target as Node)
+		) {
+			setSelectedComponent(null);
+		}
 	}, []);
+
+	useEffect(() => {
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [handleClickOutside]);
 
 	const toggleStyle = () => {
 		setCurrentStyle((prev) => (prev === "brutalist" ? "modern" : "brutalist"));
@@ -265,12 +263,10 @@ export function ComponentBrowser({
 
 	const openSidebar = (component: RegistryItem) => {
 		setSelectedComponent(component);
-		setIsSidebarOpen(true);
 	};
 
 	const closeSidebar = () => {
 		setSelectedComponent(null);
-		setIsSidebarOpen(false);
 		setInstallationProgress({ status: "idle" });
 	};
 
@@ -525,7 +521,6 @@ export function ComponentBrowser({
 					onClose={closeSidebar}
 					installationProgress={installationProgress}
 					onInstall={handleInstall}
-					onHideInstallation={hideInstallation}
 				/>
 			)}
 		</div>

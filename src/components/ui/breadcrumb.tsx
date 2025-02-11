@@ -66,6 +66,7 @@ const BreadcrumbPage = React.forwardRef<
 		aria-disabled="true"
 		aria-current="page"
 		className={cn("font-normal text-foreground", className)}
+		tabIndex={0}
 		{...props}
 	/>
 ));
@@ -79,7 +80,7 @@ const BreadcrumbSeparator = ({
 	<li
 		role="presentation"
 		aria-hidden="true"
-		className={cn("[&>svg]:w-3.5 [&>svg]:h-3.5", className)}
+		className={cn("[&>svg]:h-3.5 [&>svg]:w-3.5", className)}
 		{...props}
 	>
 		{children ?? <ChevronRightIcon />}

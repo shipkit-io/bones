@@ -65,14 +65,15 @@ export function Terminal({ output, className }: TerminalProps) {
 
 	return (
 		<ScrollArea
-			className={cn("bg-[#1E1E1E] rounded-md", className)}
+			className={cn("rounded-md bg-[#1E1E1E]", className)}
 			ref={scrollAreaRef}
 		>
-			<div className="p-4 font-mono text-sm text-[#D4D4D4] leading-5">
+			<div className="p-4 font-mono text-sm leading-5 text-[#D4D4D4]">
 				{processedOutput.map((line, i) => (
 					<div
 						key={`${i}-${line.slice(0, 20)}`}
 						className="min-h-[6px]"
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: Terminal output needs HTML conversion
 						dangerouslySetInnerHTML={{
 							__html: convert.toHtml(cleanAnsi(line)) || "&nbsp;",
 						}}

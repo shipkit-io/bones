@@ -54,5 +54,4 @@ export interface ComponentDetailsProps {
 	onClose: () => void;
 	installationProgress: InstallationProgress;
 	onInstall: (component: RegistryItem) => void;
-	onHideInstallation: () => void;
 }

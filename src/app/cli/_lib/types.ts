@@ -16,13 +16,13 @@ export interface Registry {
 export interface RegistryItem {
 	name: string;
 	type:
-		| "registry:block"
-		| "registry:ui"
-		| "registry:hook"
-		| "registry:lib"
-		| "registry:component"
-		| "registry:theme"
-		| "registry:page";
+	| "registry:block"
+	| "registry:ui"
+	| "registry:hook"
+	| "registry:lib"
+	| "registry:component"
+	| "registry:theme"
+	| "registry:page";
 	description?: string;
 	dependencies?: string[];
 	categories?: string[];
@@ -32,14 +32,14 @@ export interface RegistryItem {
 		path: string;
 		content?: string;
 		type?:
-			| "preview"
-			| "ui"
-			| "block"
-			| "hook"
-			| "lib"
-			| "component"
-			| "theme"
-			| "page";
+		| "preview"
+		| "ui"
+		| "block"
+		| "hook"
+		| "lib"
+		| "component"
+		| "theme"
+		| "page";
 		target?: string;
 	}>;
 	registryDependencies?: string[];
@@ -47,7 +47,7 @@ export interface RegistryItem {
 	meta?: {
 		library?: string;
 		hasPreview?: boolean;
-		[key: string]: any;
+		[key: string]: unknown;
 	};
 }
 

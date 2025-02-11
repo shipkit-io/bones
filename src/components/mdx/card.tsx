@@ -24,6 +24,7 @@ export function Card({
 		if (!icon) return null;
 
 		if (React.isValidElement(icon)) {
+			// biome-ignore lint/suspicious/noExplicitAny: workaround
 			return React.cloneElement(icon as React.ReactElement<any>, {
 				className: "h-5 w-5 text-primary/80 shrink-0",
 			});
@@ -60,7 +61,7 @@ export function Card({
 				<div className="space-y-2">
 					<div className="flex items-center gap-3">
 						<h3 className="font-semibold">{title}</h3>
-						<div className="absolute top-6 right-6">{renderIcon()}</div>
+						<div className="absolute right-6 top-6">{renderIcon()}</div>
 					</div>
 					<div className="text-sm text-muted-foreground">{children}</div>
 				</div>

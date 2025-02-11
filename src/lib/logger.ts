@@ -21,47 +21,47 @@ const isServer = typeof window === "undefined";
 
 const _createLogger =
 	(level: LogLevel) =>
-	(...args: unknown[]): void => {
-		const logData: LogData = {
-			apiKey: process.env.NEXT_PUBLIC_LOGFLARE_KEY,
-			prefix: "logger",
-			emoji: "🌐",
-			level,
-			message: args
-				.map((arg) =>
-					typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-				)
-				.join(" "),
-			timestamp: new Date().toISOString(),
-			url: isServer ? "server" : window.location.href,
-			userAgent: isServer ? "server" : navigator.userAgent,
-		};
+		(...args: unknown[]): void => {
+			const logData: LogData = {
+				apiKey: process.env.NEXT_PUBLIC_LOGFLARE_KEY,
+				prefix: "logger",
+				emoji: "🌐",
+				level,
+				message: args
+					.map((arg) =>
+						typeof arg === "object" ? JSON.stringify(arg) : String(arg),
+					)
+					.join(" "),
+				timestamp: new Date().toISOString(),
+				url: isServer ? "server" : window.location.href,
+				userAgent: isServer ? "server" : navigator.userAgent,
+			};
 
-		// Send server-side logs to your logging service or database
-		void fetch("http://localhost:3000/v1", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(logData),
-		});
-		if (isServer) {
-			console[level](...args);
+			// Send server-side logs to your logging service or database
+			void fetch("http://localhost:3000/v1", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(logData),
+			});
+			if (isServer) {
+				console[level](...args);
 
-			// TODO: Implement logging service
-			if (logData?.apiKey) {
-				// Send server-side logs to your logging service or database
-				void fetch("http://localhost:3000/v1", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(logData),
-				});
+				// TODO: Implement logging service
+				if (logData?.apiKey) {
+					// Send server-side logs to your logging service or database
+					void fetch("http://localhost:3000/v1", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(logData),
+					});
+				}
+			} else {
+				console[level](...args);
+				// if (loggerWorker) {
+				// 	loggerWorker.postMessage({ logData });
+				// }
 			}
-		} else {
-			console[level](...args);
-			// if (loggerWorker) {
-			// 	loggerWorker.postMessage({ logData });
-			// }
-		}
-	};
+		};
 
 export const logger = console;
 // export const logger = {
@@ -101,7 +101,7 @@ const LOGGING_METHOD = {
 	error: "error",
 } as const;
 
-function prefixedLog(prefixType: keyof typeof prefixes, ...message: any[]) {
+function prefixedLog(prefixType: keyof typeof prefixes, ...message) {
 	if ((message[0] === "" || message[0] === undefined) && message.length === 1) {
 		message.shift();
 	}
@@ -120,40 +120,40 @@ function prefixedLog(prefixType: keyof typeof prefixes, ...message: any[]) {
 	}
 }
 
-export function bootstrap(...message: any[]) {
+export function bootstrap(...message) {
 	console.info(" ", ...message);
 }
 
-export function wait(...message: any[]) {
+export function wait(...message) {
 	prefixedLog("wait", ...message);
 }
 
-export function error(...message: any[]) {
+export function error(...message) {
 	prefixedLog("error", ...message);
 }
 
-export function warn(...message: any[]) {
+export function warn(...message) {
 	prefixedLog("warn", ...message);
 }
 
-export function ready(...message: any[]) {
+export function ready(...message) {
 	prefixedLog("ready", ...message);
 }
 
-export function info(...message: any[]) {
+export function info(...message) {
 	prefixedLog("info", ...message);
 }
 
-export function event(...message: any[]) {
+export function event(...message) {
 	prefixedLog("event", ...message);
 }
 
-export function trace(...message: any[]) {
+export function trace(...message) {
 	prefixedLog("trace", ...message);
 }
 
 const warnOnceMessages = new Set();
-export function warnOnce(...message: any[]) {
+export function warnOnce(...message) {
 	if (!warnOnceMessages.has(message[0])) {
 		warnOnceMessages.add(message.join(" "));
 

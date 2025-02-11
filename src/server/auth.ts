@@ -42,9 +42,9 @@ const {
 				})
 			: undefined,
 	logger: {
-		error: (code: Error, ...message: any[]) => logger.error(code, message),
-		warn: (code: string, ...message: any[]) => logger.warn(code, message),
-		debug: (code: string, ...message: any[]) => logger.debug(code, message),
+		error: (code: Error, ...message: unknown[]) => logger.error(code, message),
+		warn: (code: string, ...message: unknown[]) => logger.warn(code, message),
+		debug: (code: string, ...message: unknown[]) => logger.debug(code, message),
 	},
 });
 interface AuthProps {

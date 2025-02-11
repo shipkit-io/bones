@@ -7,6 +7,9 @@ export function useLockBody() {
 			document.body,
 		).overflow;
 		document.body.style.overflow = "hidden";
-		return () => (document.body.style.overflow = originalStyle);
+		return () => {
+			document.body.style.overflow = originalStyle;
+			return originalStyle;
+		};
 	}, []);
 }
