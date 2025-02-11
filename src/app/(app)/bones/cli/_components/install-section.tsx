@@ -41,7 +41,7 @@ export function InstallSection() {
 	};
 
 	useEffect(() => {
-		controls.start({
+		void controls.start({
 			opacity: [0.3, 1, 0.3],
 			transition: {
 				repeat: Number.POSITIVE_INFINITY,

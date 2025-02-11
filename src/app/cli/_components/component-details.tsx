@@ -50,12 +50,12 @@ export function ComponentDetails({
 
 	const handleCopyInstall = () => {
 		const installCommand = getInstallCommand(component, currentRegistry);
-		copyToClipboard(installCommand);
+		void copyToClipboard(installCommand);
 	};
 
 	const handleCopyJson = () => {
 		const json = JSON.stringify(component, null, 2);
-		copyToClipboard(json);
+		void copyToClipboard(json);
 	};
 
 	return (
@@ -84,7 +84,7 @@ export function ComponentDetails({
 								<div
 									className="h-2 w-2 rounded-full"
 									style={{
-										backgroundColor: getColor(component.registry || ""),
+										backgroundColor: getColor(component.registry ?? ""),
 									}}
 								/>
 								<h2 className="text-lg font-bold">{component.name}</h2>

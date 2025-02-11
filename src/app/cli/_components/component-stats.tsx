@@ -92,7 +92,7 @@ export function ComponentStats({
       }
     };
 
-    loadStats();
+    void loadStats();
   }, [component]);
 
   if (!component || !stats) {

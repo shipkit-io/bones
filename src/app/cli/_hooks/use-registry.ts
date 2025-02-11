@@ -25,7 +25,7 @@ export function useRegistry() {
 				setError(error instanceof Error ? error : new Error("Failed to load registries"));
 			}
 		};
-		loadRegistries();
+		void loadRegistries();
 	}, []);
 
 	useEffect(() => {
@@ -64,7 +64,7 @@ export function useRegistry() {
 			}
 		};
 		if (registries.length > 0) {
-			loadItems();
+			void loadItems();
 		}
 	}, [currentRegistry, registries]);
 
