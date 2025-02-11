@@ -109,7 +109,8 @@ export const routes = {
 	},
 	// Demo routes
 	demo: {
-		network: "/demo/network",
+		network: "/network",
+		trpc: "/trpc",
 	},
 
 	// External links
