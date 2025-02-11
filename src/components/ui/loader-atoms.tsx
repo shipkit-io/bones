@@ -114,5 +114,5 @@ export const LoaderAtoms = React.forwardRef<HTMLDivElement, LoaderAtomsProps>(
 				`}</style>
 			</div>
 		);
-	},
+	}
 );

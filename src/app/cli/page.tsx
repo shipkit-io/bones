@@ -8,9 +8,7 @@ const spaceGrotesk = Space_Grotesk({
 
 export default function Page() {
 	return (
-		<div
-			className={`p-6 ${spaceGrotesk.className} grid place-items-center h-screen max-h-screen`}
-		>
+		<div className={`p-6 ${spaceGrotesk.className} grid place-items-center h-screen max-h-screen`}>
 			<ComponentBrowser />
 		</div>
 	);

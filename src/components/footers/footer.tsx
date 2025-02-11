@@ -1,16 +1,16 @@
-import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
+import Link from "next/link";
 import type { FC, HTMLAttributes, ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 
-type LinkItem = {
+interface LinkItem {
 	label: string;
 	href: string;
-};
+}
 
 type FooterItem = LinkItem | ReactNode;
 
@@ -22,9 +22,7 @@ interface FooterGroup {
 	items: FooterItem[];
 }
 
-type FooterElement =
-	| { type: "group"; content: FooterGroup }
-	| { type: "node"; content: ReactNode };
+type FooterElement = { type: "group"; content: FooterGroup } | { type: "node"; content: ReactNode };
 
 const defaultGroups: FooterElement[] = [
 	{
@@ -131,9 +129,7 @@ export const Footer: FC<FooterProps> = ({
 							<h1 className="text-4xl font-bold">{siteConfig.name}</h1>
 						</Link>
 					</div>
-					<div className="flex flex-col flex-wrap md:flex-row lg:gap-20">
-						{groupElements}
-					</div>
+					<div className="flex flex-col flex-wrap md:flex-row lg:gap-20">{groupElements}</div>
 				</div>
 			</div>
 		</footer>
@@ -142,10 +138,5 @@ export const Footer: FC<FooterProps> = ({
 
 // Type guard for LinkItem
 function isLinkItem(item: FooterItem): item is LinkItem {
-	return (
-		item !== null &&
-		typeof item === "object" &&
-		"href" in item &&
-		"label" in item
-	);
+	return item !== null && typeof item === "object" && "href" in item && "label" in item;
 }

@@ -29,13 +29,9 @@ const SCRYPT_OPTIONS = {
 } as const;
 
 // Promisify scrypt
-const scrypt = promisify<
-	string | Buffer,
-	Buffer,
-	number,
-	crypto.ScryptOptions,
-	Buffer
->(crypto.scrypt);
+const scrypt = promisify<string | Buffer, Buffer, number, crypto.ScryptOptions, Buffer>(
+	crypto.scrypt
+);
 
 /**
  * Hash a password using scrypt
@@ -54,10 +50,7 @@ async function hashPassword(password: string): Promise<string> {
  * @param hash The hash to verify against (in format salt:hash)
  * @returns True if the password matches, false otherwise
  */
-async function verifyPassword(
-	password: string,
-	storedHash: string,
-): Promise<boolean> {
+async function verifyPassword(password: string, storedHash: string): Promise<boolean> {
 	try {
 		const parts = storedHash.split(":");
 		if (parts.length !== 2) return false;
@@ -91,7 +84,7 @@ export const AuthService = {
 				redirectTo: options?.redirectTo ?? routes.home,
 				...options,
 			},
-			{ prompt: "select_account" },
+			{ prompt: "select_account" }
 		);
 		return { success: STATUS_CODES.LOGIN.message };
 	},
@@ -152,8 +145,7 @@ export const AuthService = {
 				role: "user",
 			};
 
-			const [result] =
-				(await db?.insert(users).values(newUser).returning()) ?? [];
+			const [result] = (await db?.insert(users).values(newUser).returning()) ?? [];
 
 			if (!result) {
 				throw new Error("Failed to create user");

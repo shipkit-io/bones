@@ -8,12 +8,15 @@
 		"enabled": true,
 		"indentStyle": "tab",
 		"indentWidth": 2,
-		"lineWidth": 80
+		"lineWidth": 100,
+		"formatWithErrors": true
 	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double",
-			"semicolons": "always"
+			"semicolons": "always",
+			"trailingCommas": "es5",
+			"arrowParentheses": "always"
 		},
 		"globals": ["React"]
 	},

@@ -1,19 +1,14 @@
 import { type RouteObject, type RouteParams, routes } from "@/config/routes";
 import type { Route } from "next";
 
-export const getRoutePath = (
-	route: Route | RouteObject,
-	params: RouteParams = {},
-): Route => {
+export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {}): Route => {
 	if (typeof route === "string") {
 		return route;
 	}
 
 	let path = route.path;
 	for (const [key, defaultValue] of Object.entries(route.params ?? {})) {
-		const value = Object.prototype.hasOwnProperty.call(params, key)
-			? params[key]
-			: defaultValue;
+		const value = Object.prototype.hasOwnProperty.call(params, key) ? params[key] : defaultValue;
 		if (value !== null) {
 			path = path.replace(`:${key}`, String(value));
 		}
@@ -23,10 +18,10 @@ export const getRoutePath = (
 
 type NestedPaths<T, P extends string = ""> = T extends object
 	? {
-		[K in keyof T]: T[K] extends object
-		? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`>
-		: `${P}${P extends "" ? "" : "."}${K & string}`;
-	}[keyof T]
+			[K in keyof T]: T[K] extends object
+				? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`>
+				: `${P}${P extends "" ? "" : "."}${K & string}`;
+		}[keyof T]
 	: never;
 
 type RoutePath = NestedPaths<typeof routes>;
@@ -35,10 +30,10 @@ export const rx = <T extends RoutePath>(
 	path: T,
 	params: T extends keyof typeof routes
 		? (typeof routes)[T] extends RouteObject
-		? Required<(typeof routes)[T]["params"]>
-		: never
-		// biome-ignore lint/suspicious/noExplicitAny: workaround for type inference
-		: RouteParams = {} as any,
+			? Required<(typeof routes)[T]["params"]>
+			: never
+		: // biome-ignore lint/suspicious/noExplicitAny: workaround for type inference
+			RouteParams = {} as any
 ): Route => {
 	const parts = path?.split(".") ?? [];
 	let current: unknown = routes;

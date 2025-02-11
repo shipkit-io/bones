@@ -9,7 +9,7 @@ import type { InstallOptions } from "../_lib/types";
  */
 export async function installComponent(
 	componentUrl: string,
-	options: InstallOptions = {},
+	options: InstallOptions = {}
 ): Promise<ReadableStream<Uint8Array>> {
 	const encoder = new TextEncoder();
 
@@ -47,9 +47,7 @@ export async function installComponent(
 
 				process.on("close", (code) => {
 					if (code !== 0) {
-						controller.enqueue(
-							encoder.encode(`\nProcess exited with code ${code}`),
-						);
+						controller.enqueue(encoder.encode(`\nProcess exited with code ${code}`));
 					}
 					controller.close();
 				});
@@ -59,8 +57,7 @@ export async function installComponent(
 					controller.close();
 				});
 			} catch (error) {
-				const message =
-					error instanceof Error ? error.message : "Unknown error occurred";
+				const message = error instanceof Error ? error.message : "Unknown error occurred";
 				controller.enqueue(encoder.encode(`\nError: ${message}`));
 				controller.close();
 			}

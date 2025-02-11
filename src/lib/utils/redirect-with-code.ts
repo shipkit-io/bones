@@ -8,10 +8,7 @@ interface RedirectWithCodeOptions {
 	nextUrl?: string;
 }
 
-export const redirectWithCode = (
-	url: string,
-	options?: RedirectWithCodeOptions,
-) => {
+export const redirectWithCode = (url: string, options?: RedirectWithCodeOptions) => {
 	const { code, nextUrl } = options ?? {};
 	const redirectUrl = new URL(url, process.env.NEXTAUTH_URL);
 
@@ -28,7 +25,7 @@ export const redirectWithCode = (
 
 export const routeRedirectWithCode = (
 	destination: string,
-	options?: string | { code?: string; nextUrl?: string; request?: Request },
+	options?: string | { code?: string; nextUrl?: string; request?: Request }
 ) => {
 	if (!options) {
 		return NextResponse.redirect(destination);

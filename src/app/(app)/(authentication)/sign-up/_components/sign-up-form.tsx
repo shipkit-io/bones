@@ -80,12 +80,7 @@ export const SignUpForm = () => {
 						<FormItem>
 							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input
-									placeholder="me@example.com"
-									type="email"
-									autoComplete="email"
-									{...field}
-								/>
+								<Input placeholder="me@example.com" type="email" autoComplete="email" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -109,9 +104,7 @@ export const SignUpForm = () => {
 					className="w-full"
 					disabled={form.formState.isSubmitting || !form.formState.isValid}
 				>
-					{form.formState.isSubmitting
-						? "Creating account..."
-						: "Create account"}
+					{form.formState.isSubmitting ? "Creating account..." : "Create account"}
 				</Button>
 			</form>
 		</Form>

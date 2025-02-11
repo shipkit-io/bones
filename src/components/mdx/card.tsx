@@ -13,13 +13,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 	children: React.ReactNode;
 }
 
-export function Card({
-	title,
-	icon,
-	children,
-	className,
-	...props
-}: CardProps) {
+export function Card({ title, icon, children, className, ...props }: CardProps) {
 	const renderIcon = () => {
 		if (!icon) return null;
 
@@ -53,7 +47,7 @@ export function Card({
 		<div
 			className={cn(
 				"relative overflow-hidden rounded-lg border bg-background p-6",
-				className || "",
+				className || ""
 			)}
 			{...props}
 		>

@@ -10,28 +10,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { BookOpen, Copy, FileJson, X } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { useState } from "react";
-import {
-	getDocumentationUrl,
-	getInstallCommand,
-} from "../_lib/registry-service";
+import { getDocumentationUrl, getInstallCommand } from "../_lib/registry-service";
+import type { RegistryItem } from "../_lib/types";
 import { getColor } from "./colors";
 import { ComponentStats } from "./component-stats";
 import { FileTree } from "./file-tree";
 import { Terminal } from "./terminal";
 import type { ComponentDetailsProps } from "./types";
-import type { RegistryItem } from "../_lib/types";
 
 const copyToClipboard = (text: string) => {
 	navigator.clipboard.writeText(text);
@@ -83,9 +75,7 @@ export function ComponentDetails({
 				transition={{ duration: 0.2, ease: "easeOut" }}
 				className={cn(
 					"fixed bottom-4 right-4 top-4 z-50 w-[600px] bg-background shadow-2xl",
-					currentStyle === "modern"
-						? "rounded-lg border"
-						: "border-2 border-primary",
+					currentStyle === "modern" ? "rounded-lg border" : "border-2 border-primary"
 				)}
 			>
 				<div className="flex h-full flex-col">
@@ -106,7 +96,7 @@ export function ComponentDetails({
 									className={cn(
 										currentStyle === "modern"
 											? "rounded-none border-2 border-primary"
-											: "rounded-full border text-xs",
+											: "rounded-full border text-xs"
 									)}
 								>
 									{component.type === "registry:ui" ? "Component" : "Block"}
@@ -118,7 +108,7 @@ export function ComponentDetails({
 										className={cn(
 											currentStyle === "modern"
 												? "rounded-none border-2 border-primary"
-												: "rounded-full border text-xs",
+												: "rounded-full border text-xs"
 										)}
 										style={{
 											backgroundColor: getColor(category),
@@ -136,9 +126,7 @@ export function ComponentDetails({
 							onClick={onClose}
 							className={cn(
 								"h-8 w-8",
-								currentStyle === "modern"
-									? "hover:bg-primary/20"
-									: "hover:bg-accent",
+								currentStyle === "modern" ? "hover:bg-primary/20" : "hover:bg-accent"
 							)}
 						>
 							<X className="h-4 w-4" />
@@ -154,9 +142,7 @@ export function ComponentDetails({
 										size="icon"
 										className={cn(
 											"h-8 w-8",
-											currentStyle === "modern"
-												? "rounded-none border-2 border-primary"
-												: "",
+											currentStyle === "modern" ? "rounded-none border-2 border-primary" : ""
 										)}
 										onClick={handleCopyInstall}
 									>
@@ -177,9 +163,7 @@ export function ComponentDetails({
 										size="icon"
 										className={cn(
 											"h-8 w-8",
-											currentStyle === "modern"
-												? "rounded-none border-2 border-primary"
-												: "",
+											currentStyle === "modern" ? "rounded-none border-2 border-primary" : ""
 										)}
 										onClick={handleCopyJson}
 									>
@@ -197,9 +181,7 @@ export function ComponentDetails({
 								variant="outline"
 								size="sm"
 								className={cn(
-									currentStyle === "modern"
-										? "rounded-none border-2 border-primary"
-										: "",
+									currentStyle === "modern" ? "rounded-none border-2 border-primary" : ""
 								)}
 								asChild
 							>
@@ -216,16 +198,14 @@ export function ComponentDetails({
 					</div>
 
 					<div className="flex-1 overflow-auto p-4">
-						<p className="mb-4 text-sm text-muted-foreground">
-							{component.description}
-						</p>
+						<p className="mb-4 text-sm text-muted-foreground">{component.description}</p>
 						<Tabs defaultValue="usage" className="flex flex-1 flex-col">
 							<TabsList
 								className={cn(
 									"grid w-full grid-cols-4 text-sm font-medium",
 									currentStyle === "modern"
 										? "rounded-none border-2 border-primary"
-										: "border-b border-muted-foreground",
+										: "border-b border-muted-foreground"
 								)}
 							>
 								<TabsTrigger value="usage">Usage</TabsTrigger>
@@ -247,20 +227,17 @@ export function ComponentDetails({
 														<div className="space-y-4">
 															<div>
 																<p className="mb-2">
-																	Run the following command to add this
-																	component to your project:
+																	Run the following command to add this component to your project:
 																</p>
 																<pre
 																	className={cn(
 																		"p-2",
 																		currentStyle === "modern"
 																			? "rounded-none bg-muted/50"
-																			: "rounded-md bg-primary/10",
+																			: "rounded-md bg-primary/10"
 																	)}
 																>
-																	<code>
-																		npx shadcn@latest add {component.name}
-																	</code>
+																	<code>npx shadcn@latest add {component.name}</code>
 																</pre>
 															</div>
 															<div>
@@ -271,9 +248,7 @@ export function ComponentDetails({
 																		e.preventDefault();
 																		onInstall(component);
 																	}}
-																	disabled={
-																		installationProgress.status === "installing"
-																	}
+																	disabled={installationProgress.status === "installing"}
 																>
 																	{installationProgress.status === "installing"
 																		? "Installing..."
@@ -285,7 +260,7 @@ export function ComponentDetails({
 																			"mt-2 text-sm",
 																			installationProgress.status === "error"
 																				? "text-destructive"
-																				: "text-muted-foreground",
+																				: "text-muted-foreground"
 																		)}
 																	>
 																		{installationProgress.message}
@@ -294,9 +269,7 @@ export function ComponentDetails({
 																{installationProgress.log && (
 																	<div className="mt-4">
 																		<Terminal
-																			output={installationProgress.log.split(
-																				"\n",
-																			)}
+																			output={installationProgress.log.split("\n")}
 																			className="h-[200px]"
 																		/>
 																	</div>
@@ -335,10 +308,7 @@ export function ComponentDetails({
 										</CardContent>
 									</Card>
 									<div className="mt-4">
-										<ComponentStats
-											component={component}
-											currentStyle={currentStyle}
-										/>
+										<ComponentStats component={component} currentStyle={currentStyle} />
 									</div>
 								</TabsContent>
 								<TabsContent value="code" className="mt-0">
@@ -350,9 +320,7 @@ export function ComponentDetails({
 											<pre
 												className={cn(
 													"overflow-x-auto bg-muted p-4",
-													currentStyle === "modern"
-														? "rounded-none"
-														: "rounded-md",
+													currentStyle === "modern" ? "rounded-none" : "rounded-md"
 												)}
 											>
 												<code>{JSON.stringify(component, null, 2)}</code>
@@ -377,9 +345,7 @@ export function ComponentDetails({
 													currentStyle={currentStyle}
 												/>
 											) : (
-												<div className="text-center text-muted-foreground">
-													No files available
-												</div>
+												<div className="text-center text-muted-foreground">No files available</div>
 											)}
 										</CardContent>
 									</Card>

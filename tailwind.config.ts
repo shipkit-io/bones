@@ -259,13 +259,11 @@ const config = {
 				"shiny-text": "shiny-text 8s infinite",
 				gradient: "gradient 8s linear infinite",
 				rainbow: "rainbow var(--speed, 2s) infinite linear",
-				"shimmer-slide":
-					"shimmer-slide var(--speed) ease-in-out infinite alternate",
+				"shimmer-slide": "shimmer-slide var(--speed) ease-in-out infinite alternate",
 				"spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
 				grid: "grid 120s linear infinite",
 				meteor: "meteor 5s linear infinite",
-				"background-position-spin":
-					"background-position-spin 3000ms infinite alternate",
+				"background-position-spin": "background-position-spin 3000ms infinite alternate",
 				marquee: "marquee var(--duration) infinite linear",
 				"marquee-vertical": "marquee-vertical var(--duration) linear infinite",
 				shine: "shine 8s ease-in-out infinite",
@@ -306,7 +304,7 @@ export default config;
 function addVariablesForColors({ addBase, theme }: any) {
 	const allColors = flattenColorPalette(theme("colors"));
 	const newVars = Object.fromEntries(
-		Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+		Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
 	);
 
 	addBase({

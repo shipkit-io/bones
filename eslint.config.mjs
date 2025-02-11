@@ -1,21 +1,16 @@
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-// @ts-nocheck
 import { FlatCompat } from "@eslint/eslintrc";
 import ts from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
-import prettier from "eslint-config-prettier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
 	baseDirectory: __dirname,
-	recommendedConfig: ts.configs["recommended-type-checked"],
-	stylisticConfig: ts.configs["stylistic-type-checked"],
 });
 
-/** @type {Array<import('eslint').Linter.FlatConfig>} */
 const eslintConfig = [
 	// Base config for all files
 	{
@@ -49,7 +44,21 @@ const eslintConfig = [
 			"@typescript-eslint": ts,
 		},
 		rules: {
-			// Disable specific TypeScript rules
+			...ts.configs.recommended.rules,
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					argsIgnorePattern: "^_",
+					varsIgnorePattern: "^_",
+				},
+			],
+			"@typescript-eslint/consistent-type-imports": [
+				"warn",
+				{
+					prefer: "type-imports",
+					fixStyle: "inline-type-imports",
+				},
+			],
 			"@typescript-eslint/ban-ts-comment": "off",
 			"@typescript-eslint/no-unsafe-argument": "off",
 			"@typescript-eslint/no-unsafe-assignment": "off",
@@ -58,23 +67,6 @@ const eslintConfig = [
 			"@typescript-eslint/no-unsafe-return": "off",
 			"@typescript-eslint/no-explicit-any": "off",
 			"react/no-unescaped-entities": "off",
-
-			// Type imports configuration
-			"@typescript-eslint/consistent-type-imports": [
-				"warn",
-				{
-					prefer: "type-imports",
-					fixStyle: "inline-type-imports",
-				},
-			],
-
-			// Unused variables configuration
-			"@typescript-eslint/no-unused-vars": [
-				"warn",
-				{
-					argsIgnorePattern: "^_",
-				},
-			],
 		},
 	},
 
@@ -101,12 +93,8 @@ const eslintConfig = [
 		"plugin:@typescript-eslint/recommended-type-checked",
 		"plugin:@typescript-eslint/stylistic-type-checked",
 		"next/core-web-vitals",
-		"next/typescript",
-		"plugin:prettier/recommended",
+		"next/typescript"
 	),
-
-	// Add Prettier last
-	prettier,
 ];
 
 export default eslintConfig;

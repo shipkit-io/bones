@@ -36,7 +36,7 @@ export function Terminal({ output, className }: TerminalProps) {
 				escapeXML: true,
 				stream: true,
 			}),
-		[],
+		[]
 	);
 
 	// Auto-scroll to bottom when output changes
@@ -47,9 +47,7 @@ export function Terminal({ output, className }: TerminalProps) {
 
 			// Check if scroll is near bottom before auto-scrolling
 			const isNearBottom =
-				viewportElement.scrollHeight -
-					viewportElement.scrollTop -
-					viewportElement.clientHeight <
+				viewportElement.scrollHeight - viewportElement.scrollTop - viewportElement.clientHeight <
 				50;
 
 			if (isNearBottom) {
@@ -64,10 +62,7 @@ export function Terminal({ output, className }: TerminalProps) {
 	}, [output]);
 
 	return (
-		<ScrollArea
-			className={cn("rounded-md bg-[#1E1E1E]", className)}
-			ref={scrollAreaRef}
-		>
+		<ScrollArea className={cn("rounded-md bg-[#1E1E1E]", className)} ref={scrollAreaRef}>
 			<div className="p-4 font-mono text-sm leading-5 text-[#D4D4D4]">
 				{processedOutput.map((line, i) => (
 					<div

@@ -10,11 +10,7 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { Label } from "@/components/ui/label";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
@@ -60,9 +56,7 @@ export function BrowserHeader({
 		<div
 			className={cn(
 				"flex items-center justify-between gap-4 p-4 border-b",
-				currentStyle === "brutalist"
-					? "border-b-2 border-primary"
-					: "border-border",
+				currentStyle === "brutalist" ? "border-b-2 border-primary" : "border-border"
 			)}
 		>
 			<h1 className="text-2xl font-bold">Component Browser</h1>
@@ -77,7 +71,7 @@ export function BrowserHeader({
 								"w-[200px] justify-between",
 								currentStyle === "brutalist"
 									? "border-2 border-primary rounded-none"
-									: "border rounded-md",
+									: "border rounded-md"
 							)}
 						>
 							<div className="flex items-center gap-2">
@@ -94,10 +88,7 @@ export function BrowserHeader({
 					</PopoverTrigger>
 					<PopoverContent className="w-[200px] p-0">
 						<Command>
-							<CommandInput
-								placeholder="Search registries..."
-								className="h-9"
-							/>
+							<CommandInput placeholder="Search registries..." className="h-9" />
 							<CommandEmpty>No registry found.</CommandEmpty>
 							<CommandList>
 								<CommandGroup heading="Registries">
@@ -109,7 +100,7 @@ export function BrowserHeader({
 											<CheckIcon
 												className={cn(
 													"mr-2 h-4 w-4",
-													!currentRegistry ? "opacity-100" : "opacity-0",
+													!currentRegistry ? "opacity-100" : "opacity-0"
 												)}
 											/>
 											<div className="w-2 h-2 rounded-full bg-gradient-to-r from-primary to-primary/50" />
@@ -128,9 +119,7 @@ export function BrowserHeader({
 													<CheckIcon
 														className={cn(
 															"mr-2 h-4 w-4",
-															currentRegistry?.name === registry.name
-																? "opacity-100"
-																: "opacity-0",
+															currentRegistry?.name === registry.name ? "opacity-100" : "opacity-0"
 														)}
 													/>
 													<div
@@ -158,7 +147,7 @@ export function BrowserHeader({
 																"mr-2 h-4 w-4",
 																currentRegistry?.name === registry.name
 																	? "opacity-100"
-																	: "opacity-0",
+																	: "opacity-0"
 															)}
 														/>
 														<div
@@ -176,12 +165,9 @@ export function BrowserHeader({
 														onClick={(e) => {
 															e.stopPropagation();
 															if (currentRegistry?.name === registry.name) {
-																const defaultRegistry = registries.find(
-																	(r) => !r.custom,
-																);
+																const defaultRegistry = registries.find((r) => !r.custom);
 																const fallbackRegistry = registries[0];
-																const nextRegistry =
-																	defaultRegistry || fallbackRegistry;
+																const nextRegistry = defaultRegistry || fallbackRegistry;
 																if (nextRegistry) {
 																	handleRegistryChange(nextRegistry);
 																}
@@ -209,11 +195,7 @@ export function BrowserHeader({
 						id="overwrite"
 						checked={overwrite}
 						onCheckedChange={onOverwriteChange}
-						className={cn(
-							currentStyle === "brutalist"
-								? "data-[state=checked]:bg-primary"
-								: "",
-						)}
+						className={cn(currentStyle === "brutalist" ? "data-[state=checked]:bg-primary" : "")}
 					/>
 					<Label htmlFor="overwrite" className="text-sm text-muted-foreground">
 						Overwrite existing
@@ -226,9 +208,7 @@ export function BrowserHeader({
 					onClick={onStyleChange}
 					className={cn(
 						"h-8 w-8",
-						currentStyle === "brutalist"
-							? "hover:bg-primary/20"
-							: "hover:bg-accent",
+						currentStyle === "brutalist" ? "hover:bg-primary/20" : "hover:bg-accent"
 					)}
 				>
 					<Palette className="h-4 w-4" />

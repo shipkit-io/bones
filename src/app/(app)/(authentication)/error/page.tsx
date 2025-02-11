@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 enum Error {
@@ -12,9 +12,8 @@ enum Error {
 const errorMap = {
 	[Error.Configuration]: (
 		<p>
-			There was a problem when trying to authenticate. Please contact us if this
-			error persists. Unique error code:{" "}
-			<code className="rounded-sm bg-slate-100 p-1 text-xs">Configuration</code>
+			There was a problem when trying to authenticate. Please contact us if this error persists.
+			Unique error code: <code className="rounded-sm bg-slate-100 p-1 text-xs">Configuration</code>
 		</p>
 	),
 };

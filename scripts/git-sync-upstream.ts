@@ -1,4 +1,4 @@
-import { program } from "commander";
+import { Command } from "commander";
 import {
 	createPullRequest,
 	deleteBranch,
@@ -40,7 +40,7 @@ async function syncUpstream(options: SyncOptions): Promise<void> {
 			try {
 				// Merge upstream changes into temp branch
 				console.info(
-					`Merging changes from ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH} into ${tempBranch}...`,
+					`Merging changes from ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH} into ${tempBranch}...`
 				);
 				runCommand(`git merge ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}`);
 
@@ -63,31 +63,22 @@ async function syncUpstream(options: SyncOptions): Promise<void> {
 			verifyCurrentBranch(CURRENT_BRANCH);
 
 			// Merge upstream changes directly
-			console.info(
-				`Merging changes from ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}...`,
-			);
+			console.info(`Merging changes from ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}...`);
 			runCommand(`git merge ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}`);
 		}
 
 		console.info("Update from upstream completed successfully.");
 	} catch (error) {
-		console.error(
-			"Failed to sync upstream:",
-			error instanceof Error ? error.message : error,
-		);
+		console.error("Failed to sync upstream:", error instanceof Error ? error.message : error);
 		process.exit(1);
 	}
 }
 
 // CLI configuration
-program
+const program = new Command()
 	.name("sync-upstream")
 	.description("Sync changes from upstream repository")
-	.option(
-		"-d, --direct",
-		"Sync directly to current branch instead of creating PR",
-		false,
-	)
+	.option("-d, --direct", "Sync directly to current branch instead of creating PR", false)
 	.option("-l, --labels <labels...>", "Labels to add to the PR")
 	.action((options) => {
 		syncUpstream({
@@ -96,4 +87,4 @@ program
 		});
 	});
 
-program.parse();
+program.parse(process.argv);

@@ -38,10 +38,7 @@ export const LinkWithRedirect = ({
 	params.set(SEARCH_PARAM_KEYS.nextUrl, String(nextUrl));
 
 	return (
-		<Link
-			{...props}
-			href={`${typeof href === "string" ? href : href.href}?${String(params)}`}
-		>
+		<Link {...props} href={`${typeof href === "string" ? href : href.href}?${String(params)}`}>
 			{children}
 		</Link>
 	);

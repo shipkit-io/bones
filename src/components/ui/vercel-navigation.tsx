@@ -26,7 +26,7 @@ const navigationVariants = cva(
 		defaultVariants: {
 			variant: "hover",
 		},
-	},
+	}
 );
 
 const buttonVariants = cva(
@@ -36,18 +36,16 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				hover: "",
-				click:
-					"transition-colors hover:text-neutral-600 dark:hover:text-neutral-400",
+				click: "transition-colors hover:text-neutral-600 dark:hover:text-neutral-400",
 			},
 		},
 		defaultVariants: {
 			variant: "hover",
 		},
-	},
+	}
 );
 
-interface VercelNavigationProps
-	extends VariantProps<typeof navigationVariants> {
+interface VercelNavigationProps extends VariantProps<typeof navigationVariants> {
 	navLinks?: NavLink[];
 	className?: string;
 }
@@ -64,7 +62,7 @@ export const VercelNavigation = ({
 	className,
 }: VercelNavigationProps) => {
 	const [elementFocused, setElementFocused] = useState<number | null>(
-		variant === "hover" ? null : 0,
+		variant === "hover" ? null : 0
 	);
 
 	const handleInteraction = (index: number | null) => {
@@ -81,10 +79,7 @@ export const VercelNavigation = ({
 			{navLinks.map((link, index) => (
 				<LinkOrButton
 					href={link.href}
-					className={cn(
-						buttonVariants({ variant }),
-						"items-center justify-center",
-					)}
+					className={cn(buttonVariants({ variant }), "items-center justify-center")}
 					key={uuidv4()}
 					{...(variant === "hover"
 						? { onMouseEnter: () => handleInteraction(index) }

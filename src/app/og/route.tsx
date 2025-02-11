@@ -40,8 +40,7 @@ export async function GET(req: NextRequest) {
 		const { searchParams } = new URL(req.url);
 		const title = searchParams.get("title") ?? siteConfig.title;
 		const mode = searchParams.get("mode") ?? "dark";
-		const description =
-			searchParams.get("description") ?? siteConfig.description;
+		const description = searchParams.get("description") ?? siteConfig.description;
 		const type = searchParams.get("type") ?? "default";
 
 		const isDark = mode === "dark";
@@ -203,8 +202,7 @@ export async function GET(req: NextRequest) {
 							style={{
 								position: "absolute",
 								inset: -20,
-								background:
-									"radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%)",
+								background: "radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%)",
 								filter: "blur(20px)",
 							}}
 						/>
@@ -229,8 +227,7 @@ export async function GET(req: NextRequest) {
 									bottom: -20,
 									width: "40px",
 									height: "60px",
-									background:
-										"linear-gradient(to bottom, rgba(59, 130, 246, 0.5), transparent)",
+									background: "linear-gradient(to bottom, rgba(59, 130, 246, 0.5), transparent)",
 									filter: "blur(10px)",
 									transform: "rotate(45deg)",
 								}}
@@ -264,8 +261,7 @@ export async function GET(req: NextRequest) {
 							style={{
 								position: "absolute",
 								inset: -30,
-								background:
-									"radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%)",
+								background: "radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%)",
 								filter: "blur(20px)",
 							}}
 						/>
@@ -343,7 +339,7 @@ export async function GET(req: NextRequest) {
 				// 		style: "normal",
 				// 	},
 				// ],
-			},
+			}
 		);
 	} catch (e) {
 		console.error(e);

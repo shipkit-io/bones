@@ -105,12 +105,13 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db?.execute(sql`
-			UPDATE ${users}
-			SET theme = ${theme},
-				updated_at = ${new Date()}
-			WHERE id = ${session.user.id}
-		`);
+		await db
+			?.update(users)
+			.set({
+				theme,
+				updatedAt: new Date(),
+			})
+			.where(eq(users.id, session.user.id));
 
 		revalidatePath("/settings");
 		return { success: true, message: "Theme updated successfully" };

@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type React from "react";
 

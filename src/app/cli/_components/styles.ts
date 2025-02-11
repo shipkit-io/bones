@@ -13,7 +13,7 @@ export const containerStyles = cva(
 		defaultVariants: {
 			style: "modern",
 		},
-	},
+	}
 );
 
 export const headerStyles = cva("p-2 relative overflow-hidden", {
@@ -47,8 +47,7 @@ export const componentCardStyles = cva("cursor-pointer transition-all", {
 		style: {
 			brutalist:
 				"hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_hsl(var(--primary))] border-2 border-primary rounded-none",
-			modern:
-				"hover:shadow-lg border border-border rounded-lg transition-shadow duration-300",
+			modern: "hover:shadow-lg border border-border rounded-lg transition-shadow duration-300",
 		},
 	},
 	defaultVariants: {

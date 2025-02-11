@@ -13,14 +13,12 @@ export const env = createEnv({
 	server: {
 		DATABASE_URL: z.string().url().optional(),
 		DB_PREFIX: z.string().default("db"),
-		NODE_ENV: z
-			.enum(["development", "test", "production"])
-			.default("development"),
+		NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 		// Auth
 		AUTH_SECRET: z.string().optional(),
 		AUTH_URL: z.preprocess(
 			(str) => process.env.VERCEL_URL ?? str,
-			process.env.VERCEL ? z.string().optional() : z.string().url().optional(),
+			process.env.VERCEL ? z.string().optional() : z.string().url().optional()
 		),
 		AUTH_DISCORD_ID: z.string().optional(),
 		AUTH_DISCORD_SECRET: z.string().optional(),

@@ -56,17 +56,15 @@ export const providers: NextAuthConfig["providers"] = [
 	}),
 ].filter(Boolean) as NextAuthConfig["providers"];
 
-export const authProviders = providers.map(
-	(provider: NextAuthConfig["providers"][number]) => {
-		if (typeof provider === "function") {
-			const providerData = provider as () => { id: string; name: string };
-			return providerData();
-		}
+export const authProviders = providers.map((provider: NextAuthConfig["providers"][number]) => {
+	if (typeof provider === "function") {
+		const providerData = provider as () => { id: string; name: string };
+		return providerData();
+	}
 
-		return { id: provider.id, name: provider.name };
-	},
-);
+	return { id: provider.id, name: provider.name };
+});
 
 export const authProvidersArray = authProviders.map(
-	(provider) => provider.id ?? provider.name.toLowerCase(),
+	(provider) => provider.id ?? provider.name.toLowerCase()
 );

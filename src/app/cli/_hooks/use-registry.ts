@@ -6,9 +6,7 @@ import type { Registry, RegistryFilters, RegistryItem } from "../_lib/types";
 
 export function useRegistry() {
 	const [registries, setRegistries] = useState<Registry[]>([]);
-	const [currentRegistry, setCurrentRegistry] = useState<Registry | undefined>(
-		undefined,
-	);
+	const [currentRegistry, setCurrentRegistry] = useState<Registry | undefined>(undefined);
 	const [items, setItems] = useState<Record<string, RegistryItem[]>>({});
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
@@ -24,11 +22,7 @@ export function useRegistry() {
 				const registries = await getRegistries();
 				setRegistries(registries);
 			} catch (error) {
-				setError(
-					error instanceof Error
-						? error
-						: new Error("Failed to load registries"),
-				);
+				setError(error instanceof Error ? error : new Error("Failed to load registries"));
 			}
 		};
 		loadRegistries();
@@ -57,21 +51,14 @@ export function useRegistry() {
 								registry: registry.name,
 							}));
 						} catch (error) {
-							console.error(
-								`Failed to load items from ${registry.name}:`,
-								error,
-							);
+							console.error(`Failed to load items from ${registry.name}:`, error);
 							allItems[registry.name] = [];
 						}
 					}
 					setItems(allItems);
 				}
 			} catch (error) {
-				setError(
-					error instanceof Error
-						? error
-						: new Error("Failed to load registry items"),
-				);
+				setError(error instanceof Error ? error : new Error("Failed to load registry items"));
 			} finally {
 				setLoading(false);
 			}
@@ -135,9 +122,7 @@ export function useRegistry() {
 		});
 
 		// Sort by name
-		return filtered.sort((a: RegistryItem, b: RegistryItem) =>
-			a.name.localeCompare(b.name),
-		);
+		return filtered.sort((a: RegistryItem, b: RegistryItem) => a.name.localeCompare(b.name));
 	};
 
 	return {

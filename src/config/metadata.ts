@@ -125,7 +125,7 @@ export const viewport: Viewport = {
 };
 
 type ConstructMetadataProps = Metadata & {
-	images?: Array<{ url: string; width: number; height: number; alt: string }>;
+	images?: { url: string; width: number; height: number; alt: string }[];
 	noIndex?: boolean;
 };
 
@@ -139,17 +139,13 @@ export const constructMetadata = ({
 	openGraph: {
 		...defaultOpenGraph,
 		title: metadata.title ? metadata.title : defaultOpenGraph.title,
-		description: metadata.description
-			? metadata.description
-			: defaultOpenGraph.description,
+		description: metadata.description ? metadata.description : defaultOpenGraph.description,
 		images: images.length > 0 ? images : defaultOpenGraph.images,
 	},
 	twitter: {
 		...defaultTwitter,
 		title: metadata.title ? metadata.title : defaultTwitter.title,
-		description: metadata.description
-			? metadata.description
-			: defaultTwitter.description,
+		description: metadata.description ? metadata.description : defaultTwitter.description,
 		images: images.length > 0 ? images : defaultTwitter.images,
 	},
 	robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,

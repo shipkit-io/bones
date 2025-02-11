@@ -54,8 +54,7 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
 		} catch (error) {
 			toast({
 				title: "Failed to add registry",
-				description:
-					error instanceof Error ? error.message : "Unknown error occurred",
+				description: error instanceof Error ? error.message : "Unknown error occurred",
 				variant: "destructive",
 			});
 		} finally {
@@ -83,8 +82,7 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
 				<DialogHeader>
 					<DialogTitle>Add Custom Registry</DialogTitle>
 					<DialogDescription>
-						Add a custom component registry to browse and install components
-						from.
+						Add a custom component registry to browse and install components from.
 					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit}>

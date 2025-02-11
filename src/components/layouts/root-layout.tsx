@@ -1,14 +1,7 @@
 import "@/styles/globals.css";
 
-import {
-	Space_Grotesk as FontSans,
-	Noto_Serif as FontSerif,
-} from "next/font/google";
+import { Space_Grotesk as FontSans, Noto_Serif as FontSerif } from "next/font/google";
 
-import { Analytics } from "@/components/primitives/analytics";
-import { ErrorToast } from "@/components/primitives/error-toast";
-import { JsonLd } from "@/components/primitives/json-ld";
-import { WebVitals } from "@/components/primitives/web-vitals";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,8 +11,9 @@ import HolyLoader from "holy-loader";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ViewTransitions } from "next-view-transitions";
-import { type ReactNode, Suspense } from "react";
+import type { ReactNode } from "react";
 import { PageTracker } from "react-page-tracker";
+import { WebVitals } from "../primitives/web-vitals";
 
 const fontSerif = FontSerif({
 	weight: ["400", "500", "600", "700"],
@@ -41,10 +35,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
 				{process.env.NODE_ENV === "development" && (
 					<head>
 						{/* React Scan */}
-						<script
-							src="https://unpkg.com/react-scan/dist/auto.global.js"
-							async
-						/>
+						<script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
 					</head>
 				)}
 
@@ -53,7 +44,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						"min-h-screen antialiased",
 						"font-sans font-normal leading-relaxed",
 						fontSans.variable,
-						fontSerif.variable,
+						fontSerif.variable
 					)}
 				>
 					<HolyLoader
@@ -66,6 +57,8 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						<TRPCReactProvider>
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
+									{/* Web Vitals - Above children to avoid blocking */}
+									<WebVitals />
 
 									{children}
 

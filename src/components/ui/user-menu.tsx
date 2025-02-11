@@ -37,16 +37,12 @@ interface UserMenuProps {
 	className?: string;
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({
-	size = "default",
-	className,
-}) => {
+export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className }) => {
 	const { data: session, status } = useSession();
 	const [isOpen, setIsOpen] = React.useState(false);
 	const { theme, setTheme } = useTheme();
 	const { toast } = useToast();
-	const isAdmin =
-		session?.user?.email && siteConfig.admin.isAdmin(session.user.email);
+	const isAdmin = session?.user?.email && siteConfig.admin.isAdmin(session.user.email);
 
 	const handleThemeChange = React.useCallback(
 		async (value: string) => {
@@ -61,9 +57,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					if (!result.success) {
 						toast({
 							title: "Failed to save theme preference",
-							description:
-								result.error ||
-								"Your theme preference will reset on next visit.",
+							description: result.error || "Your theme preference will reset on next visit.",
 							variant: "destructive",
 						});
 						return;
@@ -82,7 +76,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 				}
 			}
 		},
-		[session?.user, setTheme, toast],
+		[session?.user, setTheme, toast]
 	);
 
 	// Handle keyboard shortcuts
@@ -116,15 +110,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	// Loading state
 	if (status === "loading") {
 		return (
-			<Skeleton
-				className={cn("rounded-full", size === "sm" ? "h-6 w-6" : "h-8 w-8")}
-			>
-				<div
-					className={cn(
-						"rounded-full bg-muted",
-						size === "sm" ? "h-6 w-6" : "h-8 w-8",
-					)}
-				/>
+			<Skeleton className={cn("rounded-full", size === "sm" ? "h-6 w-6" : "h-8 w-8")}>
+				<div className={cn("rounded-full bg-muted", size === "sm" ? "h-6 w-6" : "h-8 w-8")} />
 			</Skeleton>
 		);
 	}
@@ -134,10 +121,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 		return (
 			<Link
 				href={routes.auth.signIn}
-				className={cn(
-					buttonVariants({ variant: "ghost", size: "icon" }),
-					"rounded-full",
-				)}
+				className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "rounded-full")}
 			>
 				<UserIcon className="size-4" />
 			</Link>
@@ -150,11 +134,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 				<Button
 					variant="ghost"
 					size="icon"
-					className={cn(
-						"relative rounded-full",
-						size === "sm" ? "h-6 w-6" : "h-8 w-8",
-						className,
-					)}
+					className={cn("relative rounded-full", size === "sm" ? "h-6 w-6" : "h-8 w-8", className)}
 					aria-label="User menu"
 				>
 					<Avatar className={cn(size === "sm" ? "h-6 w-6" : "h-8 w-8")}>
@@ -162,9 +142,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 							src={session?.user?.image || ""}
 							alt={session?.user?.name || "User avatar"}
 						/>
-						<AvatarFallback>
-							{session?.user?.name?.[0]?.toUpperCase() || "?"}
-						</AvatarFallback>
+						<AvatarFallback>{session?.user?.name?.[0]?.toUpperCase() || "?"}</AvatarFallback>
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
@@ -178,12 +156,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			>
 				<DropdownMenuLabel className="font-normal">
 					<div className="flex flex-col space-y-1">
-						<p className="text-sm font-medium leading-none">
-							{session?.user?.name}
-						</p>
-						<p className="text-xs leading-none text-muted-foreground">
-							{session?.user?.email}
-						</p>
+						<p className="text-sm font-medium leading-none">{session?.user?.name}</p>
+						<p className="text-xs leading-none text-muted-foreground">{session?.user?.email}</p>
 					</div>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
@@ -222,30 +196,18 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 						<span>Theme</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						<DropdownMenuRadioGroup
-							value={theme || "system"}
-							onValueChange={handleThemeChange}
-						>
-							<DropdownMenuRadioItem
-								value="light"
-								className="flex items-center gap-2"
-							>
+						<DropdownMenuRadioGroup value={theme || "system"} onValueChange={handleThemeChange}>
+							<DropdownMenuRadioItem value="light" className="flex items-center gap-2">
 								<SunIcon className="size-4" />
 								<span>Light</span>
 								<DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
 							</DropdownMenuRadioItem>
-							<DropdownMenuRadioItem
-								value="dark"
-								className="flex items-center gap-2"
-							>
+							<DropdownMenuRadioItem value="dark" className="flex items-center gap-2">
 								<MoonIcon className="size-4" />
 								<span>Dark</span>
 								<DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
 							</DropdownMenuRadioItem>
-							<DropdownMenuRadioItem
-								value="system"
-								className="flex items-center gap-2"
-							>
+							<DropdownMenuRadioItem value="system" className="flex items-center gap-2">
 								<DesktopIcon className="size-4" />
 								<span>System</span>
 								<DropdownMenuShortcut>⌘B</DropdownMenuShortcut>

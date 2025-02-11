@@ -9,7 +9,7 @@
 // Add a type annotation for startIndex
 export function restArguments<T extends any[], R>(
 	func: (...args: [...T, ...R[]]) => any,
-	startIndex: number = func.length - 1,
+	startIndex: number = func.length - 1
 ) {
 	return function (this: any, ...args: T) {
 		const length = Math.max(args.length - startIndex, 0);
@@ -41,7 +41,7 @@ export function restArguments<T extends any[], R>(
 export function debounce<T extends any[], R>(
 	func: (...args: T) => R,
 	wait: number,
-	immediate?: boolean,
+	immediate?: boolean
 ) {
 	let timeout: NodeJS.Timeout | null;
 	let previous: number;

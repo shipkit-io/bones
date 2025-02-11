@@ -61,7 +61,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 					},
 				}),
 			],
-		}),
+		})
 	);
 
 	return (

@@ -1,13 +1,7 @@
 "use client";
 
 import type { DialogProps } from "@radix-ui/react-dialog";
-import {
-	CircleIcon,
-	FileIcon,
-	LaptopIcon,
-	MoonIcon,
-	SunIcon,
-} from "@radix-ui/react-icons";
+import { CircleIcon, FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -63,7 +57,7 @@ export function Search({ ...props }: DialogProps) {
 			<Button
 				variant="outline"
 				className={cn(
-					"relative h-8 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:max-w-40 lg:max-w-64",
+					"relative h-8 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:max-w-40 lg:max-w-64"
 				)}
 				onClick={() => setOpen(true)}
 				{...props}

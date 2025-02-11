@@ -24,7 +24,7 @@ const sectionStyles = cva(
 			variant: "default",
 			size: "default",
 		},
-	},
+	}
 );
 
 export interface SectionProps
@@ -40,10 +40,7 @@ export const Section = ({
 	className,
 	...props
 }: SectionProps) => (
-	<section
-		className={cn(sectionStyles({ variant, size }), className)}
-		{...props}
-	>
+	<section className={cn(sectionStyles({ variant, size }), className)} {...props}>
 		{children}
 	</section>
 );
@@ -57,10 +54,7 @@ export const SectionBadge = ({
 }) => (
 	<Badge
 		variant="secondary"
-		className={cn(
-			"rounded-full px-4 py-1 text-sm inline-flex gap-2",
-			className,
-		)}
+		className={cn("rounded-full px-4 py-1 text-sm inline-flex gap-2", className)}
 	>
 		{children}
 	</Badge>
@@ -76,7 +70,7 @@ export const SectionHeader = ({
 	<h3
 		className={cn(
 			"font-heading text-balance text-3xl font-semibold tracking-tight sm:text-4xl",
-			className,
+			className
 		)}
 	>
 		{children}
@@ -90,14 +84,7 @@ export const SectionCopy = ({
 	children: React.ReactNode;
 	className?: string;
 }) => (
-	<p
-		className={cn(
-			"max-w-2xl text-center text-lg text-muted-foreground",
-			className,
-		)}
-	>
-		{children}
-	</p>
+	<p className={cn("max-w-2xl text-center text-lg text-muted-foreground", className)}>{children}</p>
 );
 
 export const SectionContent = ({
@@ -107,12 +94,7 @@ export const SectionContent = ({
 	children: React.ReactNode;
 	className?: string;
 }) => (
-	<div
-		className={cn(
-			"flex w-full flex-col items-center justify-center gap-4",
-			className,
-		)}
-	>
+	<div className={cn("flex w-full flex-col items-center justify-center gap-4", className)}>
 		{children}
 	</div>
 );

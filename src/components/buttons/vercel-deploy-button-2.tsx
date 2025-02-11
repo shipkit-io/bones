@@ -8,17 +8,14 @@ interface DeployToVercelButtonProps {
 	className?: string;
 }
 
-export const DeployToVercelButton: FC<DeployToVercelButtonProps> = ({
-	href,
-	className,
-}) => {
+export const DeployToVercelButton: FC<DeployToVercelButtonProps> = ({ href, className }) => {
 	return (
 		<Link
 			href={href}
 			className={cn(
 				buttonVariants({ variant: "default", size: "lg" }),
 				"group relative overflow-hidden transition-all duration-300 ease-out hover:bg-primary-foreground hover:text-primary",
-				className,
+				className
 			)}
 		>
 			<span className="relative z-10 flex items-center justify-center gap-2">

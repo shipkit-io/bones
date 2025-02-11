@@ -20,9 +20,7 @@ export const useRedirectAfterSignIn = (error: Error) => {
 		};
 
 		if (error instanceof AuthenticationError) {
-			logger.info(
-				"ErrorBoundary: Authentication error, redirecting to sign in",
-			);
+			logger.info("ErrorBoundary: Authentication error, redirecting to sign in");
 			redirectToSignIn();
 		}
 

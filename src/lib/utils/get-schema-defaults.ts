@@ -3,7 +3,7 @@
  */
 import { z } from "zod";
 export const getSchemaDefaults = <T extends z.ZodTypeAny>(
-	schema: z.AnyZodObject | z.ZodEffects<any>,
+	schema: z.AnyZodObject | z.ZodEffects<any>
 ): z.infer<T> => {
 	// Check if it's a ZodEffect
 	if (schema instanceof z.ZodEffects) {
@@ -41,6 +41,6 @@ export const getSchemaDefaults = <T extends z.ZodTypeAny>(
 	return Object.fromEntries(
 		Object.entries(schema.shape).map(([key, value]) => {
 			return [key, getDefaultValue(value as z.ZodTypeAny)];
-		}),
+		})
 	);
 };

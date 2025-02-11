@@ -37,7 +37,4 @@ const FILE_TYPES_DOCUMENTS = [
 	"text/html",
 ];
 
-export const ALLOWED_FILE_TYPES = [
-	...FILE_TYPES_IMAGES,
-	...FILE_TYPES_DOCUMENTS,
-];
+export const ALLOWED_FILE_TYPES = [...FILE_TYPES_IMAGES, ...FILE_TYPES_DOCUMENTS];

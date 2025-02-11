@@ -2,14 +2,7 @@ import { execSync } from "node:child_process";
 import { copyFile, mkdir, readdir, rm } from "node:fs/promises";
 import { join, relative } from "node:path";
 
-const EXCLUDED_DIRS = [
-	"node_modules",
-	".next",
-	".git",
-	"dist",
-	"build",
-	"temp",
-];
+const EXCLUDED_DIRS = ["node_modules", ".next", ".git", "dist", "build", "temp"];
 const upstreamUrl = "https://github.com/shipkit-io/bones.git";
 
 /*
@@ -94,11 +87,7 @@ async function main() {
 		console.info("\nCleaning working directory...");
 		const entries = await readdir(sourceDir, { withFileTypes: true });
 		for (const entry of entries) {
-			if (
-				entry.name === "temp" ||
-				entry.name === ".git" ||
-				EXCLUDED_DIRS.includes(entry.name)
-			) {
+			if (entry.name === "temp" || entry.name === ".git" || EXCLUDED_DIRS.includes(entry.name)) {
 				continue;
 			}
 			await rm(join(sourceDir, entry.name), { recursive: true, force: true });

@@ -1,5 +1,4 @@
 import { DeployToVercelButton } from "@/components/buttons/vercel-deploy-button-2";
-import Link from "next/link";
 import {
 	PageHeader,
 	PageHeaderDescription,
@@ -11,6 +10,7 @@ import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { Barrio, Stick } from "next/font/google";
+import Link from "next/link";
 
 const fontStick = Stick({
 	weight: ["400"],
@@ -34,7 +34,7 @@ export default function Page() {
 					<PageHeaderHeading
 						className={cn(
 							"font-bold md:text-[8rem]",
-							Math.random() > 0.5 ? fontBarrio.className : fontStick.className,
+							Math.random() > 0.5 ? fontBarrio.className : fontStick.className
 						)}
 					>
 						Bones
@@ -43,8 +43,8 @@ export default function Page() {
 						The Next.js stack for Shadcn/UI.
 					</PageHeaderDescription>
 					<PageHeaderDescription className="text-lg text-muted-foreground">
-						Next.js v15, Tailwind CSS v4, Auth.JS v5, and a built-in interface
-						for installing UI components.
+						Next.js v15, Tailwind CSS v4, Auth.JS v5, and a built-in interface for installing UI
+						components.
 					</PageHeaderDescription>
 				</PageHeader>
 

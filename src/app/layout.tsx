@@ -6,10 +6,6 @@ import { metadata as defaultMetadata } from "@/config/metadata";
 
 export const metadata: Metadata = defaultMetadata;
 
-export default function Layout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
 	return <RootLayout>{children}</RootLayout>;
 }

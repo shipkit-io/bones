@@ -1,14 +1,10 @@
 "use server";
 
-import {
-	forgotPasswordSchema,
-	signInActionSchema,
-	signUpSchema,
-} from "@/lib/schemas/auth";
+import { forgotPasswordSchema, signInActionSchema, signUpSchema } from "@/lib/schemas/auth";
 import { validatedAction } from "@/lib/utils/middleware";
 import { AuthService } from "@/server/services/auth-service";
-import { createServerAction } from "zsa";
 import type { UserRole } from "@/types/user";
+import { createServerAction } from "zsa";
 
 interface AuthOptions {
 	redirectTo?: string;
@@ -57,7 +53,7 @@ export const signInWithCredentialsAction = validatedAction(
 			redirect: data.redirect,
 			redirectTo: data.redirectTo,
 		});
-	},
+	}
 );
 
 export const signUpWithCredentialsAction = validatedAction(
@@ -69,7 +65,7 @@ export const signUpWithCredentialsAction = validatedAction(
 			redirect: data.redirect,
 			redirectTo: data.redirectTo,
 		});
-	},
+	}
 );
 
 export const signOutAction = async (options?: AuthOptions) => {

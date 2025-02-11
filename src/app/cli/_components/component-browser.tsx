@@ -3,25 +3,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { CheckIcon, Cross2Icon, ReloadIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { CopyIcon, Download } from "lucide-react";
-import {
-	type MouseEvent,
-	type ReactNode,
-	useEffect,
-	useRef,
-	useState,
-	useCallback,
-} from "react";
+import { type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { installComponent } from "../_actions/install";
 import { getInstalledComponents } from "../_actions/registry";
 import { useRegistry } from "../_hooks/use-registry";
@@ -69,12 +57,7 @@ const _copyToClipboard = (text: string) => {
 	});
 };
 
-const ActionButton = ({
-	icon,
-	tooltip,
-	onClick,
-	currentStyle,
-}: ActionButtonProps) => (
+const ActionButton = ({ icon, tooltip, onClick, currentStyle }: ActionButtonProps) => (
 	<TooltipProvider delayDuration={0}>
 		<Tooltip>
 			<TooltipTrigger asChild>
@@ -116,7 +99,7 @@ const ComponentCard = ({
 				isInstalled &&
 					(currentStyle === "brutalist"
 						? "border-2 border-emerald-500"
-						: "border border-emerald-500/50"),
+						: "border border-emerald-500/50")
 			)}
 			onClick={() => onOpenSidebar(component)}
 		>
@@ -142,24 +125,18 @@ const ComponentCard = ({
 			)}
 			<CardHeader className="pb-2">
 				<div className="mb-2 flex items-start justify-between">
-					<CardTitle className="text-base font-bold">
-						{component.name}
-					</CardTitle>
+					<CardTitle className="text-base font-bold">{component.name}</CardTitle>
 					<div className="flex items-center gap-2">
 						<ActionButton
 							icon={<CopyIcon className="h-4 w-4" />}
 							tooltip="Copy install command"
 							onClick={(e) => {
 								e.stopPropagation();
-								const installCommand = getInstallCommand(
-									component,
-									currentRegistry,
-								);
+								const installCommand = getInstallCommand(component, currentRegistry);
 								navigator.clipboard.writeText(installCommand);
 								toast({
 									title: "Copied to clipboard",
-									description:
-										"Install command has been copied to your clipboard.",
+									description: "Install command has been copied to your clipboard.",
 								});
 							}}
 							currentStyle={currentStyle}
@@ -183,7 +160,7 @@ const ComponentCard = ({
 						"mt-1 hidden w-auto self-start md:inline-flex",
 						currentStyle === "brutalist"
 							? "rounded-none border-2 border-primary"
-							: "rounded-full border border-muted-foreground text-xs",
+							: "rounded-full border border-muted-foreground text-xs"
 					)}
 					style={{ backgroundColor: `${categoryColor}70`, color: "#fff" }}
 				>
@@ -197,16 +174,12 @@ const ComponentCard = ({
 	);
 };
 
-export function ComponentBrowser({
-	currentStyle: initialStyle = "modern",
-}: ComponentBrowserProps) {
+export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: ComponentBrowserProps) {
 	const [currentStyle, setCurrentStyle] = useState<StyleMode>(initialStyle);
-	const [selectedComponent, setSelectedComponent] =
-		useState<RegistryItem | null>(null);
-	const [installationProgress, setInstallationProgress] =
-		useState<InstallationProgress>({
-			status: "idle",
-		});
+	const [selectedComponent, setSelectedComponent] = useState<RegistryItem | null>(null);
+	const [installationProgress, setInstallationProgress] = useState<InstallationProgress>({
+		status: "idle",
+	});
 	const [installedComponents, setInstalledComponents] = useState<string[]>([]);
 	const [overwrite, setOverwrite] = useState(false);
 	const sidebarRef = useRef<HTMLDivElement>(null);
@@ -242,10 +215,7 @@ export function ComponentBrowser({
 
 	// Type-safe event handler
 	const handleClickOutside = useCallback((event: globalThis.MouseEvent) => {
-		if (
-			sidebarRef.current &&
-			!sidebarRef.current.contains(event.target as Node)
-		) {
+		if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
 			setSelectedComponent(null);
 		}
 	}, []);
@@ -328,10 +298,7 @@ export function ComponentBrowser({
 			.catch((error) => {
 				setInstallationProgress({
 					status: "error",
-					message:
-						error instanceof Error
-							? error.message
-							: "Failed to install component",
+					message: error instanceof Error ? error.message : "Failed to install component",
 				});
 			});
 	};
@@ -345,10 +312,7 @@ export function ComponentBrowser({
 
 		return (
 			<div
-				className={cn(
-					"p-4",
-					"grid grid-cols-1 gap-4 overflow-auto sm:grid-cols-2 lg:grid-cols-3",
-				)}
+				className={cn("p-4", "grid grid-cols-1 gap-4 overflow-auto sm:grid-cols-2 lg:grid-cols-3")}
 			>
 				{allFilteredItems.map((component: RegistryItem) => (
 					<ComponentCard
@@ -397,10 +361,7 @@ export function ComponentBrowser({
 					} catch (error) {
 						toast({
 							title: "Failed to add registry",
-							description:
-								error instanceof Error
-									? error.message
-									: "Unknown error occurred",
+							description: error instanceof Error ? error.message : "Unknown error occurred",
 							variant: "destructive",
 						});
 					}
@@ -412,8 +373,7 @@ export function ComponentBrowser({
 						setRegistries(updatedRegistries);
 						if (currentRegistry?.name === name) {
 							const defaultRegistry =
-								updatedRegistries.find((r) => !r.custom) ||
-								updatedRegistries[0];
+								updatedRegistries.find((r) => !r.custom) || updatedRegistries[0];
 							if (defaultRegistry) {
 								setCurrentRegistry(defaultRegistry);
 							}
@@ -421,10 +381,7 @@ export function ComponentBrowser({
 					} catch (error) {
 						toast({
 							title: "Failed to remove registry",
-							description:
-								error instanceof Error
-									? error.message
-									: "Unknown error occurred",
+							description: error instanceof Error ? error.message : "Unknown error occurred",
 							variant: "destructive",
 						});
 					}

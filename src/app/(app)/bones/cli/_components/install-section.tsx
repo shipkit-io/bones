@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { routes } from "@/config/routes";
@@ -9,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { motion, useAnimation } from "framer-motion";
 import { BookOpenTextIcon, Check, Copy, Terminal } from "lucide-react";
 import { Bungee_Shade as FontBungee } from "next/font/google";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 const fontBungee = FontBungee({
 	weight: ["400"],
@@ -62,7 +62,7 @@ export function InstallSection() {
 					<h1
 						className={cn(
 							"mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
-							fontBungee.className,
+							fontBungee.className
 						)}
 					>
 						Bones CLI
@@ -126,11 +126,7 @@ export function InstallSection() {
 						onClick={copyToClipboard}
 						className="grow bg-blue-600 text-white hover:bg-blue-700"
 					>
-						{copied ? (
-							<Check className="mr-2 h-4 w-4" />
-						) : (
-							<Copy className="mr-2 h-4 w-4" />
-						)}
+						{copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
 						{copied ? "Copied!" : "Copy Command"}
 					</Button>
 
@@ -138,7 +134,7 @@ export function InstallSection() {
 						href={routes.external.bones}
 						className={cn(
 							buttonVariants({ variant: "outline", size: "lg" }),
-							"grow border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700",
+							"grow border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700"
 						)}
 					>
 						<BookOpenTextIcon className="mr-2 h-4 w-4" />

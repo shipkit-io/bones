@@ -14,10 +14,7 @@ import { z } from "zod";
 const querySchema = z.object({
 	[SEARCH_PARAM_KEYS.statusCode]: z
 		.enum(
-			Object.keys(STATUS_CODES) as [
-				keyof typeof STATUS_CODES,
-				...(keyof typeof STATUS_CODES)[],
-			],
+			Object.keys(STATUS_CODES) as [keyof typeof STATUS_CODES, ...(keyof typeof STATUS_CODES)[]]
 		)
 		.optional(),
 	[SEARCH_PARAM_KEYS.nextUrl]: z.string().optional(),
@@ -28,9 +25,7 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
 
 	// Parse any parameters from the URL
 	const result = querySchema.safeParse({
-		[SEARCH_PARAM_KEYS.statusCode]: searchParams.get(
-			SEARCH_PARAM_KEYS.statusCode,
-		),
+		[SEARCH_PARAM_KEYS.statusCode]: searchParams.get(SEARCH_PARAM_KEYS.statusCode),
 		[SEARCH_PARAM_KEYS.nextUrl]: searchParams.get(SEARCH_PARAM_KEYS.nextUrl),
 	});
 

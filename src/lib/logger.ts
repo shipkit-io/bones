@@ -1,11 +1,4 @@
-import {
-	bold,
-	green,
-	magenta,
-	red,
-	white,
-	yellow,
-} from "@/lib/utils/pico-colors";
+import { bold, green, magenta, red, white, yellow } from "@/lib/utils/pico-colors";
 import type { LogData, LogLevel } from "@/types/logger";
 
 // let loggerWorker: Worker | null = null;
@@ -21,47 +14,45 @@ const isServer = typeof window === "undefined";
 
 const _createLogger =
 	(level: LogLevel) =>
-		(...args: unknown[]): void => {
-			const logData: LogData = {
-				apiKey: process.env.NEXT_PUBLIC_LOGFLARE_KEY,
-				prefix: "logger",
-				emoji: "🌐",
-				level,
-				message: args
-					.map((arg) =>
-						typeof arg === "object" ? JSON.stringify(arg) : String(arg),
-					)
-					.join(" "),
-				timestamp: new Date().toISOString(),
-				url: isServer ? "server" : window.location.href,
-				userAgent: isServer ? "server" : navigator.userAgent,
-			};
-
-			// Send server-side logs to your logging service or database
-			void fetch("http://localhost:3000/v1", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(logData),
-			});
-			if (isServer) {
-				console[level](...args);
-
-				// TODO: Implement logging service
-				if (logData?.apiKey) {
-					// Send server-side logs to your logging service or database
-					void fetch("http://localhost:3000/v1", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(logData),
-					});
-				}
-			} else {
-				console[level](...args);
-				// if (loggerWorker) {
-				// 	loggerWorker.postMessage({ logData });
-				// }
-			}
+	(...args: unknown[]): void => {
+		const logData: LogData = {
+			apiKey: process.env.NEXT_PUBLIC_LOGFLARE_KEY,
+			prefix: "logger",
+			emoji: "🌐",
+			level,
+			message: args
+				.map((arg) => (typeof arg === "object" ? JSON.stringify(arg) : String(arg)))
+				.join(" "),
+			timestamp: new Date().toISOString(),
+			url: isServer ? "server" : window.location.href,
+			userAgent: isServer ? "server" : navigator.userAgent,
 		};
+
+		// Send server-side logs to your logging service or database
+		void fetch("http://localhost:3000/v1", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(logData),
+		});
+		if (isServer) {
+			console[level](...args);
+
+			// TODO: Implement logging service
+			if (logData?.apiKey) {
+				// Send server-side logs to your logging service or database
+				void fetch("http://localhost:3000/v1", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(logData),
+				});
+			}
+		} else {
+			console[level](...args);
+			// if (loggerWorker) {
+			// 	loggerWorker.postMessage({ logData });
+			// }
+		}
+	};
 
 export const logger = console;
 // export const logger = {

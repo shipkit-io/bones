@@ -9,9 +9,7 @@ export function Preview({ component, currentStyle }: PreviewProps) {
 		<div
 			className={cn(
 				"w-full h-full flex items-center justify-center p-4",
-				currentStyle === "brutalist"
-					? "border-2 border-primary"
-					: "border rounded-md",
+				currentStyle === "brutalist" ? "border-2 border-primary" : "border rounded-md"
 			)}
 		>
 			<Card
@@ -19,7 +17,7 @@ export function Preview({ component, currentStyle }: PreviewProps) {
 					"w-full h-full flex items-center justify-center",
 					currentStyle === "brutalist"
 						? "border-2 border-primary rounded-none"
-						: "border rounded-md",
+						: "border rounded-md"
 				)}
 			>
 				<div className="text-center text-muted-foreground">

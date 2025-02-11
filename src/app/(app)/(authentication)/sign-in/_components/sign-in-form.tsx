@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -21,6 +20,7 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { useToast } from "@/hooks/use-toast";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export const SignInForm = () => {
@@ -96,12 +96,7 @@ export const SignInForm = () => {
 						<FormItem>
 							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input
-									placeholder="me@example.com"
-									type="email"
-									autoComplete="email"
-									{...field}
-								/>
+								<Input placeholder="me@example.com" type="email" autoComplete="email" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -122,11 +117,7 @@ export const SignInForm = () => {
 								</Link>
 							</div>
 							<FormControl>
-								<Input
-									type="password"
-									autoComplete="current-password"
-									{...field}
-								/>
+								<Input type="password" autoComplete="current-password" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>

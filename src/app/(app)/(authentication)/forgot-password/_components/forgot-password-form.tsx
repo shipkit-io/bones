@@ -29,8 +29,7 @@ export function ForgotPasswordForm() {
 		await forgotPasswordAction(values)
 			.then(() => {
 				toast.success("Email sent", {
-					description:
-						"Please check your email for a link to reset your password.",
+					description: "Please check your email for a link to reset your password.",
 				});
 			})
 			.catch(() => {
@@ -42,10 +41,7 @@ export function ForgotPasswordForm() {
 
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={() => void form.handleSubmit(onSubmit)}
-				className="flex flex-col gap-sm"
-			>
+			<form onSubmit={() => void form.handleSubmit(onSubmit)} className="flex flex-col gap-sm">
 				<FormField
 					control={form.control}
 					name="email"

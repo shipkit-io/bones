@@ -25,10 +25,7 @@ interface Stats {
 	installedComponents: string[];
 }
 
-export function ComponentStats({
-	component,
-	currentStyle,
-}: ComponentStatsProps) {
+export function ComponentStats({ component, currentStyle }: ComponentStatsProps) {
 	const [stats, setStats] = useState<Stats | null>(null);
 
 	useEffect(() => {
@@ -107,22 +104,18 @@ export function ComponentStats({
 					"p-4",
 					currentStyle === "brutalist"
 						? "rounded-none border-2 border-primary"
-						: "rounded-md border",
+						: "rounded-md border"
 				)}
 			>
 				<h3 className="font-semibold">Dependencies</h3>
 				<div className="mt-2">
 					<div className="mb-2 flex items-center justify-between text-sm">
 						<span>
-							{stats.dependencies.installed} / {stats.dependencies.total}{" "}
-							installed
+							{stats.dependencies.installed} / {stats.dependencies.total} installed
 						</span>
 						<span className="text-muted-foreground">
 							{stats.dependencies.total
-								? Math.round(
-										(stats.dependencies.installed / stats.dependencies.total) *
-											100,
-									)
+								? Math.round((stats.dependencies.installed / stats.dependencies.total) * 100)
 								: 100}
 							%
 						</span>
@@ -130,22 +123,15 @@ export function ComponentStats({
 					<Progress
 						value={
 							stats.dependencies.total
-								? (stats.dependencies.installed / stats.dependencies.total) *
-									100
+								? (stats.dependencies.installed / stats.dependencies.total) * 100
 								: 100
 						}
-						className={cn(
-							currentStyle === "brutalist"
-								? "h-2 rounded-none"
-								: "h-2 rounded-full",
-						)}
+						className={cn(currentStyle === "brutalist" ? "h-2 rounded-none" : "h-2 rounded-full")}
 					/>
 				</div>
 				{stats.dependencies.missing.length > 0 && (
 					<div className="mt-4">
-						<p className="text-sm text-muted-foreground">
-							Missing dependencies:
-						</p>
+						<p className="text-sm text-muted-foreground">Missing dependencies:</p>
 						<div className="mt-1 space-x-1">
 							{stats.dependencies.missing.map((dep) => (
 								<span
@@ -154,7 +140,7 @@ export function ComponentStats({
 										"inline-flex items-center px-2.5 py-0.5 text-xs font-semibold text-destructive",
 										currentStyle === "brutalist"
 											? "rounded-none border-2 border-destructive"
-											: "rounded-full border border-destructive/50",
+											: "rounded-full border border-destructive/50"
 									)}
 								>
 									{dep}
@@ -171,22 +157,19 @@ export function ComponentStats({
 					"p-4",
 					currentStyle === "brutalist"
 						? "rounded-none border-2 border-primary"
-						: "rounded-md border",
+						: "rounded-md border"
 				)}
 			>
 				<h3 className="font-semibold">Registry Dependencies</h3>
 				<div className="mt-2">
 					<div className="mb-2 flex items-center justify-between text-sm">
 						<span>
-							{stats.registryDependencies.installed} /{" "}
-							{stats.registryDependencies.total} installed
+							{stats.registryDependencies.installed} / {stats.registryDependencies.total} installed
 						</span>
 						<span className="text-muted-foreground">
 							{stats.registryDependencies.total
 								? Math.round(
-										(stats.registryDependencies.installed /
-											stats.registryDependencies.total) *
-											100,
+										(stats.registryDependencies.installed / stats.registryDependencies.total) * 100
 									)
 								: 100}
 							%
@@ -195,16 +178,10 @@ export function ComponentStats({
 					<Progress
 						value={
 							stats.registryDependencies.total
-								? (stats.registryDependencies.installed /
-										stats.registryDependencies.total) *
-									100
+								? (stats.registryDependencies.installed / stats.registryDependencies.total) * 100
 								: 100
 						}
-						className={cn(
-							currentStyle === "brutalist"
-								? "h-2 rounded-none"
-								: "h-2 rounded-full",
-						)}
+						className={cn(currentStyle === "brutalist" ? "h-2 rounded-none" : "h-2 rounded-full")}
 					/>
 				</div>
 				{stats.registryDependencies.missing.length > 0 && (
@@ -218,7 +195,7 @@ export function ComponentStats({
 										"inline-flex items-center px-2.5 py-0.5 text-xs font-semibold text-destructive",
 										currentStyle === "brutalist"
 											? "rounded-none border-2 border-destructive"
-											: "rounded-full border border-destructive/50",
+											: "rounded-full border border-destructive/50"
 									)}
 								>
 									{dep}

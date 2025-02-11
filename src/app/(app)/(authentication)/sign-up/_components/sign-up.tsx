@@ -2,11 +2,7 @@
 import { InputHover as Input } from "@/components/ui/input-hover";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import {
-	IconBrandGithub,
-	IconBrandGoogle,
-	IconBrandOnlyfans,
-} from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandGoogle, IconBrandOnlyfans } from "@tabler/icons-react";
 import type React from "react";
 
 export function SignupFormDemo() {
@@ -20,8 +16,7 @@ export function SignupFormDemo() {
 				Welcome to Aceternity
 			</h2>
 			<p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-				Login to aceternity if you can because we don&apos;t have a login flow
-				yet
+				Login to aceternity if you can because we don&apos;t have a login flow yet
 			</p>
 
 			<form className="my-8" onSubmit={handleSubmit}>
@@ -45,11 +40,7 @@ export function SignupFormDemo() {
 				</LabelInputContainer>
 				<LabelInputContainer className="mb-8">
 					<Label htmlFor="twitterpassword">Your twitter password</Label>
-					<Input
-						id="twitterpassword"
-						placeholder="••••••••"
-						type="twitterpassword"
-					/>
+					<Input id="twitterpassword" placeholder="••••••••" type="twitterpassword" />
 				</LabelInputContainer>
 
 				<button
@@ -68,9 +59,7 @@ export function SignupFormDemo() {
 						type="submit"
 					>
 						<IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-						<span className="text-sm text-neutral-700 dark:text-neutral-300">
-							GitHub
-						</span>
+						<span className="text-sm text-neutral-700 dark:text-neutral-300">GitHub</span>
 						<BottomGradient />
 					</button>
 					<button
@@ -78,9 +67,7 @@ export function SignupFormDemo() {
 						type="submit"
 					>
 						<IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-						<span className="text-sm text-neutral-700 dark:text-neutral-300">
-							Google
-						</span>
+						<span className="text-sm text-neutral-700 dark:text-neutral-300">Google</span>
 						<BottomGradient />
 					</button>
 					<button
@@ -88,9 +75,7 @@ export function SignupFormDemo() {
 						type="submit"
 					>
 						<IconBrandOnlyfans className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-						<span className="text-sm text-neutral-700 dark:text-neutral-300">
-							OnlyFans
-						</span>
+						<span className="text-sm text-neutral-700 dark:text-neutral-300">OnlyFans</span>
 						<BottomGradient />
 					</button>
 				</div>
@@ -115,9 +100,5 @@ const LabelInputContainer = ({
 	children: React.ReactNode;
 	className?: string;
 }) => {
-	return (
-		<div className={cn("flex w-full flex-col space-y-2", className)}>
-			{children}
-		</div>
-	);
+	return <div className={cn("flex w-full flex-col space-y-2", className)}>{children}</div>;
 };

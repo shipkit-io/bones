@@ -22,9 +22,7 @@ interface SiteConfig {
 	};
 	store: {
 		domain: string;
-		products: {
-			[key: string]: string;
-		};
+		products: Record<string, string>;
 		format: {
 			buyUrl: (product: keyof typeof siteConfig.store.products) => string;
 		};
@@ -36,9 +34,7 @@ interface SiteConfig {
 		x_follow: string;
 		github: string;
 	};
-	app: {
-		[key: string]: string;
-	};
+	app: Record<string, string>;
 	repo: {
 		owner: string;
 		name: string;
@@ -92,10 +88,8 @@ export const siteConfig: SiteConfig = {
 		name: "shipkit",
 		url: "https://github.com/lacymorrow/shipkit", // TODO: change to use the variable
 		format: {
-			clone: () =>
-				`https://github.com/${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
-			ssh: () =>
-				`git@github.com:${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
+			clone: () => `https://github.com/${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
+			ssh: () => `git@github.com:${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
 		},
 	},
 	email: {
@@ -103,8 +97,7 @@ export const siteConfig: SiteConfig = {
 		team: "team@shipkit.io",
 		noreply: "noreply@shipkit.io",
 		domain: "shipkit.io",
-		format: (type: Exclude<keyof typeof siteConfig.email, "format">) =>
-			siteConfig.email[type],
+		format: (type: Exclude<keyof typeof siteConfig.email, "format">) => siteConfig.email[type],
 	},
 	creator: {
 		name: "lacymorrow",
@@ -138,9 +131,7 @@ export const siteConfig: SiteConfig = {
 		domains: ["lacymorrow.com"],
 		isAdmin: (email: string) =>
 			siteConfig.admin.emails.includes(email) ||
-			siteConfig.admin.domains.some((domain: string) =>
-				email?.endsWith(`@${domain}`),
-			),
+			siteConfig.admin.domains.some((domain: string) => email?.endsWith(`@${domain}`)),
 	},
 	metadata: {
 		keywords: [

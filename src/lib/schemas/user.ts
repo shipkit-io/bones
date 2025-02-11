@@ -9,9 +9,7 @@ export const userSchema = z.object({
 		message: "Password must be at least 6 characters.",
 	}),
 
-	location: z
-		.string()
-		.min(1, { message: "Enter a valid zip code or location" }),
+	location: z.string().min(1, { message: "Enter a valid zip code or location" }),
 	phone: z.string().regex(REGEX_PATTERNS.phone, {
 		message: "Please enter a valid phone number.",
 	}),
@@ -32,7 +30,7 @@ export const userSchema = z.object({
 			},
 			{
 				message: "You must accept the terms and conditions",
-			},
+			}
 		)
 		.transform((value) => {
 			if (typeof value === "string") {

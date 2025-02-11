@@ -8,10 +8,7 @@ export interface RouteObject {
 	params?: RouteParams;
 }
 
-export const createRoute = (
-	path: Route,
-	params: RouteParams = {},
-): RouteObject => ({
+export const createRoute = (path: Route, params: RouteParams = {}): RouteObject => ({
 	path,
 	params,
 });
@@ -147,21 +144,15 @@ export const redirects = async (): Promise<Redirect[]> => {
 	return [
 		...createRedirects(["/docs", "/documentation"], routes.docs),
 		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp),
-		...createRedirects(
-			["/login", "/log-in", "/signin", "/sign-in"],
-			routes.auth.signIn,
-		),
-		...createRedirects(
-			["/logout", "/log-out", "/signout", "/sign-out"],
-			routes.auth.signOut,
-		),
+		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
+		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
 	];
 };
 
 export const createRedirects = (
 	sources: Route[],
 	destination: Route,
-	permanent = false,
+	permanent = false
 ): Redirect[] => {
 	if (!sources.length) return [];
 

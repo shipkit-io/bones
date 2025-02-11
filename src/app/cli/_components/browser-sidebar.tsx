@@ -39,29 +39,23 @@ export function BrowserSidebar({
 	filteredItems,
 }: BrowserSidebarProps) {
 	// Count components by type
-	const componentCount = filteredItems.filter(
-		(item) => item.type === "registry:ui",
-	).length;
-	const blockCount = filteredItems.filter(
-		(item) => item.type === "registry:block",
-	).length;
+	const componentCount = filteredItems.filter((item) => item.type === "registry:ui").length;
+	const blockCount = filteredItems.filter((item) => item.type === "registry:block").length;
 
 	// Count components by category
 	const categoryCount = categories.reduce(
 		(acc, category) => {
-			acc[category] = filteredItems.filter((item) =>
-				item.categories?.includes(category),
-			).length;
+			acc[category] = filteredItems.filter((item) => item.categories?.includes(category)).length;
 			return acc;
 		},
-		{} as Record<string, number>,
+		{} as Record<string, number>
 	);
 
 	return (
 		<div
 			className={cn(
 				"w-full md:w-72 border-r border-border p-4 flex flex-col",
-				currentStyle === "brutalist" && "border-r-2 border-primary",
+				currentStyle === "brutalist" && "border-r-2 border-primary"
 			)}
 		>
 			<div className="space-y-6">
@@ -83,7 +77,7 @@ export function BrowserSidebar({
 								"pl-8",
 								currentStyle === "brutalist"
 									? "border-2 border-primary rounded-none"
-									: "border rounded-md",
+									: "border rounded-md"
 							)}
 							value={searchTerm}
 							onChange={(e) => {
@@ -114,26 +108,20 @@ export function BrowserSidebar({
 							className={cn(
 								currentStyle === "brutalist"
 									? "border-2 border-primary rounded-none"
-									: "border rounded-md",
+									: "border rounded-md"
 							)}
 						>
 							<SelectValue placeholder="Select type" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">All Types</SelectItem>
-							<SelectItem
-								value="components"
-								className="flex items-center justify-between"
-							>
+							<SelectItem value="components" className="flex items-center justify-between">
 								<span>Components</span>
 								<Badge variant="secondary" className="ml-2 font-mono">
 									{componentCount}
 								</Badge>
 							</SelectItem>
-							<SelectItem
-								value="blocks"
-								className="flex items-center justify-between"
-							>
+							<SelectItem value="blocks" className="flex items-center justify-between">
 								<span>Blocks</span>
 								<Badge variant="secondary" className="ml-2 font-mono">
 									{blockCount}
@@ -149,16 +137,14 @@ export function BrowserSidebar({
 					</Label>
 					<Select
 						value={filters.category}
-						onValueChange={(value) =>
-							setFilters({ ...filters, category: value })
-						}
+						onValueChange={(value) => setFilters({ ...filters, category: value })}
 					>
 						<SelectTrigger
 							id="category"
 							className={cn(
 								currentStyle === "brutalist"
 									? "border-2 border-primary rounded-none"
-									: "border rounded-md",
+									: "border rounded-md"
 							)}
 						>
 							<div className="flex items-center gap-2">
