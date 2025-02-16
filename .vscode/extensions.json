@@ -6,6 +6,7 @@
 		"ms-azuretools.vscode-docker",
 		"biomejs.biome",
 		"dexxiez.shadcn-color-preview",
-		"aaron-bond.better-comments"
+		"aaron-bond.better-comments",
+		"unifiedjs.vscode-mdx"
 	]
 }

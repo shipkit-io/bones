@@ -3,5 +3,8 @@
 	"editor.formatOnSave": true,
 	"[properties]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"[mdx]": {
+		"editor.defaultFormatter": "unifiedjs.vscode-mdx"
 	}
 }
