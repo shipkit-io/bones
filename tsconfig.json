@@ -1,0 +1,66 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"strictNullChecks": true,
+		"inlineSources": false,
+		"sourceMap": false,
+		"allowImportingTsExtensions": true,
+		"allowSyntheticDefaultImports": true,
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"incremental": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"noUncheckedIndexedAccess": false,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"verbatimModuleSyntax": false,
+		"noEmit": true,
+		"jsx": "preserve",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"target": "ES2022",
+		"lib": ["dom", "dom.iterable", "ES2022"],
+		"types": ["node"],
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"baseUrl": ".",
+		"paths": {
+			"@/public/*": ["./public/*"],
+			"@/*": ["./src/*"]
+		}
+	},
+	"include": [
+		"eslint.config.mjs",
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.cjs",
+		"**/*.js",
+		"**/*.jsx",
+		"**/*.mjs",
+		"**/*.mts",
+		"**/*.md",
+		"**/*.mdx",
+		".next/types/**/*.ts",
+		"src/types/next-auth.d.ts",
+		"next.config.ts",
+		"src/workers/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"public",
+		"src/components/blocks/**/*.ts",
+		"src/components/blocks/**/*.tsx",
+		"src/components/ui/**/*.ts",
+		"src/components/ui/**/*.tsx",
+		"src/app/(app)/(ai)/**/*",
+		"src/app/(app)/(demo)/examples/**/*",
+		"src/workers/**/*.ts"
+	]
+}
