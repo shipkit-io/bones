@@ -36,7 +36,7 @@ interface Provider {
 export function OAuthButtons({ variant = "default", className }: OAuthButtonsProps) {
 	// Redirect back to the page that the user was on before signing in
 	const searchParams = useSearchParams();
-	const nextUrl = searchParams.get(SEARCH_PARAM_KEYS.nextUrl);
+	const nextUrl = searchParams?.get(SEARCH_PARAM_KEYS.nextUrl);
 	const options = nextUrl ? { redirectTo: nextUrl } : {};
 
 	const handleSignIn = (providerId: string) => {
