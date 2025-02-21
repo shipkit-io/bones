@@ -19,7 +19,7 @@ function PageHeaderHeading({ className, ...props }: React.HTMLAttributes<HTMLHea
 	return (
 		<h1
 			className={cn(
-				"text-3xl font-bold leading-tight tracking-tighter md:text-4xl lg:leading-[1.1]",
+				"text-3xl font-bold leading-tight tracking-tighter md:text-4xl lg:leading-[1.1] w-full",
 				className
 			)}
 			{...props}
