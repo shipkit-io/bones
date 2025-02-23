@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -21,6 +20,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
+import { useSignInRedirectUrl } from "@/hooks/use-sign-in-redirect-url";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
@@ -28,6 +28,7 @@ import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import * as React from "react";
 
 type Theme = "light" | "dark" | "system";
@@ -39,9 +40,11 @@ interface UserMenuProps {
 
 export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className }) => {
 	const { data: session, status } = useSession();
-	const [isOpen, setIsOpen] = React.useState(false);
+	const signInRedirectUrl = useSignInRedirectUrl();
 	const { theme, setTheme } = useTheme();
 	const { toast } = useToast();
+	const [isOpen, setIsOpen] = React.useState(false);
+
 	const isAdmin = session?.user?.email && siteConfig.admin.isAdmin(session.user.email);
 
 	const handleThemeChange = React.useCallback(
@@ -120,7 +123,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 	if (!session?.user) {
 		return (
 			<Link
-				href={routes.auth.signIn}
+				href={signInRedirectUrl}
 				className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "rounded-full")}
 			>
 				<UserIcon className="size-4" />
