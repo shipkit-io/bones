@@ -124,7 +124,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 		return (
 			<Link
 				href={signInRedirectUrl}
-				className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "rounded-full")}
+				className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "rounded-full cursor-pointer")}
 			>
 				<UserIcon className="size-4" />
 			</Link>
