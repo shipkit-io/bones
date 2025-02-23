@@ -6,10 +6,10 @@ import {
 } from "@/components/primitives/page-header";
 import { Attribution } from "@/components/ui/attribution";
 import { buttonVariants } from "@/components/ui/button";
+import { TextLoop } from "@/components/ui/text-loop";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { IconBrandGithub } from "@tabler/icons-react";
-import { BoneIcon } from "lucide-react";
 import { Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 
@@ -60,8 +60,45 @@ export default function Page() {
 			</div>
 			<Attribution
 				variant="popover"
-				title="Build with Cursor + v0"
-				description="Get full-stack superpowers with Shipkit"
+				title={<>
+					Shipkit works with{' '}
+					{/* For users of */}
+      <TextLoop
+        className='overflow-y-clip'
+        transition={{
+          type: 'spring',
+          stiffness: 900,
+          damping: 80,
+          mass: 10,
+        }}
+        variants={{
+          initial: {
+            y: 20,
+            rotateX: 90,
+            opacity: 0,
+            filter: 'blur(4px)',
+          },
+          animate: {
+            y: 0,
+            rotateX: 0,
+            opacity: 1,
+            filter: 'blur(0px)',
+          },
+          exit: {
+            y: -20,
+            rotateX: -90,
+            opacity: 0,
+            filter: 'blur(4px)',
+          },
+        }}
+      >
+        <span>Cursor</span>
+        <span>v0</span>
+        <span>Shadcn/UI</span>
+        <span>Next.js</span>
+      </TextLoop>
+				</>}
+				description="Start your next project pre-configured with the best tools and ship faster"
 				href="https://shipkit.io"
 			/>
 		</>
