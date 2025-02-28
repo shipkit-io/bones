@@ -14,16 +14,6 @@ Get started with ShipKit in three easy steps:
 
 No environment variables needed to start! Our setup wizard will guide you through the configuration after deployment.
 
-## Rebranding
-
-Want to make this your own? We've made it easy to rebrand the entire project:
-
-```bash
-pnpm tsx scripts/rebrand.ts
-```
-
-This interactive script will guide you through updating all branding references throughout the codebase. See the [Rebranding Guide](docs/rebranding.md) for more details.
-
 ## What's Included
 
 - 🔐 **Authentication** - Multiple providers (Discord, GitHub, Google)
