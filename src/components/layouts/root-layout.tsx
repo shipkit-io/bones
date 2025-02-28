@@ -1,20 +1,16 @@
-import "@/styles/globals.css";
-import Head from "next/head";
-
-import { Space_Grotesk as FontSans, Noto_Serif as FontSerif } from "next/font/google";
-
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "@/lib/trpc/react";
 import { cn } from "@/lib/utils";
-import HolyLoader from "holy-loader";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ViewTransitions } from "next-view-transitions";
+import { Space_Grotesk as FontSans, Noto_Serif as FontSerif } from "next/font/google";
+import Head from "next/head";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from "react";
-import { PageTracker } from "react-page-tracker";
-import { WebVitals } from "../primitives/web-vitals";
+
+import "@/styles/globals.css";
 
 const fontSerif = FontSerif({
 	weight: ["400", "500", "600", "700"],
@@ -47,6 +43,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
 				>
 					<SessionProvider>
 						<TRPCReactProvider>
+							<NuqsAdapter>
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
 									{/* Content */}
@@ -56,6 +53,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
 									<SonnerToaster />
 								</TooltipProvider>
 							</ThemeProvider>
+							</NuqsAdapter>
 						</TRPCReactProvider>
 					</SessionProvider>
 				</body>
