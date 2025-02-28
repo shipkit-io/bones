@@ -1,32 +1,42 @@
+/**
+ * Site Configuration
+ *
+ * Central configuration for site-wide settings, branding, and metadata.
+ * Used throughout the application for consistent branding and functionality.
+ */
+
 interface SiteConfig {
+	// Core site information
 	name: string;
 	title: string;
 	url: string;
 	ogImage: string;
 	description: string;
+
+	// UI behavior settings
 	behavior: {
 		pageTransitions: boolean;
 	};
-	creator: {
-		fullName: string;
-		role: string;
-		name: string;
-		email: string;
-		url: string;
-		twitter: string;
-		twitter_handle: string;
-		domain: string;
-		avatar: string;
-		bio: string;
-		location: string;
-	};
-	store: {
-		domain: string;
-		products: Record<string, string>;
-		format: {
-			buyUrl: (product: keyof typeof siteConfig.store.products) => string;
+
+	// Branding information
+	branding: {
+		projectName: string;
+		projectSlug: string;
+		productNames: {
+			bones: string;
+			muscles: string;
+			brains: string;
+			main: string;
 		};
+		domain: string;
+		protocol: string;
+		githubOrg: string;
+		githubRepo: string;
+		vercelProjectName: string;
+		databaseName: string;
 	};
+
+	// External links
 	links: {
 		twitter: string;
 		twitter_follow: string;
@@ -34,7 +44,8 @@ interface SiteConfig {
 		x_follow: string;
 		github: string;
 	};
-	app: Record<string, string>;
+
+	// Repository information
 	repo: {
 		owner: string;
 		name: string;
@@ -44,18 +55,55 @@ interface SiteConfig {
 			ssh: () => string;
 		};
 	};
+
+	// Email addresses and formatting
 	email: {
 		support: string;
 		team: string;
 		noreply: string;
 		domain: string;
-		format: (type: Exclude<keyof typeof siteConfig.email, "format">) => string;
+		legal: string;
+		privacy: string;
+		format: (type: Exclude<keyof SiteConfig['email'], 'format'>) => string;
 	};
+
+	// Creator information
+	creator: {
+		name: string;
+		email: string;
+		url: string;
+		twitter: string;
+		twitter_handle: string;
+		domain: string;
+		fullName: string;
+		role: string;
+		avatar: string;
+		location: string;
+		bio: string;
+	};
+
+	// E-commerce store configuration
+	store: {
+		domain: string;
+		products: {
+			bones: string;
+			muscles: string;
+			brains: string;
+			shipkit: string;
+		};
+		format: {
+			buyUrl: (product: keyof SiteConfig['store']['products']) => string;
+		};
+	};
+
+	// Admin access control
 	admin: {
 		emails: string[];
 		domains: string[];
 		isAdmin: (email: string) => boolean;
 	};
+
+	// SEO and metadata
 	metadata: {
 		keywords: string[];
 		themeColor: {
@@ -63,11 +111,16 @@ interface SiteConfig {
 			dark: string;
 		};
 	};
+
+	// Application settings
+	app: {
+		apiKeyPrefix: string;
+	};
 }
 
 export const siteConfig: SiteConfig = {
 	behavior: {
-		pageTransitions: true, // Transition between pages
+		pageTransitions: true,
 	},
 
 	name: "Shipkit",
@@ -76,6 +129,24 @@ export const siteConfig: SiteConfig = {
 	ogImage: "https://shipkit.io/og",
 	description:
 		"Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
+
+	branding: {
+		projectName: "Shipkit",
+		projectSlug: "shipkit",
+		productNames: {
+			bones: "Bones",
+			muscles: "Muscles",
+			brains: "Brains",
+			main: "Shipkit",
+		},
+		domain: "shipkit.io",
+		protocol: "web+shipkit",
+		githubOrg: "shipkit-io",
+		githubRepo: "bones",
+		vercelProjectName: "bones-app",
+		databaseName: "shipkit",
+	},
+
 	links: {
 		twitter: "https://twitter.com/lacybuilds",
 		twitter_follow: "https://twitter.com/intent/follow?screen_name=lacybuilds",
@@ -83,22 +154,27 @@ export const siteConfig: SiteConfig = {
 		x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
 		github: "https://github.com/lacymorrow/shipkit",
 	},
+
 	repo: {
 		owner: "lacymorrow",
 		name: "shipkit",
-		url: "https://github.com/lacymorrow/shipkit", // TODO: change to use the variable
+		url: "https://github.com/lacymorrow/shipkit",
 		format: {
-			clone: () => `https://github.com/${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
-			ssh: () => `git@github.com:${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
+			clone: () => "https://github.com/lacymorrow/shipkit.git",
+			ssh: () => "git@github.com:lacymorrow/shipkit.git",
 		},
 	},
+
 	email: {
 		support: "feedback@shipkit.io",
 		team: "team@shipkit.io",
 		noreply: "noreply@shipkit.io",
 		domain: "shipkit.io",
-		format: (type: Exclude<keyof typeof siteConfig.email, "format">) => siteConfig.email[type],
+		legal: "legal@shipkit.io",
+		privacy: "privacy@shipkit.io",
+		format: (type) => siteConfig.email[type],
 	},
+
 	creator: {
 		name: "lacymorrow",
 		email: "lacy@shipkit.io",
@@ -122,17 +198,19 @@ export const siteConfig: SiteConfig = {
 			shipkit: "20b5b59e-b4c4-43b0-9979-545f90c76f28",
 		},
 		format: {
-			buyUrl: (product: keyof typeof siteConfig.store.products) =>
-				`https://${siteConfig.store.domain}/checkout/buy/${siteConfig.store.products[product]}`,
+			buyUrl: (product) =>
+				`https://shipkit.lemonsqueezy.com/checkout/buy/${siteConfig.store.products[product]}`,
 		},
 	},
+
 	admin: {
 		emails: ["lacymorrow0@gmail.com", "gojukebox@gmail.com"],
 		domains: ["lacymorrow.com"],
-		isAdmin: (email: string) =>
+		isAdmin: (email) =>
 			siteConfig.admin.emails.includes(email) ||
-			siteConfig.admin.domains.some((domain: string) => email?.endsWith(`@${domain}`)),
+			siteConfig.admin.domains.some((domain) => email?.endsWith(`@${domain}`)),
 	},
+
 	metadata: {
 		keywords: [
 			"Next.js",
@@ -148,6 +226,7 @@ export const siteConfig: SiteConfig = {
 			dark: "black",
 		},
 	},
+
 	app: {
 		apiKeyPrefix: "sk",
 	},

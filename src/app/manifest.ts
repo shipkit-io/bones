@@ -83,14 +83,14 @@ export default function manifest(): MetadataRoute.Manifest {
 		// 		sizes: "1280x720",
 		// 		type: "image/png",
 		// 		platform: "windows",
-		// 		label: "Homepage of ShipKit",
+		// 		label: `Homepage of ${siteConfig.branding.projectName}`,
 		// 	},
 		// 	{
 		// 		src: "/screenshots/docs.png",
 		// 		sizes: "1280x720",
 		// 		type: "image/png",
 		// 		platform: "windows",
-		// 		label: "Documentation page of ShipKit",
+		// 		label: `Documentation page of ${siteConfig.branding.projectName}`,
 		// 	},
 		// ],
 
@@ -102,14 +102,14 @@ export default function manifest(): MetadataRoute.Manifest {
 		// 	{
 		// 		name: "Documentation",
 		// 		short_name: "Docs",
-		// 		description: "View ShipKit documentation",
+		// 		description: `View ${siteConfig.branding.projectName} documentation`,
 		// 		url: routes.docs,
 		// 		icons: [{ src: "/icons/docs.png", sizes: "192x192" }],
 		// 	},
 		// 	{
 		// 		name: "Examples",
 		// 		short_name: "Examples",
-		// 		description: "View ShipKit examples",
+		// 		description: `View ${siteConfig.branding.projectName} examples`,
 		// 		url: routes.examples.root,
 		// 		icons: [{ src: "/icons/examples.png", sizes: "192x192" }],
 		// 	},
@@ -135,7 +135,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		 */
 		protocol_handlers: [
 			{
-				protocol: "web+shipkit", // Custom protocol scheme
+				protocol: siteConfig.branding.protocol, // Custom protocol scheme
 				url: "/protocol?type=%s", // URL that handles the protocol
 			},
 		],

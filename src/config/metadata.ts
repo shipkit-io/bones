@@ -154,23 +154,23 @@ export const constructMetadata = ({
 // Route-specific metadata for better CTR
 export const routeMetadata = {
 	home: {
-		title: "Shipkit - Launch Your App at Light Speed",
+		title: `${siteConfig.branding.projectName} - ${siteConfig.title}`,
 		description:
-			"Transform your app idea into reality with Shipkit's all-in-one development platform. Built with Next.js, TypeScript, and modern tools for rapid, production-ready deployment.",
+			`Transform your app idea into reality with ${siteConfig.branding.projectName}'s all-in-one development platform. Built with Next.js, TypeScript, and modern tools for rapid, production-ready deployment.`,
 	},
 	features: {
-		title: "Features - Modern App Development Made Simple | Shipkit",
+		title: `Features - Modern App Development Made Simple | ${siteConfig.branding.projectName}`,
 		description:
-			"Discover how Shipkit accelerates app development with Builder.io, Payload CMS, Auth.js, and more. Get enterprise-grade features without the complexity.",
+			`Discover how ${siteConfig.branding.projectName} accelerates app development with Builder.io, Payload CMS, Auth.js, and more. Get enterprise-grade features without the complexity.`,
 	},
 	pricing: {
-		title: "Simple, Transparent Pricing | Shipkit",
+		title: `Simple, Transparent Pricing | ${siteConfig.branding.projectName}`,
 		description:
-			"Choose the perfect plan for your app. Start free, scale as you grow. All plans include core features, world-class support, and automatic updates.",
+			`Choose the perfect plan for your app. Start free, scale as you grow. All plans include core features, world-class support, and automatic updates.`,
 	},
 	docs: {
-		title: "Documentation - Build Better Apps Faster | Shipkit",
+		title: `Documentation - Build Better Apps Faster | ${siteConfig.branding.projectName}`,
 		description:
-			"Comprehensive guides, API references, and examples to help you build production-ready apps with Shipkit. From quick starts to advanced topics.",
+			`Comprehensive guides, API references, and examples to help you build production-ready apps with ${siteConfig.branding.projectName}. From quick starts to advanced topics.`,
 	},
 };

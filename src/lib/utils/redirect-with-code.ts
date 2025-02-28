@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/config/base-url";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
 import { redirect } from "next/navigation";
@@ -10,7 +11,7 @@ interface RedirectWithCodeOptions {
 
 export const redirectWithCode = (url: string, options?: RedirectWithCodeOptions) => {
 	const { code, nextUrl } = options ?? {};
-	const redirectUrl = new URL(url, process.env.NEXTAUTH_URL);
+	const redirectUrl = new URL(url, BASE_URL);
 
 	if (code) {
 		redirectUrl.searchParams.set("code", code);
