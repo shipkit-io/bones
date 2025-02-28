@@ -17,6 +17,7 @@ import { useMemo } from "react";
 
 import { Logo } from "@/components/images/logo";
 import { Search } from "@/components/search/search";
+import { useSignInRedirectUrl } from "@/hooks/use-sign-in-redirect-url";
 import styles from "@/styles/header.module.css";
 import { BuyButton } from "../buttons/buy-button";
 
@@ -130,7 +131,7 @@ export const Header: React.FC<HeaderProps> = ({
 											Get Shipkit
 										</Link>
 										<Link
-											href={routes.auth.signIn}
+											href={signInRedirectUrl}
 											className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-center")}
 										>
 											Login
