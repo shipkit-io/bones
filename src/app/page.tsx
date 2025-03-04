@@ -48,19 +48,19 @@ export default function Page() {
 					<VercelDeployButton href={routes.external.vercelDeployBones} />
 				</div>
 
-				<div className="mt-auto flex flex-col items-center gap-md text-sm md:flex-row">
+				{/* <div className="mt-auto flex flex-col items-center gap-md text-sm md:flex-row">
 					<Link
 						href={"https://log.bones.sh"}
 						className={buttonVariants({ variant: "link", size: "sm" })}
 						>
 						See user errors in real-time with Bones Log
 					</Link>
-				</div>
+				</div> */}
 						</PageHeader>
 			</div>
 			<Attribution
 				variant="popover"
-				title={<>
+				heading={<>
 					Shipkit works with{' '}
 					{/* For users of */}
       <TextLoop

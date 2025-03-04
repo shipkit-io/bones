@@ -49,7 +49,7 @@ const builtByVariants = cva(
 export interface AttributionProps
 	extends React.HTMLAttributes<HTMLDivElement>,
 		VariantProps<typeof builtByVariants> {
-	title?: React.ReactNode;
+	heading?: React.ReactNode;
 	description?: React.ReactNode;
 	onClose?: () => void;
 	onClick?: () => void;
@@ -61,7 +61,7 @@ export function Attribution({
 	children,
 	className,
 	variant = "banner",
-	title,
+	heading,
 	description,
 	open = true,
 	href,
@@ -79,21 +79,21 @@ export function Attribution({
 	};
 
 	// Don't render if there's no meaningful content
-	if (!title && !description && !children) {
+	if (!heading && !description && !children) {
 		return null;
 	}
 
 	const _Content = () => (
 		<>
-			{(title || description) && (
+			{(heading || description) && (
 				<div className="">
-					{title &&
+					{heading &&
 						(href ? (
 							<Link href={href}>
-								<h3 className="font-semibold">{title}</h3>
+								<h3 className="font-semibold">{heading}</h3>
 							</Link>
 						) : (
-							<h3 className="font-semibold">{title}</h3>
+							<h3 className="font-semibold">{heading}</h3>
 						))}
 					{description &&
 						(href ? (
@@ -120,15 +120,15 @@ export function Attribution({
 				<style>{styles}</style>
 				<div className={cn(builtByVariants({ variant }), className)} {...props}>
 					<div className="container flex items-center justify-between gap-2">
-						{(title || description) && (
+						{(heading || description) && (
 							<div>
-								{title &&
+								{heading &&
 									(href ? (
 										<Link href={href}>
-											<h3 className="font-semibold">{title}</h3>
+											<h3 className="font-semibold">{heading}</h3>
 										</Link>
 									) : (
-										<h3 className="font-semibold">{title}</h3>
+										<h3 className="font-semibold">{heading}</h3>
 									))}
 								{description &&
 									(href ? (
@@ -161,9 +161,9 @@ export function Attribution({
 		<style>{styles}</style>
 			<Card className={cn(builtByVariants({ variant }), className)} {...props}>
 				<CardHeader className="p-3">
-					{(title || description) && (
+					{(heading || description) && (
 						<div className="flex flex-col gap-2">
-							{title && <h3 className="font-semibold">{title}</h3>}
+							{heading && <h3 className="font-semibold">{heading}</h3>}
 							{description && <p className="text-xs">{description}</p>}
 						</div>
 					)}
