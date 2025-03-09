@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
 import type { Twitter } from "next/dist/lib/metadata/types/twitter-types";
-import { siteConfig } from "./site";
+import { siteConfig } from "./site-config";
 
 const defaultOpenGraph: OpenGraph = {
 	type: "website",
@@ -70,10 +70,10 @@ export const defaultMetadata: Metadata = {
 			"max-snippet": -1,
 		},
 	},
-	verification: {
-		google: "YOUR_VERIFICATION_CODE",
-		yandex: "your-yandex-verification",
-	},
+	// verification: {
+	// 	google: "YOUR_VERIFICATION_CODE",
+	// 	yandex: "your-yandex-verification",
+	// },
 	alternates: {
 		canonical: siteConfig.url,
 		// languages: {
@@ -166,7 +166,7 @@ export const routeMetadata = {
 	pricing: {
 		title: `Simple, Transparent Pricing | ${siteConfig.branding.projectName}`,
 		description:
-			`Choose the perfect plan for your app. Start free, scale as you grow. All plans include core features, world-class support, and automatic updates.`,
+			"Choose the perfect plan for your app. Start free, scale as you grow. All plans include core features, world-class support, and automatic updates.",
 	},
 	docs: {
 		title: `Documentation - Build Better Apps Faster | ${siteConfig.branding.projectName}`,

@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site-config";
 import type { MetadataRoute } from "next";
 
 /* Robots.txt Configuration

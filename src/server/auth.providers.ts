@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site-config";
 import type { NextAuthConfig } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
@@ -8,10 +8,10 @@ import Resend from "next-auth/providers/resend";
 export const providers: NextAuthConfig["providers"] = [
 	// Magic Link Provider
 	process.env.AUTH_RESEND_KEY &&
-		process.env.DATABASE_URL &&
-		Resend({
-			from: siteConfig.email.support,
-		}),
+	process.env.DATABASE_URL &&
+	Resend({
+		from: siteConfig.email.support,
+	}),
 	// Credentials({
 	// 	name: "credentials", // Used by Oauth buttons to determine the active sign-in options
 	// 	credentials: {

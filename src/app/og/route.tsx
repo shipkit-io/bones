@@ -17,7 +17,7 @@
 	https://your-site.com/og?title=Custom%20Title&description=Custom%20Description&mode=dark
 */
 
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site-config";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 import { v4 } from "uuid";

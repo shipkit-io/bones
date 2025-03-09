@@ -1,6 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import Link from "next/link";
