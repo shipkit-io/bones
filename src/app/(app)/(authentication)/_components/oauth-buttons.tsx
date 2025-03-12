@@ -1,6 +1,6 @@
 "use client";
 
-import { Icons } from "@/components/images/icons";
+import { Icons } from "@/components/assets/icons";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";

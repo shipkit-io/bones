@@ -15,7 +15,7 @@ import Link from "next/link";
 import type React from "react";
 import { useMemo } from "react";
 
-import { Logo } from "@/components/images/logo";
+import { Logo } from "@/components/assets/logo";
 import { Search } from "@/components/search/search";
 import { useSignInRedirectUrl } from "@/hooks/use-sign-in-redirect-url";
 import styles from "@/styles/header.module.css";

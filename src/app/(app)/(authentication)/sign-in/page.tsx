@@ -1,4 +1,4 @@
-import { Logo } from "@/components/images/logo";
+import { Logo } from "@/components/assets/logo";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import Link from "next/link";
