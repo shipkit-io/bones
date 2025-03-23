@@ -64,6 +64,7 @@ export default function Page() {
 					Shipkit works with{' '}
 					{/* For users of */}
       <TextLoop
+	  	interval={10}
         className='overflow-y-clip'
         transition={{
           type: 'spring',

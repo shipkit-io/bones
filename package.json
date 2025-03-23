@@ -20,6 +20,7 @@
 		"db:seed": "dotenv -e .env -- tsx scripts/seed.ts",
 		"deps:check": "ncu",
 		"deps:update": "ncu -u",
+		"git:checkpoint": "tsx scripts/git-checkpoint.ts",
 		"lint": "npm run lint:biome && npm run lint:eslint && npm run lint:prettier",
 		"lint:biome": "biome lint .",
 		"lint:eslint": "next lint",

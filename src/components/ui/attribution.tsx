@@ -13,20 +13,18 @@ import { useLocalStorage } from "usehooks-ts";
 
 // Add the CSS animation
 const styles = `
-  @keyframes slideInUp {
+  @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(0.5rem);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
     }
   }
 
   .attribution-animate {
     opacity: 0;
-    animation: slideInUp 0.4s ease-in-out forwards;
+    animation: fadeIn 0.4s ease-in-out forwards;
     animation-delay: 10s;
   }
 `;
@@ -181,8 +179,9 @@ export function Attribution({
 					<CardFooter className="mt-auto p-3">
 						<LinkOrButton
 							href={href}
-							className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-full")}
+							className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-full p-1")}
 							variant="outline"
+							size={"sm"}
 							onClick={() => onClick?.()}
 						>
 							Learn more...
@@ -191,7 +190,7 @@ export function Attribution({
 				)}
 
 				<button onClick={handleClose} type="button" className="absolute right-1.5 top-1.5">
-					<X className="h-4 w-4" />
+					<X className="size-3" />
 				</button>
 			</Card>
 		</>

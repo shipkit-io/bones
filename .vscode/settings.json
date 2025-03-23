@@ -1,6 +1,8 @@
 {
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
+	"editor.wordWrap": "on",
+	"editor.wordWrapColumn": 120,
 	"[properties]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
