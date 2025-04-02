@@ -116,7 +116,7 @@ export const routes = {
 		bones: `https://${siteConfig.branding.productNames.bones.toLowerCase()}.${siteConfig.branding.domain}`,
 		log: `https://log.${siteConfig.branding.productNames.bones.toLowerCase()}.${siteConfig.branding.domain}`,
 		ui: `https://ui.${siteConfig.branding.productNames.bones.toLowerCase()}.${siteConfig.branding.domain}`,
-		buy: siteConfig.store.format.buyUrl("muscles"),
+		buy: siteConfig.store.format.buyUrl("shipkit"),
 		discord: "https://discord.gg/XxKrKNvEje",
 		twitter: siteConfig.links.twitter,
 		twitter_follow: siteConfig.links.twitter_follow,
