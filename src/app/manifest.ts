@@ -60,39 +60,46 @@ export default function manifest(): MetadataRoute.Manifest {
 				type: "image/x-icon",
 			},
 			{
-				src: "/favicon/web-app-manifest-192x192.png", // Home screen icon
+				src: "/favicon/web-app-manifest-192x192.png",
 				sizes: "192x192",
 				type: "image/png",
-				purpose: "maskable", // Allows icon to be masked into different shapes on Android
+				purpose: "maskable",
 			},
 			{
-				src: "/favicon/web-app-manifest-512x512.png", // Large icon for splash screens
+				src: "/favicon/web-app-manifest-192x192.png",
+				sizes: "192x192",
+				type: "image/png",
+				purpose: "any",
+			},
+			{
+				src: "/favicon/web-app-manifest-512x512.png",
 				sizes: "512x512",
 				type: "image/png",
 				purpose: "maskable",
 			},
 		],
 
-		/* App Screenshots (currently commented out)
+		/* App Screenshots
 		 * Used in app stores and install prompts to showcase the app
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/screenshots
+		 * @note You need to create these screenshot files in `public/screenshots/`
 		 */
-		// screenshots: [
-		// 	{
-		// 		src: "/screenshots/home.png",
-		// 		sizes: "1280x720",
-		// 		type: "image/png",
-		// 		platform: "windows",
-		// 		label: `Homepage of ${siteConfig.branding.projectName}`,
-		// 	},
-		// 	{
-		// 		src: "/screenshots/docs.png",
-		// 		sizes: "1280x720",
-		// 		type: "image/png",
-		// 		platform: "windows",
-		// 		label: `Documentation page of ${siteConfig.branding.projectName}`,
-		// 	},
-		// ],
+		screenshots: [
+			{
+				src: "/assets/screenshots/screenshot-desktop.png", // Updated path
+				sizes: "1280x720",
+				type: "image/png",
+				form_factor: "wide", // Indicates this is for wide screens (desktop)
+				label: `Desktop view of ${siteConfig.branding.projectName}`,
+			},
+			{
+				src: "/assets/screenshots/screenshot-mobile.png", // Updated path
+				sizes: "720x1280",
+				type: "image/png",
+				form_factor: "narrow", // Indicates this is for narrow screens (mobile)
+				label: `Mobile view of ${siteConfig.branding.projectName}`,
+			},
+		],
 
 		/* App Shortcuts (currently commented out)
 		 * Provides quick access to key features from the app icon
@@ -120,12 +127,13 @@ export default function manifest(): MetadataRoute.Manifest {
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/share_target
 		 */
 		share_target: {
-			action: "/share", // URL that handles shared content
-			method: "GET", // HTTP method for sharing
+			action: "/share",
+			method: "POST", // Changed from GET to POST
+			enctype: "application/x-www-form-urlencoded", // Added enctype for POST
 			params: {
-				title: "title", // Parameter name for shared title
-				text: "text", // Parameter name for shared text
-				url: "url", // Parameter name for shared URL
+				title: "title",
+				text: "text",
+				url: "url",
 			},
 		},
 

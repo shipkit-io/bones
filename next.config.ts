@@ -2,6 +2,7 @@ import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import withPWA from "next-pwa";
 
 /**
  * Validate environment variables
@@ -62,7 +63,7 @@ let nextConfig: NextConfig = {
 			* Dangerously allow production builds to successfully complete even if
 			* your project has type errors.
 		*/
-		// ignoreBuildErrors: true,
+		ignoreBuildErrors: true,
 	},
 
 	// Configure `pageExtensions` to include markdown and MDX files
@@ -139,6 +140,18 @@ const withMDX = createMDX({
 	},
 });
 nextConfig = withMDX(nextConfig);
+
+/*
+ * PWA config
+ */
+const pwaConfig = {
+	dest: "public",
+	register: true,
+	skipWaiting: true,
+	disable: process.env.NODE_ENV === "development",
+};
+
+nextConfig = (withPWA as any)(pwaConfig)(nextConfig) as NextConfig;
 
 /*
  * Logflare config - should be last
