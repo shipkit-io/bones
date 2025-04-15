@@ -17,184 +17,196 @@ import { useMemo } from "react";
 
 import { Logo } from "@/components/assets/logo";
 import { Search } from "@/components/search/search";
+import { defaultNavLinks, type NavLink } from "@/config/navigation";
 import { useSignInRedirectUrl } from "@/hooks/use-sign-in-redirect-url";
 import styles from "@/styles/header.module.css";
 import { BuyButton } from "../buttons/buy-button";
 
-interface NavLink {
-	href: string;
-	label: string;
-	isCurrent?: boolean;
-}
-
 interface HeaderProps {
-	navLinks?: NavLink[];
-	logoHref?: string;
-	logoIcon?: React.ReactNode;
-	logoText?: string;
-	searchPlaceholder?: string;
-	variant?: "default" | "sticky" | "floating";
+  navLinks?: NavLink[];
+  logoHref?: string;
+  logoIcon?: React.ReactNode;
+  logoText?: string;
+  searchPlaceholder?: string;
+  variant?: "default" | "sticky" | "floating";
 }
-
-const defaultNavLinks = [
-	{ href: routes.faq, label: "Faqs", isCurrent: false },
-	{ href: routes.features, label: "Features", isCurrent: false },
-	{ href: routes.pricing, label: "Pricing", isCurrent: false },
-];
 
 const headerVariants = cva("translate-z-0 z-50 p-md", {
-	variants: {
-		variant: {
-			default: "relative",
-			floating: "sticky top-0 h-24",
-			sticky:
-				"sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-		},
-	},
-	defaultVariants: {
-		variant: "default",
-	},
+  variants: {
+    variant: {
+      default: "relative",
+      floating: "sticky top-0 h-24",
+      sticky:
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
 });
 
 export const Header: React.FC<HeaderProps> = ({
-	logoHref = routes.home,
-	logoIcon = <Logo />,
-	logoText = siteConfig.name,
-	navLinks = defaultNavLinks,
-	variant = "default",
+  logoHref = routes.home,
+  logoIcon = <Logo />,
+  logoText = siteConfig.name,
+  navLinks = defaultNavLinks,
+  variant = "default",
 }) => {
-	const [{ y }] = useWindowScroll();
-	const isOpaque = useMemo(() => variant === "floating" && y && y > 100, [y, variant]);
-	const { data: session } = useSession();
-	const signInRedirectUrl = useSignInRedirectUrl();
+  const [{ y }] = useWindowScroll();
+  const isOpaque = useMemo(
+    () => variant === "floating" && y && y > 100,
+    [y, variant]
+  );
+  const { data: session } = useSession();
+  const signInRedirectUrl = useSignInRedirectUrl();
 
-	return (
-		<>
-			<header
-				className={cn(
-					headerVariants({ variant }),
-					variant === "floating" && styles.header,
-					variant === "floating" && isOpaque && styles.opaque,
-					variant === "floating" &&
-						isOpaque &&
-						"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]"
-				)}
-			>
-				{variant === "floating" && <div className="h-[12px] w-full" />}
-				<nav className="container flex items-center justify-between gap-md">
-					<div className="hidden flex-col gap-md md:flex md:flex-row md:items-center">
-						<Link
-							href={logoHref}
-							className="flex grow items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
-						>
-							{logoIcon}
-							<span className="block">{logoText}</span>
-							<span className="sr-only">{logoText}</span>
-						</Link>
-						<Search />
-					</div>
+  return (
+    <>
+      <header
+        className={cn(
+          headerVariants({ variant }),
+          variant === "floating" && styles.header,
+          variant === "floating" && isOpaque && styles.opaque,
+          variant === "floating" &&
+            isOpaque &&
+            "-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]"
+        )}
+      >
+        {variant === "floating" && <div className="h-[12px] w-full" />}
+        <nav className="container flex items-center justify-between gap-md">
+          <div className="hidden flex-col gap-md md:flex md:flex-row md:items-center">
+            <Link
+              href={logoHref}
+              className="flex grow items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+            >
+              {logoIcon}
+              <span className="block">{logoText}</span>
+              <span className="sr-only">{logoText}</span>
+            </Link>
+            <Search />
+          </div>
 
-					<Sheet>
-						<SheetTrigger asChild>
-							<Button variant="outline" size="icon" className="shrink-0 md:hidden">
-								<HamburgerMenuIcon className="h-5 w-5" />
-								<span className="sr-only">Toggle navigation menu</span>
-							</Button>
-						</SheetTrigger>
-						<SheetContent side="left">
-							<nav className="grid gap-6 font-medium">
-								<Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
-									{logoIcon}
-									<span className="sr-only">{logoText}</span>
-								</Link>
-								{navLinks.map((link) => (
-									<Link
-										key={`${link.href}-${link.label}`}
-										href={link.href}
-										className={cn(
-											"text-muted-foreground hover:text-foreground",
-											link.isCurrent ? "text-foreground" : ""
-										)}
-									>
-										{link.label}
-									</Link>
-								))}
-								{!session && (
-									<>
-										<Link
-											href={routes.launch}
-											className={cn(
-												buttonVariants({ variant: "default" }),
-												"w-full justify-center"
-											)}
-										>
-											Get Shipkit
-										</Link>
-										<Link
-											href={signInRedirectUrl}
-											className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-center")}
-										>
-											Login
-										</Link>
-									</>
-								)}
-								{session && (
-									<>
-										<Link
-											href={routes.docs}
-											className={cn("text-muted-foreground hover:text-foreground")}
-										>
-											Documentation
-										</Link>
-										<Link
-											href={routes.app.dashboard}
-											className={cn(
-												buttonVariants({ variant: "default" }),
-												"w-full justify-center"
-											)}
-										>
-											Dashboard
-										</Link>
-									</>
-								)}
-							</nav>
-						</SheetContent>
-					</Sheet>
-					<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
-						<div className="hidden items-center justify-between gap-md text-sm md:flex">
-							{session && (
-								<Link
-									key={routes.docs}
-									href={routes.docs}
-									className={cn("text-muted-foreground transition-colors hover:text-foreground")}
-								>
-									Documentation
-								</Link>
-							)}
-							{navLinks.map((link) => (
-								<Link
-									key={`${link.href}-${link.label}`}
-									href={link.href}
-									className={cn(
-										"transition-colors hover:text-foreground",
-										link.isCurrent ? "text-foreground" : "text-muted-foreground"
-									)}
-								>
-									{link.label}
-								</Link>
-							))}
-						</div>
-						<div className="flex items-center gap-2">
-							{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 md:hidden"
+              >
+                <HamburgerMenuIcon className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <nav className="grid gap-6 font-medium">
+                <Link
+                  href={logoHref}
+                  className="flex items-center gap-2 text-lg font-semibold"
+                >
+                  {logoIcon}
+                  <span className="sr-only">{logoText}</span>
+                </Link>
+                {navLinks.map((link) => (
+                  <Link
+                    key={`${link.href}-${link.label}`}
+                    href={link.href}
+                    className={cn(
+                      "text-muted-foreground hover:text-foreground",
+                      link.isCurrent ? "text-foreground" : ""
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                {!session && (
+                  <>
+                    <Link
+                      href={routes.launch}
+                      className={cn(
+                        buttonVariants({ variant: "default" }),
+                        "w-full justify-center"
+                      )}
+                    >
+                      Get Shipkit
+                    </Link>
+                    <Link
+                      href={signInRedirectUrl}
+                      className={cn(
+                        buttonVariants({ variant: "ghost" }),
+                        "w-full justify-center"
+                      )}
+                    >
+                      Login
+                    </Link>
+                  </>
+                )}
+                {session && (
+                  <>
+                    <Link
+                      href={routes.docs}
+                      className={cn(
+                        "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Documentation
+                    </Link>
+                    <Link
+                      href={routes.app.dashboard}
+                      className={cn(
+                        buttonVariants({ variant: "default" }),
+                        "w-full justify-center"
+                      )}
+                    >
+                      Dashboard
+                    </Link>
+                  </>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
+          <div className="flex items-center gap-2 md:ml-auto lg:gap-4">
+            <div className="hidden items-center justify-between gap-md text-sm md:flex">
+              {session && (
+                <Link
+                  key={routes.docs}
+                  href={routes.docs}
+                  className={cn(
+                    "text-muted-foreground transition-colors hover:text-foreground"
+                  )}
+                >
+                  Documentation
+                </Link>
+              )}
+              {navLinks.map((link) => (
+                <Link
+                  key={`${link.href}-${link.label}`}
+                  href={link.href}
+                  className={cn(
+                    "transition-colors hover:text-foreground",
+                    link.isCurrent ? "text-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              {!session && (
+                <ThemeToggle
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full"
+                />
+              )}
 
-							<UserMenu size="sm" />
+              <UserMenu size="sm" />
 
-							{!session && <BuyButton />}
-						</div>
-					</div>
-				</nav>
-			</header>
-			{variant === "floating" && <div className="-mt-24" />}
-		</>
-	);
+              {!session && <BuyButton />}
+            </div>
+          </div>
+        </nav>
+      </header>
+      {variant === "floating" && <div className="-mt-24" />}
+    </>
+  );
 };
