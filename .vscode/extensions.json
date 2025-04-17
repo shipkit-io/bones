@@ -1,12 +1,13 @@
 {
-	"recommendations": [
-		"esbenp.prettier-vscode",
-		"dbaeumer.vscode-eslint",
-		"foxundermoon.shell-format",
-		"ms-azuretools.vscode-docker",
-		"biomejs.biome",
-		"dexxiez.shadcn-color-preview",
-		"aaron-bond.better-comments",
-		"unifiedjs.vscode-mdx"
-	]
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "foxundermoon.shell-format",
+    "ms-azuretools.vscode-docker",
+    "biomejs.biome",
+    "dexxiez.shadcn-color-preview",
+    "aaron-bond.better-comments",
+    "unifiedjs.vscode-mdx",
+    "github.vscode-github-actions"
+  ]
 }
