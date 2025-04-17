@@ -1,0 +1,29 @@
+name: AI Code Review
+
+# This workflow runs PR Agent on pull requests to provide AI-powered code reviews.
+# It requires an OPENAI_KEY secret to be configured in the repository settings.
+# @see https://github.com/qodo-ai/pr-agent
+#
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write # Required to post comments on PRs
+  issues: write # Required to create issues (optional, depending on config)
+  contents: read # Required to read code content
+
+jobs:
+  pr_agent_job:
+    runs-on: ubuntu-latest
+    name: AI Code Reviewer
+    steps:
+      - name: Run PR Agent
+        uses: qodo-ai/pr-agent@main # Or use a specific version tag like @vX.Y.Z
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          # Add other configuration environment variables here if needed
+          # e.g., PR_REVIEWER.MODEL, PR_DESCRIPTION.MODEL, etc.
+          # @see https://github.com/qodo-ai/pr-agent?tab=readme-ov-file#-configuration
