@@ -1,8 +1,7 @@
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
-import createMDX from "@next/mdx";
+import { withPlugins } from "@/config/with-plugins";
 import type { NextConfig } from "next";
-import withPWA from "next-pwa";
 
 /**
  * Validate environment variables
@@ -12,7 +11,7 @@ import withPWA from "next-pwa";
  */
 import { env } from "@/env";
 
-let nextConfig: NextConfig = {
+const nextConfig: NextConfig = {
 	/*
 	 * Redirects are located in the `src/config/routes.ts` file
 	 */
@@ -86,6 +85,7 @@ let nextConfig: NextConfig = {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
 		},
 		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
+		// instrumentationHook: true, // Removed from experimental
 	},
 	/*
 	 * Miscellaneous configuration
@@ -114,66 +114,8 @@ let nextConfig: NextConfig = {
 };
 
 /*
- * Configurations
- * Order matters!
+ * Apply Next.js configuration plugins using the withPlugins utility.
+ * The utility handles loading and applying functions exported from files
+ * in the specified directory (default: src/config/nextjs).
  */
-
-/*
- * MDX config - should be last or second to last
- */
-const withMDX = createMDX({
-	extension: /\.mdx?$/,
-	options: {
-		remarkPlugins: [
-			[
-				// @ts-expect-error
-				"remark-frontmatter",
-				{
-					type: "yaml",
-					marker: "-",
-				},
-			],
-			// @ts-expect-error
-			["remark-mdx-frontmatter", {}],
-		],
-		rehypePlugins: [],
-	},
-});
-nextConfig = withMDX(nextConfig);
-
-/*
- * PWA config
- */
-const pwaConfig = {
-	dest: "public",
-	register: true,
-	skipWaiting: true,
-	disable: process.env.NODE_ENV === "development",
-};
-
-nextConfig = (withPWA as any)(pwaConfig)(nextConfig) as NextConfig;
-
-/*
- * Logflare config - should be last
- */
-/** @type {import("./withLogFlare.js").LogFlareOptions} */
-// const logFlareOptions = {
-// 	// apiKey: "sk_tk4XH5TBd76VPKWEkDQ7706z9WReI7sQK9bSelC5", // Move to env
-// 	prefix: "[LogFlare]",
-// 	logLevel: process.env.NODE_ENV === "production" ? "log" : "debug",
-// 	logToFile: true,
-// 	logFilePath: "./logflare.log",
-// 	useColors: true,
-// 	useEmoji: true,
-// 	colors: {
-// 		// Override default colors if needed
-// 		error: "\x1b[41m\x1b[37m", // White text on red background
-// 	},
-// 	emojis: {
-// 		// Override default emojis if needed
-// 		debug: "🔍",
-// 	},
-// };
-// nextConfig = withLogFlare(logFlareOptions)(nextConfig);
-
-export default nextConfig;
+export default withPlugins(nextConfig);
