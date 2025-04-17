@@ -1,0 +1,19 @@
+{
+  "name": "fontawesome",
+  "type": "registry:block",
+  "description": "FontAwesome configuration and setup.",
+  "registryDependencies": [],
+  "dependencies": [
+    "@fortawesome/fontawesome-svg-core",
+    "@fortawesome/react-fontawesome"
+  ],
+  "categories": ["shipkit", "icons"],
+  "style": "default",
+  "files": [
+    {
+      "source": "src/lib/fontawesome.ts",
+      "type": "registry:page",
+      "target": "src/lib/fontawesome.ts"
+    }
+  ]
+}
