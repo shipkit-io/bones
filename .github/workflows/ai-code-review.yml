@@ -23,7 +23,7 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           # Add other configuration environment variables here if needed
           # e.g., PR_REVIEWER.MODEL, PR_DESCRIPTION.MODEL, etc.
           # @see https://github.com/qodo-ai/pr-agent?tab=readme-ov-file#-configuration
