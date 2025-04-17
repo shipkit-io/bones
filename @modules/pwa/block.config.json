@@ -1,0 +1,7 @@
+{
+  "name": "pwa",
+  "description": "Adds Progressive Web App (PWA) capabilities using next-pwa.",
+  "dependencies": ["next-pwa"],
+  "devDependencies": ["@types/node"],
+  "files": ["src/config/nextjs/with-pwa.ts", "src/app/manifest.ts"]
+}
