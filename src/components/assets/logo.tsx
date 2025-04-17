@@ -1,5 +1,9 @@
-import { BoxesIcon } from "lucide-react";
-
-export const Logo = (props: React.ComponentProps<typeof BoxesIcon>) => {
-	return <BoxesIcon {...props} />;
+import { Icon } from "@/components/assets/icon";
+import { siteConfig } from "@/config/site-config";
+export const Logo = (props: React.ComponentProps<typeof Icon>) => {
+  return (
+    <div className="flex items-center gap-2 text-2xl font-bold">
+      <Icon {...props} /> {siteConfig.name}
+    </div>
+  );
 };

@@ -1,4 +1,4 @@
-import { routes } from "@/config/routes";
+// import { routes } from "@/config/routes"; // No longer needed directly
 import { siteConfig } from "@/config/site-config";
 import type { MetadataRoute } from "next";
 
@@ -7,72 +7,70 @@ export default function manifest(): MetadataRoute.Manifest {
 		/* Basic Application Information
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest#name
 		 */
-		name: siteConfig.title, // Full name of the application
-		short_name: siteConfig.name, // Short name for app shortcuts and home screen
+		name: `${siteConfig.name} - ${siteConfig.title}`, // Use siteConfig.title for full name
+		short_name: siteConfig.name, // Use siteConfig.name for short name
 		description: siteConfig.description, // Description shown in app stores and install prompts
 
 		/* Application Entry Points and Identification
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
 		 */
-		start_url: routes.home, // URL that loads when app is launched
-		id: routes.home, // Unique identifier for the app
+		start_url: siteConfig.manifest.startUrl, // Use config value
+		id: siteConfig.manifest.startUrl, // Use config value
 
 		/* Display and UI Settings
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/display
 		 */
-		display: "standalone", // App appears as standalone application (no browser UI)
-		display_override: ["window-controls-overlay"], // Enables customization of title bar in PWA
+		display: siteConfig.manifest.display, // Use config value
+		display_override: siteConfig.manifest.displayOverride, // Use config value
 
 		/* Theme and Color Settings
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/theme_color
 		 */
-		background_color: siteConfig.metadata.themeColor.light, // Background color during app load
-		theme_color: siteConfig.metadata.themeColor.dark, // Theme color for OS integration
+		background_color: siteConfig.metadata.themeColor.light, // Use config value
+		theme_color: siteConfig.metadata.themeColor.dark, // Use config value
 
 		/* Device and Locale Settings
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/orientation
 		 */
-		orientation: "portrait-primary", // Preferred screen orientation
-		categories: ["development", "productivity", "utilities"], // App store categories
-		dir: "ltr", // Text direction
-		lang: "en-US", // Primary language
+		orientation: siteConfig.manifest.orientation, // Use config value
+		categories: siteConfig.manifest.categories, // Use config value
+		dir: siteConfig.manifest.dir, // Use config value
+		lang: siteConfig.manifest.lang, // Use config value
 
 		/* Installation and Platform Preferences
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/prefer_related_applications
 		 */
-		prefer_related_applications: false, // Don't prefer native apps over this web app
-		scope: "/", // Pages that are part of the PWA experience
+		prefer_related_applications: siteConfig.manifest.preferRelatedApplications, // Use config value
+		scope: siteConfig.manifest.scope, // Use config value
 
 		/* Launch Behavior
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/launch_handler
 		 */
-		launch_handler: {
-			client_mode: ["navigate-existing", "auto"], // Controls how app launches when clicked
-		},
+		launch_handler: siteConfig.manifest.launchHandler, // Use config value
 
 		/* App Icons
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/icons
 		 */
 		icons: [
 			{
-				src: "/favicon.ico", // Standard favicon
+				src: siteConfig.manifest.icons.favicon, // Use config value
 				sizes: "48x48",
 				type: "image/x-icon",
 			},
 			{
-				src: "/app/web-app-manifest-192x192.png",
+				src: siteConfig.manifest.icons.appIcon192, // Use config value
 				sizes: "192x192",
 				type: "image/png",
 				purpose: "maskable",
 			},
 			{
-				src: "/app/web-app-manifest-192x192.png",
+				src: siteConfig.manifest.icons.appIcon192, // Use config value
 				sizes: "192x192",
 				type: "image/png",
 				purpose: "any",
 			},
 			{
-				src: "/app/web-app-manifest-512x512.png",
+				src: siteConfig.manifest.icons.appIcon512, // Use config value
 				sizes: "512x512",
 				type: "image/png",
 				purpose: "maskable",
@@ -117,7 +115,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		// 		name: "Examples",
 		// 		short_name: "Examples",
 		// 		description: `View ${siteConfig.branding.projectName} examples`,
-		// 		url: routes.examples.root,
+		// 		url: routes.examples.index,
 		// 		icons: [{ src: "/icons/examples.png", sizes: "192x192" }],
 		// 	},
 		// ],
@@ -152,6 +150,6 @@ export default function manifest(): MetadataRoute.Manifest {
 		 * Links to related native applications
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/related_applications
 		 */
-		related_applications: [], // No related native apps
+		related_applications: siteConfig.manifest.relatedApplications || [], // Use config value, ensure array
 	};
 }

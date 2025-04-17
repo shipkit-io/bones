@@ -1,0 +1,42 @@
+{
+  "name": "mdx",
+  "type": "registry:block",
+  "description": "MDX components including Card, CardGroup, and a Secret Generator.",
+  "registryDependencies": ["button", "input", "fontawesome"],
+  "dependencies": [
+    "@fortawesome/fontawesome-svg-core",
+    "@fortawesome/react-fontawesome",
+    "lucide-react",
+    "mdx/types",
+    "sonner"
+  ],
+  "categories": ["shipkit", "mdx", "ui"],
+  "style": "default",
+  "files": [
+    {
+      "source": "src/config/nextjs/with-mdx.ts",
+      "type": "registry:config",
+      "target": "src/config/nextjs/with-mdx.ts"
+    },
+    {
+      "source": "src/mdx-components.tsx",
+      "type": "registry:page",
+      "target": "src/mdx-components.tsx"
+    },
+    {
+      "source": "src/_components/card.tsx",
+      "type": "registry:page",
+      "target": "src/components/mdx/card.tsx"
+    },
+    {
+      "source": "src/_components/card-group.tsx",
+      "type": "registry:page",
+      "target": "src/components/mdx/card-group.tsx"
+    },
+    {
+      "source": "src/_components/secret-generator.tsx",
+      "type": "registry:page",
+      "target": "src/components/mdx/secret-generator.tsx"
+    }
+  ]
+}
