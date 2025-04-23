@@ -1,6 +1,29 @@
 version: "3.8"
 
 services:
+  # Add app service for development
+  app:
+    image: mcr.microsoft.com/devcontainers/javascript-node:22
+    container_name: sk_bones_app
+    volumes:
+      # Mount the workspace with caching
+      - ..:/workspace:cached
+      # Use a named volume for node_modules for better performance
+      - node_modules:/workspace/node_modules:delegated
+    command: sleep infinity
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-lacy_user}:${POSTGRES_PASSWORD:-lacy_password}@db:5432/${POSTGRES_DB:-lacy}
+      - NODE_ENV=development
+    # Wait for the database to be healthy before starting
+    depends_on:
+      db:
+        condition: service_healthy
+    # Connect to the same network as the database
+    networks:
+      - app-network
+    # Define profiles for this service
+    profiles: ["development", "testing"]
+
   db:
     image: postgres:15
     container_name: lacy_postgres
@@ -13,6 +36,43 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    # Add healthcheck to ensure DB is ready
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-lacy_user} -d ${POSTGRES_DB:-lacy}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Define profiles for this service
+    profiles: ["development", "testing", "database-only"]
+
+  # Add pgAdmin service for database management
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: sk_bones_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    # Define profiles for this service
+    profiles: ["development"]
 
 volumes:
   postgres_data:
+  # Named volume for node_modules
+  node_modules:
+
+# Create a shared network between containers
+networks:
+  app-network:
+    driver: bridge

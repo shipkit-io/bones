@@ -1,0 +1,77 @@
+{
+  "name": "SK Bones Dev Container",
+
+  // Use Docker Compose for multi-container setup
+  "dockerComposeFile": "../docker-compose.yml",
+
+  // The service you want to run inside VS Code
+  "service": "app",
+
+  // The optional 'workspaceFolder' property is the path VS Code should open by default when connected.
+  "workspaceFolder": "/workspace",
+
+  // Use 'runArgs' to pass arguments to the container run command
+  // Loads environment variables from .env.dev file
+  "runArgs": ["--env-file", "${localWorkspaceFolder}/.env.dev"],
+
+  "features": {
+    // Installs Node.js
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    // Installs pnpm globally
+    "ghcr.io/devcontainers/features/pnpm:1": {
+      "version": "latest"
+    },
+    // Installs Git and Git LFS
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": true
+    },
+    // Installs GitHub CLI
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+
+  // Forward ports for development
+  "forwardPorts": [
+    3000, // Next.js app
+    5050 // pgAdmin
+  ],
+
+  // Configure VS Code specific settings and extensions
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        // Enable format on save
+        "editor.formatOnSave": true,
+        // Configure ESLint to fix issues on save
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        // Use non-relative paths for imports
+        "typescript.preferences.importModuleSpecifier": "non-relative"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "prisma.prisma",
+        "ms-vscode.vscode-typescript-next",
+        "github.vscode-github-actions",
+        "github.copilot",
+        "github.copilot-chat",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+
+  // Use non-root user
+  "remoteUser": "node",
+
+  // Run commands after the container is created
+  "postCreateCommand": "pnpm install"
+}
