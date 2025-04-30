@@ -1,5 +1,5 @@
-import { BoxesIcon } from "lucide-react";
+import { BoneIcon } from "lucide-react";
 
-export const Logo = (props: React.ComponentProps<typeof BoxesIcon>) => {
-	return <BoxesIcon {...props} />;
+export const Logo = (props: React.ComponentProps<typeof BoneIcon>) => {
+  return <BoneIcon {...props} />;
 };

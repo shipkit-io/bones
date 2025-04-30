@@ -123,28 +123,28 @@ export const siteConfig: SiteConfig = {
 		pageTransitions: true,
 	},
 
-	name: "Shipkit",
+	name: "Bones",
 	title: "Launch your app today",
-	url: "https://shipkit.io",
+	url: "https://bones.sh",
 	ogImage: "https://shipkit.io/og",
 	description:
 		"Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
 
 	branding: {
-		projectName: "Shipkit",
-		projectSlug: "shipkit",
+		projectName: "Bones",
+		projectSlug: "bones",
 		productNames: {
 			bones: "Bones",
 			muscles: "Muscles",
 			brains: "Brains",
-			main: "Shipkit",
+			main: "Bones",
 		},
-		domain: "shipkit.io",
-		protocol: "web+shipkit",
-		githubOrg: "shipkit-io",
+		domain: "bones.sh",
+		protocol: "web+bones",
+		githubOrg: "bones-sh",
 		githubRepo: "bones",
 		vercelProjectName: "bones-app",
-		databaseName: "shipkit",
+		databaseName: "bones",
 	},
 
 	links: {
@@ -157,11 +157,11 @@ export const siteConfig: SiteConfig = {
 
 	repo: {
 		owner: "lacymorrow",
-		name: "shipkit",
-		url: "https://github.com/lacymorrow/shipkit",
+		name: "bones",
+		url: "https://github.com/shipkit-io/bones",
 		format: {
-			clone: () => "https://github.com/lacymorrow/shipkit.git",
-			ssh: () => "git@github.com:lacymorrow/shipkit.git",
+			clone: () => "https://github.com/shipkit-io/bones.git",
+			ssh: () => "git@github.com:shipkit-io/bones.git",
 		},
 	},
 
