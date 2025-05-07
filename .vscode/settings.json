@@ -13,5 +13,13 @@
     "next/router",
     "next/dist",
     "^lucide-react/dist/lucide-react.suffixed$"
+  ],
+
+  "remote.SSH.defaultExtensions": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "GitHub.vscode-pull-request-github",
+    "GitHub.copilot",
+    "eamodio.gitlens"
   ]
 }
