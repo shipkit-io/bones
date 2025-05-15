@@ -4,7 +4,7 @@
  * Rebranding Script
  *
  * This script updates the site configuration with new branding information.
- * It modifies the site.ts file to replace all branding references with new values.
+ * It modifies the site-config.ts file to replace all branding references with new values.
  *
  * Usage:
  * ```
@@ -91,108 +91,130 @@ async function main() {
 	const musclesName = "Pro";
 	const brainsName = "Enterprise";
 
-	// Update site.ts
+	// Update site-config.ts
 	console.log('\nUpdating site configuration...');
 
-	const siteConfigPath = path.join(process.cwd(), 'src', 'config', 'site.ts');
+	const siteConfigPath = path.join(process.cwd(), 'src', 'config', 'site-config.ts');
 	let siteConfig = fs.readFileSync(siteConfigPath, 'utf8');
 
-	// Update branding section
-	siteConfig = siteConfig.replace(
-		/name: "([^"]+)"/,
-		`name: "${projectName}"`
+	// We need to identify the export declaration and handle the branding info correctly
+	// Find where the actual siteConfig object starts
+	const siteConfigStartPattern = /export const siteConfig: SiteConfig = \{/;
+	const siteConfigMatch = siteConfig.match(siteConfigStartPattern);
+
+	if (!siteConfigMatch) {
+		console.error('Could not find siteConfig export in site-config.ts');
+		process.exit(1);
+	}
+
+	const siteConfigStart = siteConfigMatch.index;
+	const beforeConfig = siteConfig.substring(0, siteConfigStart + siteConfigMatch[0].length);
+	let afterConfig = siteConfig.substring(siteConfigStart + siteConfigMatch[0].length);
+
+	// Handle replacement of individual keys in the object
+	// Name
+	afterConfig = afterConfig.replace(
+		/\n\tname: "([^"]+)"/,
+		`\n\tname: "${projectName}"`
 	);
 
-	siteConfig = siteConfig.replace(
-		/url: "([^"]+)"/,
-		`url: "https://${domain}"`
+	// URL
+	afterConfig = afterConfig.replace(
+		/\n\turl: "([^"]+)"/,
+		`\n\turl: "https://${domain}"`
 	);
 
-	siteConfig = siteConfig.replace(
-		/ogImage: "([^"]+)"/,
-		`ogImage: "https://${domain}/og"`
+	// OG Image
+	afterConfig = afterConfig.replace(
+		/\n\togImage: "([^"]+)"/,
+		`\n\togImage: "https://${domain}/og"`
 	);
 
-	// Update branding section
-	const brandingRegex = /branding: \{[\s\S]*?\},/;
-	const newBranding = `branding: {
-		projectName: "${projectName}",
-		projectSlug: "${projectSlug}",
-		productNames: {
-			bones: "${bonesName}",
-			muscles: "${musclesName}",
-			brains: "${brainsName}",
-			main: "${projectName}",
-		},
-		domain: "${domain}",
-		protocol: "web+${projectSlug}",
-		githubOrg: "${githubOrg}",
-		githubRepo: "${githubRepo}",
-		vercelProjectName: "${vercelProjectName}",
-		databaseName: "${databaseName}",
-	},`;
+	// Description - keep original but update if needed
 
-	siteConfig = siteConfig.replace(brandingRegex, newBranding);
+	// Branding section
+	const brandingPattern = /\n\tbranding: \{[\s\S]*?\n\t\},/;
+	const newBranding = `\n\tbranding: {
+\t\tprojectName: "${projectName}",
+\t\tprojectSlug: "${projectSlug}",
+\t\tproductNames: {
+\t\t\tbones: "${bonesName}",
+\t\t\tmuscles: "${musclesName}",
+\t\t\tbrains: "${brainsName}",
+\t\t\tmain: "${projectName}",
+\t\t},
+\t\tdomain: "${domain}",
+\t\tprotocol: "web+${projectSlug}",
+\t\tgithubOrg: "${githubOrg}",
+\t\tgithubRepo: "${githubRepo}",
+\t\tvercelProjectName: "${vercelProjectName}",
+\t\tdatabaseName: "${databaseName}",
+\t},`;
 
-	// Update creator section
-	const creatorRegex = /creator: \{[\s\S]*?\},/;
-	const newCreator = `creator: {
-		name: "${creatorUsername}",
-		email: "${creatorEmail}",
-		url: "https://${creatorDomain}",
-		twitter: "@${creatorTwitter}",
-		twitter_handle: "${creatorTwitter}",
-		domain: "${creatorDomain}",
-		fullName: "${creatorName || `${projectName} Team`}",
-		role: "Developer",
-		avatar: "https://avatars.githubusercontent.com/u/1311301?v=4",
-		location: "San Francisco, CA",
-		bio: "Creator and developer.",
-	},`;
+	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
-	siteConfig = siteConfig.replace(creatorRegex, newCreator);
+	// Repository section
+	const repoPattern = /\n\trepo: \{[\s\S]*?\n\t\},/;
+	const newRepo = `\n\trepo: {
+\t\towner: "${githubOrg}",
+\t\tname: "${githubRepo}",
+\t\turl: "https://github.com/${githubOrg}/${githubRepo}",
+\t\tformat: {
+\t\t\tclone: () => "https://github.com/${githubOrg}/${githubRepo}.git",
+\t\t\tssh: () => "git@github.com:${githubOrg}/${githubRepo}.git",
+\t\t},
+\t},`;
 
-	// Update email section
-	const emailRegex = /email: \{[\s\S]*?\},/;
-	const newEmail = `email: {
-		support: "support@${domain}",
-		team: "team@${domain}",
-		noreply: "noreply@${domain}",
-		domain: "${domain}",
-		legal: "legal@${domain}",
-		privacy: "privacy@${domain}",
-		format: (type: Exclude<keyof typeof siteConfig.email, "format">) => siteConfig.email[type],
-	},`;
+	afterConfig = afterConfig.replace(repoPattern, newRepo);
 
-	siteConfig = siteConfig.replace(emailRegex, newEmail);
+	// Email section
+	const emailPattern = /\n\temail: \{[\s\S]*?\n\t\},/;
+	const newEmail = `\n\temail: {
+\t\tsupport: "support@${domain}",
+\t\tteam: "team@${domain}",
+\t\tnoreply: "noreply@${domain}",
+\t\tdomain: "${domain}",
+\t\tlegal: "legal@${domain}",
+\t\tprivacy: "privacy@${domain}",
+\t\tformat: (type) => siteConfig.email[type],
+\t},`;
 
-	// Update repo section
-	const repoRegex = /repo: \{[\s\S]*?\},/;
-	const newRepo = `repo: {
-		owner: "${githubOrg}",
-		name: "${githubRepo}",
-		url: "https://github.com/${githubOrg}/${githubRepo}",
-		format: {
-			clone: () => \`https://github.com/\${siteConfig.repo.owner}/\${siteConfig.repo.name}.git\`,
-			ssh: () => \`git@github.com:\${siteConfig.repo.owner}/\${siteConfig.repo.name}.git\`,
-		},
-	},`;
+	afterConfig = afterConfig.replace(emailPattern, newEmail);
 
-	siteConfig = siteConfig.replace(repoRegex, newRepo);
+	// Creator section
+	const creatorPattern = /\n\tcreator: \{[\s\S]*?\n\t\},/;
+	const newCreator = `\n\tcreator: {
+\t\tname: "${creatorUsername}",
+\t\temail: "${creatorEmail}",
+\t\turl: "https://${creatorDomain}",
+\t\ttwitter: "@${creatorTwitter}",
+\t\ttwitter_handle: "${creatorTwitter}",
+\t\tdomain: "${creatorDomain}",
+\t\tfullName: "${creatorName || `${projectName} Team`}",
+\t\trole: "Developer",
+\t\tavatar: "https://avatars.githubusercontent.com/u/1311301?v=4",
+\t\tlocation: "San Francisco, CA",
+\t\tbio: "Creator and developer.",
+\t},`;
 
-	// Update metadata keywords
-	const keywordsRegex = /keywords: \[[\s\S]*?\],/;
-	const newKeywords = `keywords: [
-			"Next.js",
-			"React",
-			"Tailwind CSS",
-			"Server Components",
-			"${projectName}",
-			"Shadcn",
-			"UI Components",
-		],`;
+	afterConfig = afterConfig.replace(creatorPattern, newCreator);
 
-	siteConfig = siteConfig.replace(keywordsRegex, newKeywords);
+	// Metadata keywords
+	const keywordsPattern = /\n\t\tkeywords: \[[\s\S]*?\n\t\t\],/;
+	const newKeywords = `\n\t\tkeywords: [
+\t\t\t"Next.js",
+\t\t\t"React",
+\t\t\t"Tailwind CSS",
+\t\t\t"Server Components",
+\t\t\t"${projectName}",
+\t\t\t"Shadcn",
+\t\t\t"UI Components",
+\t\t],`;
+
+	afterConfig = afterConfig.replace(keywordsPattern, newKeywords);
+
+	// Put the file back together
+	siteConfig = beforeConfig + afterConfig;
 
 	// Read .env.example and package.json
 	const envExamplePath = path.join(process.cwd(), '.env.example');
@@ -214,7 +236,7 @@ async function main() {
 	// If dry run, just show what would be changed
 	if (isDryRun) {
 		console.log('\n📝 Changes that would be made:');
-		console.log('\n1. src/config/site.ts:');
+		console.log('\n1. src/config/site-config.ts:');
 		console.log(`  - Project name: Shipkit -> ${projectName}`);
 		console.log(`  - Domain: shipkit.io -> ${domain}`);
 		console.log(`  - GitHub: lacymorrow/shipkit -> ${githubOrg}/${githubRepo}`);
@@ -230,7 +252,7 @@ async function main() {
 	} else {
 		// Write updated files
 		fs.writeFileSync(siteConfigPath, siteConfig);
-		console.log('✅ Updated src/config/site.ts');
+		console.log('✅ Updated src/config/site-config.ts');
 
 		fs.writeFileSync(envExamplePath, envExample);
 		console.log('✅ Updated .env.example');
@@ -238,10 +260,10 @@ async function main() {
 		fs.writeFileSync(packageJsonPath, packageJson);
 		console.log('✅ Updated package.json');
 
-		// Run prettier to format files
+		// Run formatter
 		console.log('\nFormatting files...');
 		try {
-			execSync('pnpm format', { stdio: 'inherit' });
+			execSync('pnpm prettier --write src/config/site-config.ts || echo "Formatting skipped"', { stdio: 'inherit' });
 		} catch (error) {
 			console.error('Error formatting files:', error);
 		}
@@ -252,7 +274,7 @@ async function main() {
 
 	if (!isDryRun) {
 		console.log('\nNext steps:');
-		console.log('1. Review the changes in src/config/site.ts');
+		console.log('1. Review the changes in src/config/site-config.ts');
 		console.log('2. Update your .env file with the new database name');
 		console.log('3. Restart your development server');
 	} else {
