@@ -107,9 +107,9 @@ async function main() {
 		process.exit(1);
 	}
 
-	const siteConfigStart = siteConfigMatch.index;
-	const beforeConfig = siteConfig.substring(0, siteConfigStart + siteConfigMatch[0].length);
-	let afterConfig = siteConfig.substring(siteConfigStart + siteConfigMatch[0].length);
+	const siteConfigStart = siteConfigMatch.index!;
+	const beforeConfig = siteConfig.substring(0, siteConfigStart + siteConfigMatch[0]!.length);
+	let afterConfig = siteConfig.substring(siteConfigStart + siteConfigMatch[0]!.length);
 
 	// Handle replacement of individual keys in the object
 	// Name
