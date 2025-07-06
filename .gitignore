@@ -1,9 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # PWA
-**/public/workbox-*.js
-**/public/sw.js
-**/public/worker-*.js
+public/sw.js
+public/sw.js.*
+public/worker-*.js
+public/workbox-*.js
+public/workbox-*.js.*
 
 # dependencies
 /node_modules
