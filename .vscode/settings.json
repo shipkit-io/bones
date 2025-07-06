@@ -1,28 +1,30 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.wordWrap": "on",
-  "editor.wordWrapColumn": 120,
-  "[properties]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "[mdx]": {
-    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
-  },
-  "typescript.preferences.autoImportSpecifierExcludeRegexes": [
-    "next/router",
-    "next/dist",
-    "^lucide-react/dist/lucide-react.suffixed$"
-  ],
-
-  "remote.SSH.defaultExtensions": [
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "GitHub.vscode-pull-request-github",
-    "GitHub.copilot",
-    "eamodio.gitlens"
-  ],
-  "[ignore]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
-  }
+	"editor.defaultFormatter": "vscode.typescript-language-features",
+	"editor.formatOnSave": true,
+	"editor.wordWrap": "on",
+	"editor.wordWrapColumn": 120,
+	"[properties]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"[mdx]": {
+		"editor.defaultFormatter": "unifiedjs.vscode-mdx"
+	},
+	"typescript.preferences.autoImportSpecifierExcludeRegexes": [
+		"next/router",
+		"next/dist",
+		"^lucide-react/dist/lucide-react.suffixed$"
+	],
+	"remote.SSH.defaultExtensions": [
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"GitHub.vscode-pull-request-github",
+		"GitHub.copilot",
+		"eamodio.gitlens"
+	],
+	"[ignore]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	}
 }

@@ -1,68 +1,54 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 node_modules
 /.pnp
 .pnp.js
 
-# testing
+# Testing
 /testing-results
 /coverage
 
-# next.js
+# Build output
+/build
+dist/
 /.next/
 /out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-
-# local env files
-env
-*.env*
-!.env.example
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDE
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# Build output
-dist/
-build/
 
 # Cache
 .cache/
 .eslintcache
 
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
 # Environment variables
-env/*
+env/
 *.env*
 !.env.example
 
-# # Logs
-# logs
-*.log
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
 
-# Editor directories and files
-.idea
+# IDE directories and files
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+
+# Misc
+.DS_Store
+*.pem
 
 # Service worker
 public/sw.js

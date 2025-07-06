@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
 	/*
 	 * Source maps
 	 */
-	productionBrowserSourceMaps: true,
+	productionBrowserSourceMaps: false,
 
 	/*
 	 * Lint configuration
@@ -53,7 +53,7 @@ const nextConfig: NextConfig = {
 			* This allows production builds to successfully complete even if
 			* your project has ESLint errors.
 		*/
-		ignoreDuringBuilds: true,
+		// ignoreDuringBuilds: true,
 	},
 	typescript: {
 		/*
@@ -71,27 +71,20 @@ const nextConfig: NextConfig = {
 	 * Experimental configuration
 	 */
 	experimental: {
-		// esmExternals: true,
-		// mdxRs: true,
-		// mdxRs: {
-		// 	jsxRuntime: "automatic",
-		// 	jsxImportSource: "jsx-runtime",
-		// 	mdxType: "gfm",
-		// },
-
-		nextScriptWorkers: true,
 		serverActions: {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
 		},
+		// @see: https://nextjs.org/docs/app/api-reference/next-config-js/viewTransition
+		viewTransition: true,
 		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
-		// instrumentationHook: true, // Removed from experimental
 	},
+
 	/*
 	 * Miscellaneous configuration
 	 */
-	// devIndicators: {
-	// buildActivityPosition: "bottom-right" as const,
-	// },
+	devIndicators: {
+		buildActivityPosition: "bottom-left" as const,
+	},
 
 	/*
 	 * Logging configuration
@@ -100,16 +93,16 @@ const nextConfig: NextConfig = {
 	logging: {
 		fetches: {
 			fullUrl: true, // This will log the full URL of the fetch request even if cached
-			// hmrRefreshes: true,
+			hmrRefreshes: true,
 		},
 	},
 
-	// compiler: {
-	// Remove all console logs
-	// removeConsole: true
-	// Remove console logs only in production, excluding error logs
-	// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
-	// },
+	compiler: {
+		// Remove all console logs
+		// removeConsole: true
+		// Remove console logs only in production, excluding error logs
+		removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
+	},
 };
 
 /*
