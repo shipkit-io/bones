@@ -12,10 +12,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/*
-	 * Redirects are located in the `src/config/routes.ts` file
-	 */
-	redirects,
-	/*
 	 * Next.js configuration
 	 */
 	images: {
@@ -33,6 +29,23 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
+
+	/*
+	 * Redirects are located in the `src/config/routes.ts` file
+	 */
+	redirects,
+
+	/*
+	 * Rewrites
+	 */
+	// async rewrites() {
+	// 	return Promise.resolve([
+	// 		{
+	// 			source: "/api/:path*",
+	// 			destination: "https://api.example.com/:path*",
+	// 		},
+	// 	]);
+	// },
 
 	/*
 	 * React configuration
