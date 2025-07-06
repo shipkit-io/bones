@@ -43,7 +43,7 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
 			}
 
 			await validateRegistry(registry)
-			await onAdd(registry)
+			onAdd(registry)
 			setOpen(false)
 			setName('')
 			setUrl('')

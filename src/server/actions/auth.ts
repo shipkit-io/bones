@@ -1,7 +1,7 @@
 "use server";
 
 import { forgotPasswordSchema, signInActionSchema, signUpSchema } from "@/lib/schemas/auth";
-import { validatedAction } from "@/lib/utils/middleware";
+import { validatedAction } from "@/lib/utils/validated-action";
 import { AuthService } from "@/server/services/auth-service";
 import type { UserRole } from "@/types/user";
 import { createServerAction } from "zsa";

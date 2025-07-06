@@ -27,7 +27,7 @@ async function getProjectRoot(): Promise<string> {
 	try {
 		const { stdout } = await execAsync("git rev-parse --show-toplevel");
 		return stdout.trim();
-	} catch (error) {
+	} catch {
 		throw new Error("Not in a git repository");
 	}
 }

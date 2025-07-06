@@ -7,6 +7,7 @@ import { type InstallOptions } from "../_lib/types";
  * Install a component from a registry
  * @see https://ui.shadcn.com/docs/cli
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function installComponent(
 	componentUrl: string,
 	options: InstallOptions = {},
@@ -14,6 +15,7 @@ export async function installComponent(
 	const encoder = new TextEncoder();
 
 	return new ReadableStream({
+		// eslint-disable-next-line @typescript-eslint/require-await
 		async start(controller) {
 			try {
 				const args = ["shadcn@latest", "add"];
@@ -37,12 +39,12 @@ export async function installComponent(
 					process.stdin.end();
 				}
 
-				process.stdout?.on("data", (data) => {
-					controller.enqueue(encoder.encode(data));
+				process.stdout?.on("data", (data: Buffer) => {
+					controller.enqueue(encoder.encode(data.toString()));
 				});
 
-				process.stderr?.on("data", (data) => {
-					controller.enqueue(encoder.encode(data));
+				process.stderr?.on("data", (data: Buffer) => {
+					controller.enqueue(encoder.encode(data.toString()));
 				});
 
 				process.on("close", (code) => {
