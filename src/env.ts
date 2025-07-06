@@ -38,6 +38,7 @@ export const env = createEnv({
 	client: {
 		NEXT_PUBLIC_BUILDER_API_KEY: z.string().optional(),
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().optional(),
+		NEXT_PUBLIC_UMAMI_WEBSITE_ID: z.string().optional(),
 	},
 
 	/**
@@ -59,6 +60,7 @@ export const env = createEnv({
 
 		NEXT_PUBLIC_BUILDER_API_KEY: process.env.NEXT_PUBLIC_BUILDER_API_KEY,
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+		NEXT_PUBLIC_UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
