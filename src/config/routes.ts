@@ -112,10 +112,10 @@ export const routes = {
 
 	// External links
 	external: {
-		shipkit: `https://${siteConfig.branding.domain}`,
-		bones: `https://${siteConfig.branding.productNames.bones.toLowerCase()}.${siteConfig.branding.domain}`,
-		log: `https://log.${siteConfig.branding.productNames.bones.toLowerCase()}.${siteConfig.branding.domain}`,
-		ui: `https://ui.${siteConfig.branding.productNames.bones.toLowerCase()}.${siteConfig.branding.domain}`,
+		shipkit: `https://shipkit.io`,
+		bones: `https://bones.sh`,
+		log: `https://log.bones.sh`,
+		ui: `https://ui.bones.sh`,
 		buy: siteConfig.store.format.buyUrl("shipkit"),
 		discord: "https://discord.gg/XxKrKNvEje",
 		twitter: siteConfig.links.twitter,
@@ -123,7 +123,7 @@ export const routes = {
 		x: siteConfig.links.x,
 		x_follow: siteConfig.links.x_follow,
 		website: siteConfig.creator.url,
-		docs: "/docs",
+		docs: "https://shipkit.io/docs",
 		email: `mailto:${siteConfig.creator.email}`,
 		github: siteConfig.repo.url,
 		vercelDeployBones:
