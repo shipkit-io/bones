@@ -39,7 +39,7 @@ export default function robots(): MetadataRoute.Robots {
 		 * Points search engines to your XML sitemap for efficient crawling
 		 * @see https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview
 		 */
-		// sitemap: `${siteConfig.url}/sitemap.xml`,
+		sitemap: `${siteConfig.url}/sitemap.xml`,
 
 		/* Host Directive
 		 * Specifies the preferred domain version of your site

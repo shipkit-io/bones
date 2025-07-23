@@ -33,8 +33,8 @@ const defaultGroups: FooterElement[] = [
       header: { label: "Product" },
       items: [
         { href: routes.home, label: "Home" },
-        { href: routes.features, label: "Features" },
-        { href: routes.pricing, label: "Pricing" },
+        // { href: routes.features, label: "Features" },
+        // { href: routes.pricing, label: "Pricing" },
         { href: routes.external.bones, label: "Bones" },
       ],
     },
@@ -44,9 +44,9 @@ const defaultGroups: FooterElement[] = [
     content: {
       header: { label: "Resources" },
       items: [
-        { href: routes.docs, label: "Documentation" },
+        // { href: routes.docs, label: "Documentation" },
         // { href: routes.blog, label: "Blog" }, // TODO: Add blog
-        { href: routes.support, label: "Support" },
+        { href: routes.external.support, label: "Support" },
         { href: routes.auth.signIn, label: "Sign in" },
       ],
     },
