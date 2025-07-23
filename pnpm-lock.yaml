@@ -18,9 +18,6 @@ importers:
       '@builder.io/dev-tools':
         specifier: 1.6.147
         version: 1.6.147
-      '@builder.io/partytown':
-        specifier: 0.10.3
-        version: 0.10.3
       '@builder.io/react':
         specifier: 8.2.5
         version: 8.2.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -42,6 +39,9 @@ importers:
       '@mdx-js/react':
         specifier: 3.1.0
         version: 3.1.0(@types/react@19.1.8)(react@19.1.0)
+      '@qwik.dev/partytown':
+        specifier: ^0.11.2
+        version: 0.11.2
       '@radix-ui/react-accordion':
         specifier: 1.2.11
         version: 1.2.11(@types/react-dom@19.0.4(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -971,12 +971,6 @@ packages:
   '@builder.io/dev-tools@1.6.147':
     resolution: {integrity: sha512-f8guhIEW6xfK8k+JRvVylZeSAHJ4/lNiHC/3v61Hu4E5L/ltiFO5GpRIlaqxQvZZBhBnpJt6WIhiOitnX3opqQ==}
     engines: {node: '>=18'}
-    hasBin: true
-
-  '@builder.io/partytown@0.10.3':
-    resolution: {integrity: sha512-N2SWA3c5vEad3rgdAFM3zMb6uc7aXqibkgAz4ijvYzycgQXJ4dE5oH6fGFMXSQWj6ayVlLT1/CmpflYUJHfmQg==}
-    engines: {node: '>=18.0.0'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     hasBin: true
 
   '@builder.io/react@8.2.5':
@@ -1929,6 +1923,11 @@ packages:
     resolution: {integrity: sha512-3NuxWlbzYNevgPZbV0ktA2z6r0bfh0g22ONTxcK09a6+6MdIPjHsYx1Hnyu4yOq+j7LmupO5J69hhuOnuvj8oQ==}
     peerDependencies:
       '@opentelemetry/api': ^1.8
+
+  '@qwik.dev/partytown@0.11.2':
+    resolution: {integrity: sha512-795y49CqBiKiwKAD+QBZlzlqEK275hVcazZ7wBPSfgC23L+vWuA7PJmMpgxojOucZHzYi5rAAQ+IP1I3BKVZxw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -7495,8 +7494,6 @@ snapshots:
       - debug
       - supports-color
 
-  '@builder.io/partytown@0.10.3': {}
-
   '@builder.io/react@8.2.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@builder.io/sdk': 6.1.1
@@ -8342,6 +8339,10 @@ snapshots:
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
     transitivePeerDependencies:
       - supports-color
+
+  '@qwik.dev/partytown@0.11.2':
+    dependencies:
+      dotenv: 16.4.7
 
   '@radix-ui/number@1.1.1': {}
 
