@@ -1,4 +1,5 @@
 import type { MainNavItem, SidebarNavItem } from "@/types/nav";
+import { routes } from "@/config/routes";
 
 export interface DocsConfig {
   mainNav: MainNavItem[];
@@ -10,23 +11,23 @@ export const docsConfig: DocsConfig = {
   mainNav: [
     {
       title: "Home",
-      href: "/",
+      href: routes.home,
     },
     {
       title: "Features",
-      href: "/features",
+      href: routes.features,
     },
     {
       title: "CLI",
-      href: "/cli",
+      href: routes.cli,
     },
     {
       title: "Sign In",
-      href: "/sign-in",
+      href: routes.auth.signIn,
     },
     {
       title: "Shipkit",
-      href: "https://shipkit.io",
+      href: routes.external.shipkit,
       external: true,
     },
   ],
@@ -36,22 +37,22 @@ export const docsConfig: DocsConfig = {
       items: [
         {
           title: "Home",
-          href: "/",
+          href: routes.home,
           items: [],
         },
         {
           title: "Features",
-          href: "/features",
+          href: routes.features,
           items: [],
         },
         {
           title: "CLI",
-          href: "/cli",
+          href: routes.cli,
           items: [],
         },
         {
           title: "Bones CLI WWW",
-          href: "/bones/cli-www",
+          href: routes.bones.cliWww,
           items: [],
         },
       ],
@@ -61,17 +62,17 @@ export const docsConfig: DocsConfig = {
       items: [
         {
           title: "Sign In",
-          href: "/sign-in",
+          href: routes.auth.signIn,
           items: [],
         },
         {
           title: "Sign Up",
-          href: "/sign-up",
+          href: routes.auth.signUp,
           items: [],
         },
         {
           title: "Forgot Password",
-          href: "/forgot-password",
+          href: routes.auth.forgotPassword,
           items: [],
         },
       ],
@@ -81,12 +82,12 @@ export const docsConfig: DocsConfig = {
       items: [
         {
           title: "Terms of Service",
-          href: "/terms-of-service",
+          href: routes.terms,
           items: [],
         },
         {
           title: "Privacy Policy",
-          href: "/privacy-policy",
+          href: routes.privacy,
           items: [],
         },
       ],
@@ -96,7 +97,7 @@ export const docsConfig: DocsConfig = {
       items: [
         {
           title: "tRPC Demo",
-          href: "/trpc",
+          href: routes.demo.trpc,
           items: [],
         },
       ],
@@ -106,13 +107,13 @@ export const docsConfig: DocsConfig = {
       items: [
         {
           title: "Shipkit",
-          href: "https://shipkit.io",
+          href: routes.external.shipkit,
           label: "External",
           items: [],
         },
         {
           title: "GitHub",
-          href: "https://github.com/shipkit-io/bones",
+          href: routes.external.github,
           label: "External",
           items: [],
         },
@@ -125,12 +126,12 @@ export const docsConfig: DocsConfig = {
       items: [
         {
           title: "Home",
-          href: "/",
+          href: routes.home,
           items: [],
         },
         {
           title: "Features",
-          href: "/features",
+          href: routes.features,
           items: [],
         },
       ],

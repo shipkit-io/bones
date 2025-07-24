@@ -147,7 +147,8 @@ interface Redirect {
 /* eslint-disable-next-line @typescript-eslint/require-await */
 export const redirects = async (): Promise<Redirect[]> => {
   return [
-    ...createRedirects(["/docs", "/documentation"], routes.docs),
+    // Remove docs redirects since routes.docs is not defined
+    // ...createRedirects(["/docs", "/documentation"], routes.docs),
     ...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp),
     ...createRedirects(
       ["/login", "/log-in", "/signin", "/sign-in"],
