@@ -116,6 +116,7 @@
     "react-day-picker": "9.8.0",
     "react-dom": "19.1.0",
     "react-hook-form": "7.60.0",
+    "react-is": "^19.1.0",
     "react-page-tracker": "^0.4.1",
     "react-resizable-panels": "^3.0.3",
     "recharts": "^3.0.2",

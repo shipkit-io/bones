@@ -7,7 +7,6 @@ import { metadata as defaultMetadata } from "@/config/metadata";
 
 export const metadata: Metadata = {
   ...defaultMetadata,
-  manifest: "/manifest.json", // Ensure this path is correct
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

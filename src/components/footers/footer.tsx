@@ -35,7 +35,8 @@ const defaultGroups: FooterElement[] = [
         { href: routes.home, label: "Home" },
         // { href: routes.features, label: "Features" },
         // { href: routes.pricing, label: "Pricing" },
-        { href: routes.external.bones, label: "Bones" },
+        { href: routes.external.bones, label: "Shipkit Bones" },
+        { href: routes.external.bones, label: "Shipkit" },
       ],
     },
   },
@@ -46,8 +47,8 @@ const defaultGroups: FooterElement[] = [
       items: [
         // { href: routes.docs, label: "Documentation" },
         // { href: routes.blog, label: "Blog" }, // TODO: Add blog
-        { href: routes.external.support, label: "Support" },
         { href: routes.auth.signIn, label: "Sign in" },
+        { href: routes.external.support, label: "Support" },
       ],
     },
   },
@@ -127,8 +128,11 @@ export const Footer: FC<FooterProps> = ({
       <div className="container relative flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
         <div className="flex flex-col justify-between gap-2xl lg:flex-row">
           <div className="flex flex-col gap-2xl">
-            <Link href={routes.home}>
-              <h1 className="text-4xl font-bold">{siteConfig.name}</h1>
+            <Link
+              href={routes.home}
+              className="text-4xl font-bold hover:text-primary/80 transition-colors"
+            >
+              <h1>{siteConfig.name}</h1>
             </Link>
           </div>
           <div className="flex flex-col flex-wrap md:flex-row lg:gap-20">

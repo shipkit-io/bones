@@ -16,28 +16,34 @@ export const createRoute = (
   params,
 });
 
-// Flattened routes structure for better type safety and easier access
 export const routes = {
   // Public routes
   home: "/",
-  docs: "/docs",
-  blog: "/blog",
+  features: "/features",
+  cli: "/cli",
   support: `mailto:${siteConfig.email.support}`,
 
   // Legal routes
   terms: "/terms-of-service",
   privacy: "/privacy-policy",
 
-  // Marketing routes
-  faq: "/faq",
-  features: "/features",
-  pricing: "/pricing",
-  launch: "/launch",
+  // Bones specific routes
+  bones: {
+    cliWww: "/bones/cli-www",
+  },
 
-  // App routes
-  download: "/download",
-  components: "/components",
-  tasks: "/tasks",
+  // Special routes
+  og: "/og",
+
+  // Planned/Future routes (not yet implemented)
+  // docs: "/docs",
+  // blog: "/blog",
+  // faq: "/faq",
+  // pricing: "/pricing",
+  // launch: "/launch",
+  // download: "/download",
+  // components: "/components",
+  // tasks: "/tasks",
 
   // Auth routes
   auth: {
@@ -50,42 +56,42 @@ export const routes = {
     error: "/error",
   },
 
-  // App routes
-  app: {
-    dashboard: "/dashboard",
-    apiKeys: "/api-keys",
-    logs: "/logs",
-    network: "/network",
-    live: "/live",
-    settings: "/settings",
-    tools: "/tools",
-    downloads: "/downloads",
-    admin: "/admin",
-    activity: "/activity",
-    projects: "/projects",
-    teams: "/teams",
-  },
+  // App routes (planned/future)
+  // app: {
+  //   dashboard: "/dashboard",
+  //   apiKeys: "/api-keys",
+  //   logs: "/logs",
+  //   network: "/network",
+  //   live: "/live",
+  //   settings: "/settings",
+  //   tools: "/tools",
+  //   downloads: "/downloads",
+  //   admin: "/admin",
+  //   activity: "/activity",
+  //   projects: "/projects",
+  //   teams: "/teams",
+  // },
 
-  // Admin routes
-  admin: {
-    root: "/admin",
-    activity: "/admin/activity",
-    users: "/admin/users",
-    cms: "/admin/cms",
-    ai: "/admin/ai",
-    feedback: "/admin/feedback",
-    payments: "/admin/payments",
-  },
+  // Admin routes (planned/future)
+  // admin: {
+  //   root: "/admin",
+  //   activity: "/admin/activity",
+  //   users: "/admin/users",
+  //   cms: "/admin/cms",
+  //   ai: "/admin/ai",
+  //   feedback: "/admin/feedback",
+  //   payments: "/admin/payments",
+  // },
 
-  // Example routes
-  examples: {
-    root: "/examples",
-    dashboard: "/examples/dashboard",
-    forms: "/examples/forms",
-    authentication: "/examples/authentication",
-    notifications: "/examples/forms/notifications",
-    profile: "/examples/forms/profile",
-  },
+  // Example routes (planned/future)
+  // examples: {
+  //   root: "/examples",
+  //   dashboard: "/examples/dashboard",
+  //   forms: "/examples/forms",
+  //   authentication: "/examples/authentication",
+  //   notifications: "/examples/forms/notifications",
+  //   profile: "/examples/forms/profile",
+  // },
 
   // API routes
   api: {
@@ -107,7 +113,6 @@ export const routes = {
   },
   // Demo routes
   demo: {
-    network: "/network",
     trpc: "/trpc",
   },
 
@@ -128,7 +133,8 @@ export const routes = {
     docs: "https://shipkit.io/docs",
     email: `mailto:${siteConfig.creator.email}`,
     github: siteConfig.repo.url,
-    vercelDeployBones: `https://vercel.com/new/clone?repository-url=https://github.com/${siteConfig.branding.githubOrg}/${siteConfig.branding.githubRepo}&project-name=${siteConfig.branding.vercelProjectName}&repository-name=${siteConfig.branding.vercelProjectName}&redirect-url=https://${siteConfig.branding.domain}/connect/vercel/deploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=${siteConfig.branding.projectName}%20Deploy&demo-title=${siteConfig.branding.projectName}%20Preview&demo-description=The%20official%20${siteConfig.branding.projectName}%20Preview.%20A%20full%20featured%20demo%20with%20dashboards,%20AI%20tools,%20and%20integrations%20with%20Docs,%20Payload,%20and%20Builder.io&demo-url=https://${siteConfig.branding.domain}/demo&demo-image=//assets.vercel.com/image/upload/contentful/image/e5382hct74si/4JmubmYDJnFtstwHbaZPev/0c3576832aae5b1a4d98c8c9f98863c3/Vercel_Home_OG.png`,
+    vercelDeployBones:
+      "https://vercel.com/new/clone?repository-url=https://github.com/shipkit-io/bones&project-name=bones-app&repository-name=bones-app&redirect-url=https://shipkit.io/connect/vercel/deploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards,%20AI%20tools,%20and%20integrations%20with%20Docs,%20Payload,%20and%20Builder.io&demo-url=https://shipkit.io/demo&demo-image=//assets.vercel.com/image/upload/contentful/image/e5382hct74si/4JmubmYDJnFtstwHbaZPev/0c3576832aae5b1a4d98c8c9f98863c3/Vercel_Home_OG.png",
   },
 };
 
