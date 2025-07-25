@@ -121,6 +121,7 @@ export const routes = {
     shipkit: `https://shipkit.io`,
     support: `https://shipkit.io/contact`,
     bones: `https://bones.sh`,
+    bones_github: `https://github.com/shipkit-io/bones`,
     log: `https://log.bones.sh`,
     ui: `https://ui.bones.sh`,
     buy: siteConfig.store.format.buyUrl("shipkit"),
