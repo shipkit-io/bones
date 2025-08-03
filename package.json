@@ -133,13 +133,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
+    "@eslint/eslintrc": "^3.3.1",
     "@mdx-js/loader": "3.1.0",
     "@mdx-js/mdx": "^3.1.0",
     "@next/eslint-plugin-next": "15.3.5",
     "@next/mdx": "15.3.5",
     "@tailwindcss/typography": "0.5.16",
     "@types/color": "^4.2.0",
-    "@types/eslint__eslintrc": "^3.3.0",
     "@types/next-pwa": "^5.6.9",
     "@types/node": "24.0.10",
     "@types/react": "19.1.8",
@@ -163,7 +163,16 @@
     "overrides": {
       "react": "19.1.0",
       "react-dom": "19.1.0"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@vercel/speed-insights",
+      "@vscode/ripgrep",
+      "bufferutil",
+      "esbuild",
+      "isolated-vm",
+      "sharp",
+      "utf-8-validate"
+    ]
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }
