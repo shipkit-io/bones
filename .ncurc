@@ -1,0 +1,30 @@
+{
+  "reject": [
+		"pg",
+		"sharp",
+		"tailwindcss",
+		"zod",
+		"lexical",
+		"@lexical/clipboard",
+		"@lexical/code",
+		"@lexical/dragon",
+		"@lexical/hashtag",
+		"@lexical/headless",
+		"@lexical/history",
+		"@lexical/html",
+		"@lexical/link",
+		"@lexical/list",
+		"@lexical/mark",
+		"@lexical/markdown",
+		"@lexical/offset",
+		"@lexical/overflow",
+		"@lexical/plain-text",
+		"@lexical/react",
+		"@lexical/rich-text",
+		"@lexical/selection",
+		"@lexical/table",
+		"@lexical/text",
+		"@lexical/utils",
+		"@lexical/yjs"
+	]
+}
