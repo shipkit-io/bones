@@ -56,7 +56,7 @@ Once setup is complete, you're ready to:
 
 Built with modern technologies:
 
-- ⚡️ [Next.js 15](https://nextjs.org) - React Framework
+ - ⚡️ [Next.js 16](https://nextjs.org) - React Framework
 - 🎨 [Tailwind CSS](https://tailwindcss.com) - Styling
 - 🔧 [Shadcn/UI](https://ui.shadcn.com) - Components
 - 🛠 [Drizzle](https://orm.drizzle.team) - Database ORM
