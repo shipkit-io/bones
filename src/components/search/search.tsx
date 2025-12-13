@@ -85,12 +85,13 @@ export function Search({ ...props }: DialogProps) {
                 key={navItem.href}
                 value={navItem.title}
                 onSelect={() => {
-                  if (navItem.href) {
+                  const href = navItem.href;
+                  if (href) {
                     runCommand(() => {
                       if (navItem.external) {
-                        window.open(navItem.href, "_blank");
+                        window.open(href, "_blank");
                       } else {
-                        router.push(navItem.href);
+                        router.push(href);
                       }
                     });
                   }
@@ -113,12 +114,13 @@ export function Search({ ...props }: DialogProps) {
                   key={navItem.href}
                   value={navItem.title}
                   onSelect={() => {
-                    if (navItem.href) {
+                    const href = navItem.href;
+                    if (href) {
                       runCommand(() => {
-                        if (navItem.href?.startsWith("http")) {
-                          window.open(navItem.href, "_blank");
+                        if (href.startsWith("http")) {
+                          window.open(href, "_blank");
                         } else {
-                          router.push(navItem.href);
+                          router.push(href);
                         }
                       });
                     }

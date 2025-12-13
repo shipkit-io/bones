@@ -30,11 +30,11 @@ const {
 	adapter:
 		env?.DATABASE_URL && db
 			? DrizzleAdapter(db, {
-					usersTable: users,
-					accountsTable: accounts,
-					sessionsTable: sessions,
-					verificationTokensTable: verificationTokens,
-				})
+				usersTable: users,
+				accountsTable: accounts,
+				sessionsTable: sessions,
+				verificationTokensTable: verificationTokens,
+			})
 			: undefined,
 	logger: {
 		error: (code: Error, ...message: unknown[]) => logger.error(code, message),
@@ -58,7 +58,11 @@ interface AuthProps {
 const authWithOptions = async (props?: AuthProps) => {
 	const session = await nextAuthAuth();
 	const { errorCode, redirect, nextUrl } = props ?? {};
-	const protect = props?.protect ?? props?.redirectTo !== undefined ?? redirect ?? false;
+	const protect =
+		props?.protect ??
+		(props?.redirectTo !== undefined ? true : undefined) ??
+		redirect ??
+		false;
 	const redirectTo = props?.redirectTo ?? routes.auth.signOutIn;
 
 	const handleRedirect = (code: string) => {

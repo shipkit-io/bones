@@ -1,11 +1,13 @@
 import * as RadixIcons from "@radix-ui/react-icons";
 import * as LucideIcons from "lucide-react";
-import type { MDXComponents } from "mdx/types";
+import type { ComponentType, ReactNode } from "react";
 import { isValidElementType } from "react-is";
 import { Card } from "@/components/mdx/card";
 import { CardGroup } from "@/components/mdx/card-group";
 import * as AlertComponents from "@/components/ui/alert";
 import { siteConfig } from "@/config/site-config";
+
+type MDXComponents = Record<string, ComponentType<any>>;
 
 // Filter the icon libraries to only include valid React components
 function filterForMDXComponents(module: Record<string, any>): MDXComponents {
@@ -17,7 +19,7 @@ function filterForMDXComponents(module: Record<string, any>): MDXComponents {
   ) as MDXComponents;
 }
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <div id="sk-mdx-wrapper" className="prose container mx-auto py-10">
     {children}
   </div>

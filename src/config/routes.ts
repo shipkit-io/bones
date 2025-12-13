@@ -36,11 +36,11 @@ export const routes = {
   og: "/og",
 
   // Planned/Future routes (not yet implemented)
-  // docs: "/docs",
+  launch: "/launch",
+  docs: "/docs",
   // blog: "/blog",
   // faq: "/faq",
   // pricing: "/pricing",
-  // launch: "/launch",
   // download: "/download",
   // components: "/components",
   // tasks: "/tasks",
@@ -50,6 +50,7 @@ export const routes = {
     signIn: "/sign-in",
     signUp: "/sign-up",
     signOut: "/sign-out",
+    signOutIn: "/sign-out",
     forgotPassword: "/forgot-password",
     signInPage: "/api/auth/signin",
     signOutPage: "/api/auth/signout",
@@ -57,31 +58,16 @@ export const routes = {
   },
 
   // App routes (planned/future)
-  // app: {
-  //   dashboard: "/dashboard",
-  //   apiKeys: "/api-keys",
-  //   logs: "/logs",
-  //   network: "/network",
-  //   live: "/live",
-  //   settings: "/settings",
-  //   tools: "/tools",
-  //   downloads: "/downloads",
-  //   admin: "/admin",
-  //   activity: "/activity",
-  //   projects: "/projects",
-  //   teams: "/teams",
-  // },
+  app: {
+    dashboard: "/dashboard",
+    settings: "/settings",
+    apiKeys: "/api-keys",
+  },
 
   // Admin routes (planned/future)
-  // admin: {
-  //   root: "/admin",
-  //   activity: "/admin/activity",
-  //   users: "/admin/users",
-  //   cms: "/admin/cms",
-  //   ai: "/admin/ai",
-  //   feedback: "/admin/feedback",
-  //   payments: "/admin/payments",
-  // },
+  admin: {
+    root: "/admin",
+  },
 
   // Example routes (planned/future)
   // examples: {
