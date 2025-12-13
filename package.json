@@ -172,7 +172,9 @@
       "esbuild",
       "isolated-vm",
       "sharp",
-      "utf-8-validate"
+      "utf-8-validate",
+      "@lvce-editor/ripgrep",
+      "unrs-resolver"
     ]
   },
   "packageManager": "pnpm@10.25.0",
