@@ -108,6 +108,21 @@ const nextConfig: NextConfig = {
 		// Remove console logs only in production, excluding error logs
 		removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
 	},
+
+	/*
+	 * Turbopack configuration
+	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
+	 */
+	turbopack: {
+		rules: {
+			// Add rules for raw-loader to handle specific file types
+			// This mirrors the webpack config for these extensions
+			"*.(node|bin|html)": {
+				loaders: ["raw-loader"],
+				as: "*.js",
+			},
+		},
+	},
 };
 
 /*
