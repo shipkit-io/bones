@@ -1,6 +1,11 @@
 {
-  "name": "ship-kit",
+  "name": "bones",
   "version": "0.2.1",
+  "homepage": "https://bones.sh",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shipkit-io/bones"
+  },
   "shipkit": {
     "bones": "0.2.1"
   },
