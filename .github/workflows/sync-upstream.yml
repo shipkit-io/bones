@@ -1,0 +1,115 @@
+name: Sync Upstream
+
+on:
+  workflow_dispatch: # Allow manual triggering
+  # schedule:
+  #   - cron: '0 0 * * 0' # Run weekly on Sunday at midnight UTC
+
+permissions:
+  contents: write # To push branches and commit changes
+  pull-requests: write # To create Pull Requests
+
+env:
+  UPSTREAM_REPO: lacymorrow/shipkit
+  UPSTREAM_BRANCH: main
+  TARGET_BRANCH: main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for merging
+          token: ${{ secrets.GITHUB_TOKEN }} # Use default token for checkout
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream "https://github.com/${{ env.UPSTREAM_REPO }}.git" || git remote set-url upstream "https://github.com/${{ env.UPSTREAM_REPO }}.git"
+
+      - name: Fetch upstream
+        run: git fetch upstream ${{ env.UPSTREAM_BRANCH }}
+
+      - name: Create sync branch
+        id: sync_branch
+        run: |
+          BRANCH_NAME="sync-upstream-$(date +%Y%m%d%H%M%S)"
+          echo "name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          git checkout -b $BRANCH_NAME ${{ env.TARGET_BRANCH }}
+
+      - name: Attempt merge
+        id: merge
+        run: |
+          # Attempt merge, allow failure, don't commit yet
+          git merge upstream/${{ env.UPSTREAM_BRANCH }} --no-commit --no-ff || echo "CONFLICTS_DETECTED=true" >> $GITHUB_ENV
+        continue-on-error: true # Continue even if merge fails, to allow conflict resolution
+
+      - name: Install jq (for conflict resolution script)
+        if: env.CONFLICTS_DETECTED == 'true'
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Resolve conflicts using AI
+        if: env.CONFLICTS_DETECTED == 'true' && env.OPENAI_API_KEY != ''
+        env:
+           # Ensure this secret is set in your repository settings
+           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Pass token if script needs it
+        run: |
+           chmod +x ./scripts/resolve-conflicts.sh
+           ./scripts/resolve-conflicts.sh
+        # This step assumes resolve-conflicts.sh exists, is executable,
+        # reads OPENAI_API_KEY, resolves conflicts, and stages files (`git add`).
+        # If it fails, the workflow should ideally stop here.
+
+      - name: Check merge status after potential resolution
+        id: merge_status
+        run: |
+          # Check if merge is still failing after potential resolution attempt
+          if git merge --is-ancestor HEAD upstream/${{ env.UPSTREAM_BRANCH }}; then
+            echo "Merge completed or conflicts resolved."
+            echo "COMMIT_MESSAGE=chore: Sync with upstream ${{ env.UPSTREAM_REPO }}" >> $GITHUB_OUTPUT
+          elif [[ -n "$(git diff --check)" ]]; then
+            # Check if there are still conflict markers
+            echo "::error::Merge conflicts remain after AI resolution attempt."
+            exit 1
+          elif [[ -n "$(git diff --staged)" || -n "$(git diff)" ]]; then
+             # If there are staged changes from resolution script
+             echo "Merge conflicts resolved by AI."
+             echo "COMMIT_MESSAGE=chore: Sync with upstream ${{ env.UPSTREAM_REPO }} (Conflicts Resolved by AI)" >> $GITHUB_OUTPUT
+          else
+             # This case shouldn't normally be reached if conflicts existed and weren't resolved/staged
+             echo "::error::Unknown merge state after conflict detection."
+             exit 1
+          fi
+
+      - name: Commit changes
+        run: |
+           # Commit if there are changes (clean merge or resolved conflicts)
+           # Use the commit message determined in the previous step
+           if ! git diff --quiet || ! git diff --cached --quiet; then
+             git commit -m "${{ steps.merge_status.outputs.COMMIT_MESSAGE }}"
+           else
+             echo "No changes to commit."
+           fi
+
+      - name: Push sync branch
+        run: git push --set-upstream origin ${{ steps.sync_branch.outputs.name }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: ${{ steps.merge_status.outputs.COMMIT_MESSAGE }}
+          title: 'chore: Sync with upstream ${{ env.UPSTREAM_REPO }}'
+          body: |
+            Automated sync with upstream repository `${{ env.UPSTREAM_REPO }}`.
+
+            ${{ env.CONFLICTS_DETECTED == 'true' && format('**Note:** Merge conflicts were detected and resolved using AI. Please review carefully!') || '' }}
+
+            Upstream: `https://github.com/${{ env.UPSTREAM_REPO }}/tree/${{ env.UPSTREAM_BRANCH }}`
+            Branch: `${{ steps.sync_branch.outputs.name }}`
+          branch: ${{ steps.sync_branch.outputs.name }}
+          base: ${{ env.TARGET_BRANCH }}
+          labels: automated-pr, upstream-sync
+          draft: false

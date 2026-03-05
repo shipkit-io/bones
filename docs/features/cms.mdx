@@ -1,0 +1,92 @@
+---
+title: "CMS"
+description: "Content management with Payload CMS v3"
+---
+
+# CMS
+
+Shipkit uses [Payload CMS v3](https://payloadcms.com) as its headless CMS, sharing the same PostgreSQL database and Next.js runtime as your app.
+
+## Setup
+
+Payload auto-enables when `DATABASE_URL` and `PAYLOAD_SECRET` (or `APP_SECRET`) are set. Explicitly disable with `DISABLE_PAYLOAD=true`.
+
+```env
+DATABASE_URL=postgresql://user:password@host:5432/mydb
+PAYLOAD_SECRET=your-secret-key
+```
+
+## Admin Panel
+
+Access the admin panel at `/cms`. First-time setup creates an admin user via Payload's built-in user management.
+
+The admin panel uses Payload's Lexical rich text editor for content authoring.
+
+## Collections
+
+Defined in `src/lib/payload/collections/`:
+
+| Collection | Purpose |
+|-----------|---------|
+| **Users** | Linked to app users table, manages credentials auth |
+| **Pages** | Dynamic pages with layout blocks |
+| **Media** | File and image uploads |
+| **FAQs** | FAQ entries |
+| **Features** | Feature definitions for marketing pages |
+| **Testimonials** | Customer testimonials |
+
+## Globals
+
+- **Settings** - Site-wide configuration managed through the admin panel
+
+## API Access
+
+Payload exposes a REST API at `/cms-api/[...slug]`:
+
+```typescript
+// Fetch pages
+const res = await fetch("/cms-api/pages");
+
+// GraphQL playground available at /cms-api/graphql-playground
+```
+
+From server code, use the Payload client directly:
+
+```typescript
+import { getPayload } from "@/lib/payload/payload";
+
+const payload = await getPayload();
+const pages = await payload.find({ collection: "pages" });
+```
+
+## Storage
+
+Payload supports two storage backends:
+- **AWS S3** - Set `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_BUCKET_NAME`
+- **Vercel Blob** - Set `BLOB_READ_WRITE_TOKEN`
+
+## Relationship to App Tables
+
+Payload tables are prefixed separately from app tables. Relationships between them are defined in schema:
+
+- `payload_user` links to `shipkit_user` (1:1, cascade delete)
+- `payload_media` links to `shipkit_user_file`
+- `payload_pages` links to `shipkit_post`
+
+## Content Routing
+
+Shipkit's `[...slug]` catch-all route checks Payload first, then falls back to Builder.io:
+
+1. Look up page in Payload CMS by slug
+2. If not found and Builder.io is configured, fetch from Builder.io
+3. If neither has content, return 404
+
+## Builder.io (Visual Builder)
+
+For drag-and-drop page building, see [Visual Builder](/docs/features/visual-builder).
+
+## Next Steps
+
+- [Payload CMS Integration](/docs/integrations/content/payload-cms) - Detailed setup
+- [Builder.io Integration](/docs/integrations/content/builder-io) - Visual editor setup
+- [Markdown/MDX](/docs/content-creation/markdown-mdx) - Content authoring with MDX

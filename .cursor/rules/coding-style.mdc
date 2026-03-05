@@ -1,0 +1,83 @@
+---
+description: 
+globs: 
+---
+# Coding Style Guidelines
+
+## Naming Conventions
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError)
+- Use kebab-case for file names (e.g., `user-profile.tsx`)
+- Use PascalCase for component names (e.g., `UserProfile`)
+- Use camelCase for variables and functions
+- Use SCREAMING_SNAKE_CASE for constants
+
+## File Structure
+- Exported component
+- Subcomponents
+- Helpers
+- Static content
+- Types
+- Keep files small (<200 lines)
+
+## TypeScript Usage
+- Use TypeScript for all code
+- Prefer interfaces over types
+- Avoid enums; use maps instead
+- Use functional components with TypeScript interfaces
+- Pre-emptively add types to all functions and variables
+- Fix all TypeScript errors and warnings
+- Use proper type imports
+
+## React Components
+- Use arrow functions for components:
+  ```typescript
+  ✅ export const Component = () => { ... }
+  ❌ export function Component() { ... }
+  ❌ export default function Component() { ... }
+  ```
+- One component per file
+- Use named exports
+- Keep components focused and small
+- Document complex logic
+
+## Comments
+- Pre-emptively add comments to explain "why" behind the code
+- Preserve existing comments unless specifically asked to modify
+- Use callouts and examples:
+  ```typescript
+  /*
+   * Logging configuration
+   * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
+   */
+  ```
+- Document complex logic and important decisions
+
+## Code Organization
+- Group related code together
+- Use index files for exports
+- Separate concerns appropriately
+- Follow DRY principles
+- Pre-emptively optimize for production
+- Keep code maintainable and readable
+
+## Error Handling
+- Handle all potential errors
+- Provide meaningful error messages
+- Use proper error boundaries
+- Log errors appropriately
+- Document error scenarios
+
+## Testing
+- Write tests for new functionality
+- Test edge cases
+- Follow existing test patterns
+- Document test coverage expectations
+- Keep tests maintainable
+
+## Best Practices
+- Use open-source libraries when beneficial
+- Follow security best practices
+- Optimize for performance
+- Consider accessibility
+- Document architecture decisions
+- Maintain consistency across codebase 

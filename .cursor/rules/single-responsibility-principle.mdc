@@ -1,0 +1,109 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Single Responsibility Principle (SRP)
+
+## Definition
+The Single Responsibility Principle states that "A module should be responsible to one, and only one, actor." In simpler terms, a class or function should have only one reason to change.
+
+## Core Principles
+- Each module has one clearly defined purpose
+- Services handle only their domain concerns
+- User creation belongs only in UserService
+- Payment processing belongs only in PaymentService
+- Side effects are managed by their respective services
+- Cross-cutting concerns use service composition
+
+## Signs of SRP Violations
+- Methods doing multiple unrelated things
+- Large service files (>300 lines)
+- Services creating/managing entities outside their domain
+- Duplicated logic across services
+- A change in one feature requires changes in multiple services
+- Conditional logic based on entity types
+- Direct database access across domain boundaries
+
+## Best Practices
+
+### Service Organization
+- Services should only manipulate their own domain entities
+- UserService should be the ONLY place creating/updating users
+- TeamService should be the ONLY place creating/updating teams
+- PaymentService should NEVER create users directly
+- Use service composition instead of cross-domain logic
+
+### Correct Patterns
+```typescript
+// ✅ Good: PaymentService calls UserService for user creation
+const user = await userService.ensureUserExists({
+  email: payment.email,
+  name: payment.name
+});
+await this.linkPaymentToUser(payment, user.id);
+
+// ✅ Good: UserService manages all user creation side effects
+async createUser(data) {
+  const user = await this.insert(data);
+  await this.createPersonalTeam(user.id);
+  await this.createDefaultApiKey(user.id);
+  return user;
+}
+```
+
+### Incorrect Patterns
+```typescript
+// ❌ Bad: PaymentService creating users directly
+const [user] = await db.insert(users).values({
+  email: payment.email,
+  name: payment.name
+}).returning();
+
+// ❌ Bad: Duplicated team creation logic
+await db.insert(teams).values({
+  id: randomUUID(),
+  name: "Personal",
+  userId: user.id
+});
+```
+
+## Refactoring Guidelines
+
+### When to Refactor
+- When you find duplicated business logic
+- When a service needs to know too much about another domain
+- When adding a feature requires changes to multiple services
+- When a service file exceeds 300 lines
+
+### How to Refactor
+1. Identify the "actor" responsible for each piece of functionality
+2. Move methods to their appropriate service
+3. Replace direct operations with service calls
+4. Update tests to reflect new structure
+5. Document service boundaries
+
+## Examples
+
+### User Creation
+- UserService: responsible for creating users and all related side effects
+- PaymentService: should NEVER create users directly
+- AuthService: should defer to UserService for user creation
+
+### Team Management
+- TeamService: responsible for all team operations
+- UserService: should call TeamService for team-related operations
+- ProjectService: should call TeamService for team access checks
+
+## Testing
+
+- Test services in isolation using mocks for dependencies
+- Verify service boundaries are respected in integration tests
+- Don't test implementation details, test outcomes
+
+## Monitoring for SRP Violations
+
+- Regular code reviews focusing on service boundaries
+- Static analysis for cyclomatic complexity
+- Monitor file size growth over time
+- Track cross-service dependencies

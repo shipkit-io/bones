@@ -1,0 +1,131 @@
+---
+title: "Payments"
+description: "Payment processing with Stripe, Lemon Squeezy, and Polar"
+---
+
+# Payments
+
+Shipkit supports three payment providers through a unified provider interface. Pick one (or more) and configure via env vars.
+
+## Supported Providers
+
+| Provider | Best For | Feature Flag |
+|----------|----------|-------------|
+| [Stripe](/docs/integrations/payments/stripe) | Full payment processing, subscriptions | `STRIPE_SECRET_KEY` |
+| [Lemon Squeezy](/docs/integrations/payments/lemonsqueezy) | SaaS with built-in tax handling | `LEMONSQUEEZY_API_KEY` |
+| [Polar](/docs/integrations/payments/polar) | Open-source friendly payments | `POLAR_ACCESS_TOKEN` |
+
+## How It Works
+
+All providers implement the same `PaymentProvider` interface in `src/server/providers/`. This means your app code doesn't change when switching providers.
+
+### Provider Registry
+
+```typescript
+// src/server/providers/registry.ts
+// Providers auto-register based on env vars
+import { getPaymentProvider } from "@/server/providers";
+
+const provider = getPaymentProvider();
+const hasSubscription = await provider.hasUserActiveSubscription(userId);
+```
+
+### Database Schema
+
+Payments use two tables in `src/server/db/schema.ts`:
+
+- **`plans`** - Products and pricing variants from your payment processor. The `variantId` field is used for checkout.
+- **`payments`** - Transaction records with userId, orderId, amount, status, and processor metadata.
+
+## Setting Up Payments
+
+### 1. Configure env vars
+
+Pick your provider and add the required keys:
+
+```env
+# Stripe
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# OR Lemon Squeezy
+LEMONSQUEEZY_API_KEY=...
+LEMONSQUEEZY_STORE_ID=...
+LEMONSQUEEZY_WEBHOOK_SECRET=...
+
+# OR Polar
+POLAR_ACCESS_TOKEN=...
+POLAR_WEBHOOK_SECRET=...
+```
+
+### 2. Create products in your provider's dashboard
+
+Set up your products, plans, and pricing in the provider's web interface.
+
+### 3. Import products
+
+```typescript
+const provider = getPaymentProvider();
+await provider.importPayments(); // Syncs products and orders to your DB
+```
+
+## Checkout Flow
+
+Create a checkout URL and redirect the user:
+
+```typescript
+const provider = getPaymentProvider();
+const url = await provider.createCheckoutUrl({
+  variantId: "your-variant-id",
+  userId: session.user.id,
+  email: session.user.email,
+});
+
+// Redirect user to url
+```
+
+Shipkit includes pre-built checkout pages:
+- Stripe: `/stripe/checkout`
+- Lemon Squeezy: `/lemonsqueezy`
+- Polar: `/polar/checkout`
+
+## Webhooks
+
+Each provider has a webhook endpoint that handles payment events:
+
+- `/webhooks/stripe` - Stripe events
+- `/webhooks/lemonsqueezy` - Lemon Squeezy events
+- `/webhooks/polar` - Polar events
+
+Webhooks verify signatures, process events idempotently, and update the `payments` table. See the [webhooks guide](/docs/guides/webhooks) for security details.
+
+## Checking Payment Status
+
+```typescript
+import { getPaymentProvider } from "@/server/providers";
+
+// In a server component or action
+const provider = getPaymentProvider();
+
+// Check if user has any active subscription
+const isSubscribed = await provider.hasUserActiveSubscription(userId);
+
+// Check specific product purchase
+const hasPro = await provider.hasUserPurchasedProduct(userId, "pro-plan-id");
+
+// Get all user purchases
+const purchases = await provider.getUserPurchasedProducts(userId);
+```
+
+## API Routes
+
+- `GET /api/payments/check-subscription` - Check if current user has active subscription
+- `GET /api/payments/check-purchase` - Check if current user purchased a specific product
+
+## Next Steps
+
+- [Stripe Integration](/docs/integrations/payments/stripe)
+- [Lemon Squeezy Integration](/docs/integrations/payments/lemonsqueezy)
+- [Polar Integration](/docs/integrations/payments/polar)
+- [Webhook Security](/docs/guides/webhooks)
