@@ -1,7 +1,8 @@
 // Actions middleware
-import { auth } from "@/server/auth";
-import type { User } from "next-auth";
+
 import type { z } from "zod";
+import { auth } from "@/server/auth";
+import type { User } from "@/types/user";
 
 export interface ActionState {
 	error?: string;

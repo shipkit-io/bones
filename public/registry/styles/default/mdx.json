@@ -1,0 +1,55 @@
+{
+  "name": "mdx",
+  "type": "registry:block",
+  "description": "MDX components including Card, CardGroup, and a Secret Generator.",
+  "dependencies": [
+    "@fortawesome/fontawesome-svg-core",
+    "@fortawesome/react-fontawesome",
+    "lucide-react",
+    "mdx/types",
+    "sonner"
+  ],
+  "registryDependencies": [
+    "button",
+    "input"
+  ],
+  "categories": [
+    "shipkit",
+    "mdx",
+    "ui"
+  ],
+  "style": "default",
+  "version": "1.0.0",
+  "files": [
+    {
+      "path": "mdx-components.tsx",
+      "content": "export function useMDXComponents(components: MDXComponents): MDXComponents {\n\treturn {\n\t\t// ...fumadocsComponents,\n\t\t...components,\n\t\tCard,\n\t\tCardGroup,\n\t};\n}\n",
+      "type": "registry:page",
+      "target": "src/mdx-components.tsx"
+    },
+    {
+      "path": "_components/card.tsx",
+      "content": "\"use client\";\n\nimport \"@/lib/fontawesome\";\nimport { cn } from \"@/registry/default/lib/utils\";\nimport type { IconProp } from \"@fortawesome/fontawesome-svg-core\";\nimport { FontAwesomeIcon } from \"@fortawesome/react-fontawesome\";\nimport type { LucideIcon } from \"lucide-react\";\nimport * as React from \"react\";\n\ninterface CardProps extends React.HTMLAttributes<HTMLDivElement> {\n\ttitle: string;\n\ticon?: React.ReactElement | string | LucideIcon;\n\tchildren: React.ReactNode;\n}\n\nexport function Card({ title, icon, children, className, ...props }: CardProps) {\n\tconst renderIcon = () => {\n\t\tif (!icon) return null;\n\n\t\tif (React.isValidElement(icon)) {\n\t\t\treturn React.cloneElement(icon, {\n\t\t\t\tclassName: \"h-5 w-5 text-primary/80 shrink-0\",\n\t\t\t} as React.SVGProps<SVGSVGElement>);\n\t\t}\n\n\t\tif (typeof icon === \"string\") {\n\t\t\t// Handle Font Awesome icon string format (e.g., \"user\", \"home\", etc.)\n\t\t\treturn (\n\t\t\t\t<FontAwesomeIcon\n\t\t\t\t\ticon={icon as IconProp}\n\t\t\t\t\tclassName=\"h-4 w-4 text-primary/80\"\n\t\t\t\t\tstyle={{ transform: \"scale(1.2)\" }}\n\t\t\t\t/>\n\t\t\t);\n\t\t}\n\n\t\tif (typeof icon === \"function\") {\n\t\t\tconst Icon = icon;\n\t\t\treturn <Icon className=\"h-4 w-4 text-primary/80\" />;\n\t\t}\n\n\t\treturn null;\n\t};\n\n\treturn (\n\t\t<div\n\t\t\tclassName={cn(\n\t\t\t\t\"relative overflow-hidden rounded-lg border bg-background p-6\",\n\t\t\t\tclassName ?? \"\"\n\t\t\t)}\n\t\t\t{...props}\n\t\t>\n\t\t\t<div className=\"flex h-full flex-col justify-between\">\n\t\t\t\t<div className=\"space-y-2\">\n\t\t\t\t\t<div className=\"flex items-center gap-3\">\n\t\t\t\t\t\t<h3 className=\"font-semibold\">{title}</h3>\n\t\t\t\t\t\t<div className=\"absolute right-6 top-6\">{renderIcon()}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div className=\"text-sm text-muted-foreground\">{children}</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:page",
+      "target": "src/components/mdx/card.tsx"
+    },
+    {
+      "path": "_components/card-group.tsx",
+      "content": "export function CardGroup({ cols = 2, children, className, ...props }: CardGroupProps) {\n\treturn (\n\t\t<div\n\t\t\tclassName={cn(\n\t\t\t\t\"grid gap-4\",\n\t\t\t\tcols === 1 && \"grid-cols-1\",\n\t\t\t\tcols === 2 && \"grid-cols-1 md:grid-cols-2\",\n\t\t\t\tcols === 3 && \"grid-cols-1 md:grid-cols-2 lg:grid-cols-3\",\n\t\t\t\tcols === 4 && \"grid-cols-1 md:grid-cols-2 lg:grid-cols-4\",\n\t\t\t\tclassName\n\t\t\t)}\n\t\t\t{...props}\n\t\t>\n\t\t\t{children}\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:page",
+      "target": "src/components/mdx/card-group.tsx"
+    },
+    {
+      "path": "_components/secret-generator.tsx",
+      "content": "\"use client\";\n\nimport { Button } from \"@/registry/default/components/ui/button\";\nimport { Input } from \"@/registry/default/components/ui/input\";\nimport { Copy } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { toast } from \"sonner\";\n\n/**\n * SecretGenerator component for generating random secrets\n * Used in MDX files to allow users to generate secrets for various purposes\n */\nexport const SecretGenerator = ({ length = 32, label = \"Generate Secret\" }: { length?: number; label?: string }) => {\n\tconst [secret, setSecret] = useState<string>(\"\");\n\n\t// Generate a random secret of specified length\n\tconst generateSecret = () => {\n\t\tconst characters = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\";\n\t\tconst randomValues = new Uint8Array(length);\n\t\twindow.crypto.getRandomValues(randomValues);\n\n\t\tlet result = \"\";\n\t\tfor (const val of randomValues) {\n\t\t\tresult += characters.charAt(val % characters.length);\n\t\t}\n\n\t\tsetSecret(result);\n\t};\n\n\t// Copy the secret to clipboard\n\tconst copyToClipboard = () => {\n\t\tif (!secret) return;\n\n\t\tnavigator.clipboard.writeText(secret)\n\t\t\t.then(() => {\n\t\t\t\ttoast.success(\"Secret copied to clipboard\");\n\t\t\t})\n\t\t\t.catch(() => {\n\t\t\t\ttoast.error(\"Failed to copy secret\");\n\t\t\t});\n\t};\n\n\treturn (\n\t\t<div className=\"my-4 p-4 border rounded-md bg-muted/50\">\n\t\t\t<div className=\"mb-2 font-medium\">Generate a secure random secret</div>\n\t\t\t<div className=\"flex gap-2 mb-4\">\n\t\t\t\t<Button\n\t\t\t\t\tonClick={generateSecret}\n\t\t\t\t\tvariant=\"default\"\n\t\t\t\t>\n\t\t\t\t\t{label}\n\t\t\t\t</Button>\n\t\t\t</div>\n\n\t\t\t{secret && (\n\t\t\t\t<div className=\"mt-2\">\n\t\t\t\t\t<div className=\"flex gap-2 items-center\">\n\t\t\t\t\t\t<Input\n\t\t\t\t\t\t\tvalue={secret}\n\t\t\t\t\t\t\treadOnly\n\t\t\t\t\t\t\tclassName=\"font-mono text-sm\"\n\t\t\t\t\t\t/>\n\t\t\t\t\t\t<Button\n\t\t\t\t\t\t\tsize=\"icon\"\n\t\t\t\t\t\t\tvariant=\"outline\"\n\t\t\t\t\t\t\tonClick={copyToClipboard}\n\t\t\t\t\t\t\ttitle=\"Copy to clipboard\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<Copy className=\"h-4 w-4\" />\n\t\t\t\t\t\t</Button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<p className=\"text-xs text-muted-foreground mt-2\">\n\t\t\t\t\t\tThis is a cryptographically secure random string. Copy this value and use it as your PAYLOAD_SECRET.\n\t\t\t\t\t</p>\n\t\t\t\t</div>\n\t\t\t)}\n\t\t</div>\n\t);\n};\n",
+      "type": "registry:page",
+      "target": "src/components/mdx/secret-generator.tsx"
+    },
+    {
+      "path": "../../../lib/fontawesome.ts",
+      "content": "import { library } from \"@fortawesome/fontawesome-svg-core\";\nimport { fas } from \"@fortawesome/free-solid-svg-icons\";\n\n// Add all solid icons to the library\nlibrary.add(fas);\n",
+      "type": "registry:internal",
+      "target": "src/lib/fontawesome.ts"
+    }
+  ]
+}

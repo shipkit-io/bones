@@ -1,0 +1,51 @@
+---
+title: 'Caching & Rate Limiting'
+description: 'Caching and rate limiting configuration using Upstash Redis in Shipkit'
+---
+
+# Caching & Rate Limiting
+
+Shipkit uses [Upstash Redis](https://upstash.com) for caching and rate limiting.
+
+## Features
+
+- API rate limiting
+- Data caching
+- Session storage
+- Queue management
+- Real-time features
+- Edge caching
+
+## Configuration
+
+Add these environment variables to enable Redis functionality:
+
+```env
+# Required
+UPSTASH_REDIS_REST_URL=your_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_redis_token
+```
+
+Get your credentials from the [Upstash Console](https://console.upstash.com/).
+
+## Rate Limiting
+
+Default configuration:
+- 10 requests per 10 seconds per IP
+- Customizable limits
+- Analytics enabled
+- Global and route-specific limits
+
+## Caching
+
+Supported caching strategies:
+- In-memory caching
+- Distributed caching
+- Edge caching
+- Stale-while-revalidate
+
+## Resources
+
+- [Upstash Documentation](https://docs.upstash.com)
+- [Redis Documentation](https://redis.io/docs)
+- [Rate Limiting Guide](https://docs.upstash.com/redis/tutorials/rate-limiting)

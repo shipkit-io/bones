@@ -1,7 +1,7 @@
+import type * as React from "react";
+import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import type * as React from "react";
 
 export const Boundary = ({
 	children,
@@ -22,7 +22,12 @@ export const Boundary = ({
 }) => {
 	return (
 		<>
-			<div className={cn("container flex w-full flex-1 items-center justify-center border border-dashed p-md shadow-sm", className)}>
+			<div
+				className={cn(
+					"container flex w-full flex-1 items-center justify-center border border-dashed p-md shadow-sm",
+					className
+				)}
+			>
 				<div className="flex flex-col items-center gap-lg text-center">
 					<h1 className="text-2xl font-bold">{title}</h1>
 					{description && <p className="text-muted-foreground">{description}</p>}

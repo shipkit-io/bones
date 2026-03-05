@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withPWA from "next-pwa";
+import { buildTimeFeatures, envIsTrue } from "../features-config";
 
 /**
  * Applies PWA configuration to the Next.js config.
@@ -11,7 +12,7 @@ export function withPWAConfig(nextConfig: NextConfig): NextConfig {
 		dest: "public",
 		register: true,
 		skipWaiting: true,
-		disable: process.env.NODE_ENV === "development",
+		disable: process.env.NODE_ENV === "development" || !buildTimeFeatures.PWA_ENABLED,
 	};
 
 	// The 'withPWA' type might be complex, using 'any' for simplicity here.

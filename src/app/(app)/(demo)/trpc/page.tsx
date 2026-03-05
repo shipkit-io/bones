@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import { HydrateClient, api } from "@/lib/trpc/server";
+import { api, HydrateClient } from "@/lib/trpc/server";
 import { auth } from "@/server/auth";
 import { LatestPost } from "./_components/post";
 

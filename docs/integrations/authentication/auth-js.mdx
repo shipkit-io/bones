@@ -1,0 +1,51 @@
+# Auth.js Integration
+
+Auth.js (NextAuth.js v5) is Shipkit's default authentication library. It comes pre-configured and supports 40+ OAuth providers.
+
+## Quick Setup
+
+```bash
+# Required
+AUTH_SECRET=your_secret_key_here
+AUTH_URL=https://yourdomain.com
+
+# Optional - Add OAuth providers
+AUTH_GITHUB_ID=your_github_client_id
+AUTH_GITHUB_SECRET=your_github_client_secret
+AUTH_GOOGLE_ID=your_google_client_id
+AUTH_GOOGLE_SECRET=your_google_client_secret
+```
+
+## Key Features
+
+- ✅ 40+ OAuth providers (Google, GitHub, Discord, etc.)
+- ✅ Email/password authentication
+- ✅ Magic link authentication
+- ✅ Session management
+- ✅ JWT tokens
+- ✅ CSRF protection
+
+## Popular OAuth Providers
+
+**Major Platforms:** Google, GitHub, Discord, Microsoft, Facebook, Apple
+**Developer Tools:** Bitbucket, GitLab, Vercel, Netlify
+**Communication:** Slack, Teams, Zoom
+
+## Advanced Configuration
+
+For database sessions or custom email:
+
+```bash
+# Database sessions (optional)
+AUTH_DB_URL=your_database_url
+
+# Custom email (optional)
+AUTH_EMAIL_FROM=noreply@yourdomain.com
+AUTH_EMAIL_SERVER=smtp://user:pass@smtp.example.com:587
+```
+
+## Learn More
+
+- [Main Authentication Guide](/docs/auth)
+- [Auth.js Documentation](https://authjs.dev)
+- [OAuth Setup Guide](https://authjs.dev/getting-started/providers)

@@ -1,8 +1,16 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["node_modules", ".next", "*.css", "src/components/ui/*"]
+		"includes": [
+			"**/*.ts",
+			"**/*.tsx",
+			"**/*.js",
+			"**/*.jsx",
+			"!**/node_modules",
+			"!**/.next",
+			"!**/*.css"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -31,21 +39,44 @@
 			},
 			"suspicious": {
 				"noExplicitAny": "warn",
-				"noConsoleLog": "warn",
 				"noControlCharactersInRegex": "off",
-				"noShadowRestrictedNames": "off"
+				"noShadowRestrictedNames": "off",
+				"noConsole": { "level": "warn", "options": { "allow": ["log"] } }
 			},
 			"style": {
 				"noNonNullAssertion": "warn",
 				"useNodejsImportProtocol": "warn",
-				"useTemplate": "error"
+				"useTemplate": "error",
+				"noParameterAssign": "error",
+				"useAsConstAssertion": "error",
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useSelfClosingElements": "error",
+				"useSingleVarDeclarator": "error",
+				"noUnusedTemplateLiteral": "error",
+				"useNumberNamespace": "error",
+				"noInferrableTypes": "error",
+				"noUselessElse": "error"
 			},
 			"a11y": {
 				"noSvgWithoutTitle": "warn"
 			}
 		}
 	},
-	"organizeImports": {
-		"enabled": true
-	}
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"overrides": [
+		{
+			"includes": ["**/src/components/ui/**/*"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noExplicitAny": "warn"
+					},
+					"style": {
+						"noNonNullAssertion": "warn"
+					}
+				}
+			}
+		}
+	]
 }

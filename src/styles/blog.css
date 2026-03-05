@@ -1,0 +1,277 @@
+/*
+ * LogSpot-style Blog CSS
+ * Feed-style timeline design with sticky navigation
+ */
+
+/* Timeline styles adapted for sidebar layout */
+.feed-dot {
+  position: absolute;
+  top: 6px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  background-color: rgb(125 211 252); /* sky-300 */
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px rgb(125 211 252);
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .feed-dot {
+    top: 7px;
+    left: -4px;
+  }
+}
+
+.feed-border {
+  position: absolute;
+  left: -1px;
+  top: -12px;
+  bottom: -8px;
+  width: 1px;
+  background-color: rgb(125 211 252);
+}
+
+@media (min-width: 768px) {
+  .feed-border {
+    top: 10px;
+    left: -1px;
+  }
+}
+
+/* Date column styling */
+.content-date {
+  padding-left: 1.75rem; /* pl-7 */
+  font-size: 0.75rem; /* text-xs */
+  line-height: 1.5; /* leading-6 */
+  color: rgb(107 114 128); /* text-slate-500 */
+}
+
+@media (min-width: 640px) {
+  .content-date {
+    font-size: 0.875rem; /* sm:text-sm */
+  }
+}
+
+@media (min-width: 768px) {
+  .content-date {
+    width: 25%; /* md:w-1/4 */
+    padding-left: 0; /* md:pl-0 */
+    padding-right: 3rem; /* md:pr-12 */
+    text-align: right; /* md:text-right */
+  }
+}
+
+/* Content block styling */
+.content-block {
+  position: relative;
+  padding-top: 0.5rem; /* pt-2 */
+  padding-left: 1.75rem; /* pl-7 */
+  padding-bottom: 4rem; /* pb-16 */
+}
+
+@media (min-width: 768px) {
+  .content-block {
+    width: 75%; /* md:w-3/4 */
+    padding-top: 0; /* md:pt-0 */
+    padding-left: 3rem; /* md:pl-12 */
+  }
+}
+
+/* Blog image specific styling */
+.content-block .blog-image {
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.content-block .blog-image:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.content-block .blog-image img {
+  transition: transform 0.3s ease-in-out;
+}
+
+.content-block .blog-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Document/content styling */
+.document {
+  max-width: none;
+  font-size: 0.875rem; /* prose-sm equivalent */
+}
+
+.document h3 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.document pre {
+  font-size: 1rem;
+}
+
+.document a {
+  font-weight: 600;
+  color: rgb(59 130 246); /* primary equivalent */
+}
+
+.document a:hover {
+  color: rgb(2 132 199); /* sky-600 */
+}
+
+/* Dark mode support */
+[data-theme="dark"] .content-block,
+.dark .content-block {
+  color: #f9fafb;
+}
+
+[data-theme="dark"] .feed-dot,
+.dark .feed-dot {
+  border-color: #1f2937;
+  background-color: rgb(125 211 252);
+}
+
+[data-theme="dark"] .content-date,
+.dark .content-date {
+  color: rgb(156 163 175); /* gray-400 */
+}
+
+/* Sticky sidebar and TOC improvements */
+.blog-sidebar {
+  position: sticky;
+  top: 2rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(156 163 175) transparent;
+}
+
+.blog-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.blog-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.blog-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgb(156 163 175);
+  border-radius: 3px;
+}
+
+.blog-toc {
+  position: sticky;
+  top: 2rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(156 163 175) transparent;
+}
+
+.blog-toc::-webkit-scrollbar {
+  width: 6px;
+}
+
+.blog-toc::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.blog-toc::-webkit-scrollbar-thumb {
+  background-color: rgb(156 163 175);
+  border-radius: 3px;
+}
+
+/* Smooth scrolling for TOC navigation */
+html {
+  scroll-behavior: smooth;
+}
+
+/* TOC active link styling */
+.toc-link.active {
+  background-color: rgb(125 211 252 / 0.1);
+  color: rgb(2 132 199);
+  font-weight: 500;
+  border-left: 2px solid rgb(125 211 252);
+  padding-left: 14px;
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 1024px) {
+  .blog-sidebar {
+    display: none;
+  }
+}
+
+/* Mobile TOC styling */
+.mobile-toc-button {
+  background: rgb(125 211 252 / 0.1);
+  border: 1px solid rgb(125 211 252 / 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.mobile-toc-content {
+  background: white;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .mobile-toc-content,
+.dark .mobile-toc-content {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+/* Image hover effects for blog posts */
+.blog-post-image {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.blog-post-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark mode image adjustments */
+[data-theme="dark"] .blog-post-image,
+.dark .blog-post-image {
+  border-color: #374151;
+}
+
+[data-theme="dark"] .blog-post-image:hover,
+.dark .blog-post-image:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+/* Ensure images don't break the timeline layout */
+.content-block img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+/* Responsive image sizing */
+@media (max-width: 640px) {
+  .content-block .blog-image {
+    margin-left: -1.75rem;
+    margin-right: -1rem;
+    border-radius: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .content-block .blog-image {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0.5rem;
+  }
+}

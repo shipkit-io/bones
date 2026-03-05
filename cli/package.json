@@ -1,0 +1,36 @@
+{
+  "name": "create-shipkit",
+  "version": "0.1.0",
+  "description": "Scaffold and manage ShipKit sites",
+  "type": "module",
+  "bin": {
+    "shipkit": "./dist/index.js",
+    "create-shipkit": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["shipkit", "nextjs", "starter", "cli", "scaffold"],
+  "author": "Lacy Morrow",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lacymorrow/shipkit",
+    "directory": "cli"
+  },
+  "homepage": "https://shipkit.io",
+  "dependencies": {
+    "@clack/prompts": "^1.1.0",
+    "commander": "^14.0.3",
+    "execa": "^9.6.1",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}

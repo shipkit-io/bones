@@ -1,0 +1,52 @@
+---
+title: 'File Storage'
+description: 'File storage configuration using AWS S3 in Shipkit'
+---
+
+# File Storage
+
+Shipkit uses [Amazon S3](https://aws.amazon.com/s3/) for secure and scalable file storage.
+
+## Features
+
+- File uploads
+- Secure URLs
+- Image optimization
+- Access control
+- CDN integration
+- Bucket policies
+
+## Configuration
+
+Add these environment variables to enable S3 storage:
+
+```env
+# Required
+AWS_REGION=your_aws_region
+AWS_ACCESS_KEY_ID=your_access_key_id
+AWS_SECRET_ACCESS_KEY=your_secret_access_key
+AWS_BUCKET_NAME=your_bucket_name
+```
+
+## Setup Steps
+
+1. Create an AWS account
+2. Create an S3 bucket
+3. Configure CORS settings
+4. Create IAM user with S3 access
+5. Get access credentials
+
+## Best Practices
+
+- Use presigned URLs for uploads
+- Enable versioning
+- Set up lifecycle rules
+- Configure bucket policies
+- Enable encryption
+- Monitor usage
+
+## Resources
+
+- [AWS S3 Documentation](https://docs.aws.amazon.com/s3)
+- [S3 Security Guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html)
+- [CORS Configuration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/cors.html)

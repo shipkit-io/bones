@@ -1,0 +1,82 @@
+# PostHog Integration
+
+PostHog is an open-source product analytics platform that provides comprehensive user behavior tracking, A/B testing, and feature flags.
+
+## Environment Variables
+
+### Required Client Variables
+```
+NEXT_PUBLIC_POSTHOG_KEY=phc_... # Your PostHog project API key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com # PostHog instance host
+```
+
+Note:
+
+- You can set `POSTHOG_KEY` without the `NEXT_PUBLIC_` prefix and Shipkit will automatically generate `NEXT_PUBLIC_POSTHOG_KEY` at build time for use on the client.
+- The non-prefixed variable is not accessible on the client; only the generated `NEXT_PUBLIC_*` value is exposed.
+
+## Setup Instructions
+
+1. **Create a PostHog Account**: Sign up at [posthog.com](https://posthog.com) or set up a self-hosted instance
+
+2. **Get Your Project API Key**:
+   - Go to your [PostHog Dashboard](https://us.posthog.com)
+   - Navigate to "Project Settings" → "Project Variables"
+   - Copy your "Project API Key"
+
+3. **Configure Host URL**:
+   - For PostHog Cloud: Use `https://us.i.posthog.com` (US) or `https://eu.i.posthog.com` (EU)
+   - For self-hosted: Use your PostHog instance URL
+
+4. **Add Environment Variables**:
+   ```bash
+   NEXT_PUBLIC_POSTHOG_KEY=your_project_api_key_here
+   NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+   ```
+
+## Features Enabled
+
+When these environment variables are configured, the following features become available:
+
+- ✅ User event tracking and analytics
+- ✅ User journey mapping and funnel analysis
+- ✅ A/B testing capabilities
+- ✅ Feature flag management
+- ✅ Session recording
+- ✅ Heatmaps and user interaction insights
+- ✅ Real-time dashboards and reporting
+
+## Configuration Options
+
+### Advanced Configuration
+You can customize PostHog behavior with additional environment variables:
+
+```bash
+# Disable autocapture (optional)
+NEXT_PUBLIC_POSTHOG_DISABLE_AUTOCAPTURE=false
+
+# Enable debug mode in development
+NEXT_PUBLIC_POSTHOG_DEBUG=true
+
+# Customize session recording
+NEXT_PUBLIC_POSTHOG_SESSION_RECORDING_ENABLED=true
+```
+
+## Testing
+
+PostHog works seamlessly in development:
+
+- Events are captured in real-time
+- Use the PostHog toolbar for debugging
+- Test feature flags in different environments
+- Review captured events in your dashboard
+
+## Production Deployment
+
+Before going live:
+
+1. Ensure proper data collection policies are in place
+2. Configure data retention settings
+3. Set up proper user identification
+4. Review privacy compliance (GDPR, CCPA)
+5. Configure data export if needed

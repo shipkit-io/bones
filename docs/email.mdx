@@ -1,0 +1,43 @@
+---
+title: 'Email Integration'
+description: 'Email configuration using Resend in Shipkit'
+---
+
+# Email Integration
+
+Shipkit uses [Resend](https://resend.com) for sending transactional emails, marketing campaigns, and authentication emails.
+
+## Features
+
+- Transactional emails
+- Marketing campaigns
+- Authentication emails
+- Email templates
+- Analytics and tracking
+- DKIM and SPF setup
+
+## Configuration
+
+Add these environment variables to enable email functionality:
+
+```env
+# Required
+RESEND_API_KEY=your_resend_api_key
+
+# Optional - For audience management
+RESEND_AUDIENCE_ID=your_audience_id
+```
+
+Get your API key from the [Resend Dashboard](https://resend.com/dashboard).
+
+## Domain Setup
+
+1. Add your domain in the [Resend Dashboard](https://resend.com/domains)
+2. Configure DNS records for DKIM and SPF
+3. Verify domain ownership
+
+## Resources
+
+- [Resend Documentation](https://resend.com/docs)
+- [React Email Templates](https://resend.com/docs/templates)
+- [Email Authentication Guide](https://resend.com/docs/dashboard/domains/overview)

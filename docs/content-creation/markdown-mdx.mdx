@@ -1,0 +1,144 @@
+---
+title: 'Markdown and MDX'
+description: 'Using Markdown and MDX for content in Shipkit'
+---
+
+# Markdown and MDX
+
+Shipkit supports Markdown and MDX for content authoring, providing a developer-friendly way to create and manage content.
+
+## Overview
+
+Markdown is a lightweight markup language that allows you to write formatted content using plain text. MDX extends Markdown by allowing you to include JSX components directly in your content.
+
+## File Structure
+
+Markdown and MDX files in Shipkit are organized in the `src/content` directory:
+
+```
+src/content/
+├── docs/            # Documentation content
+├── blog/            # Blog posts
+src/pages/           # Static pages
+```
+
+## Creating Content
+
+1. Create a new `.md` or `.mdx` file in the appropriate directory
+2. Add frontmatter at the top of the file for metadata
+3. Write your content using Markdown syntax
+4. For MDX, import and use React components as needed
+
+## Frontmatter
+
+Use frontmatter to define metadata for your content:
+
+```md
+---
+title: 'My Page Title'
+description: 'A brief description of the page'
+date: '2023-01-01'
+author: 'John Doe'
+---
+
+# Content starts here
+```
+
+### Blog Post Frontmatter
+
+Blog posts support additional frontmatter fields:
+
+```md
+---
+title: "Getting Started with Shipkit"
+publishedAt: 2024-12-27
+description: "Learn how to get started with Shipkit"
+author: "Lacy Morrow"
+categories: ["Guides", "Development"]
+badge: "1.01"
+image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop"
+authors:
+  - name: "Lacy Morrow"
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4"
+---
+
+# Your blog post content
+```
+
+#### Image Support
+
+Blog posts support hero images that appear both in the blog timeline and individual post pages:
+
+- **`image`**: URL to the hero image for the blog post
+- Images automatically scale with hover effects
+- Responsive sizing for different screen sizes
+- Optimized loading with Next.js Image component
+
+You can also include inline images in your blog content using standard Markdown syntax:
+
+```md
+![Alt text](https://example.com/image.jpg)
+```
+
+## Using Components in MDX
+
+MDX allows you to import and use React components:
+
+```mdx
+---
+title: 'Interactive Page'
+---
+
+import { Button } from '@/components/ui/button';
+
+# Interactive Content
+
+Click the button below:
+
+<Button>Click Me</Button>
+```
+
+## Accessing Content
+
+Content created with Markdown and MDX is automatically available at the URL matching its file path:
+
+- `src/content/pages/about.mdx` will be available at `/about`
+- `src/content/blog/hello-world.mdx` will be available at `/blog/hello-world`
+
+## Image Guidelines
+
+When using images in blog posts, follow these best practices:
+
+1. **Hero Images**: Use high-quality images with 800x400 aspect ratio
+2. **Inline Images**: Use 600x300 for inline content images
+3. **Alt Text**: Always provide descriptive alt text for accessibility
+4. **Performance**: Use optimized image URLs (WebP format when possible)
+5. **Responsive**: Images automatically adapt to different screen sizes
+
+### Example Blog Post with Images
+
+```mdx
+---
+title: "Building Better Apps"
+image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop"
+---
+
+# Building Better Apps
+
+This post demonstrates how to use images effectively.
+
+![Dashboard Screenshot](https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop)
+
+Images in blog posts support:
+- Hover scaling effects
+- Responsive design
+- Optimized loading
+- Accessibility features
+```
+
+## Resources
+
+- [Markdown Guide](https://www.markdownguide.org/)
+- [MDX Documentation](https://mdxjs.com/)
+- [Next.js MDX Integration](https://nextjs.org/docs/advanced-features/using-mdx)
+- [Unsplash](https://unsplash.com/) - Free stock photos for blog images

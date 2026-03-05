@@ -1,0 +1,105 @@
+# Upstash Redis Integration
+
+Upstash Redis is a serverless Redis service that provides a fully managed, scalable, and secure Redis database with a generous free tier.
+
+## Environment Variables
+
+### Required Server Variables
+```
+UPSTASH_REDIS_REST_URL=https://your-db-id.upstash.io # Your Upstash Redis REST URL
+UPSTASH_REDIS_REST_TOKEN=your_rest_token_here # Your Upstash Redis REST token
+```
+
+## Setup Instructions
+
+1. **Create an Upstash Account**: Sign up at [upstash.com](https://upstash.com) if you haven't already
+
+2. **Create a Redis Database**:
+   - Go to your [Upstash Console](https://console.upstash.com)
+   - Create a new Redis database
+   - Choose your region and plan
+
+3. **Get Your Connection Details**:
+   - In your database dashboard, go to "Connect"
+   - Copy the REST URL and REST Token
+   - These are used for HTTP-based Redis operations
+
+4. **Add Environment Variables**:
+   ```bash
+   UPSTASH_REDIS_REST_URL=https://your-db-id.upstash.io
+   UPSTASH_REDIS_REST_TOKEN=your_rest_token_here
+   ```
+
+## Features Enabled
+
+When these environment variables are configured, the following features become available:
+
+- ✅ High-performance caching
+- ✅ Session storage
+- ✅ Rate limiting
+- ✅ Job queues and background tasks
+- ✅ Real-time data structures
+- ✅ Pub/Sub messaging
+- ✅ Data persistence and backup
+- ✅ Automatic scaling
+
+## Configuration Options
+
+### Advanced Configuration
+You can customize Redis behavior:
+
+```bash
+# Connection configuration
+UPSTASH_REDIS_READ_TIMEOUT=3000
+UPSTASH_REDIS_WRITE_TIMEOUT=3000
+
+# Database configuration
+UPSTASH_REDIS_DB=0
+
+# Security configuration
+UPSTASH_REDIS_TLS=true
+```
+
+## Use Cases
+
+Common Redis use cases in web applications:
+
+- **Caching**: API responses, database queries, computed data
+- **Sessions**: User session storage and management
+- **Rate Limiting**: API rate limiting and abuse prevention
+- **Queues**: Background job processing
+- **Real-time Features**: Live updates and notifications
+- **Analytics**: Temporary data aggregation
+
+## Performance Benefits
+
+Upstash Redis advantages:
+
+- Global replication with low latency
+- Automatic failover and high availability
+- Serverless scaling (no server management)
+- REST API for easy integration
+- Built-in monitoring and analytics
+- Generous free tier for development
+
+## Testing
+
+Upstash Redis testing capabilities:
+
+- Use development databases for testing
+- Test connection and operations
+- Verify data persistence
+- Test performance and latency
+- Monitor usage and costs
+
+## Production Deployment
+
+Before going live:
+
+1. Ensure proper connection security
+2. Configure appropriate timeouts
+3. Set up proper error handling
+4. Configure monitoring and alerts
+5. Review cost optimization
+6. Set up proper backup strategies
+7. Configure data retention policies

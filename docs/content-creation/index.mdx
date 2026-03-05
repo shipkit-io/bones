@@ -1,0 +1,39 @@
+---
+title: 'Content Management'
+description: 'Overview of content management options in Shipkit'
+---
+
+# Content Management in Shipkit
+
+Shipkit provides a flexible content management system that allows you to choose the right tool for each use case. The system supports two powerful CMS options:
+
+1. **[Payload CMS](/content-management/payload)** - A self-hosted headless CMS with a powerful admin interface
+2. **[Builder.io](/content-management/builder)** - A visual page builder with a drag-and-drop interface
+
+Shipkit implements a unified routing system that allows content to be served from either Payload CMS or Builder.io dynamically.
+
+## Choosing the Right CMS
+
+- **Payload CMS**: Best for structured content like blog posts, product pages, and documentation
+- **Builder.io**: Ideal for marketing pages, landing pages, and visually rich content. Supports visual editing and drag-and-drop, as well as some AI features.
+
+## Content Authoring
+
+Shipkit also supports [Markdown and MDX](/content-management/markdown-mdx) for content authoring, which can be used alongside either CMS option.
+
+## Getting Started
+
+To get started with content management in Shipkit, configure your preferred CMS:
+
+```bash
+# For Payload CMS
+DATABASE_URL=postgres://username:password@localhost:5432/database
+PAYLOAD_SECRET=randomsecretkey # Used for encrypting passwords and sessions
+
+# For Builder.io
+NEXT_PUBLIC_BUILDER_API_KEY=your_builder_api_key
+```
+
+Payload CMS is automatically enabled when both `DATABASE_URL` and `PAYLOAD_SECRET` are provided. You can explicitly disable it by setting `DISABLE_PAYLOAD=true`.
+
+See the individual CMS documentation pages for detailed setup instructions.

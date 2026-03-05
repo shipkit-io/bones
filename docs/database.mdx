@@ -1,0 +1,49 @@
+---
+title: 'Database'
+description: 'Database configuration using PostgreSQL and Drizzle ORM in Shipkit'
+---
+
+# Database
+
+Shipkit uses PostgreSQL as the database and [Drizzle ORM](https://orm.drizzle.team) for type-safe database operations.
+
+## Features
+
+- Type-safe queries
+- Automatic migrations
+- Schema validation
+- Connection pooling
+- Prepared statements
+- SQL security
+
+## Configuration
+
+Add these environment variables to configure your database:
+
+```env
+# Required
+DATABASE_URL=postgresql://user:password@host:port/database
+
+# Optional - For database naming prefix
+DB_PREFIX=your_prefix
+```
+
+## Database Setup
+
+1. Create a PostgreSQL database
+2. Set up the connection URL in your environment
+3. Run migrations: `bun run db:migrate`
+4. Generate types: `bun run db:generate`
+
+## Hosting Options
+
+- [Neon](https://neon.tech) - Serverless Postgres (Recommended)
+- [Supabase](https://supabase.com) - Open source Firebase alternative
+- [Railway](https://railway.app) - Infrastructure platform
+- Self-hosted PostgreSQL
+
+## Resources
+
+- [Drizzle Documentation](https://orm.drizzle.team/docs/overview)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Database Schema Guide](https://orm.drizzle.team/docs/sql-schema-declaration)

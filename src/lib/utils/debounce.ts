@@ -1,9 +1,4 @@
 // @ts-nocheck
-/* eslint-disable-all */
-
-// Remove the import statement for Timeout
-// import { Timeout } from 'node';
-
 // Add a type annotation for startIndex
 export function restArguments<T extends any[], R>(
 	func: (...args: [...T, ...R[]]) => any,
@@ -52,7 +47,9 @@ export function debounce<T extends any[], R>(
 	const later = function (this: any) {
 		const passed = now() - previous;
 		if (wait > passed) {
-			timeout = setTimeout(later, wait - passed);
+			// Ensure timeout value is never negative
+			const remainingWait = Math.max(wait - passed, 0);
+			timeout = setTimeout(later, remainingWait);
 		} else {
 			timeout = null;
 			if (!immediate) {

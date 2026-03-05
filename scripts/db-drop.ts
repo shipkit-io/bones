@@ -1,40 +1,27 @@
-import { db } from "@/server/db";
+// import "../scripts/env-config.js";
+
 import { sql } from "drizzle-orm";
+import { db } from "@/server/db";
 
 async function dropDatabase() {
 	console.info("🗑️  Starting database cleanup...");
 
 	try {
 		// Drop all tables in the public schema
-		console.info("📦 Dropping all tables...");
+		await db?.execute(sql`DROP SCHEMA IF EXISTS public CASCADE`);
 
-		// Drop Payload tables
-		await db?.execute(sql`
-			DO $$ DECLARE
-				r RECORD;
-			BEGIN
-				-- Drop tables in payload schema
-				FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'payload') LOOP
-					EXECUTE 'DROP TABLE IF EXISTS payload.' || quote_ident(r.tablename) || ' CASCADE';
-				END LOOP;
+		// Recreate the public schema
+		await db?.execute(sql`CREATE SCHEMA public`);
 
-				-- Drop tables in public schema
-				FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
-					EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
-				END LOOP;
-
-				-- Drop tables in drizzle schema
-				FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'drizzle') LOOP
-					EXECUTE 'DROP TABLE IF EXISTS drizzle.' || quote_ident(r.tablename) || ' CASCADE';
-				END LOOP;
-			END $$;
-		`);
-
-		// Drop schemas
+		// Drop Payload and Drizzle schemas
+		console.info("📦 Dropping Payload and Drizzle schemas...");
 		await db?.execute(sql`
 			DROP SCHEMA IF EXISTS payload CASCADE;
-			DROP SCHEMA IF EXISTS drizzle CASCADE;
+		DROP SCHEMA IF EXISTS drizzle CASCADE;
 		`);
+
+		// Recreate the payload and drizzle schemas
+		await db?.execute(sql`CREATE SCHEMA payload; CREATE SCHEMA drizzle;`);
 
 		// Drop custom types
 		await db?.execute(sql`

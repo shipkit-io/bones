@@ -1,0 +1,38 @@
+{
+  "name": "bento-grid",
+  "type": "registry:block",
+  "description": "A skewed grid layout with Title, description and a header component",
+  "dependencies": [
+    "framer-motion",
+    "clsx",
+    "tailwind-merge",
+    "@tabler/icons-react",
+    "react",
+    "@types/react",
+    "@types/node"
+  ],
+  "categories": [
+    "components",
+    "ui"
+  ],
+  "files": [
+    {
+      "path": "bento-grid.tsx",
+      "content": "import { cn } from \"@/registry/default/lib/utils\";\n \nexport const BentoGrid = ({\n  className,\n  children,\n}: {\n  className?: string;\n  children?: React.ReactNode;\n}) => {\n  return (\n    <div\n      className={cn(\n        \"grid md:auto-rows-[18rem] grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto \",\n        className\n      )}\n    >\n      {children}\n    </div>\n  );\n};\n \nexport const BentoGridItem = ({\n  className,\n  title,\n  description,\n  header,\n  icon,\n}: {\n  className?: string;\n  title?: string | React.ReactNode;\n  description?: string | React.ReactNode;\n  header?: React.ReactNode;\n  icon?: React.ReactNode;\n}) => {\n  return (\n    <div\n      className={cn(\n        \"row-span-1 rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent justify-between flex flex-col space-y-4\",\n        className\n      )}\n    >\n      {header}\n      <div className=\"group-hover/bento:translate-x-2 transition duration-200\">\n        {icon}\n        <div className=\"font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2\">\n          {title}\n        </div>\n        <div className=\"font-sans font-normal text-neutral-600 text-xs dark:text-neutral-300\">\n          {description}\n        </div>\n      </div>\n    </div>\n  );\n};",
+      "type": "registry:component",
+      "target": ""
+    },
+    {
+      "path": "block.config.json",
+      "content": "{\n  \"name\": \"bento-grid\",\n  \"type\": \"registry:block\",\n  \"description\": \"A skewed grid layout with Title, description and a header component\",\n  \"dependencies\": [\n    \"framer-motion\",\n    \"clsx\",\n    \"tailwind-merge\",\n    \"@tabler/icons-react\",\n    \"react\",\n    \"@types/react\",\n    \"@types/node\"\n  ],\n  \"categories\": [\n    \"components\",\n    \"ui\"\n  ],\n  \"style\": \"default\",\n  \"tags\": [\n    \"bento\",\n    \"grid\"\n  ],\n  \"version\": \"1.0.0\",\n  \"author\": \"mannupaaji\",\n  \"license\": \"MIT\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"https://github.com/steven-tey/aceternity-ui\"\n  },\n  \"files\": [\n    {\n      \"source\": \"bento-grid.tsx\",\n      \"type\": \"registry:component\"\n    },\n    {\n      \"source\": \"block.config.json\",\n      \"type\": \"registry:config\"\n    },\n    {\n      \"source\": \"meta.ts\",\n      \"type\": \"registry:meta\"\n    }\n  ]\n}",
+      "type": "registry:config",
+      "target": ""
+    },
+    {
+      "path": "meta.ts",
+      "content": "export default {\n  \"meta\": {\n    \"category\": \"UI Components\",\n    \"tags\": [\n      \"bento\",\n      \"grid\"\n    ],\n    \"status\": \"stable\",\n    \"version\": \"1.0.0\",\n    \"author\": \"mannupaaji\",\n    \"description\": \"A skewed grid layout with Title, description and a header component\",\n    \"repository\": {\n      \"type\": \"git\",\n      \"url\": \"https://github.com/steven-tey/aceternity-ui\"\n    },\n    \"license\": \"MIT\"\n  },\n  \"examples\": []\n};",
+      "type": "registry:meta",
+      "target": ""
+    }
+  ]
+}

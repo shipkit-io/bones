@@ -1,0 +1,74 @@
+---
+title: 'Analytics Integration'
+description: 'Analytics configuration for PostHog, Umami, and DataFast in Shipkit'
+---
+
+# Analytics Integration
+
+Shipkit includes built-in support for PostHog, Umami, and DataFast analytics to help you understand user behavior and improve your application.
+
+## PostHog Analytics
+
+[PostHog](https://posthog.com) is a powerful product analytics platform that provides:
+- Product analytics
+- Session recording
+- Feature flags
+- A/B testing
+- User surveys
+- And more
+
+### Configuration
+Add these environment variables to enable PostHog:
+```env
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_key
+NEXT_PUBLIC_POSTHOG_HOST=your_posthog_host
+```
+
+Get your API keys from the [PostHog Dashboard](https://app.posthog.com/project/settings).
+
+### Resources
+
+- [PostHog Documentation](https://posthog.com/docs)
+
+## Umami Analytics
+
+[Umami](https://umami.is) is a simple, fast, privacy-focused alternative to Google Analytics. It provides:
+- Page views
+- Visitor insights
+- Real-time data
+- Privacy compliance
+- No cookie notices required
+
+### Configuration
+Add this environment variable to enable Umami:
+```env
+NEXT_PUBLIC_UMAMI_WEBSITE_ID=your_umami_website_id
+```
+
+Get your Website ID from your Umami dashboard after creating a project.
+
+### Resources
+
+- [Umami Documentation](https://umami.is/docs)
+
+## DataFast Analytics
+
+[DataFast](https://datafa.st) is a privacy-friendly analytics tool focused on revenue attribution and marketing analytics.
+
+### Configuration
+Add these environment variables to enable DataFast:
+```env
+NEXT_PUBLIC_DATAFAST_WEBSITE_ID=your_datafast_website_id
+# Optional: set your primary domain shown in their dashboard
+NEXT_PUBLIC_DATAFAST_DOMAIN=yourdomain.com
+```
+
+Add the tracking script is handled automatically when the above variables are present and the feature flag is generated at build time. See their App Router docs: [DataFast Next.js App Router guide](https://datafa.st/docs/nextjs-app-router).
+
+### Resources
+
+- [DataFast Documentation](https://datafa.st/docs/nextjs-app-router)
+
+## Additional Resources
+
+- [Web Analytics Guide](https://nextjs.org/docs/app/building-your-application/optimizing/analytics)

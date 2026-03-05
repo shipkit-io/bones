@@ -1,30 +1,67 @@
 {
-	"editor.defaultFormatter": "vscode.typescript-language-features",
-	"editor.formatOnSave": true,
-	"editor.wordWrap": "on",
-	"editor.wordWrapColumn": 120,
-	"[properties]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
-	},
-	"[mdx]": {
-		"editor.defaultFormatter": "unifiedjs.vscode-mdx"
-	},
-	"typescript.preferences.autoImportSpecifierExcludeRegexes": [
-		"next/router",
-		"next/dist",
-		"^lucide-react/dist/lucide-react.suffixed$"
-	],
-	"remote.SSH.defaultExtensions": [
-		"esbenp.prettier-vscode",
-		"dbaeumer.vscode-eslint",
-		"GitHub.vscode-pull-request-github",
-		"GitHub.copilot",
-		"eamodio.gitlens"
-	],
-	"[ignore]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
-	},
-	"[jsonc]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
-	}
+  "editor.smoothScrolling": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "workbench.list.smoothScrolling": true,
+  "terminal.integrated.smoothScrolling": true,
+  "terminal.integrated.cursorBlinking": true,
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#a2068d",
+    "titleBar.inactiveBackground": "#570a49",
+    "titleBar.activeForeground": "#ffffff"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.autoImportFileExcludePatterns": [],
+  "javascript.preferences.autoImportFileExcludePatterns": [],
+  "editor.codeActionsOnSave": {
+    // "source.organizeImports": "explicit"
+  },
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "files.watcherExclude": {
+    "**/src/app/(app)/(demo)/**": true
+  },
+  "[mdx]": {
+    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
+  },
+  "[git-commit]": {
+    "editor.wordWrap": "on"
+  },
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 120,
+  "chat.editor.wordWrap": "off",
+  "[properties]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "kiroAgent.configureMCP": "Disabled"
 }

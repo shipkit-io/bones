@@ -1,43 +1,34 @@
-/* Global Error Boundary Component
- * This is a special Next.js component that catches and displays runtime errors
- * It must be a Client Component (hence the "use client" directive)
- * @see https://nextjs.org/docs/app/api-reference/file-conventions/error
- */
 "use client";
 
-import { Boundary } from "@/components/primitives/boundary";
+import { ErrorBoundary } from "@/components/primitives/error-boundary";
 
-/* GlobalError Component Props
- * @param {Error} error - The error object containing details about what went wrong
- * @param {string} error.digest - A unique hash of the error (useful for error tracking)
- * @param {() => void} resetAction - Function provided by Next.js to attempt recovery
- */
 export default function GlobalError({
 	error,
-	resetAction,
+	reset,
 }: {
 	error: Error & { digest?: string };
-	resetAction: () => void;
+	reset: () => void;
 }) {
-	/* Log error to console for development/debugging
-	 * TODO: Replace with proper error tracking in production
-	 */
-	if (process.env.NODE_ENV === "development") {
-		console.error(error);
-	}
-
 	return (
-		/* Note: Must include html and body tags since this replaces the entire page */
-		// ! We don't use the RootLayout here because there could be an error in it.
 		<html lang="en" suppressHydrationWarning>
 			<body className="bg-background">
-				<Boundary title="Something went wrong!" actionText="Try again" onAction={resetAction} className="h-screen w-screen">
-					{process.env.NODE_ENV === "development" && (
-						<div className="text-xs">
-							<pre>{error.message}</pre>
+				<ErrorBoundary
+					fallback={({ error, retry }) => (
+						<div className="h-screen w-screen flex items-center justify-center">
+							<div className="text-center">
+								<h1 className="text-2xl font-bold">Something went wrong.</h1>
+								{process.env.NODE_ENV === "development" && (
+									<div className="text-xs">
+										<pre>{error.message}</pre>
+									</div>
+								)}
+								<button onClick={retry}>Try again</button>
+							</div>
 						</div>
 					)}
-				</Boundary>
+				>
+					<div />
+				</ErrorBoundary>
 			</body>
 		</html>
 	);

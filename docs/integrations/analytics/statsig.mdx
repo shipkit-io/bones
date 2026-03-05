@@ -1,0 +1,72 @@
+# StatSig Integration
+
+StatSig is a feature flagging and experimentation platform that provides A/B testing, feature flags, and advanced analytics for product teams.
+
+## Environment Variables
+
+### Required Client Variables
+```
+NEXT_PUBLIC_STATSIG_CLIENT_KEY=client-... # Your StatSig client SDK key
+```
+
+## Setup Instructions
+
+1. **Create a StatSig Account**: Sign up at [statsig.com](https://statsig.com) if you haven't already
+
+2. **Get Your Client SDK Key**:
+   - Go to your [StatSig Console](https://console.statsig.com)
+   - Navigate to "Project Settings" → "Keys & Environments"
+   - Copy your "Client SDK Key" (starts with `client-`)
+
+3. **Add Environment Variables**:
+   ```bash
+   NEXT_PUBLIC_STATSIG_CLIENT_KEY=your_client_sdk_key_here
+   ```
+
+## Features Enabled
+
+When this environment variable is configured, the following features become available:
+
+- ✅ Feature flag management
+- ✅ A/B testing and experimentation
+- ✅ User segmentation and targeting
+- ✅ Real-time feature rollouts
+- ✅ Performance monitoring
+- ✅ User behavior analytics
+- ✅ Dynamic configuration
+
+## Configuration Options
+
+### Advanced Configuration
+You can customize StatSig behavior with additional environment variables:
+
+```bash
+# StatSig API endpoint (usually default)
+NEXT_PUBLIC_STATSIG_API_URL=https://api.statsig.com/v1
+
+# Enable debug mode in development
+NEXT_PUBLIC_STATSIG_DEBUG=true
+
+# Custom user ID generation
+NEXT_PUBLIC_STATSIG_USER_ID_TYPE=uuid
+```
+
+## Testing
+
+StatSig provides comprehensive testing capabilities:
+
+- Test feature flags in different environments
+- Create test experiments with specific user segments
+- Use the StatSig debug view for troubleshooting
+- Monitor experiment results in real-time
+
+## Production Deployment
+
+Before going live:
+
+1. Ensure proper user identification strategy
+2. Configure appropriate user segments
+3. Set up proper experiment monitoring
+4. Review data collection and privacy policies
+5. Configure feature flag rollout strategies
+6. Set up proper error handling for flag evaluation

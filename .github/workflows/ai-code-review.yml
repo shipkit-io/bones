@@ -6,7 +6,11 @@ name: AI Code Review
 #
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened]
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}'
+  cancel-in-progress: true
 
 permissions:
   pull-requests: write # Required to post comments on PRs
@@ -17,8 +21,15 @@ jobs:
   pr_agent_job:
     runs-on: ubuntu-latest
     name: AI Code Reviewer
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
+      - name: Skip if OpenAI not configured
+        if: env.OPENAI_API_KEY == ''
+        run: |
+          echo 'Skipping AI Code Review: OPENAI_API_KEY not set'
       - name: Run PR Agent
+        if: env.OPENAI_API_KEY != ''
         uses: qodo-ai/pr-agent@main # Or use a specific version tag like @vX.Y.Z
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}

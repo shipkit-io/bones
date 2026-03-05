@@ -13,7 +13,7 @@
     "incremental": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noUncheckedIndexedAccess": false,
+    "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": false,
@@ -37,6 +37,9 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@payload-config": [
+        "./src/payload.config.ts"
+      ],
       "@/public/*": [
         "./public/*"
       ],
@@ -64,13 +67,12 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
+    ".next",
     "node_modules",
+    "tests",
     "public",
-    "src/components/blocks/**/*.ts",
-    "src/components/blocks/**/*.tsx",
-    "src/components/ui/**/*.ts",
-    "src/components/ui/**/*.tsx",
-    "src/app/(app)/(ai)/**/*",
+    "packages",
+    "debug/**/*.ts",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts"
   ]

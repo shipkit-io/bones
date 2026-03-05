@@ -1,103 +1,74 @@
-import { green, magenta, red, white, yellow } from "@/lib/utils/pico-colors";
-import type { LogData, LogLevel } from "@/types/logger";
+import { trace as otelTrace, type Span, SpanStatusCode, type Tracer } from "@opentelemetry/api";
+import pc from "./utils/pico-colors";
+import type { LogData, LogLevel } from "../types/logger";
 
-// let loggerWorker: Worker | null = null;
-
-// if (typeof window !== "undefined" && window.Worker) {
-// 	// Initialize the worker in the browser environment
-// 	loggerWorker = new Worker(
-// 		new URL(routes.workers.logger, window.location.origin),
-// 	);
-// }
+const tracer: Tracer = otelTrace.getTracer("bones-nextjs-app");
 
 const isServer = typeof window === "undefined";
 
 const _createLogger =
 	(level: LogLevel) =>
-		(...args: unknown[]): void => {
-			const logData: LogData = {
-				apiKey: process.env.NEXT_PUBLIC_LOGFLARE_KEY,
-				prefix: "logger",
-				emoji: "🌐",
-				level,
-				message: args
-					.map((arg) => {
-						if (arg === null) return "null";
-						if (arg === undefined) return "undefined";
-						if (typeof arg === "string") return arg;
-						if (typeof arg === "number") return arg.toString();
-						if (typeof arg === "boolean") return arg.toString();
-						if (typeof arg === "bigint") return arg.toString();
-						if (typeof arg === "symbol") return arg.toString();
-						if (typeof arg === "function") return "[Function]";
-						// Must be an object at this point
-						try {
-							return JSON.stringify(arg);
-						} catch {
-							return "[Object]";
-						}
-					})
-					.join(" "),
-				timestamp: new Date().toISOString(),
-				url: isServer ? "server" : window.location.href,
-				userAgent: isServer ? "server" : navigator.userAgent,
-			};
-
-			// Send server-side logs to your logging service or database
-			void fetch("http://localhost:3000/v1", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(logData),
-			});
-			if (isServer) {
-				console[level](...args);
-
-				// TODO: Implement logging service
-				if (logData?.apiKey) {
-					// Send server-side logs to your logging service or database
-					void fetch("http://localhost:3000/v1", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(logData),
-					});
+	(...args: unknown[]): void => {
+		const message = args
+			.map((arg) => {
+				if (arg === null) return "null";
+				if (arg === undefined) return "undefined";
+				if (typeof arg === "string") return arg;
+				if (typeof arg === "number") return arg.toString();
+				if (typeof arg === "boolean") return arg.toString();
+				if (typeof arg === "bigint") return arg.toString();
+				if (typeof arg === "symbol") return arg.toString();
+				if (typeof arg === "function") return "[Function]";
+				// Must be an object at this point
+				try {
+					return JSON.stringify(arg);
+				} catch {
+					return "[Object]";
 				}
-			} else {
-				console[level](...args);
-				// if (loggerWorker) {
-				// 	loggerWorker.postMessage({ logData });
-				// }
-			}
-		};
+			})
+			.join(" ");
 
-export const logger = console;
-// export const logger = {
-// 	info: createLogger("info"),
-// 	warn: createLogger("warn"),
-// 	error: createLogger("error"),
-// 	debug: createLogger("debug"),
-// 	log: createLogger("log"),
-// };
+		const span: Span = tracer.startSpan(`log.${level}`);
+		span.setAttribute("log.message", message);
+		span.setAttribute("log.level", level);
 
-/* Start of Logger */
-// import { type ILogObj, Logger } from "tslog";
-// export const logger = new Logger<ILogObj>({
-//   name: "logger",
-// });
+		const error = args.find((arg) => arg instanceof Error);
+		if (error) {
+			span.recordException(error);
+			span.setStatus({ code: SpanStatusCode.ERROR });
+		}
 
-// export const middlewareLogger = logger.getSubLogger({
-//   name: "middleware",
-//   hideLogPositionForProduction: true,
-// });
-/* End of Logger */
+		const metadata = args.find((arg) => typeof arg === "object" && !(arg instanceof Error)) as
+			| Record<string, unknown>
+			| undefined;
+		if (metadata) {
+			Object.entries(metadata).forEach(([key, value]) => {
+				span.setAttribute(`log.metadata.${key}`, JSON.stringify(value));
+			});
+		}
+
+		span.end();
+
+		const consoleMethod = console[level] ?? console.log;
+		consoleMethod(...args);
+	};
+
+export const logger = {
+	info: _createLogger("info"),
+	warn: _createLogger("warn"),
+	error: _createLogger("error"),
+	debug: _createLogger("debug"),
+	log: _createLogger("log"),
+};
 
 const prefixes = {
-	info: white("ℹ"),
-	warn: yellow("⚠"),
-	error: red("✖"),
-	wait: magenta("○"),
-	ready: green("✓"),
-	event: magenta("◆"),
-	trace: white("›"),
+	info: pc.white("ℹ"),
+	warn: pc.yellow("⚠"),
+	error: pc.red("✖"),
+	wait: pc.magenta("○"),
+	ready: pc.green("✓"),
+	event: pc.magenta("◆"),
+	trace: pc.white("›"),
 } as const;
 
 const LOGGING_METHOD = {
@@ -170,5 +141,7 @@ export function warnOnce(...message: unknown[]) {
 
 export function panic(...message: unknown[]) {
 	error(...message);
-	process.exit(1);
+	// process.exit(1) is not supported in Edge Runtime
+	// Throwing an error instead to halt execution
+	throw new Error("Panic: " + message.join(" "));
 }

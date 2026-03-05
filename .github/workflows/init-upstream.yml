@@ -1,0 +1,86 @@
+name: Initialize Upstream History
+
+# This workflow runs ONCE to graft the upstream template history into this repository.
+# After the histories are connected, regular git merges will work without --allow-unrelated-histories.
+# This enables seamless syncing with the upstream template via the sync-upstream.yml workflow.
+
+on:
+  workflow_dispatch: # Triggered programmatically after repo creation
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_REPO: lacymorrow/shipkit
+  UPSTREAM_BRANCH: main
+
+jobs:
+  init:
+    if: ${{ github.ref_name == github.event.repository.default_branch }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream "https://github.com/${{ env.UPSTREAM_REPO }}.git" || git remote set-url upstream "https://github.com/${{ env.UPSTREAM_REPO }}.git"
+
+      - name: Fetch upstream
+        run: git fetch upstream ${{ env.UPSTREAM_BRANCH }}
+
+      - name: Check if histories are already connected
+        id: check
+        run: |
+          if git merge-base HEAD upstream/${{ env.UPSTREAM_BRANCH }} &>/dev/null; then
+            echo "grafted=true" >> $GITHUB_OUTPUT
+            echo "Upstream history already connected - skipping graft"
+          else
+            echo "grafted=false" >> $GITHUB_OUTPUT
+            echo "No common ancestor found - will graft upstream history"
+          fi
+
+      - name: Graft upstream history
+        if: steps.check.outputs.grafted == 'false'
+        run: |
+          echo "Grafting upstream history with --allow-unrelated-histories..."
+
+          # Merge upstream with allow-unrelated-histories
+          # This creates a merge commit that connects the two histories
+          git merge upstream/${{ env.UPSTREAM_BRANCH }} --allow-unrelated-histories --no-edit \
+            -m "chore: graft upstream template history
+
+          This merge connects this repository's history with the upstream
+          template (${{ env.UPSTREAM_REPO }}), enabling clean future syncs.
+
+          After this commit, regular 'git merge upstream/main' will work
+          without needing --allow-unrelated-histories.
+
+          Upstream: ${{ env.UPSTREAM_REPO }}"
+
+          echo "Successfully grafted upstream history"
+
+      - name: Push changes
+        if: steps.check.outputs.grafted == 'false'
+        run: |
+          git push origin main
+          echo "Pushed grafted history to origin"
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.check.outputs.grafted }}" == "true" ]; then
+            echo "## Already Connected" >> $GITHUB_STEP_SUMMARY
+            echo "This repository's history is already connected to upstream." >> $GITHUB_STEP_SUMMARY
+            echo "No action was needed." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## History Grafted Successfully" >> $GITHUB_STEP_SUMMARY
+            echo "This repository's history has been connected to upstream:" >> $GITHUB_STEP_SUMMARY
+            echo "- **Upstream:** ${{ env.UPSTREAM_REPO }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Future syncs can now use regular \`git merge\` without \`--allow-unrelated-histories\`." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The \`sync-upstream.yml\` workflow will automatically sync changes weekly." >> $GITHUB_STEP_SUMMARY
+          fi

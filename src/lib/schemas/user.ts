@@ -1,5 +1,5 @@
-import { REGEX_PATTERNS } from "@/lib/utils/regex-patterns";
 import { z } from "zod";
+import { REGEX_PATTERNS } from "@/lib/utils/regex-patterns";
 
 export const userSchema = z.object({
 	name: z.string().min(1, { message: "Name is required" }),

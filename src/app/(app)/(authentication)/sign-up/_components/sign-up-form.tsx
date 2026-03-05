@@ -1,8 +1,10 @@
 "use client";
 
-import { signUpSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -16,36 +18,52 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { routes } from "@/config/routes";
-import { useToast } from "@/hooks/use-toast";
+import { signUpSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signUpWithCredentialsAction } from "@/server/actions/auth";
 
+type SignUpFormValues = z.infer<typeof signUpSchema>;
+
 export const SignUpForm = () => {
-	const { toast } = useToast();
-	const form = useForm<z.infer<typeof signUpSchema>>({
+	const router = useRouter();
+	const { update: updateSession } = useSession();
+	const form = useForm<SignUpFormValues>({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: {
-			...getSchemaDefaults(signUpSchema),
+			...getSchemaDefaults<typeof signUpSchema>(signUpSchema),
 			redirectTo: routes.home,
 			redirect: true,
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof signUpSchema>) {
+	async function onSubmit(values: SignUpFormValues) {
 		try {
+			// Create FormData to match the expected function signature
 			const formData = new FormData();
-			for (const [key, value] of Object.entries(values)) {
-				if (value !== undefined && value !== null) {
-					formData.append(key, value.toString());
-				}
+			formData.append("email", values.email);
+			formData.append("password", values.password);
+			formData.append("redirect", "false");
+			formData.append("redirectTo", routes.home);
+
+			const result = await signUpWithCredentialsAction({}, formData);
+
+			// Check if the sign-up was okful
+			if (result?.ok) {
+				toast.success("Account created successfully");
+				// Update the session before redirecting
+				await updateSession();
+				router.push(routes.home);
+				router.refresh(); // Refresh to update the session
+				return;
 			}
 
-			await signUpWithCredentialsAction(values, formData);
+			if (result?.error) {
+				// Handle error from result object
+				throw new Error(result.error);
+			}
 
-			toast({
-				title: "Success",
-				description: "Account created successfully.",
-			});
+			// If we get here, something unexpected happened
+			throw new Error("Sign up failed");
 		} catch (error) {
 			if (error instanceof Error) {
 				if (error.message.includes("User already exists")) {
@@ -54,17 +72,13 @@ export const SignUpForm = () => {
 						message: "An account with this email already exists.",
 					});
 				} else {
-					toast({
-						title: "Error",
+					toast.error("Error creating account", {
 						description: error.message,
-						variant: "destructive",
 					});
 				}
 			} else {
-				toast({
-					title: "Error",
+				toast.error("Error creating account", {
 					description: "Something went wrong. Please try again.",
-					variant: "destructive",
 				});
 			}
 		}

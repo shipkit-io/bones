@@ -1,0 +1,44 @@
+# DataFast Analytics Integration
+
+DataFast is a privacy-friendly analytics tool with strong revenue attribution capabilities.
+
+## Environment Variables
+
+```bash
+# Required
+NEXT_PUBLIC_DATAFAST_WEBSITE_ID=your_website_id
+
+# Optional (used for improved reporting in their UI)
+NEXT_PUBLIC_DATAFAST_DOMAIN=yourdomain.com
+```
+
+Notes:
+
+- You can set `DATAFAST_WEBSITE_ID` without the `NEXT_PUBLIC_` prefix and Shipkit will automatically generate `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` at build time (client accessible) via the public env mirroring.
+- The non-prefixed variable is not accessible on the client; only the generated `NEXT_PUBLIC_*` value is exposed.
+
+## Setup Instructions
+
+1. Go to your DataFast dashboard and copy your Website ID.
+2. Add the env variable(s) listed above to your environment.
+3. Build and deploy. The tracking script is injected automatically when the feature flag is enabled.
+
+## How It Works
+
+- At build time, Shipkit detects `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` and sets the `NEXT_PUBLIC_FEATURE_DATAFAST_ENABLED` flag.
+- At runtime, `DataFastAnalytics` injects the recommended script:
+
+```tsx
+<Script
+  src="https://datafa.st/js/script.js"
+  data-website-id={env.NEXT_PUBLIC_DATAFAST_WEBSITE_ID}
+  data-domain={env.NEXT_PUBLIC_DATAFAST_DOMAIN}
+  strategy="afterInteractive"
+/> 
+```
+
+## Resources
+
+- DataFast App Router Guide: https://datafa.st/docs/nextjs-app-router
+
+

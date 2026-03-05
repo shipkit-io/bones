@@ -1,0 +1,117 @@
+---
+title: 'Deployment'
+description: 'Deploy Shipkit to Vercel with zero configuration'
+---
+
+# Deployment
+
+Shipkit deploys beautifully on Vercel. One-click setup with all the performance optimizations you need.
+
+## One-Click Deploy
+
+The fastest way to get started:
+
+1. **Click the Deploy button** in the README
+2. **Connect your GitHub repo** to Vercel
+3. **Add your environment variables**
+4. **You're live!**
+
+That's it. Shipkit handles the rest.
+
+## Manual Deploy (Advanced)
+
+For more control:
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Login to your account
+vercel login
+
+# Deploy your app
+vercel deploy
+```
+
+## Environment Variables
+
+Shipkit needs these to work properly:
+
+1. **Copy the example file:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. **Configure your services:**
+   - Database (if using Payload CMS)
+   - Authentication providers
+   - Payment processors
+   - Analytics services
+
+3. **Add to Vercel:**
+   - Go to your project dashboard
+   - Add variables under "Environment Variables"
+   - Set up different values for production/staging
+
+## Built-in Features
+
+Shipkit comes with Vercel optimizations:
+
+- ✅ **Automatic HTTPS** - SSL certificates handled for you
+- ✅ **Edge Functions** - Global CDN with fast responses
+- ✅ **Analytics** - Built-in performance monitoring
+- ✅ **Preview Deployments** - Test changes before merging
+- ✅ **CI/CD** - Automatic deployments from Git
+
+## Production Checklist
+
+Before going live:
+
+- [ ] Environment variables configured
+- [ ] Domain connected (optional)
+- [ ] Analytics enabled
+- [ ] Error monitoring set up
+- [ ] Performance tested
+
+## Advanced Deployment
+
+### Multi-Zone Setup
+Run multiple Shipkit apps on different paths:
+
+```typescript
+// next.config.ts - Add rewrites for zones
+async rewrites() {
+  return [
+    {
+      source: '/docs/:path*',
+      destination: 'https://docs.yourdomain.com/docs/:path*',
+    },
+    // Add more zones as needed
+  ];
+}
+```
+
+### Custom Domains
+Point your domain to Vercel:
+
+1. Add your domain in Vercel dashboard
+2. Update DNS records as instructed
+3. SSL certificate is automatic
+
+## Troubleshooting
+
+**Build failing?**
+- Check environment variables are set
+- Verify database connection
+- Check for TypeScript errors
+
+**Slow performance?**
+- Enable Vercel's analytics
+- Check image optimization
+- Review bundle size
+
+## Resources
+
+- [Vercel Deployment Guide](https://vercel.com/docs/deployments/overview)
+- [Next.js Deployment](https://nextjs.org/docs/deployment)
+- [Environment Variables Guide](https://vercel.com/docs/concepts/projects/environment-variables)

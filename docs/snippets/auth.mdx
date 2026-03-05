@@ -1,0 +1,146 @@
+---
+title: 'Authentication Snippets'
+description: 'Common authentication patterns in Shipkit'
+---
+
+# Authentication Snippets
+
+## Protected Route
+
+```typescript
+// src/app/(app)/dashboard/page.tsx
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
+
+export default async function DashboardPage() {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/sign-in");
+  }
+
+  return (
+    <div>
+      <h1>Welcome {session.user.name}</h1>
+    </div>
+  );
+}
+```
+
+## Sign In Form
+
+```typescript
+// src/components/auth/sign-in-form.tsx
+"use client";
+
+import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
+export function SignInForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+
+  async function handleSubmit(formData: FormData) {
+    try {
+      setIsLoading(true);
+      const result = await signIn("credentials", {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      window.location.href = callbackUrl;
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <form action={handleSubmit}>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        required
+      />
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? "Signing in..." : "Sign in"}
+      </button>
+    </form>
+  );
+}
+```
+
+## OAuth Buttons
+
+```typescript
+// src/components/auth/oauth-buttons.tsx
+"use client";
+
+import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Github, Mail } from "lucide-react";
+
+export function OAuthButtons() {
+  return (
+    <div className="grid gap-2">
+      <Button
+        variant="outline"
+        onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+      >
+        <Github className="mr-2 h-4 w-4" />
+        Continue with GitHub
+      </Button>
+      <Button
+        variant="outline"
+        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+      >
+        <Mail className="mr-2 h-4 w-4" />
+        Continue with Google
+      </Button>
+    </div>
+  );
+}
+```
+
+## Protected API Route
+
+```typescript
+// src/app/api/protected/route.ts
+import { auth } from "@/server/auth";
+import { ErrorService } from "@/server/services/error-service";
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return ErrorService.throwUnauthorized("Not authenticated");
+    }
+
+    return NextResponse.json({ message: "Success" });
+  } catch (error) {
+    const appError = ErrorService.handleError(error);
+    return NextResponse.json(
+      { error: appError },
+      { status: appError.code === "UNAUTHORIZED" ? 401 : 500 }
+    );
+  }
+}
+```

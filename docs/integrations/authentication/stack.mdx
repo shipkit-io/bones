@@ -1,0 +1,98 @@
+# Stack Auth Integration
+
+Stack Auth is an open-source authentication and authorization platform designed for modern web applications, providing secure user management with a focus on developer experience.
+
+## Environment Variables
+
+### Required Server Variables
+```
+STACK_PROJECT_ID=your_project_id_here # Your Stack project ID
+STACK_PUBLISHABLE_CLIENT_KEY=pk_... # Your Stack publishable client key
+STACK_SECRET_SERVER_KEY=sk_... # Your Stack secret server key
+```
+
+## Setup Instructions
+
+1. **Set Up Stack Auth**: You can either:
+   - Use [Stack Auth Cloud](https://stack-auth.com) (hosted service)
+   - Self-host Stack Auth on your own infrastructure
+
+2. **Create a Stack Project**:
+   - Go to your Stack dashboard
+   - Create a new project
+   - Configure your authentication settings
+
+3. **Get Your API Keys**:
+   - In your Stack project dashboard, go to "Settings" → "API Keys"
+   - Copy your Project ID, Publishable Client Key, and Secret Server Key
+
+4. **Add Environment Variables**:
+   ```bash
+   STACK_PROJECT_ID=your_project_id_here
+   STACK_PUBLISHABLE_CLIENT_KEY=pk_your_client_key_here
+   STACK_SECRET_SERVER_KEY=sk_your_server_key_here
+   ```
+
+## Features Enabled
+
+When these environment variables are configured, the following features become available:
+
+- ✅ User registration and login
+- ✅ Social OAuth providers (Google, GitHub, Discord, etc.)
+- ✅ Email and password authentication
+- ✅ Magic link authentication
+- ✅ Password reset functionality
+- ✅ Email verification
+- ✅ Session management
+- ✅ User profile management
+- ✅ Team and organization support
+- ✅ Role-based access control (RBAC)
+
+## Configuration Options
+
+### Advanced Configuration
+You can customize Stack Auth behavior:
+
+```bash
+# Custom API endpoints (if self-hosting)
+STACK_API_URL=https://your-stack-instance.com
+
+# Email configuration
+STACK_EMAIL_FROM=noreply@yourdomain.com
+
+# Session configuration
+STACK_SESSION_MAX_AGE=86400 # 24 hours in seconds
+```
+
+## Supported OAuth Providers
+
+Stack Auth supports major OAuth providers:
+
+- Google
+- GitHub
+- Discord
+- Microsoft
+- And more...
+
+Configure these in your Stack dashboard for automatic integration.
+
+## Testing
+
+Stack Auth provides comprehensive testing features:
+
+- Test authentication flows in development
+- Use test OAuth applications
+- Verify email delivery
+- Test team management features
+- Monitor authentication events
+
+## Production Deployment
+
+Before going live:
+
+1. Ensure secure key management
+2. Configure production domains
+3. Set up proper email delivery
+4. Configure OAuth applications for production
+5. Set up proper monitoring and logging
+6. Review security configurations

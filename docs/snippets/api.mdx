@@ -1,0 +1,215 @@
+---
+title: 'API Route Snippets'
+description: 'Common API route patterns in Shipkit'
+---
+
+# API Route Snippets
+
+## Basic Route Handler
+
+```typescript
+// src/app/api/posts/route.ts
+import { NextResponse } from "next/server";
+import { ValidationService } from "@/server/services/validation-service";
+import { ErrorService } from "@/server/services/error-service";
+import { z } from "zod";
+
+const createPostSchema = z.object({
+  title: z.string().min(1),
+  content: z.string().optional(),
+});
+
+export async function POST(req: Request) {
+  try {
+    const json = await req.json();
+    const result = await ValidationService.validate(createPostSchema, json);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 }
+      );
+    }
+
+    const post = await db?.post.create({
+      data: result.data,
+    });
+
+    return NextResponse.json(post, { status: 201 });
+  } catch (error) {
+    const appError = ErrorService.handleError(error);
+    return NextResponse.json(
+      { error: appError },
+      { status: appError.code === "UNAUTHORIZED" ? 401 : 500 }
+    );
+  }
+}
+```
+
+## Protected Route Handler
+
+```typescript
+// src/app/api/protected/posts/route.ts
+import { auth } from "@/server/auth";
+import { NextResponse } from "next/server";
+import { ValidationService } from "@/server/services/validation-service";
+import { ErrorService } from "@/server/services/error-service";
+import { z } from "zod";
+
+const schema = z.object({
+  title: z.string().min(1),
+  content: z.string().optional(),
+});
+
+export async function POST(req: Request) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return ErrorService.throwUnauthorized("Not authenticated");
+    }
+
+    const json = await req.json();
+    const result = await ValidationService.validate(schema, json);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 }
+      );
+    }
+
+    const post = await db?.post.create({
+      data: {
+        ...result.data,
+        authorId: session.user.id,
+      },
+    });
+
+    return NextResponse.json(post, { status: 201 });
+  } catch (error) {
+    const appError = ErrorService.handleError(error);
+    return NextResponse.json(
+      { error: appError },
+      { status: appError.code === "UNAUTHORIZED" ? 401 : 500 }
+    );
+  }
+}
+```
+
+## File Upload Handler
+
+```typescript
+// src/app/api/upload/route.ts
+import { auth } from "@/server/auth";
+import { NextResponse } from "next/server";
+import { ErrorService } from "@/server/services/error-service";
+
+export async function POST(req: Request) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return ErrorService.throwUnauthorized("Not authenticated");
+    }
+
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
+
+    if (!file) {
+      return ErrorService.throwBadRequest("No file provided");
+    }
+
+    // Process file upload
+    // Example: Upload to S3, process image, etc.
+    const uploadedFile = await uploadToStorage(file);
+
+    return NextResponse.json(uploadedFile, { status: 201 });
+  } catch (error) {
+    const appError = ErrorService.handleError(error);
+    return NextResponse.json(
+      { error: appError },
+      { status: appError.code === "UNAUTHORIZED" ? 401 : 500 }
+    );
+  }
+}
+
+async function uploadToStorage(file: File) {
+  // Implement file upload logic
+  return {
+    url: "https://example.com/files/image.jpg",
+    filename: file.name,
+    size: file.size,
+    type: file.type,
+  };
+}
+```
+
+## Dynamic Route Handler
+
+```typescript
+// src/app/api/posts/[id]/route.ts
+import { auth } from "@/server/auth";
+import { NextResponse } from "next/server";
+import { ErrorService } from "@/server/services/error-service";
+
+interface RouteContext {
+  params: { id: string };
+}
+
+export async function GET(req: Request, { params }: RouteContext) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return ErrorService.throwUnauthorized("Not authenticated");
+    }
+
+    const post = await db?.post.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!post) {
+      return ErrorService.throwNotFound("Post not found");
+    }
+
+    return NextResponse.json(post);
+  } catch (error) {
+    const appError = ErrorService.handleError(error);
+    return NextResponse.json(
+      { error: appError },
+      { status: appError.code === "NOT_FOUND" ? 404 : 500 }
+    );
+  }
+}
+
+export async function DELETE(req: Request, { params }: RouteContext) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return ErrorService.throwUnauthorized("Not authenticated");
+    }
+
+    const post = await db?.post.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!post) {
+      return ErrorService.throwNotFound("Post not found");
+    }
+
+    if (post.authorId !== session.user.id) {
+      return ErrorService.throwForbidden("Not authorized");
+    }
+
+    await db?.post.delete({
+      where: { id: params.id },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const appError = ErrorService.handleError(error);
+    return NextResponse.json(
+      { error: appError },
+      { status: appError.code === "NOT_FOUND" ? 404 : 500 }
+    );
+  }
+}
+```

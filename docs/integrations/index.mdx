@@ -1,0 +1,105 @@
+# Integrations
+
+Shipkit supports a wide range of integrations to enhance your application with powerful features. Each integration is enabled by setting specific environment variables.
+
+## Payment Providers
+
+Handle payments, subscriptions, and financial transactions with these integrated payment platforms.
+
+- **[Stripe](./payments/stripe.mdx)** - Complete payment processing with subscriptions and webhooks
+- **[Lemon Squeezy](./payments/lemonsqueezy.mdx)** - SaaS-focused payment platform with license management
+- **[Polar](./payments/polar.mdx)** - Open-source payment platform for developers
+
+## Analytics & Tracking
+
+Track user behavior, monitor performance, and gain insights into your application usage.
+
+- **[PostHog](./analytics/posthog.mdx)** - Open-source product analytics with A/B testing
+- **[Umami](./analytics/umami.mdx)** - Privacy-focused, lightweight web analytics
+- **[StatSig](./analytics/statsig.mdx)** - Feature flagging and experimentation platform
+- **[Google Analytics](./analytics/google-analytics.mdx)** - Comprehensive web and app analytics
+- **[Google Tag Manager](./analytics/google-tag-manager.mdx)** - Centralized tag management system
+
+## Authentication
+
+Secure user authentication and authorization with these integrated providers.
+
+- **[Better Auth](./authentication/better-auth.mdx)** - Modern authentication library with developer experience focus
+- **[Clerk](./authentication/clerk.mdx)** - Complete user management platform with UI components
+- **[Stack Auth](./authentication/stack.mdx)** - Open-source authentication with team management
+- **[Supabase Auth](./authentication/supabase.mdx)** - Authentication powered by PostgreSQL
+- **[Auth.js](./authentication/auth-js.mdx)** - Popular Next.js authentication library (NextAuth.js)
+
+## Content Management
+
+Create, manage, and deliver content with these powerful CMS platforms.
+
+- **[Builder.io](./content/builder-io.mdx)** - Visual page builder with drag-and-drop editing
+- **[Payload CMS](./content/payload-cms.mdx)** - Headless CMS with powerful admin interface
+
+## Storage & Infrastructure
+
+Store files, cache data, and integrate with cloud infrastructure.
+
+- **[AWS S3](./infrastructure/aws-s3.mdx)** - Scalable object storage with global CDN
+- **[Vercel Blob](./infrastructure/vercel-blob.mdx)** - Simple storage solution for Vercel apps
+- **[Upstash Redis](./infrastructure/upstash-redis.mdx)** - Serverless Redis for caching and sessions
+- **[Vercel API](./infrastructure/vercel-api.mdx)** - Programmatic access to Vercel platform features
+
+## Additional Services
+
+Enhance your application with these additional service integrations.
+
+- **[Resend](./services/resend.mdx)** - Modern email API for transactional and marketing emails
+- **[OpenAI](./services/openai.mdx)** - AI-powered text and image generation
+- **[GitHub API](./services/github-api.mdx)** - Programmatic access to GitHub features
+
+## How to Enable Integrations
+
+Each integration is enabled by setting the required environment variables in your `.env.local` file (for development) or your deployment platform's environment settings (for production).
+
+### Environment Variable Categories
+
+- **Server Variables**: Used in API routes and server-side operations
+- **Client Variables**: Exposed to the browser (prefixed with `NEXT_PUBLIC_`)
+- **Optional Variables**: Enhance functionality but aren't required for basic operation
+
+### Example Setup
+
+```bash
+# Payment processing
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY=phc_...
+
+# Authentication
+AUTH_SECRET=your_secret_here
+AUTH_URL=https://yourdomain.com
+```
+
+## Feature Flags
+
+Many integrations automatically enable corresponding feature flags that control UI elements and functionality. These are managed automatically based on your environment variable configuration.
+
+## Security Best Practices
+
+- Never commit API keys or secrets to version control
+- Use different keys for development and production
+- Rotate keys regularly
+- Monitor usage and set up alerts for unusual activity
+- Follow the principle of least privilege for API permissions
+
+## Support
+
+For integration-specific questions or issues:
+
+- Check the individual integration documentation
+- Review the service provider's documentation
+- Check Shipkit's GitHub issues for known problems
+- Contact support if you encounter integration issues
+
+## Contributing
+
+Found an integration you'd like to see supported? Check our [contributing guidelines](../contributing.md) for information on how to request or contribute new integrations.

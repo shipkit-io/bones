@@ -1,0 +1,41 @@
+---
+title: "DevTools"
+description: "Developer tooling toggled via feature flag to aid local development."
+---
+
+## DevTools
+
+DevTools includes optional UI helpers that can be enabled during development to speed up UI iteration:
+
+- Tailwind Indicator: shows current responsive breakpoint
+- Font Selector: change fonts on the fly for visual testing
+- Live Preview Script: optional external helper injected in the document head
+
+### Enable
+
+Add this to your environment (local only recommended):
+
+```bash
+ENABLE_DEVTOOLS=true
+```
+
+At build time, this sets `NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED=true` which is used throughout the app.
+
+### Where it appears
+
+- App Router: `src/app/(app)/layout.tsx` injects the live-preview script when enabled
+- App Router: `FontSelector` renders in development only when the flag is enabled
+- App Router: `TailwindIndicator` renders in development only when the flag is enabled
+- Pages Router: `_app.tsx` renders both `TailwindIndicator` and `FontSelector` in development when the flag is enabled
+
+### Components
+
+- `src/components/modules/devtools/tailwind-indicator.tsx`
+- `src/components/modules/devtools/font-selector.tsx`
+
+### Notes
+
+- DevTools are disabled in production even if the flag is present
+- Keep this flag off in production environments
+
+

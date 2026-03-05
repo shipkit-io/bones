@@ -1,0 +1,227 @@
+---
+title: 'Component Snippets'
+description: 'Common component patterns in Shipkit'
+---
+
+# Component Snippets
+
+## Server Component with Data Fetching
+
+```typescript
+// src/app/(app)/posts/page.tsx
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
+import { PostList } from "./_components/post-list";
+
+export default async function PostsPage() {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/sign-in");
+  }
+
+  const posts = await db?.post.findMany({
+    where: {
+      authorId: session.user.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return (
+    <div className="container py-8">
+      <h1 className="text-2xl font-bold mb-4">Your Posts</h1>
+      <PostList posts={posts} />
+    </div>
+  );
+}
+```
+
+## Client Component with State
+
+```typescript
+// src/components/posts/post-list.tsx
+"use client";
+
+import { useState } from "react";
+import { Post } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+interface PostListProps {
+  posts: Post[];
+}
+
+export function PostList({ posts: initialPosts }: PostListProps) {
+  const [posts, setPosts] = useState(initialPosts);
+  const [search, setSearch] = useState("");
+
+  const filteredPosts = posts.filter((post) =>
+    post.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-4">
+      <Input
+        type="search"
+        placeholder="Search posts..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <div className="grid gap-4">
+        {filteredPosts.map((post) => (
+          <div
+            key={post.id}
+            className="p-4 rounded-lg border bg-card text-card-foreground"
+          >
+            <h2 className="text-xl font-semibold">{post.title}</h2>
+            {post.content && (
+              <p className="mt-2 text-muted-foreground">{post.content}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {filteredPosts.length === 0 && (
+        <p className="text-center text-muted-foreground">No posts found</p>
+      )}
+    </div>
+  );
+}
+```
+
+## Suspense Boundary
+
+```typescript
+// src/app/(app)/posts/loading.tsx
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function Loading() {
+  return (
+    <div className="container py-8">
+      <Skeleton className="h-8 w-48 mb-4" />
+      <div className="grid gap-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="p-4 rounded-lg border bg-card"
+          >
+            <Skeleton className="h-6 w-3/4 mb-2" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## Error Boundary
+
+```typescript
+// src/components/error-boundary.tsx
+"use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+interface Props {
+  error: Error;
+  reset: () => void;
+}
+
+export default function ErrorBoundary({ error, reset }: Props) {
+  return (
+    <Card className="w-full max-w-md mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-destructive">Something went wrong</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">{error.message}</p>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={reset} variant="outline">
+          Try again
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+```
+
+## Modal Component
+
+```typescript
+// src/components/ui/modal.tsx
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+interface ModalProps {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function Modal({
+  title,
+  description,
+  children,
+  open,
+  onOpenChange,
+}: ModalProps) {
+  const [isOpen, setIsOpen] = useState(open);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
+
+  const handleOpenChange = useCallback(
+    (value: boolean) => {
+      setIsOpen(value);
+      onOpenChange?.(value);
+    },
+    [onOpenChange]
+  );
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          {description && (
+            <DialogDescription>{description}</DialogDescription>
+          )}
+        </DialogHeader>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4"
+          onClick={() => handleOpenChange(false)}
+        >
+          <X className="h-4 w-4" />
+        </Button>
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
+}
+```

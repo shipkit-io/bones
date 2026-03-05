@@ -1,0 +1,16 @@
+# Stripe
+
+Enterprise-grade payment processing with advanced features.
+
+```bash
+STRIPE_SECRET_KEY=sk_test_your_key
+STRIPE_WEBHOOK_SECRET=whsec_your_secret
+STRIPE_PUBLISHABLE_KEY=pk_test_your_key
+# or...
+# NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_key
+```
+
+Note:
+
+- You can set `STRIPE_PUBLISHABLE_KEY` without the `NEXT_PUBLIC_` prefix and Shipkit will automatically generate `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` at build time for use on the client.
+- The non-prefixed variable is not accessible on the client; only the generated `NEXT_PUBLIC_*` value is exposed.

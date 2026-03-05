@@ -1,0 +1,37 @@
+---
+title: "Features"
+description: "Explore Shipkit's powerful features including view transitions, user interface components, and development tools to build better apps faster."
+---
+
+# Features
+
+## User Interface
+
+### View Transitions
+
+Simply use the `<Link>` component from `@/components/primitives/link-with-transition` and Shipkit will handle the view transitions for you.
+
+```tsx
+import { Link } from "@/components/primitives/link-with-transition";
+//...
+<Link href="/">Home</Link>;
+```
+
+### Theme Switcher
+
+Shipkit comes with a theme switcher that allows you to switch between light and dark mode, or use the system theme.
+
+There are two components you can use to switch themes:
+
+```tsx
+import { ThemeChooser, ThemeToggle } from "@/components/ui/theme";
+```
+
+- `<ThemeToggle>`: This component is used to switch the theme between light and dark mode.
+- `<ThemeChooser>`: This component allows you to switch the theme to a specific theme.
+
+### Dynamic Slots
+
+Shipkit allows you to dynamically render slots, without having to touch the layout code.
+
+Just create an intercepting route and shipkit will handle the rest.

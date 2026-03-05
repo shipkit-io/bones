@@ -1,0 +1,93 @@
+# Google Analytics Integration
+
+Google Analytics (GA4) provides comprehensive website and app analytics, user behavior tracking, and conversion measurement capabilities.
+
+## Environment Variables
+
+### Required Client Variables
+```
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX # Your GA4 Measurement ID
+```
+
+Note:
+
+- You can set `GOOGLE_ANALYTICS_ID` without the `NEXT_PUBLIC_` prefix and Shipkit will automatically generate `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` at build time for use on the client.
+- The non-prefixed variable is not accessible on the client; only the generated `NEXT_PUBLIC_*` value is exposed.
+
+## Setup Instructions
+
+1. **Create a Google Analytics Account**: Sign up at [analytics.google.com](https://analytics.google.com) if you haven't already
+
+2. **Set Up a GA4 Property**:
+   - Go to your Google Analytics dashboard
+   - Create a new GA4 property (recommended over Universal Analytics)
+   - Follow the setup wizard for your website
+
+3. **Get Your Measurement ID**:
+   - In your GA4 property, go to "Admin" → "Data Streams"
+   - Select your web data stream
+   - Copy the "Measurement ID" (starts with `G-`)
+
+4. **Add Environment Variables**:
+   ```bash
+   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+   ```
+
+## Features Enabled
+
+When this environment variable is configured, the following features become available:
+
+- ✅ Page view and user interaction tracking
+- ✅ Conversion and goal tracking
+- ✅ E-commerce and purchase analytics
+- ✅ User demographic and interest data
+- ✅ Real-time reporting
+- ✅ Audience segmentation
+- ✅ Custom event tracking
+- ✅ Integration with Google Ads and Search Console
+
+## Configuration Options
+
+### Advanced Configuration
+You can enhance Google Analytics with additional features:
+
+```bash
+# Enhanced E-commerce tracking
+NEXT_PUBLIC_GA_ENHANCED_ECOMMERCE=true
+
+# Custom dimensions and metrics
+NEXT_PUBLIC_GA_CUSTOM_DIMENSIONS=user_type,subscription_tier
+
+# Cross-domain tracking
+NEXT_PUBLIC_GA_CROSS_DOMAIN_TRACKING=example.com,anotherexample.com
+```
+
+## Privacy and Compliance
+
+Google Analytics includes privacy features:
+
+- IP anonymization available
+- Data retention controls
+- Consent mode integration
+- GDPR compliance tools
+- Cookie-less measurement options
+
+## Testing
+
+Google Analytics provides several testing options:
+
+- Use Google Analytics Debugger browser extension
+- Test events in real-time reports
+- Use GA4's debug mode
+- Monitor tracking accuracy in development
+
+## Production Deployment
+
+Before going live:
+
+1. Ensure proper cookie consent implementation
+2. Configure data retention settings
+3. Set up proper cross-domain tracking if needed
+4. Review and implement privacy controls
+5. Test conversion tracking thoroughly
+6. Set up proper attribution models

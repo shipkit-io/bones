@@ -1,0 +1,25 @@
+# !TODO
+name: Template Cleanup
+description: Configuration for cleaning up template-specific files when creating a new repository
+
+cleanup:
+  # Files to be removed when creating a new repository from this template
+  files:
+    - .github/template-cleanup/
+    - .github/FUNDING.yml
+    - CHANGELOG.md
+    - CODEOWNERS
+
+  # Directories to be removed
+  directories:
+    - .github/template-cleanup
+
+  # Files to be renamed
+  rename:
+    "README.template.md": "README.md"
+
+  # Strings to be replaced in files
+  replace:
+    "shipkit/shipkit": "{owner}/{repo}"
+    "Shipkit Template": "{repo}"
+    "[Your Team Name]": "{owner}"

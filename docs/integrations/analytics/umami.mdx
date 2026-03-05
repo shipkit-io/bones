@@ -1,0 +1,86 @@
+# Umami Analytics Integration
+
+Umami is a simple, fast, privacy-focused alternative to Google Analytics. It's lightweight and respects user privacy while providing essential website analytics.
+
+## Environment Variables
+
+### Required Client Variables
+```
+NEXT_PUBLIC_UMAMI_WEBSITE_ID=your_website_id_here # Your Umami website ID
+```
+
+Note:
+
+- You can set `UMAMI_WEBSITE_ID` without the `NEXT_PUBLIC_` prefix and Shipkit will automatically generate `NEXT_PUBLIC_UMAMI_WEBSITE_ID` at build time for use on the client.
+- The non-prefixed variable is not accessible on the client; only the generated `NEXT_PUBLIC_*` value is exposed.
+
+## Setup Instructions
+
+1. **Set Up Umami**: You can either:
+   - Use [Umami Cloud](https://umami.is) (hosted service)
+   - Self-host Umami on your own server
+
+2. **Get Your Website ID**:
+   - Log into your Umami dashboard
+   - Go to "Settings" → "Websites"
+   - Create a new website or copy existing website ID
+   - The website ID is usually a UUID or short string
+
+3. **Add Environment Variables**:
+   ```bash
+   NEXT_PUBLIC_UMAMI_WEBSITE_ID=your_website_id_here
+   ```
+
+## Features Enabled
+
+When this environment variable is configured, the following features become available:
+
+- ✅ Page view tracking
+- ✅ Unique visitor counting
+- ✅ Referrer tracking
+- ✅ Device and browser information
+- ✅ Geographic location data
+- ✅ Real-time analytics
+- ✅ Privacy-friendly tracking (no cookies required)
+
+## Configuration Options
+
+### Advanced Configuration
+If you're using a self-hosted Umami instance, you might need additional configuration:
+
+```bash
+# Custom Umami instance URL (if self-hosted)
+NEXT_PUBLIC_UMAMI_URL=https://your-umami-instance.com
+
+# Enable/disable tracking in development
+NEXT_PUBLIC_UMAMI_TRACK_LOCALHOST=true
+```
+
+## Privacy Features
+
+Umami stands out for its privacy-first approach:
+
+- No personal data collection
+- No tracking cookies
+- GDPR compliant by default
+- Lightweight (minimal impact on page load)
+- Self-hosted option available
+
+## Testing
+
+Umami analytics work immediately:
+
+- Events are tracked as soon as the script loads
+- View real-time data in your Umami dashboard
+- Test different pages and user flows
+- Monitor tracking accuracy
+
+## Production Deployment
+
+Before going live:
+
+1. Verify your website ID is correct
+2. Test tracking across different pages
+3. Review privacy policy compliance
+4. Configure data retention if self-hosting
+5. Set up proper domain allowlisting if needed

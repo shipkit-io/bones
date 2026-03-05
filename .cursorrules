@@ -1,19 +1,44 @@
-# ShipKit Rules
+# Shipkit Rules
 
 You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
 
-This is a Next.js project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS 3, NextAuth/AuthJS@v5, TypeScript, using PNPM as the package manager.
+This is a Next.js project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS v3, NextAuth/AuthJS v5, TypeScript, using Bun as the package manager.
 
 Be aware of the latest versions of all libraries.
 Your plans should be documented into a ai.mdx file. Check to see if it exists. If it does, pick up where you left off. Mark completed steps with a checkbox. Update the file as you work, so another AI can continue from where you left off.
 
+Shipkit is a premium starter boilerplate for Next.js that allows customers to opt in to features by adding environment variables.
+
+For example, you may launch with no environment variables at all. Adding a database will enable features like payload CMS. Adding a builder.io API key will enable the builder.io integration.
+
 ## Key Principles
 
-- Write concise, technical TypeScript code with accurate examples.
-- Use functional and declarative programming patterns; avoid classes.
-- Prefer iteration and modularization over code duplication.
-- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
-- Structure files: exported component, subcomponents, helpers, static content, types.
+- Authentication uses NextAuth/AuthJS v5.
+- Authentication with credentials uses payload CMS user management.
+- Use the Shadcn/UI components and styles when possible. This means colors, fonts, spacing, border-radius, etc. are already set up.
+
+## Code sacred beliefs
+
+- Thou shalt Make files small and discrete. When possible keep files under 500 lines, if at all possible.
+- Thou shalt Write concise, technical TypeScript code with accurate examples.
+- Thou shalt Use functional and declarative programming patterns; avoid classes.
+- Thou shalt Prefer iteration and modularization over code duplication.
+- Thou shalt Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+- Thou shalt Structure files: exported component, subcomponents, helpers, static content, types.
+- Thou shalt Use the simplest solution first and only add complexity when necessary.
+
+## React State Management
+
+- Avoid circular dependencies between state variables that can cause infinite update loops
+- Don't update state directly inside useEffect without dependencies or conditions
+- Don't use useState and useEffect when a single state update function would suffice
+- When synchronizing two state variables, use a single source of truth approach
+- For local storage integration, ensure state updates don't trigger unnecessary re-renders
+- Prefer unidirectional data flow: parent state flowing to children
+- When using multiple state variables that change together, consider useReducer
+- Carefully analyze effects to avoid unwanted side effects and re-renders
+- When a state update depends on previous state, always use the functional form (prev => ...)
+- For complex state transitions, implement dedicated state management functions rather than direct setters
 
 ## Naming Conventions
 
@@ -37,6 +62,15 @@ Your plans should be documented into a ai.mdx file. Check to see if it exists. I
 - Use Shadcn UI, Radix, and Tailwind for components and styling.
 - Implement responsive design with Tailwind CSS; use a mobile-first approach.
 
+## Navigation Patterns
+
+- Prefer declarative links over imperative navigation (`router.push`)
+- In the App Router, use `src/components/primitives/link-with-transition` instead of `next/link`
+- For styled links that look like buttons, use: `<Link className={cn(buttonVariants({ variant: "...", size: "..." }))} ...>`
+- Only use router navigation for complex scenarios (e.g., form submissions with redirects)
+- Prefer shallow routing when appropriate to avoid unnecessary data fetching
+- Add proper aria labels to navigation elements
+
 ## Performance Optimization
 
 - Minimize 'use client', 'useEffect', and 'setState'; favor React Server Components (RSC).
@@ -58,6 +92,7 @@ Follow Next.js docs for Data Fetching, Rendering, and Routing.
 ## Don't
 
 Don't delete environment variables.
+Don't run the dev server (`bun dev`) in the terminal, User will do that.
 Don't nest server components in client components unless passed through props.
 Don't forget to add `use client` to the top of the file if you are using client-side code like hooks.
 Don't use `use client` in server components.
@@ -111,10 +146,13 @@ Prefer arrow functions for React components:
 
 ## Next.js
 
-Next config is in `src/config/next-config.ts`
-
 Don't use server actions to fetch data. Use Server Components instead.
 Server code belongs in services, server action code belongs in actions if an action needs server-side code it should call services. So, a server component may load data using a service, then manipulate data using a server action, which then calls a service.
+
+- `params`, `searchParams`, and `headers` should be awaited before using its properties.
+- Never nest server components in client components unless passed through props.
+- Never use server actions to fetch data.
+- Never nest `<Button>` components in `<Link>` components, or vice versa.
 
 ## When interacting with the database
 

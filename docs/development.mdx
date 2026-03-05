@@ -1,0 +1,159 @@
+---
+title: 'Development Guide'
+description: 'Get started developing with Shipkit'
+---
+
+# Development Guide
+
+Shipkit is built for developers who want to ship fast. Let's get you set up and building.
+
+## Quick Start
+
+Get Shipkit running in 4 steps:
+
+1. **Clone the repo:**
+   ```bash
+   git clone https://github.com/your-repo/shipkit.git
+   cd shipkit
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   bun install --frozen-lockfile
+   ```
+
+3. **Set up environment:**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your values
+   ```
+
+4. **Start developing:**
+   ```bash
+   bun dev
+   ```
+
+That's it! You're ready to build.
+
+## What You Need
+
+### Required Tools
+- **Node.js** v18+ ([download](https://nodejs.org))
+- **Bun** v1.1+ ([install](https://bun.sh))
+- **PostgreSQL** v15+ (for database features)
+- **VS Code** (recommended)
+
+### VS Code Setup
+
+Install these extensions for the best experience:
+
+- **Biome** - Code formatting and linting
+- **Tailwind CSS IntelliSense** - CSS autocompletion
+- **TypeScript Importer** - Smart imports
+- **MDX** - Markdown with JSX support
+
+## Project Structure
+
+Shipkit follows a clean, logical structure:
+
+```
+src/
+├── app/                 # Next.js App Router pages
+├── components/          # React components
+│   ├── ui/             # Reusable UI components
+│   └── blocks/         # Page-specific components
+├── lib/                # Utility functions
+├── server/             # Backend code
+│   ├── actions/        # Server actions
+│   ├── auth/          # Authentication config
+│   └── services/      # Business logic
+└── styles/             # Global styles
+```
+
+## Development Workflow
+
+### Components
+- **Server components first** - Better performance, fewer bugs
+- **Client components only when needed** - For interactivity (forms, animations)
+- **Organize by purpose** - UI components in `ui/`, page blocks in `blocks/`
+
+### API Routes
+- **Server actions** for forms and mutations
+- **API routes** for external integrations
+- **Zod validation** on all inputs
+- **Consistent error handling**
+
+### Database
+- **Drizzle ORM** for type-safe queries
+- **Migrations** for schema changes
+- **Transactions** for data consistency
+
+### Authentication
+- **Auth.js v5** for all auth needs
+- **Multiple providers** supported
+- **Server-side sessions** preferred
+
+## Common Tasks
+
+### Add a New Page
+```bash
+# Create app/(app)/my-page/page.tsx
+export default function MyPage() {
+  return <div>Hello World</div>;
+}
+```
+
+### Add a Component
+```typescript
+// src/components/ui/my-component.tsx
+export function MyComponent() {
+  return <div>My Component</div>;
+}
+```
+
+### Add Database Schema
+```bash
+bun run db:generate
+# Edit the migration file
+bun run db:migrate
+```
+
+## Feature Flags
+
+Control features with environment variables:
+
+```bash
+# Enable Stripe payments
+NEXT_PUBLIC_FEATURE_STRIPE_ENABLED=true
+
+# Enable GitHub auth
+NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED=true
+```
+
+Features auto-enable when you add the required env vars.
+
+## Before Production
+
+Run these checks:
+
+```bash
+# Type checking
+bun run typecheck
+
+# Code quality
+bun run lint
+
+# Tests (if you have them)
+bun run test
+
+# Build test
+bun run build
+```
+
+## Need Help?
+
+- [Feature Flags Guide](/docs/development/feature-flags)
+- [DevTools](/docs/development/devtools)
+- [Web Workers Guide](/docs/development/web-workers)
+- [Component Snippets](/docs/snippets/components)
+- [API Examples](/docs/snippets/api)

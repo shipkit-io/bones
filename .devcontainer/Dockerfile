@@ -10,12 +10,15 @@ WORKDIR /workspace
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 ENV NODE_ENV=development
 
+# Install Bun
+RUN curl -fsSL https://bun.sh/install | bash && mv /root/.bun/bin/bun /usr/local/bin/bun
+
 # Copy package manager files. These are copied first to leverage Docker cache
 # so that dependencies are not re-installed if only application code changes.
-COPY package.json pnpm-lock.yaml ./
+COPY package.json bun.lock* ./
 
-# Install dependencies using pnpm.
-RUN pnpm install --child-concurrency=4
+# Install dependencies using Bun.
+RUN bun install --frozen-lockfile
 
 # Make scripts in node_modules/.bin executable.
 # The '|| true' is kept from the original command to ignore errors if any.
@@ -28,4 +31,4 @@ RUN chmod +x /workspace/node_modules/.bin/* 2>/dev/null || true
 EXPOSE 3000
 
 # Default command to start the Next.js development server.
-CMD ["pnpm", "run", "dev"]
+CMD ["bun", "run", "dev"]

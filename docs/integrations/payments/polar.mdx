@@ -1,0 +1,13 @@
+# Polar
+
+Open-source payment platform for developers.
+
+```bash
+POLAR_ACCESS_TOKEN=your_access_token
+NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID=your_price_id
+NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID=your_price_id
+```
+
+Note:
+
+- Polar client price IDs are not mirrored because they are already `NEXT_PUBLIC_*` and not derived from a single base key. Only specific whitelisted keys (Builder, Clerk publishable, Supabase URL/anon, Stripe publishable, analytics keys, C15T URL) are mirrored.

@@ -64,7 +64,7 @@ const eslintConfig = [
 			"@typescript-eslint": ts,
 		},
 		rules: {
-			...ts.configs.recommended.rules,
+			...(ts.configs.recommended?.rules || {}),
 			"@typescript-eslint/no-unused-vars": [
 				"warn",
 				{
@@ -89,6 +89,26 @@ const eslintConfig = [
 			"@typescript-eslint/no-unsafe-call": "warn",
 			"@typescript-eslint/no-unsafe-member-access": "warn",
 			"@typescript-eslint/no-unsafe-return": "warn",
+		},
+	},
+
+	// Workers: use dedicated tsconfig for typed linting
+	{
+		files: ["src/workers/**/*.ts"],
+		languageOptions: {
+			parser: tsParser,
+			parserOptions: {
+				project: ["./tsconfig.workers.json"],
+				tsconfigRootDir: __dirname,
+				ecmaVersion: "latest",
+				sourceType: "module",
+				ecmaFeatures: {
+					jsx: false,
+				},
+			},
+		},
+		plugins: {
+			"@typescript-eslint": ts,
 		},
 	},
 ];

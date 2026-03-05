@@ -1,7 +1,7 @@
+import type React from "react";
+import { Link } from "@/components/primitives/link";
 import { Button, type ButtonProps, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import type React from "react";
 import styles from "./animated-button.module.css";
 
 // Extend the ButtonHTMLAttributes to include all possible button props

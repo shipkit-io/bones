@@ -1,0 +1,106 @@
+# Resend Email Integration
+
+Resend is a modern email API service that provides reliable email delivery with excellent developer experience and powerful features.
+
+## Environment Variables
+
+### Required Server Variables
+```
+RESEND_API_KEY=re_... # Your Resend API key
+```
+
+### Optional Server Variables
+```
+RESEND_AUDIENCE_ID=your_audience_id # For audience management
+RESEND_FROM_EMAIL=noreply@yourdomain.com # Default from email
+```
+
+## Setup Instructions
+
+1. **Create a Resend Account**: Sign up at [resend.com](https://resend.com) if you haven't already
+
+2. **Verify Your Domain**:
+   - Go to your [Resend Dashboard](https://resend.com)
+   - Navigate to "Domains"
+   - Add and verify your domain for sending emails
+
+3. **Get Your API Key**:
+   - In your dashboard, go to "API Keys"
+   - Create a new API key
+   - Copy the key (starts with `re_`)
+
+4. **Add Environment Variables**:
+   ```bash
+   RESEND_API_KEY=re_your_api_key_here
+   RESEND_FROM_EMAIL=noreply@yourdomain.com
+   ```
+
+## Features Enabled
+
+When these environment variables are configured, the following features become available:
+
+- ✅ Transactional email sending
+- ✅ Email templates and personalization
+- ✅ Bounce and complaint handling
+- ✅ Email analytics and tracking
+- ✅ Contact list management
+- ✅ A/B testing for emails
+- ✅ Webhook notifications
+- ✅ SMTP relay support
+
+## Configuration Options
+
+### Advanced Configuration
+You can customize Resend behavior:
+
+```bash
+# Webhook configuration
+RESEND_WEBHOOK_SECRET=your_webhook_secret
+
+# Email configuration
+RESEND_FROM_NAME=Your App Name
+
+# Rate limiting
+RESEND_RATE_LIMIT=100 # emails per hour
+```
+
+## Email Templates
+
+Resend supports various email formats:
+
+- **Transactional Emails**: Order confirmations, password resets
+- **Marketing Emails**: Newsletters, promotions
+- **HTML Templates**: Rich email designs
+- **Plain Text**: Simple text emails
+
+## Integration with Authentication
+
+Resend integrates with authentication systems:
+
+- Welcome emails for new users
+- Password reset emails
+- Email verification
+- Magic link authentication
+- Account notifications
+
+## Testing
+
+Resend provides comprehensive testing capabilities:
+
+- Test mode for development
+- Email preview and testing
+- Spam testing tools
+- Delivery testing
+- Analytics dashboard
+
+## Production Deployment
+
+Before going live:
+
+1. Ensure domain verification and DNS setup
+2. Configure proper SPF, DKIM, and DMARC records
+3. Set up webhook endpoints for bounce handling
+4. Configure rate limiting and sending limits
+5. Review email content and compliance
+6. Set up proper monitoring and alerts
+7. Configure backup email service if needed

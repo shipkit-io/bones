@@ -1,0 +1,93 @@
+# Google Tag Manager Integration
+
+Google Tag Manager (GTM) is a tag management system that allows you to manage and deploy marketing tags, analytics codes, and other third-party scripts without modifying your website code.
+
+## Environment Variables
+
+### Required Client Variables
+```
+NEXT_PUBLIC_GOOGLE_GTM_ID=GTM-XXXXXXX # Your GTM Container ID
+```
+
+Note:
+
+- You can set `GOOGLE_GTM_ID` without the `NEXT_PUBLIC_` prefix and Shipkit will automatically generate `NEXT_PUBLIC_GOOGLE_GTM_ID` at build time for use on the client.
+- The non-prefixed variable is not accessible on the client; only the generated `NEXT_PUBLIC_*` value is exposed.
+
+## Setup Instructions
+
+1. **Create a Google Tag Manager Account**: Sign up at [tagmanager.google.com](https://tagmanager.google.com) if you haven't already
+
+2. **Create a GTM Container**:
+   - Go to your GTM dashboard
+   - Create a new container for your website
+   - Choose "Web" as the target platform
+
+3. **Get Your Container ID**:
+   - In your GTM container, the ID is displayed in the top navigation
+   - It follows the format `GTM-XXXXXXX`
+
+4. **Add Environment Variables**:
+   ```bash
+   NEXT_PUBLIC_GOOGLE_GTM_ID=GTM-XXXXXXX
+   ```
+
+## Features Enabled
+
+When this environment variable is configured, the following features become available:
+
+- ✅ Centralized tag management
+- ✅ Easy deployment of analytics and marketing tags
+- ✅ Version control for tag configurations
+- ✅ Built-in triggers and variables
+- ✅ Integration with Google Analytics, Google Ads, Facebook Pixel, and more
+- ✅ Custom HTML/JavaScript tag support
+- ✅ Real-time tag firing monitoring
+
+## Configuration Options
+
+### Advanced Configuration
+You can customize GTM behavior with additional settings:
+
+```bash
+# Custom data layer name
+NEXT_PUBLIC_GTM_DATA_LAYER_NAME=dataLayer
+
+# Enable debug mode in development
+NEXT_PUBLIC_GTM_DEBUG=true
+
+# Custom environment (for staging/production separation)
+NEXT_PUBLIC_GTM_ENVIRONMENT=production
+```
+
+## Common Use Cases
+
+Google Tag Manager enables:
+
+- **Analytics**: Google Analytics, Adobe Analytics, Mixpanel
+- **Advertising**: Google Ads, Facebook Pixel, LinkedIn Insight
+- **Marketing**: HubSpot, Salesforce, Marketo
+- **Support**: Intercom, Zendesk, LiveChat
+- **Performance**: Hotjar, Crazy Egg, FullStory
+- **Custom Scripts**: Any third-party tracking or marketing code
+
+## Testing
+
+GTM provides comprehensive testing capabilities:
+
+- Use GTM's built-in preview mode
+- Test tags in different environments
+- Use Google Tag Assistant browser extension
+- Monitor tag firing in real-time
+- Debug data layer events
+
+## Production Deployment
+
+Before going live:
+
+1. Publish your GTM container
+2. Test all tags in preview mode
+3. Verify tag firing order and timing
+4. Set up proper trigger conditions
+5. Configure environment-specific settings
+6. Set up proper error handling for failed tags

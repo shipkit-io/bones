@@ -19,7 +19,7 @@ services:
     environment:
       # DATABASE_URL is required by the application at runtime to connect to the database.
       # It's kept here as it depends on other services (db) and might use host environment variables.
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-lacy_user}:${POSTGRES_PASSWORD:-lacy_password}@db:5432/${POSTGRES_DB:-lacy}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-shipkit_user}:${POSTGRES_PASSWORD:-shipkit_password}@db:5432/${POSTGRES_DB:-shipkit}
       # NODE_ENV is now set in the Dockerfile.
       # - NODE_ENV=development
     # Wait for the database to be healthy before starting
@@ -42,12 +42,12 @@ services:
 
   db:
     image: postgres:15
-    container_name: lacy_postgres
+    container_name: shipkit_postgres
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-lacy}
-      POSTGRES_USER: ${POSTGRES_USER:-lacy_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lacy_password}
+      POSTGRES_DB: ${POSTGRES_DB:-shipkit}
+      POSTGRES_USER: ${POSTGRES_USER:-shipkit_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shipkit_password}
     ports:
       - "5432:5432"
     volumes:
@@ -59,7 +59,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-lacy_user} -d ${POSTGRES_DB:-lacy}",
+          "pg_isready -U ${POSTGRES_USER:-shipkit_user} -d ${POSTGRES_DB:-shipkit}",
         ]
       interval: 5s
       timeout: 5s

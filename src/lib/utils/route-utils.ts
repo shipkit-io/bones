@@ -1,5 +1,5 @@
-import { type RouteObject, type RouteParams, routes } from "@/config/routes";
 import type { Route } from "next";
+import { type RouteObject, type RouteParams, routes } from "@/config/routes";
 
 export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {}): Route => {
 	if (typeof route === "string") {
@@ -7,10 +7,17 @@ export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {
 	}
 
 	let path = route.path;
-	for (const [key, defaultValue] of Object.entries(route.params ?? {})) {
-		const value = Object.prototype.hasOwnProperty.call(params, key) ? params[key] : defaultValue;
-		if (value !== null) {
+	// First, replace using provided params
+	for (const [key, value] of Object.entries(params)) {
+		if (value !== undefined && value !== null) {
 			path = path.replace(`:${key}`, String(value));
+		}
+	}
+
+	// Then, fill remaining placeholders with defaults if any
+	for (const [key, defaultValue] of Object.entries(route.params ?? {})) {
+		if (path.includes(`:${key}`) && defaultValue !== null && defaultValue !== undefined) {
+			path = path.replace(`:${key}`, String(defaultValue));
 		}
 	}
 	return path;
@@ -26,15 +33,7 @@ type NestedPaths<T, P extends string = ""> = T extends object
 
 type RoutePath = NestedPaths<typeof routes>;
 
-export const rx = <T extends RoutePath>(
-	path: T,
-	params: T extends keyof typeof routes
-		? (typeof routes)[T] extends RouteObject
-			? Required<(typeof routes)[T]["params"]>
-			: never
-		: // biome-ignore lint/suspicious/noExplicitAny: workaround for type inference
-			RouteParams = {} as any
-): Route => {
+export const rx = <T extends RoutePath>(path: T, params?: RouteParams): Route => {
 	const parts = path?.split(".") ?? [];
 	let current: unknown = routes;
 
@@ -52,8 +51,8 @@ export const rx = <T extends RoutePath>(
 	}
 
 	if (current && typeof current === "object" && "index" in current) {
-		return getRoutePath(current.index as RouteObject | string, params);
+		return getRoutePath(current.index as RouteObject | string, params ?? {});
 	}
 
-	return getRoutePath(current as RouteObject | string, params);
+	return getRoutePath(current as RouteObject | string, params ?? {});
 };

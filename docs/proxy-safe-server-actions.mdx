@@ -1,0 +1,346 @@
+---
+title: "Proxy-Safe Server Actions"
+description: "Learn how to implement proxy-safe server actions in Shipkit to handle requests securely behind proxies and load balancers while maintaining proper IP detection."
+---
+
+# Proxy-Safe Server Actions
+
+This guide explains how to implement robust error handling for server actions that gracefully handles corporate proxy blocking and network issues.
+
+## The Problem
+
+Corporate proxies often block Next.js server actions, causing:
+
+- React error #418 (minified error)
+- "An unexpected response was received from the server"
+- 403 Forbidden responses
+- Application crashes instead of graceful error handling
+
+## The Solution
+
+We've implemented a comprehensive error handling system with:
+
+1. **Server Action Wrapper** - Automatic retry, timeout, and fallback handling
+2. **Specialized Error Boundary** - Catches React server action errors specifically
+3. **Corporate Environment Detection** - Proactively detects and handles restricted environments
+4. **Fallback Mechanisms** - Local storage, offline mode, and alternative flows
+
+## Quick Start
+
+### 1. Wrap your forms with the error boundary
+
+```tsx
+import { ServerActionErrorBoundary } from "@/components/primitives/server-action-error-boundary";
+
+export function MyForm() {
+  return (
+    <ServerActionErrorBoundary>
+      {/* Your existing form */}
+    </ServerActionErrorBoundary>
+  );
+}
+```
+
+### 2. Use the server action hook for automatic handling
+
+```tsx
+import { useServerAction } from "@/lib/server-action-wrapper";
+
+export function MyForm() {
+  const { execute, isLoading, error, clearError } = useServerAction(
+    myServerAction,
+    {
+      timeout: 10000,
+      retries: 2,
+      showToast: true,
+      fallback: () => localFallbackFunction(),
+    },
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const result = await execute(formData);
+
+    if (result.success) {
+      // Handle success
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form fields */}
+      {isLoading && <div>Loading...</div>}
+      {error && <div className="error">{error}</div>}
+    </form>
+  );
+}
+```
+
+## Detailed Implementation
+
+### Server Action Wrapper Options
+
+```typescript
+interface ServerActionOptions {
+  /** Timeout in milliseconds (default: 10000) */
+  timeout?: number;
+
+  /** Number of retry attempts (default: 2) */
+  retries?: number;
+
+  /** Delay between retries in milliseconds (default: 1000) */
+  retryDelay?: number;
+
+  /** Show toast notifications on error (default: true) */
+  showToast?: boolean;
+
+  /** Custom error messages */
+  errorMessages?: {
+    network?: string;
+    proxy?: string;
+    timeout?: string;
+    server?: string;
+    unknown?: string;
+  };
+
+  /** Fallback function when server action fails */
+  fallback?: () => Promise<ServerActionResult<any>>;
+
+  /** Custom loading state handler */
+  onLoadingChange?: (loading: boolean) => void;
+}
+```
+
+### Creating Fallback Functions
+
+For critical forms, implement fallback mechanisms:
+
+```typescript
+// Store data locally when server actions are blocked
+async function fallbackSubmission(formData: FormData) {
+  const data = {
+    email: formData.get("email"),
+    name: formData.get("name"),
+    timestamp: new Date().toISOString(),
+    method: "fallback",
+  };
+
+  // Store in localStorage
+  const existing = JSON.parse(
+    localStorage.getItem("pending_submissions") || "[]",
+  );
+  existing.push(data);
+  localStorage.setItem("pending_submissions", JSON.stringify(existing));
+
+  return {
+    success: true,
+    data,
+    message: "Data saved locally. Will sync when connection is restored.",
+  };
+}
+
+// Use with server action
+const { execute } = useServerAction(myServerAction, {
+  fallback: () => fallbackSubmission(formData),
+});
+```
+
+## Migration Guide
+
+### Before (Vulnerable to Proxy Blocking)
+
+```tsx
+// ❌ This breaks in corporate environments
+"use client";
+
+export function OldForm() {
+  return (
+    <form action={myServerAction}>
+      <input name="email" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+### After (Proxy-Safe)
+
+```tsx
+// ✅ Handles proxy blocking gracefully
+"use client";
+
+import { ServerActionErrorBoundary } from "@/components/primitives/server-action-error-boundary";
+import { useServerAction } from "@/lib/server-action-wrapper";
+
+export function NewForm() {
+  const { execute, isLoading, error } = useServerAction(myServerAction, {
+    timeout: 8000,
+    retries: 2,
+    fallback: () => localFallback(),
+    errorMessages: {
+      proxy: "Corporate firewall blocked this request. Data saved locally.",
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await execute(new FormData(e.target));
+
+    if (result.success) {
+      toast.success("Submitted successfully!");
+    }
+  };
+
+  return (
+    <ServerActionErrorBoundary>
+      <form onSubmit={handleSubmit}>
+        <input name="email" />
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Submitting..." : "Submit"}
+        </button>
+        {error && <div className="error">{error}</div>}
+      </form>
+    </ServerActionErrorBoundary>
+  );
+}
+```
+
+## Manual Wrapping (Alternative Approach)
+
+If you prefer not to use the hook:
+
+```typescript
+import { withServerActionHandling } from "@/lib/server-action-wrapper";
+
+export function ManualForm() {
+  const handleSubmit = async (formData: FormData) => {
+    const wrappedAction = withServerActionHandling(myServerAction, {
+      timeout: 10000,
+      retries: 1,
+      fallback: () => localFallback(formData)
+    });
+
+    const result = await wrappedAction(formData);
+
+    if (result.success) {
+      // Handle success
+    } else {
+      // Handle error - result.errorType tells you what went wrong
+      console.log('Error type:', result.errorType);
+    }
+  };
+
+  return (
+    <ServerActionErrorBoundary>
+      <form action={handleSubmit}>
+        {/* Form content */}
+      </form>
+    </ServerActionErrorBoundary>
+  );
+}
+```
+
+## Corporate Environment Detection
+
+Detect and adapt to corporate environments:
+
+```tsx
+import { useDetectCorporateEnvironment } from "@/components/primitives/server-action-error-boundary";
+
+export function AdaptiveForm() {
+  const { isCorporate, isChecking } = useDetectCorporateEnvironment();
+
+  return (
+    <div>
+      {!isChecking && isCorporate && (
+        <div className="warning">
+          Corporate network detected. Some features may be limited.
+        </div>
+      )}
+
+      <ServerActionErrorBoundary>{/* Your form */}</ServerActionErrorBoundary>
+    </div>
+  );
+}
+```
+
+## Error Types
+
+The system categorizes errors into specific types:
+
+```typescript
+enum ServerActionError {
+  NETWORK_ERROR = "NETWORK_ERROR", // Connection issues
+  PROXY_BLOCKED = "PROXY_BLOCKED", // Corporate proxy blocking
+  TIMEOUT = "TIMEOUT", // Request timeout
+  SERVER_ERROR = "SERVER_ERROR", // 5xx server errors
+  UNKNOWN = "UNKNOWN", // Other errors
+}
+```
+
+## Best Practices
+
+1. **Always use error boundaries** around forms with server actions
+2. **Implement fallbacks** for critical user data (contact forms, signups, etc.)
+3. **Provide clear messaging** when corporate restrictions are detected
+4. **Test in corporate environments** or simulate with browser dev tools
+5. **Monitor error rates** to identify proxy blocking patterns
+6. **Consider offline-first approaches** for better resilience
+
+## Testing Proxy Blocking
+
+Simulate corporate proxy blocking:
+
+```javascript
+// In browser dev tools console:
+// Block server actions by intercepting fetch
+const originalFetch = window.fetch;
+window.fetch = function (url, options) {
+  if (url.includes("/_next/static/chunks/") || options?.method === "POST") {
+    return Promise.reject(new Error("403 Forbidden - Corporate proxy"));
+  }
+  return originalFetch.apply(this, arguments);
+};
+```
+
+## Monitoring and Analytics
+
+Track proxy blocking in your analytics:
+
+```typescript
+// In your error boundary onError callback
+onError: (error, errorInfo) => {
+  if (isProxyBlockingError(error)) {
+    analytics.track("proxy_blocking_detected", {
+      userAgent: navigator.userAgent,
+      hostname: window.location.hostname,
+      error: error.message,
+    });
+  }
+};
+```
+
+## Global Configuration
+
+Set up global defaults in your app:
+
+```typescript
+// _app.tsx or layout.tsx
+import { ServerActionErrorBoundary } from "@/components/primitives/server-action-error-boundary";
+
+export default function Layout({ children }) {
+  return (
+    <ServerActionErrorBoundary
+      onError={(error, errorInfo) => {
+        // Global error tracking
+        console.error('Global server action error:', error);
+      }}
+    >
+      {children}
+    </ServerActionErrorBoundary>
+  );
+}
+```
+
+This solution provides a robust, user-friendly way to handle corporate proxy blocking while maintaining full functionality for users on unrestricted networks.

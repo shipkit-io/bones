@@ -1,0 +1,194 @@
+---
+title: "Waitlist Feature"
+description: "Set up and manage a product waitlist for your Next.js app"
+---
+
+# Waitlist Feature
+
+Shipkit includes a complete waitlist implementation that allows you to collect user signups before your product launch. This feature includes email collection, detailed form data, database storage, and email notifications.
+
+## Features
+
+- ✅ **Email Collection**: Simple hero form and detailed signup form
+- ✅ **Database Storage**: All waitlist data stored in PostgreSQL
+- ✅ **Email Integration**: Welcome emails via Resend
+- ✅ **Admin Dashboard**: View and manage waitlist entries
+- ✅ **Analytics**: Track signup statistics
+- ✅ **Duplicate Prevention**: Prevents duplicate email signups
+
+## Setup
+
+### 1. Environment Variables
+
+Add these environment variables to your `.env` file:
+
+```bash
+# Required for email functionality
+RESEND_API_KEY="re_123456789"     # Your Resend API key
+RESEND_API_KEY="re_123456789"      # Can be same as RESEND_API_KEY
+RESEND_AUDIENCE_ID=""              # Your Resend audience ID
+RESEND_FROM_EMAIL="your@email.com"       # Your sender email
+```
+
+### 2. Database Migration
+
+Run the database migration to create the waitlist table:
+
+```bash
+bun run db:push
+```
+
+This creates the `waitlist_entry` table with the following fields:
+- Email, name, company, role
+- Project type, timeline, interests
+- Notification status and metadata
+- Created/updated timestamps
+
+### 3. Access the Waitlist
+
+The waitlist is available at:
+- **Public page**: `/waitlist` - User signup page
+- **Admin page**: `/admin/waitlist` - View entries and stats
+
+## Usage
+
+### User Signup Flow
+
+1. **Hero Form**: Quick email signup in the hero section
+2. **Detailed Form**: Comprehensive form with project details
+3. **Database Storage**: All data saved to PostgreSQL
+4. **Email Notification**: Welcome email sent via Resend
+5. **Success State**: Confirmation message displayed
+
+### Admin Management
+
+Access `/admin/waitlist` to:
+- View signup statistics
+- Browse all waitlist entries
+- See user project details
+- Track notification status
+
+### API Actions
+
+The waitlist includes these server actions:
+
+```typescript
+// Add user to waitlist
+await addToWaitlist({
+  email: "user@example.com",
+  name: "John Doe",
+  company: "Acme Corp",
+  role: "developer",
+  projectType: "saas",
+  timeline: "3-months",
+  interests: "Authentication and payments"
+});
+
+// Get waitlist statistics
+const stats = await getWaitlistStats();
+// Returns: { total: 150, notified: 25, pending: 125 }
+```
+
+### Service Functions
+
+You can also use the waitlist service functions directly:
+
+```typescript
+import {
+  addWaitlistEntry,
+  isEmailOnWaitlist,
+  getWaitlistEntries,
+  getWaitlistStats,
+  markWaitlistEntryAsNotified
+} from "@/server/services/waitlist-service";
+
+// Add an entry directly
+const entry = await addWaitlistEntry({
+  email: "user@example.com",
+  name: "John Doe",
+  source: "website"
+});
+
+// Check if email exists
+const exists = await isEmailOnWaitlist("user@example.com");
+
+// Get paginated entries
+const entries = await getWaitlistEntries({
+  limit: 50,
+  offset: 0,
+  orderBy: "desc"
+});
+
+// Mark as notified
+await markWaitlistEntryAsNotified("user@example.com");
+```
+
+## Customization
+
+### Email Templates
+
+Edit the welcome email template in `src/server/actions/waitlist-actions.ts`:
+
+```typescript
+await resend.emails.send({
+  from: env.RESEND_FROM_EMAIL || "Shipkit <noreply@shipkit.io>",
+  to: formData.email,
+  subject: "Welcome to the Shipkit Waitlist! 🚀",
+  html: `
+    <!-- Your custom email template -->
+  `,
+});
+```
+
+### Form Fields
+
+Modify the form fields in `src/app/(app)/waitlist/_components/waitlist-form.tsx` and update the interface in `src/server/actions/waitlist-actions.ts`.
+
+### Styling
+
+The waitlist components use Shadcn/UI and Tailwind CSS. Customize the styling by editing the component files in `src/app/(app)/waitlist/_components/`.
+
+## Database Schema
+
+The waitlist uses this database schema:
+
+```sql
+CREATE TABLE waitlist_entry (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  company VARCHAR(255),
+  role VARCHAR(100),
+  project_type VARCHAR(100),
+  timeline VARCHAR(100),
+  interests TEXT,
+  is_notified BOOLEAN DEFAULT false,
+  notified_at TIMESTAMP WITH TIME ZONE,
+  source VARCHAR(50) DEFAULT 'website',
+  metadata TEXT DEFAULT '{}',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE
+);
+```
+
+## Best Practices
+
+1. **Email Validation**: Always validate email addresses
+2. **Duplicate Prevention**: Check for existing emails before adding
+3. **Error Handling**: Gracefully handle Resend API failures
+4. **Privacy**: Be transparent about data collection
+5. **Analytics**: Track conversion rates and user interests
+6. **Follow-up**: Use the admin dashboard to manage communications
+
+## Troubleshooting
+
+### Common Issues
+
+**Resend not working**: Check your API key and audience ID
+**Database errors**: Ensure migrations are run
+**Email not sending**: Verify RESEND_FROM_EMAIL domain is verified
+**Duplicate entries**: The system prevents duplicates automatically
+
+### Debug Mode
+
+Enable debug logging by checking the server console for waitlist-related errors.

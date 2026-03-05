@@ -1,0 +1,119 @@
+# Supabase Authentication Integration
+
+Supabase Auth provides a complete authentication system with user management, powered by PostgreSQL and JWT tokens.
+
+## Environment Variables
+
+### Required Server Variables
+```
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... # Service role key for admin operations
+```
+
+### Required Client Variables
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co # Your Supabase project URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... # Anonymous/public key
+```
+
+Note:
+
+- You can set `SUPABASE_URL` and `SUPABASE_ANON_KEY` without the `NEXT_PUBLIC_` prefix and Shipkit will automatically generate `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` at build time for use on the client.
+- The non-prefixed variables are not accessible on the client; only the generated `NEXT_PUBLIC_*` values are exposed.
+
+## Setup Instructions
+
+1. **Create a Supabase Account**: Sign up at [supabase.com](https://supabase.com) if you haven't already
+
+2. **Create a Supabase Project**:
+   - Go to your [Supabase Dashboard](https://supabase.com/dashboard)
+   - Create a new project
+   - Wait for the project to be fully provisioned
+
+3. **Get Your API Keys**:
+   - In your project dashboard, go to "Settings" → "API"
+   - Copy your "Project URL" and "anon/public" key
+   - For server-side operations, copy the "service_role" key
+
+4. **Configure Authentication**:
+   - In Supabase Dashboard, go to "Authentication" → "Settings"
+   - Configure your site URL and redirect URLs
+   - Set up email templates and SMTP settings
+
+5. **Add Environment Variables**:
+   ```bash
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+   ```
+
+## Features Enabled
+
+When these environment variables are configured, the following features become available:
+
+- ✅ Email and password authentication
+- ✅ Social OAuth providers (Google, GitHub, Discord, etc.)
+- ✅ Magic link authentication
+- ✅ Phone authentication (SMS)
+- ✅ User profile management
+- ✅ Row Level Security (RLS) integration
+- ✅ Real-time subscriptions
+- ✅ Built-in user dashboard
+- ✅ Password reset functionality
+- ✅ Email verification
+
+## Configuration Options
+
+### Advanced Configuration
+You can enhance Supabase Auth with additional settings:
+
+```bash
+# Custom JWT expiry
+SUPABASE_JWT_EXPIRY=3600 # 1 hour in seconds
+
+# Custom SMTP configuration
+SUPABASE_SMTP_HOST=your_smtp_host
+SUPABASE_SMTP_PORT=587
+SUPABASE_SMTP_USER=your_smtp_user
+SUPABASE_SMTP_PASS=your_smtp_password
+
+# OAuth provider configuration
+SUPABASE_GOOGLE_CLIENT_ID=your_google_client_id
+SUPABASE_GOOGLE_SECRET=your_google_secret
+```
+
+## Supported OAuth Providers
+
+Supabase supports major OAuth providers:
+
+- Google
+- GitHub
+- Discord
+- Microsoft
+- Facebook
+- Twitter
+- Apple
+- And more...
+
+Configure these in your Supabase dashboard under "Authentication" → "Providers".
+
+## Testing
+
+Supabase provides excellent testing capabilities:
+
+- Use Supabase's built-in authentication testing
+- Test OAuth flows with test applications
+- Verify email delivery
+- Test real-time features
+- Monitor authentication events in dashboard
+
+## Production Deployment
+
+Before going live:
+
+1. Ensure proper API key security
+2. Configure production domains in Supabase
+3. Set up proper SMTP for email delivery
+4. Configure OAuth applications for production
+5. Set up proper database backups
+6. Review Row Level Security policies
+7. Configure proper monitoring and alerts

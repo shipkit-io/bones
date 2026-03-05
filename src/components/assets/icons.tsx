@@ -1,3 +1,4 @@
+// Assorted icons
 import { CalendarIcon, MailIcon } from "lucide-react";
 import type React from "react";
 
@@ -227,6 +228,17 @@ export const Icons = {
 		>
 			<title>Loading Spinner</title>
 			<path d="M21 12a9 9 0 1 1-6.219-8.56" />
+		</svg>
+	),
+	vercel: (props: IconProps) => (
+		<svg
+			viewBox="0 0 76 65"
+			fill="currentColor"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Vercel</title>
+			<path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
 		</svg>
 	),
 };
