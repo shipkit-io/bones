@@ -34,7 +34,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const allRoutes = flattenRoutes(routes);
 
   // Define routes to exclude from sitemap
-  const excludedRoutes = ["/api", "/workers", "/sign-out", "/error", "/admin"];
+  const excludedRoutes = [
+    "/api",
+    "/workers",
+    "/sign-out",
+    "/sign-in",
+    "/sign-up",
+    "/error",
+    "/admin",
+    "/dashboard",
+    "/settings",
+    "/api-keys",
+    "/forgot-password",
+    "/og",
+    "/trpc",
+    "/launch",
+  ];
 
   // Filter routes
   const includedRoutes = allRoutes.filter((route) => {
