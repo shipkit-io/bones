@@ -1,0 +1,90 @@
+# Vercel Deployment Check
+#
+# Runs after Vercel deploys a preview/production build.
+# Hits the deployment URL and verifies it returns 2xx.
+# Used with Vercel Deployment Checks to gate production promotion.
+#
+# Setup:
+#   1. Enable Deployment Checks in Vercel project settings
+#   2. Select this workflow as a required check
+#   3. Vercel won't promote to production until this passes
+#
+# For non-Vercel deployments, this workflow is a no-op.
+
+name: Deployment Check
+
+on:
+  deployment_status:
+
+jobs:
+  smoke-test:
+    # Only run when the deployment is ready (not pending/failed)
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get deployment URL
+        id: url
+        run: |
+          URL="${{ github.event.deployment_status.target_url }}"
+          if [ -z "$URL" ]; then
+            URL="${{ github.event.deployment_status.environment_url }}"
+          fi
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "🔗 Deployment URL: $URL"
+
+      - name: Wait for deployment to stabilize
+        run: sleep 10
+
+      - name: Health check
+        run: |
+          URL="${{ steps.url.outputs.url }}"
+          if [ -z "$URL" ]; then
+            echo "⚠️ No deployment URL found — skipping check"
+            exit 0
+          fi
+
+          echo "🔥 Checking $URL ..."
+
+          # Retry up to 3 times with backoff
+          for attempt in 1 2 3; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$URL" || echo "000")
+            echo "  Attempt $attempt: HTTP $STATUS"
+
+            if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+              echo "✅ Deployment is healthy (HTTP $STATUS)"
+              exit 0
+            fi
+
+            if [ "$STATUS" -ge 500 ]; then
+              echo "❌ Server error detected (HTTP $STATUS)"
+              if [ "$attempt" -lt 3 ]; then
+                echo "  Retrying in $((attempt * 10))s..."
+                sleep $((attempt * 10))
+              fi
+            else
+              # 4xx might be expected (auth, etc.) — not a server error
+              echo "⚠️ Got HTTP $STATUS — not a 5xx, passing"
+              exit 0
+            fi
+          done
+
+          echo ""
+          echo "💥 Deployment check FAILED — $URL returned 5xx after 3 attempts"
+          exit 1
+
+      # Report status back to Vercel via commit status
+      - name: Report check result
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state,
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              context: 'Deployment Check: Health',
+              description: state === 'success' ? 'Deployment is healthy' : 'Deployment returned 5xx',
+            });

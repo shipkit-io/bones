@@ -1,0 +1,48 @@
+name: Lighthouse Audit Loop
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.1.34
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Start server
+        run: bun start & sleep 5
+
+      - name: Run Lighthouse Loop
+        env:
+          LH_OUT_DIR: .lighthouse
+          LH_T_PERF: '90'
+          LH_T_A11Y: '95'
+          LH_T_SEO: '95'
+          LH_T_BP: '95'
+        run: bun run audit:lh:loop -- http://localhost:3000/
+
+      - name: Upload Lighthouse Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouse
+
+

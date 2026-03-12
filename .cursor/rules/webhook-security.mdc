@@ -1,0 +1,124 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Webhook Security Best Practices
+
+## Signature Verification
+- ALWAYS verify webhook signatures using timing-safe comparison
+- Never accept webhooks without proper signature validation
+- Use environment variables for webhook secrets
+- Implement multiple signature algorithm support when available
+- Log signature verification failures for security monitoring
+- Never expose signature verification logic in error messages
+- Use raw request body for signature validation (before JSON parsing)
+
+## Request Validation
+- Validate all webhook payload fields before processing
+- Implement strict JSON schema validation
+- Check for required fields and proper data types
+- Sanitize all input data before database operations
+- Validate webhook event types against expected values
+- Implement payload size limits to prevent DoS attacks
+- Check request headers for proper content-type
+
+## Idempotency
+- Implement idempotency using unique event identifiers
+- Store processed webhook IDs to prevent duplicate processing
+- Use database transactions for atomic operations
+- Handle race conditions with proper locking mechanisms
+- Implement retry logic for failed webhook processing
+- Set appropriate timeouts for database operations
+- Log all idempotency checks and outcomes
+
+## Error Handling
+- Return proper HTTP status codes (200 for success, 4xx for client errors)
+- Implement comprehensive try/catch blocks
+- Log all webhook processing errors with context
+- Never expose internal error details in responses
+- Implement graceful degradation for non-critical failures
+- Use structured logging for better error analysis
+- Set up alerts for webhook failure patterns
+
+## Rate Limiting
+- Implement rate limiting per webhook source
+- Use sliding window or token bucket algorithms
+- Configure different limits for different event types
+- Monitor and alert on rate limit violations
+- Implement progressive backoff for repeated violations
+- Log all rate limiting actions
+- Allow for burst traffic during normal operations
+
+## Data Security
+- Never log sensitive data from webhook payloads
+- Encrypt webhook data at rest if storage is required
+- Implement data retention policies for webhook logs
+- Sanitize logs before external monitoring systems
+- Use secure connections (HTTPS) for all webhook endpoints
+- Validate SSL certificates in development and production
+- Implement proper access controls for webhook endpoints
+
+## Monitoring and Alerting
+- Track webhook success/failure rates
+- Monitor processing times and performance metrics
+- Set up alerts for unusual patterns or failures
+- Implement health checks for webhook endpoints
+- Track payload sizes and processing volumes
+- Monitor for potential security threats or attacks
+- Regular review of webhook logs and metrics
+
+## Testing
+- Test signature verification with invalid signatures
+- Test with malformed and oversized payloads
+- Implement integration tests with webhook providers
+- Test idempotency with duplicate events
+- Test error handling and recovery scenarios
+- Validate rate limiting behavior under load
+- Test webhook endpoint availability and performance
+
+## Database Security
+- Use parameterized queries to prevent SQL injection
+- Implement proper database connection pooling
+- Use database transactions for webhook data consistency
+- Implement proper database access controls
+- Regular database security audits
+- Monitor database performance during webhook processing
+- Implement database backup and recovery procedures
+
+## Event Processing
+- Process webhooks asynchronously when possible
+- Implement proper queuing mechanisms for high-volume webhooks
+- Use database transactions for multi-step operations
+- Handle webhook dependencies and ordering when required
+- Implement proper rollback mechanisms for failed operations
+- Track processing status and provide visibility
+- Implement dead letter queues for failed events
+
+## Documentation
+- Document all supported webhook events and formats
+- Maintain webhook endpoint documentation
+- Document security requirements and procedures
+- Keep webhook integration guides updated
+- Document error codes and troubleshooting steps
+- Maintain webhook testing and validation procedures
+- Document monitoring and alerting configurations
+
+## Compliance
+- Follow payment processor security requirements
+- Implement PCI DSS compliance for payment webhooks
+- Follow GDPR requirements for customer data processing
+- Implement audit trails for compliance reporting
+- Regular security assessments and penetration testing
+- Document compliance procedures and requirements
+- Regular compliance training for development teams
+
+## Lemon Squeezy Specific
+- Always verify X-Signature header using HMAC-SHA256
+- Support all critical webhook events (subscription.created, payment_success, etc.)
+- Implement proper customer and subscription data synchronization
+- Handle test vs production webhook environments correctly
+- Implement proper error responses for Lemon Squeezy retry logic
+- Follow Lemon Squeezy webhook documentation requirements
+- Test webhook integration in Lemon Squeezy sandbox environment
+

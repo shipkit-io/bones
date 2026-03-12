@@ -1,0 +1,159 @@
+---
+title: "Multi-Zone Architecture"
+description: "Run multiple Shipkit apps on different paths under one domain"
+---
+
+# Multi-Zone Architecture
+
+Multi-zone lets you run separate Shipkit apps on different URL paths under a single domain. Each zone is a full Shipkit installation, customized for its purpose.
+
+```
+yourdomain.com/          -> Main app (marketing, dashboard, auth)
+yourdomain.com/docs/*    -> Documentation app
+yourdomain.com/blog/*    -> Blog app
+yourdomain.com/ui/*      -> Component library
+yourdomain.com/tools/*   -> Developer tools
+```
+
+## When to Use This
+
+- You want independent deployments for different sections
+- Different teams own different parts of the site
+- You need to scale sections independently
+- You want soft navigation within zones but accept hard navigation between them
+
+## Setup
+
+### 1. Add rewrites to your main app
+
+In your main app's `next.config.ts`:
+
+```typescript
+async rewrites() {
+  const multiZoneRewrites = [];
+
+  if (process.env.DOCS_DOMAIN) {
+    multiZoneRewrites.push(
+      { source: '/docs', destination: `${process.env.DOCS_DOMAIN}/docs` },
+      { source: '/docs/:path+', destination: `${process.env.DOCS_DOMAIN}/docs/:path+` },
+      { source: '/docs-static/:path+', destination: `${process.env.DOCS_DOMAIN}/docs-static/:path+` }
+    );
+  }
+
+  if (process.env.BLOG_DOMAIN) {
+    multiZoneRewrites.push(
+      { source: '/blog', destination: `${process.env.BLOG_DOMAIN}/blog` },
+      { source: '/blog/:path+', destination: `${process.env.BLOG_DOMAIN}/blog/:path+` },
+      { source: '/blog-static/:path+', destination: `${process.env.BLOG_DOMAIN}/blog-static/:path+` }
+    );
+  }
+
+  // Repeat for /ui, /tools, etc.
+  return multiZoneRewrites;
+}
+```
+
+### 2. Create zone apps
+
+Clone Shipkit for each zone:
+
+```bash
+git clone https://github.com/shipkit-io/bones.git my-docs
+cd my-docs && bun install --frozen-lockfile
+```
+
+### 3. Configure each zone
+
+Each zone app needs `basePath` and `assetPrefix` in its `next.config.ts`:
+
+```typescript
+const nextConfig: NextConfig = {
+  basePath: "/docs",
+  assetPrefix: "/docs-static",
+
+  // Rewrite for static assets
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/docs-static/_next/:path+",
+          destination: "/_next/:path+",
+        },
+      ],
+    };
+  },
+  // ... rest of Shipkit config
+};
+```
+
+### 4. Set environment variables
+
+Main app (`.env.local`):
+
+```env
+DOCS_DOMAIN=http://localhost:3001
+BLOG_DOMAIN=http://localhost:3002
+UI_DOMAIN=http://localhost:3003
+TOOLS_DOMAIN=http://localhost:3004
+```
+
+Each zone app:
+
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3001  # Zone-specific port
+DATABASE_URL=...  # Can share or use separate DBs
+AUTH_SECRET=...   # Share for cross-zone auth
+```
+
+## Navigation
+
+Within a zone, use `<Link>` (soft navigation). Between zones, use `<a>` tags (hard navigation):
+
+```tsx
+// Within zone (soft nav)
+import Link from "next/link";
+<Link href="/docs/getting-started">Getting Started</Link>
+
+// Between zones (hard nav)
+<a href="/blog/latest-updates">Latest Blog Posts</a>
+```
+
+## Local Development
+
+Run each zone on a different port:
+
+```bash
+# Terminal 1 - Main app
+bun dev
+
+# Terminal 2 - Docs
+cd ../my-docs && bun dev -- --port 3001
+
+# Terminal 3 - Blog
+cd ../my-blog && bun dev -- --port 3002
+```
+
+## Deployment
+
+1. Deploy each Shipkit app to Vercel as a separate project
+2. Set production zone domains in the main app's env vars:
+   ```env
+   DOCS_DOMAIN=https://docs-myapp.vercel.app
+   BLOG_DOMAIN=https://blog-myapp.vercel.app
+   ```
+3. Assign your domain to the main app
+
+## Approach Options
+
+| Approach | Complexity | Best For |
+|----------|-----------|----------|
+| **Next.js Multi-Zone** (above) | Medium | Optimal performance, soft nav within zones |
+| **Vercel Proxy Project** | Low | Simple setup, separate teams, hard nav everywhere |
+| **Modified Config** | Low | Gradual migration, starting with 1-2 zones |
+
+## Considerations
+
+- Each zone is a full Shipkit install, so bundles are larger per zone but optimized per purpose
+- Authentication state can be shared across zones by using the same `AUTH_SECRET`
+- Analytics tracking works across zones using Shipkit's built-in integrations
+- Cross-zone links should use `<a>` tags, not `<Link>`, for proper zone transitions

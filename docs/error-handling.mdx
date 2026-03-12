@@ -1,0 +1,306 @@
+---
+title: 'Error Handling'
+description: 'Comprehensive guide to error handling in Shipkit'
+---
+
+# Error Handling
+
+This guide covers Shipkit's error handling system, which provides consistent error management across the application.
+
+## Error Services
+
+### Error Service
+
+The core error handling service provides standardized error creation and handling:
+
+```typescript
+// src/server/services/error-service.ts
+export type ErrorCode =
+  | "VALIDATION_ERROR"
+  | "NOT_FOUND"
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "CONFLICT"
+  | "INTERNAL_SERVER_ERROR"
+  | "BAD_REQUEST"
+  | "RATE_LIMITED";
+
+export interface AppError extends Error {
+  code: ErrorCode;
+  message: string;
+  cause?: unknown;
+  metadata?: Record<string, unknown>;
+}
+
+export class ErrorService {
+  static createError(
+    code: ErrorCode,
+    message: string,
+    cause?: unknown,
+    metadata?: Record<string, unknown>,
+  ): AppError {
+    const error = new Error(message) as AppError;
+    error.code = code;
+    error.cause = cause;
+    error.metadata = metadata;
+    return error;
+  }
+
+  static handleError(error: unknown): AppError {
+    if (ErrorService.isAppError(error)) {
+      logger.error(error.message, {
+        code: error.code,
+        cause: error.cause,
+        metadata: error.metadata,
+      });
+      return error;
+    }
+
+    if (error instanceof Error) {
+      const appError = ErrorService.createError(
+        "INTERNAL_SERVER_ERROR",
+        error.message,
+        error,
+      );
+      logger.error(error.message, {
+        code: appError.code,
+        cause: error,
+      });
+      return appError;
+    }
+
+    const appError = ErrorService.createError(
+      "INTERNAL_SERVER_ERROR",
+      "An unexpected error occurred",
+      error,
+    );
+    logger.error("Unknown error", { error });
+    return appError;
+  }
+}
+```
+
+### Validation Service
+
+Handles form and data validation errors:
+
+```typescript
+// src/server/services/validation-service.ts
+export interface ValidationError {
+  code: "VALIDATION_ERROR";
+  message: string;
+  fieldErrors?: Record<string, string[]>;
+}
+
+export interface ValidationResult<T> {
+  success: boolean;
+  data?: T;
+  error?: ValidationError;
+}
+
+export class ValidationService {
+  static async validate<T>(
+    schema: z.ZodType<T>,
+    data: unknown,
+  ): Promise<ValidationResult<T>> {
+    try {
+      const validatedData = await schema.parseAsync(data);
+      return {
+        success: true,
+        data: validatedData,
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors = Object.entries(error.formErrors.fieldErrors).reduce(
+          (acc, [key, value]) => {
+            acc[key] = Array.isArray(value) ? value : [value as string];
+            return acc;
+          },
+          {} as Record<string, string[]>,
+        );
+
+        return {
+          success: false,
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "Validation failed",
+            fieldErrors,
+          },
+        };
+      }
+
+      return {
+        success: false,
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "An unexpected validation error occurred",
+        },
+      };
+    }
+  }
+}
+```
+
+## Error Boundaries
+
+### Global Error Boundary
+
+```typescript
+// src/components/primitives/error-boundary.tsx
+export default function ErrorBoundary({
+  error,
+  resetAction,
+}: {
+  error: Error & { digest?: string };
+  resetAction: () => void;
+}) {
+  useRedirectAfterSignIn(error);
+
+  return (
+    <Boundary title="Something went wrong." description={error.message}>
+      <Button type="button" onClick={resetAction}>
+        Try again
+      </Button>
+    </Boundary>
+  );
+}
+```
+
+### Component Error Boundary
+
+```typescript
+// src/components/ui/suspense-boundary.tsx
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback: React.ReactNode;
+}
+
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+## Error Handling in Server Actions
+
+```typescript
+// Example server action with error handling
+"use server"
+
+import { ErrorService } from "@/server/services/error-service";
+import { ValidationService } from "@/server/services/validation-service";
+import { z } from "zod";
+
+const schema = z.object({
+  title: z.string().min(1),
+  content: z.string().optional(),
+});
+
+export async function createPost(data: unknown) {
+  try {
+    // Validate input
+    const result = await ValidationService.validate(schema, data);
+    if (!result.success) {
+      return { error: result.error };
+    }
+
+    // Process validated data
+    const post = await db?.post.create({
+      data: result.data,
+    });
+
+    return { data: post };
+  } catch (error) {
+    // Handle and standardize error
+    const appError = ErrorService.handleError(error);
+    return { error: appError };
+  }
+}
+```
+
+## Error Handling in Components
+
+```typescript
+"use client"
+
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
+import { createPost } from "@/server/actions/posts";
+
+export function PostForm() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = useCallback(async (formData: FormData) => {
+    try {
+      setIsLoading(true);
+      const result = await createPost(Object.fromEntries(formData));
+
+      if (result.error) {
+        toast.error(result.error.message);
+        return;
+      }
+
+      toast.success("Post created successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  return (
+    <form action={handleSubmit}>
+      {/* Form fields */}
+    </form>
+  );
+}
+```
+
+## Best Practices
+
+1. **Use Error Services**
+   - Use `ErrorService` for standardized error handling
+   - Use `ValidationService` for form and data validation
+   - Always return typed error responses
+
+2. **Error Boundaries**
+   - Use error boundaries for component-level error handling
+   - Provide meaningful fallback UIs
+   - Log errors appropriately
+
+3. **Validation**
+   - Always validate input data with Zod schemas
+   - Return detailed validation errors
+   - Handle validation errors gracefully in the UI
+
+4. **Server Actions**
+   - Wrap logic in try-catch blocks
+   - Use service methods for error handling
+   - Return standardized error responses
+
+5. **Client Components**
+   - Handle loading states
+   - Show appropriate error messages
+   - Provide retry mechanisms when appropriate

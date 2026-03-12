@@ -1,0 +1,21 @@
+---
+title: "Web Workers"
+description: "Learn how to implement and use Web Workers in Shipkit for better performance and non-blocking JavaScript execution in the browser."
+---
+
+# Web Workers
+
+Web Workers are a way to run JavaScript code in the background, without blocking the main thread. This is useful for performing tasks that are computationally intensive or time-consuming, such as image processing or data analysis.
+
+Shipkit is pre-configured to build Typescript Web Workers from the `src/workers` directory into the `public/workers` directory, so it will automatically load the workers when the app is built.
+
+## Example
+
+<FileTree
+  files={[
+    { path: "src/workers/logger-worker.ts", type: "file" },
+    { path: "public/workers/logger-worker.js", type: "file" },
+  ]}
+/>
+
+The `logger-worker.ts` file is an example of a web worker that handles logging operations in batches to reduce API calls. It automatically flushes logs every 5 seconds or when reaching a specified batch size.

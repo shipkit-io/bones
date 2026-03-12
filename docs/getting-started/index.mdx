@@ -1,0 +1,75 @@
+---
+title: "Quick Start"
+description: "Get Shipkit running in under 5 minutes"
+---
+
+# Quick Start
+
+## Deploy to Vercel (Fastest)
+
+1. Click **Deploy to Vercel** in the [GitHub repo](https://github.com/shipkit-io/bones)
+2. Connect your GitHub account
+3. Set `AUTH_SECRET` (run `openssl rand -base64 32` to generate)
+4. Deploy
+
+You now have a live site with auth, UI components, and a full Next.js 15 app.
+
+## Local Development
+
+```bash
+# Clone and install
+git clone https://github.com/shipkit-io/bones.git my-app
+cd my-app
+bun install --frozen-lockfile
+
+# Configure
+cp .env.example .env.local
+# Edit .env.local - at minimum set AUTH_SECRET
+
+# Run
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## What You Get Out of the Box
+
+- **Authentication** with multiple OAuth providers, magic link, and guest mode. [Details](/docs/features/authentication)
+- **Payments** via Stripe, Lemon Squeezy, or Polar. [Details](/docs/features/payments)
+- **CMS** with Payload CMS v3 and Builder.io visual editor. [Details](/docs/features/cms)
+- **UI Components** from shadcn/ui, plus 300+ custom components. [Details](/docs/reference/components)
+- **Database** with PostgreSQL and Drizzle ORM. [Details](/docs/features/database)
+- **Email** via Resend. [Details](/docs/features/email)
+- **Analytics** with PostHog, Vercel Analytics, and more. [Details](/docs/features/analytics)
+- **AI** integrations with OpenAI and Anthropic. [Details](/docs/features/ai)
+- **Feature flags** that auto-detect from env vars. [Details](/docs/development/feature-flags)
+
+## First Customization
+
+Rebrand to your project name:
+
+```bash
+bunx tsx scripts/rebrand.ts
+```
+
+This updates `site-config.ts`, `package.json`, and related files. See the [rebranding guide](/docs/guides/rebranding) for details.
+
+## Add Features
+
+Features enable automatically when you add the required env vars. For example, to enable GitHub auth:
+
+```env
+AUTH_GITHUB_ID=your_client_id
+AUTH_GITHUB_SECRET=your_client_secret
+```
+
+Restart your dev server and GitHub login appears. No code changes needed.
+
+See [Environment Variables](/docs/getting-started/environment) for the full list.
+
+## Next Steps
+
+- [Environment Variables](/docs/getting-started/environment) - Configure services
+- [File Structure](/docs/getting-started/file-structure) - Understand the codebase
+- [Features](/docs/features) - Everything Shipkit includes
+- [Deployment](/docs/getting-started/deploy) - Production deployment guide

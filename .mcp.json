@@ -1,0 +1,8 @@
+{
+	"mcpServers": {
+		"dns-analytics": {
+			"command": "npx",
+			"args": ["mcp-remote", "https://dns-analytics.mcp.cloudflare.com/mcp"]
+		}
+	}
+}
