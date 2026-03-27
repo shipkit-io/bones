@@ -2,16 +2,8 @@
 
 import * as React from "react";
 import { type ShortcutActionType, shortcutConfig } from "@/config/keyboard-shortcuts";
+import { useIsMac } from "@/hooks/use-is-mac";
 import { cn } from "@/lib/utils";
-
-// Inline isMac detection until use-is-mac hook is available
-function useIsMac(): boolean {
-  const [isMac, setIsMac] = React.useState(false);
-  React.useEffect(() => {
-    setIsMac(typeof navigator !== "undefined" && /mac/i.test(navigator.platform));
-  }, []);
-  return isMac;
-}
 
 interface ShortcutDisplayProps {
   action: ShortcutActionType;
