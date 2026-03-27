@@ -1,3 +1,4 @@
+import { Analytics } from "@/components/primitives/analytics";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "@/lib/trpc/react";
@@ -54,6 +55,9 @@ export function RootLayout({ children }: { children: ReactNode }) {
 
                     {/* Toast - Display messages to the user */}
                     <SonnerToaster />
+
+                    {/* Analytics */}
+                    <Analytics />
                   </TooltipProvider>
                 </ThemeProvider>
               </NuqsAdapter>
