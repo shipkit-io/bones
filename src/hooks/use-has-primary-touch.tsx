@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
-export function useTouchPrimary() {
+export function useHasPrimaryTouch() {
   const [isTouchPrimary, setIsTouchPrimary] = useState(false);
 
   useEffect(() => {

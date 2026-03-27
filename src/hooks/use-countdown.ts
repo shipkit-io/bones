@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
 interface CountdownResult {
@@ -48,11 +50,12 @@ export const useCountdown = (targetDate: string | Date): CountdownResult => {
       };
     };
 
-    // Defer initial setState so the effect does not synchronously cascade renders.
-    queueMicrotask(() => setCountdown(calculateTimeLeft()));
+    setCountdown(calculateTimeLeft());
 
     const timer = setInterval(() => {
-      setCountdown(calculateTimeLeft());
+      const result = calculateTimeLeft();
+      setCountdown(result);
+      if (result.isExpired) clearInterval(timer);
     }, 1000);
 
     return () => clearInterval(timer);
