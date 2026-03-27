@@ -163,4 +163,3 @@ export const PriorityNav: React.FC<PriorityNavProps> = ({
 	);
 };
 
-export default PriorityNav;

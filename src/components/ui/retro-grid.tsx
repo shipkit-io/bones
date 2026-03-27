@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default function RetroGrid({
+export function RetroGrid({
   className,
   angle = 65,
 }: {

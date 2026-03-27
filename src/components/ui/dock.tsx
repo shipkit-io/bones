@@ -86,7 +86,8 @@ const DockIcon = ({ size, className, children, ...props }: DockIconProps) => {
   const { mouseX, magnification, distance } = React.useContext(DockContext);
 
   // Handle case where mouseX is null (should only happen if DockIcon is used outside of Dock)
-  const mouseXValue = mouseX || useMotionValue(Number.POSITIVE_INFINITY);
+  const fallbackMouseX = useMotionValue(Number.POSITIVE_INFINITY);
+  const mouseXValue = mouseX ?? fallbackMouseX;
 
   const distanceCalc = useTransform(mouseXValue, (val: number) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };

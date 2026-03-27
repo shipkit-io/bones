@@ -650,4 +650,3 @@ export function IntroDisclosure({
   );
 }
 
-export default IntroDisclosure;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { type AnimationProps, motion } from "framer-motion";
@@ -60,4 +59,3 @@ export const ShinyButton = ({ children, className, ...props }: ShinyButtonProps)
   );
 };
 
-export default ShinyButton;

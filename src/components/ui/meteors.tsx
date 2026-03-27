@@ -39,4 +39,3 @@ export const Meteors = ({ number = 20 }: MeteorsProps) => {
   );
 };
 
-export default Meteors;
