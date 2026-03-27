@@ -166,7 +166,7 @@ const nextConfig: NextConfig = {
     position: "bottom-left" as const,
   },
 
-  typedRoutes: true,
+  // typedRoutes: true, // Disabled: breaks downstream repos with dynamic route strings
 
   /*
    * Enhanced Logging Configuration
