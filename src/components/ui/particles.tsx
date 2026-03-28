@@ -74,6 +74,7 @@ export const Particles: React.FC<ParticlesProps> = ({
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const context = useRef<CanvasRenderingContext2D | null>(null);
   const circles = useRef<Circle[]>([]);
+  const animationFrameRef = useRef<number>(0);
   const mousePosition = MousePosition();
   const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
@@ -90,6 +91,7 @@ export const Particles: React.FC<ParticlesProps> = ({
 
     return () => {
       window.removeEventListener("resize", initCanvas);
+      cancelAnimationFrame(animationFrameRef.current);
     };
   }, [color]);
 
@@ -259,7 +261,7 @@ export const Particles: React.FC<ParticlesProps> = ({
         // update the circle position
       }
     });
-    window.requestAnimationFrame(animate);
+    animationFrameRef.current = window.requestAnimationFrame(animate);
   };
 
   return (

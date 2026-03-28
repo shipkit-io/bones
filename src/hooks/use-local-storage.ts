@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useLocalStorage<T>(
   key: string,
@@ -89,8 +89,14 @@ export function useLocalStorage<T>(
     };
   }, [key, initialValue]);
 
-  // Persist to localStorage whenever value or key changes
+  // Persist to localStorage whenever value changes via setValue
+  const isInitialMount = useRef(true);
   useEffect(() => {
+    // Skip the initial mount to avoid writing the default value
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     try {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(key, JSON.stringify(storedValue));

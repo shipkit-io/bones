@@ -155,9 +155,10 @@ export const CodeWindow = ({
       <div
         className={cn(
           codeContentVariants({ variant }),
-          !isExpanded && !isSingle && `max-h-[${maxHeight}]`,
+          !isExpanded && !isSingle && "overflow-y-auto",
           "group relative"
         )}
+        style={{ maxHeight: isExpanded || isSingle ? undefined : maxHeight }}
       >
         <SyntaxHighlighter
           language={language}

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export interface AsyncState<T> {
   data: T | null;
@@ -36,24 +36,32 @@ export function useAsyncState<T, Args extends unknown[]>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const requestIdRef = useRef(0);
 
   const execute = useCallback(
     async (...args: Args): Promise<T> => {
+      const currentId = ++requestIdRef.current;
       setLoading(true);
       setError(null);
       setSuccess(false);
 
       try {
         const result = await asyncFunction(...args);
-        setData(result);
-        setSuccess(true);
+        if (currentId === requestIdRef.current) {
+          setData(result);
+          setSuccess(true);
+        }
         return result;
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-        setError(errorMessage);
+        if (currentId === requestIdRef.current) {
+          const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+          setError(errorMessage);
+        }
         throw err;
       } finally {
-        setLoading(false);
+        if (currentId === requestIdRef.current) {
+          setLoading(false);
+        }
       }
     },
     [asyncFunction]
