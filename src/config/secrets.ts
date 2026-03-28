@@ -17,6 +17,13 @@ export function getMasterAppSecret(): string {
     return provided;
   }
 
+  if (process.env.NODE_ENV === "production") {
+    console.warn(
+      "[SECURITY] APP_SECRET is not set. Using deterministic fallback derived from BASE_URL. " +
+        "This is INSECURE for production. Set APP_SECRET in your environment."
+    );
+  }
+
   const input = `${BASE_URL}|bones|app-secret|v1`;
   return crypto.createHash("sha256").update(input).digest("hex");
 }

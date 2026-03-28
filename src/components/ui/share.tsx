@@ -2,6 +2,7 @@
 
 import { Facebook, Linkedin, Link as LinkIcon, Share2, Twitter } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -31,6 +32,11 @@ export const Share = ({
   const { toast } = useToast();
   const pathname = usePathname();
   const url = `${BASE_URL}${pathname}`;
+  const [supportsNativeShare, setSupportsNativeShare] = useState(false);
+
+  useEffect(() => {
+    setSupportsNativeShare(typeof navigator?.share === "function");
+  }, []);
 
   const shareData = {
     title,
@@ -99,7 +105,7 @@ export const Share = ({
           <Share2 className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      {!navigator?.share && (
+      {!supportsNativeShare && (
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => openShareWindow(twitterUrl)}>
             <Twitter className="mr-2 h-4 w-4" />

@@ -37,4 +37,4 @@ const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
   );
 };
 
-export default AnimatedShinyText;
+export { AnimatedShinyText };

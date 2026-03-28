@@ -31,4 +31,4 @@ const AvatarCircles = ({ numPeople, className, avatarUrls }: AvatarCirclesProps)
   );
 };
 
-export default AvatarCircles;
+export { AvatarCircles };
