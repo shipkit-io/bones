@@ -16,9 +16,10 @@ export const ErrorToast = () => {
       console.log(error, toast);
       if (error) {
         // Todo: renders twice - maybe strict mode is causing this
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           toast.error(error.message);
         }, 500);
+        return () => clearTimeout(timeoutId);
       }
     }
   }, [errorCode]);

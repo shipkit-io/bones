@@ -6,7 +6,7 @@ import createMDX from "@next/mdx";
  * @param nextConfig The existing Next.js configuration object.
  * @returns The modified Next.js configuration object with PWA support.
  */
-export default function withMDXConfig(nextConfig: NextConfig): NextConfig {
+export function withMDXConfig(nextConfig: NextConfig): NextConfig {
 
 	const withMDX = createMDX({
 		extension: /\.mdx?$/,

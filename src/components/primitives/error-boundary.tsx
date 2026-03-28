@@ -9,7 +9,7 @@ import { logger } from "@/lib/logger";
 import { redirectWithCode } from "@/lib/utils/redirect-with-code";
 import { useEffect } from "react";
 
-export default function ErrorBoundary({
+export function ErrorBoundary({
 	error,
 	resetAction,
 }: {
