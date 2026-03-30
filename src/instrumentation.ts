@@ -4,12 +4,11 @@
  * WARNING: This needs to load on Node.js AND Edge runtime.
  */
 
-import { registerOTel } from "@vercel/otel";
 import type { Instrumentation } from "next";
 import { displayLaunchMessage } from "@/lib/utils/kit-launch-message";
 
 /**
- * Registers OpenTelemetry for observability in the application.
+ * Registers instrumentation for the application.
  * This function is called once when a new Next.js server instance is initiated.
  */
 export function register() {
@@ -23,19 +22,15 @@ export function register() {
   }
 
   displayLaunchMessage();
-  registerOTel({
-    serviceName: "shipkit",
-    // Add any additional configuration options here
-  });
+
+  // OpenTelemetry: install @vercel/otel and uncomment to enable
+  // import { registerOTel } from "@vercel/otel";
+  // registerOTel({ serviceName: "bones" });
 }
 
 /**
  * Handles server errors and reports them to a custom observability provider.
  * This function is triggered when the Next.js server captures an error.
- *
- * @param error - The caught error with a unique digest ID.
- * @param request - Information about the request that caused the error.
- * @param context - The context in which the error occurred.
  */
 export const onRequestError: Instrumentation.onRequestError = (
   error,
@@ -45,15 +40,4 @@ export const onRequestError: Instrumentation.onRequestError = (
   console.debug("error", error);
   console.debug("request", request);
   console.debug("context", context);
-  // await fetch("https://your-observability-endpoint/report-error", {
-  //   method: "POST",
-  //   body: JSON.stringify({
-  //     message: error.message,
-  //     request,
-  //     context,
-  //   }),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
 };

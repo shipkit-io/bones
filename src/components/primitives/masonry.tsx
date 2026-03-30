@@ -1,6 +1,6 @@
 import type React from "react";
 import { useMemo } from "react";
-import BlurFade from "@/components/ui/blur-fade";
+import { BlurFade } from "@/components/ui/blur-fade";
 
 interface MasonryProps<T> {
 	items: T[];

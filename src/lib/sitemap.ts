@@ -3,65 +3,41 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
 interface SitemapEntry {
-	url: string;
-	lastModified?: string | Date;
-	changeFrequency?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-	priority?: number;
+  url: string;
+  lastModified?: string | Date;
+  changeFrequency?:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never";
+  priority?: number;
 }
 
 export async function generateSitemapEntries(): Promise<SitemapEntry[]> {
-	const entries: SitemapEntry[] = [];
+  const now = new Date().toISOString();
 
-	// High priority static routes
-	const highPriorityRoutes = [routes.home, routes.docs, routes.features, routes.pricing].map(
-		(route) => ({
-			url: `${siteConfig.url}${route}`,
-			lastModified: new Date().toISOString(),
-			changeFrequency: "daily" as const,
-			priority: 1,
-		})
-	);
+  const highPriorityRoutes = [routes.home, routes.features, routes.docs].map(
+    (route) => ({
+      url: `${siteConfig.url}${route}`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 1,
+    }),
+  );
 
-	// Medium priority static routes
-	const mediumPriorityRoutes = [routes.faq, routes.download].map((route) => ({
-		url: `${siteConfig.url}${route}`,
-		lastModified: new Date().toISOString(),
-		changeFrequency: "weekly" as const,
-		priority: 0.8,
-	}));
+  const lowPriorityRoutes = [routes.terms, routes.privacy].map((route) => ({
+    url: `${siteConfig.url}${route}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
 
-	// Low priority static routes
-	const lowPriorityRoutes = [routes.terms, routes.privacy].map((route) => ({
-		url: `${siteConfig.url}${route}`,
-		lastModified: new Date().toISOString(),
-		changeFrequency: "monthly" as const,
-		priority: 0.5,
-	}));
-
-	// Example routes
-	const exampleRoutes = Object.values(routes.examples)
-		.filter(
-			(route): route is string => typeof route === "string" && route !== routes.examples.index
-		)
-		.map((route) => ({
-			url: `${siteConfig.url}${route}`,
-			lastModified: new Date().toISOString(),
-			changeFrequency: "weekly" as const,
-			priority: 0.7,
-		}));
-
-	// Add all entries
-	entries.push(
-		...highPriorityRoutes,
-		...mediumPriorityRoutes,
-		...lowPriorityRoutes,
-		...exampleRoutes
-	);
-
-	return entries;
+  return [...highPriorityRoutes, ...lowPriorityRoutes];
 }
 
 export async function generateSitemap(): Promise<MetadataRoute.Sitemap> {
-	const entries = await generateSitemapEntries();
-	return entries;
+  return generateSitemapEntries();
 }
