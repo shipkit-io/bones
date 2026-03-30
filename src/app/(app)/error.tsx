@@ -12,4 +12,4 @@
  * - Providing retry functionality
  * - Logging errors appropriately
  */
-export { default } from "@/components/primitives/error-boundary";
+export { ErrorBoundary as default } from "@/components/primitives/error-boundary";

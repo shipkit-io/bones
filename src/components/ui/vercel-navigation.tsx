@@ -109,4 +109,3 @@ export const VercelNavigation = ({
 	);
 };
 
-export default VercelNavigation;
