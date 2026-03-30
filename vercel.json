@@ -1,16 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/ai",
-      "destination": "https://ai-offline.vercel.app/"
-    },
-    {
-      "source": "/ai/:match*",
-      "destination": "https://ai-offline.vercel.app/:match*"
-    }
-  ],
-
   "buildCommand": "bun run build:vercel",
   "devCommand": "bun run dev",
   "installCommand": "bun install --frozen-lockfile",
