@@ -1,0 +1,96 @@
+---
+description: Environment Configuration Best Practices
+globs: .env.*, config/*, src/env.*, next.config.*
+---
+
+# Environment Configuration Best Practices
+
+## Environment Files
+- Use `.env.local` for local development
+- Use `.env.development` for development
+- Use `.env.test` for testing
+- Use `.env.production` for production
+- Never commit env files
+- Document all variables
+- Use example files
+
+## Variable Naming
+- Use SCREAMING_SNAKE_CASE
+- Use descriptive names
+- Group related variables
+- Use proper prefixes
+- Document purpose
+- Consider scope
+- Maintain consistency
+
+## Security
+- Never commit secrets
+- Use proper encryption
+- Rotate secrets regularly
+- Use secret management
+- Audit access
+- Monitor usage
+- Document procedures
+
+## Validation
+- Validate at startup
+- Check required variables
+- Validate formats
+- Type checking
+- Document requirements
+- Handle missing values
+- Log validation errors
+
+## Organization
+- Group by purpose
+- Use proper prefixes
+- Document structure
+- Maintain consistency
+- Version control
+- Review regularly
+- Keep organized
+
+## Development
+- Use local overrides
+- Document setup
+- Share examples
+- Handle conflicts
+- Maintain parity
+- Test configurations
+- Document workflows
+
+## Production
+- Use proper secrets
+- Configure monitoring
+- Set up logging
+- Handle rotation
+- Plan for scaling
+- Document deployment
+- Regular audits
+
+## Testing
+- Use test-specific values
+- Mock when needed
+- Clean up after tests
+- Validate configurations
+- Document test setup
+- Maintain isolation
+- Regular validation
+
+## Documentation
+- Document all variables
+- Explain purpose
+- Show examples
+- Document requirements
+- Keep updated
+- Version control
+- Regular reviews
+
+## Management
+- Use secret management
+- Configure access control
+- Monitor usage
+- Regular rotation
+- Audit access
+- Document procedures
+- Plan for emergencies 

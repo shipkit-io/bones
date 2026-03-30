@@ -8,7 +8,10 @@ interface ProseProps extends HTMLAttributes<HTMLDivElement> {
 export function Prose({ children, className, unstyled, ...props }: ProseProps) {
   return (
     <div
-      className={cn(!unstyled && "prose prose-slate dark:prose-invert", className)}
+      className={cn(
+        !unstyled && "prose prose-slate dark:prose-invert",
+        className,
+      )}
       {...props}
     >
       {children}

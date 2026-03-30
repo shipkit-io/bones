@@ -5,11 +5,11 @@ import { is } from "@/lib/utils/is";
 
 // Extend Navigator type to include userAgentData (might be browser-specific)
 interface NavigatorWithUAData extends Navigator {
-  userAgentData?: {
-    platform: string;
-    brands: { brand: string; version: string }[];
-    mobile: boolean;
-  };
+	userAgentData?: {
+		platform: string;
+		brands: { brand: string; version: string }[];
+		mobile: boolean;
+	};
 }
 
 /**
@@ -18,26 +18,26 @@ interface NavigatorWithUAData extends Navigator {
  * Returns false during SSR or if the platform cannot be determined.
  */
 export function useIsMac(): boolean {
-  const [isMac, setIsMac] = useState(false);
+	const [isMac, setIsMac] = useState(false);
 
-  useEffect(() => {
-    let determinedIsMac = false;
-    if (typeof window !== "undefined") {
-      const nav = navigator as NavigatorWithUAData; // Cast to extended type
+	useEffect(() => {
+		let determinedIsMac = false;
+		if (typeof window !== "undefined") {
+			const nav = navigator as NavigatorWithUAData; // Cast to extended type
 
-      // Prefer userAgentData if available
-      if (nav.userAgentData?.platform) {
-        determinedIsMac = /mac|iphone|ipad|ipod/i.test(nav.userAgentData.platform);
-      } else if (nav.platform) {
-        // Fallback to platform
-        determinedIsMac = /Mac|iPod|iPhone|iPad/.test(nav.platform);
-      } else {
-        // Last resort fallback using the existing utility
-        determinedIsMac = is.mac();
-      }
-    }
-    setIsMac(determinedIsMac);
-  }, []);
+			// Prefer userAgentData if available
+			if (nav.userAgentData?.platform) {
+				determinedIsMac = /mac|iphone|ipad|ipod/i.test(nav.userAgentData.platform);
+			} else if (nav.platform) {
+				// Fallback to platform
+				determinedIsMac = /Mac|iPod|iPhone|iPad/.test(nav.platform);
+			} else {
+				// Last resort fallback using the existing utility
+				determinedIsMac = is.mac();
+			}
+		}
+		setIsMac(determinedIsMac);
+	}, []);
 
-  return isMac;
+	return isMac;
 }

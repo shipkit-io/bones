@@ -1,0 +1,96 @@
+---
+description: Accessibility Best Practices and Guidelines
+globs: *.tsx, components/*, pages/*, app/*
+---
+
+# Accessibility Best Practices
+
+## Semantic HTML
+- Use proper heading hierarchy
+- Use semantic elements (nav, main, article)
+- Use proper list structures
+- Use proper table markup
+- Use proper form labels
+- Use ARIA roles when needed
+- Validate HTML structure
+
+## Keyboard Navigation
+- Ensure keyboard focus visibility
+- Implement logical tab order
+- Provide skip links
+- Handle keyboard shortcuts
+- Test keyboard-only navigation
+- Support focus management
+- Document keyboard interactions
+
+## Screen Readers
+- Provide alt text for images
+- Use proper ARIA labels
+- Implement proper headings
+- Announce dynamic content
+- Test with screen readers
+- Support text-to-speech
+- Document screen reader support
+
+## Visual Design
+- Ensure sufficient color contrast
+- Support high contrast modes
+- Provide text alternatives
+- Allow text resizing
+- Support zoom functionality
+- Avoid reliance on color alone
+- Test with color blindness tools
+
+## Interactive Elements
+- Make buttons keyboard accessible
+- Make modals accessible
+- Make dropdowns accessible
+- Handle focus management
+- Provide feedback on actions
+- Support touch interfaces
+- Test all interactions
+
+## Forms
+- Use proper labels
+- Provide clear error messages
+- Support keyboard navigation
+- Group related fields
+- Validate input accessibly
+- Support autocomplete
+- Test form submissions
+
+## Media
+- Provide captions for videos
+- Provide transcripts for audio
+- Support media controls
+- Allow volume control
+- Provide media alternatives
+- Test media playback
+- Document media features
+
+## Dynamic Content
+- Announce updates
+- Handle loading states
+- Manage focus on updates
+- Provide progress indicators
+- Support pause/stop
+- Test dynamic changes
+- Document behavior
+
+## Testing
+- Use accessibility checkers
+- Test with screen readers
+- Test keyboard navigation
+- Test color contrast
+- Test with users
+- Regular audits
+- Document findings
+
+## Documentation
+- Document accessibility features
+- Provide usage guidelines
+- Document known issues
+- Keep VPAT updated
+- Document test results
+- Regular reviews
+- Maintain compliance docs 

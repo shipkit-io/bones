@@ -13,6 +13,7 @@
   "type": "module",
   "scripts": {
     "build": "next build --webpack",
+    "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192' next build",
     "clean": "rm next-env.d.ts && rm package-lock.json && rm pnpm-lock.yaml && rm bun.lockb && rm -rf .next && rm -rf node_modules && rm -rf .turbo",
     "dev": "next dev --turbo",
     "dev:legacy": "next dev",

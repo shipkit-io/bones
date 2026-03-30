@@ -1,0 +1,62 @@
+# Vercel Ignore File
+# Files and directories to exclude from deployment
+
+# Development dependencies
+node_modules/.cache
+node_modules/.store
+node_modules/.pnpm
+.pnpm-store
+
+# Heavy development-only dependencies
+node_modules/@playwright
+node_modules/@types
+node_modules/typescript
+node_modules/eslint
+node_modules/prettier
+node_modules/@biomejs
+node_modules/@testing-library
+node_modules/@vitejs
+node_modules/vitest
+node_modules/jsdom
+node_modules/playwright
+
+# Documentation and tests
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/*.stories.ts
+**/*.stories.tsx
+**/tests/**
+**/test/**
+**/__tests__/**
+**/__mocks__/**
+docs/**
+*.md
+!README.md
+
+# IDE and config files
+.vscode
+.idea
+*.log
+.DS_Store
+
+# Build artifacts from development
+.next/cache/webpack
+
+# Source maps (already disabled in config)
+**/*.map
+
+# Git files
+.git
+.github
+.gitignore
+
+# Other unnecessary files
+.env.example
+.env.local
+.env.development
+.env.test
+CLAUDE.md
+TODO.md
+CHANGELOG.md

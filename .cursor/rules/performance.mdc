@@ -1,0 +1,96 @@
+---
+description: Performance Best Practices and Guidelines
+globs: *.ts, *.tsx, *.js, *.jsx, src/**/*
+---
+
+# Performance Best Practices
+
+## Core Web Vitals
+- Optimize LCP (Largest Contentful Paint)
+- Minimize FID (First Input Delay)
+- Reduce CLS (Cumulative Layout Shift)
+- Monitor Web Vitals
+- Set performance budgets
+- Regular performance audits
+- Document metrics
+
+## Image Optimization
+- Use next/image
+- Implement lazy loading
+- Choose proper formats
+- Optimize image sizes
+- Use responsive images
+- Implement caching
+- Monitor image performance
+
+## JavaScript
+- Implement code splitting
+- Use dynamic imports
+- Minimize bundle size
+- Tree shake unused code
+- Optimize dependencies
+- Use proper caching
+- Monitor JS performance
+
+## CSS
+- Minimize unused CSS
+- Use CSS modules
+- Implement critical CSS
+- Optimize tailwind usage
+- Reduce CSS bundle size
+- Use proper specificity
+- Monitor CSS performance
+
+## Server-Side
+- Use proper caching
+- Optimize database queries
+- Implement CDN
+- Use edge functions
+- Optimize API responses
+- Monitor server performance
+- Regular optimization
+
+## Client-Side
+- Implement proper caching
+- Use service workers
+- Optimize rendering
+- Reduce reflows/repaints
+- Handle offline support
+- Monitor client performance
+- Regular optimization
+
+## Data Loading
+- Use proper fetching
+- Implement caching
+- Handle loading states
+- Optimize payload size
+- Use proper protocols
+- Monitor data loading
+- Regular optimization
+
+## Build Optimization
+- Optimize build process
+- Minimize asset size
+- Use proper compression
+- Implement caching
+- Monitor build metrics
+- Regular build audits
+- Document optimizations
+
+## Monitoring
+- Use performance monitoring
+- Track key metrics
+- Set up alerts
+- Monitor trends
+- Regular analysis
+- Document findings
+- Take action on insights
+
+## Documentation
+- Document performance goals
+- Track improvements
+- Document optimizations
+- Keep metrics history
+- Regular reviews
+- Share best practices
+- Maintain documentation 

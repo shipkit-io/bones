@@ -1,0 +1,126 @@
+---
+description: Database Best Practices and Guidelines
+globs: *.prisma, *.sql, src/server/db/*, src/lib/db/*
+alwaysApply: false
+---
+# Database Best Practices
+
+## Data Modeling
+- Use meaningful and consistent naming
+- Define clear relationships between entities
+- Use appropriate data types
+- Implement proper indexing
+- Consider query patterns
+- Plan for scalability
+- Document schema design
+
+## Field Types
+- Use dates instead of booleans
+  - ❌ `isActive: boolean`
+  - ✅ `activeAt: Date`
+  - ❌ `isDeleted: boolean`
+  - ✅ `deletedAt: Date`
+- Use enums for fixed values
+- Use JSON for flexible structures
+- Use proper numeric types
+- Consider storage implications
+
+## Field Consistency and Provider Integration
+- **ALWAYS** store critical data in multiple compatible fields when dealing with external providers
+- **NEVER** assume external systems use your field naming conventions
+- Use fallback logic when reading data that could exist in multiple fields
+  - ✅ `payment.orderId || payment.processorOrderId || ""`
+  - ❌ `payment.orderId ?? ""`
+- Document which providers populate which fields in [src/server/providers/](mdc:src/server/providers)
+- Test complete data flow from provider import to UI display
+- Maintain backward compatibility when adding new fields
+- Example from payments table:
+  ```typescript
+  // Store in both fields for compatibility
+  orderId: processorOrderId,           // For display compatibility
+  processorOrderId: processorOrderId,  // For provider-specific operations
+  ```
+
+## Relationships
+- Define foreign key constraints
+- Use junction tables for many-to-many
+- Consider denormalization when needed
+- Document relationship types
+- Plan for cascading operations
+- Handle circular references
+- Consider query performance
+
+## Webhook Data Patterns
+- Store webhook event IDs for idempotency checks
+- Use database transactions for atomic webhook processing
+- Implement proper indexes on webhook event lookup fields
+- Store webhook processing status and timestamps
+- Use proper data types for webhook payload storage (JSON/JSONB)
+- Implement webhook event deduplication at database level
+- Create audit trails for webhook-triggered data changes
+- Handle webhook event ordering and dependencies
+- Use database locks to prevent race conditions in webhook processing
+- Store webhook retry attempts and failure reasons
+
+## Querying
+- Use parameterized queries
+- Optimize query performance
+- Use appropriate indexes
+- Avoid N+1 queries
+- Use transactions appropriately
+- Handle race conditions
+- Monitor query performance
+
+## Security
+- Use prepared statements
+- Implement row-level security
+- Encrypt sensitive data
+- Use connection pooling
+- Implement proper access control
+- Regular security audits
+- Monitor for vulnerabilities
+
+## Error Handling
+- Use try-catch blocks
+- Implement retries for transient failures
+- Log database errors
+- Handle constraint violations
+- Implement proper rollbacks
+- Monitor for deadlocks
+- Document error scenarios
+
+## Performance
+- Use appropriate indexes
+- Monitor query performance
+- Implement caching strategies
+- Regular maintenance
+- Handle connection pooling
+- Monitor resource usage
+- Optimize bulk operations
+
+## Migrations
+- Version control migrations
+- Test migrations thoroughly
+- Plan for rollbacks
+- Document changes
+- Handle data backfills
+- Consider downtime impact
+- Monitor migration progress
+
+## Backup and Recovery
+- Regular backups
+- Test recovery procedures
+- Document backup strategy
+- Monitor backup success
+- Plan for disaster recovery
+- Regular restore tests
+- Maintain backup history
+
+## Monitoring
+- Monitor performance metrics
+- Set up alerts
+- Track error rates
+- Monitor disk usage
+- Check connection pools
+- Monitor query patterns
+- Regular health checks

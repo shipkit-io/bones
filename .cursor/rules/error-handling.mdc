@@ -1,0 +1,109 @@
+---
+description: Error Handling Best Practices and Guidelines
+globs: *.ts, *.tsx, src/lib/errors/*, src/components/error-boundary/*
+alwaysApply: false
+---
+
+# Error Handling Best Practices
+
+## Client-Side Errors
+- Use error boundaries
+- Handle async errors
+- Provide user feedback
+- Log errors properly
+- Implement recovery
+- Monitor client errors
+- Document error types
+
+## Server-Side Errors
+- Use proper try/catch
+- Handle async errors
+- Implement logging
+- Return proper status
+- Monitor server errors
+- Regular error review
+- Document procedures
+
+## API Errors
+- Use proper status codes
+- Return meaningful messages
+- Handle validation errors
+- Log API errors
+- Monitor error rates
+- Regular error review
+- Document API errors
+
+## Webhook Errors
+- Return proper HTTP status codes (200 for success, 4xx for client errors)
+- Implement comprehensive try/catch blocks for webhook processing
+- Log all webhook processing errors with context (but not sensitive data)
+- Never expose internal error details in webhook responses
+- Implement graceful degradation for non-critical webhook failures
+- Handle signature verification failures appropriately
+- Implement retry logic for failed webhook processing
+- Set up alerts for webhook failure patterns
+- Track webhook success/failure rates
+- Handle duplicate webhook events gracefully
+
+## Database Errors
+- Handle connection errors
+- Handle query errors
+- Implement retries
+- Log database errors
+- Monitor error patterns
+- Regular error review
+- Document procedures
+
+## Validation
+- Validate all inputs
+- Handle edge cases
+- Return clear messages
+- Log validation errors
+- Monitor patterns
+- Regular review
+- Document rules
+
+## Logging
+- Use proper logging levels
+- Structure log messages
+- Include context
+- Handle sensitive data
+- Monitor logs
+- Regular log review
+- Document patterns
+
+## Recovery
+- Implement fallbacks
+- Handle graceful degradation
+- Provide recovery options
+- Monitor recovery
+- Test recovery paths
+- Regular drills
+- Document procedures
+
+## Monitoring
+- Track error rates
+- Set up alerts
+- Monitor patterns
+- Regular analysis
+- Take action
+- Document findings
+- Share insights
+
+## User Experience
+- Show friendly messages
+- Provide clear guidance
+- Handle offline states
+- Support recovery
+- Monitor user impact
+- Regular UX review
+- Document patterns
+
+## Documentation
+- Document error types
+- Document handling
+- Keep updated
+- Share knowledge
+- Regular reviews
+- Monitor changes
+- Maintain docs

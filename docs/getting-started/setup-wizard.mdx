@@ -1,0 +1,65 @@
+---
+title: "Setup Wizard"
+description: "Post-deploy configuration walkthrough"
+---
+
+# Setup Wizard
+
+After deploying, Shipkit's setup wizard at `/install` walks you through initial configuration.
+
+## What It Covers
+
+### 1. Repository Connection
+
+Connect your GitHub account to enable:
+- Automatic deployments on push
+- Repository management from the dashboard
+- GitHub OAuth login for your users
+
+Requires: `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`, and optionally `GITHUB_ACCESS_TOKEN`.
+
+### 2. Database Setup
+
+Provide your PostgreSQL connection string. Shipkit runs migrations automatically on first boot.
+
+```env
+DATABASE_URL=postgresql://user:password@host:5432/mydb
+```
+
+Recommended hosts: [Neon](https://neon.tech), [Supabase](https://supabase.com), [Railway](https://railway.app).
+
+### 3. Authentication
+
+Choose which auth providers to enable. Each just needs the corresponding env vars:
+
+- **GitHub** - `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`
+- **Google** - `AUTH_GOOGLE_ID` + `AUTH_GOOGLE_SECRET`
+- **Discord** - `AUTH_DISCORD_ID` + `AUTH_DISCORD_SECRET`
+- **Magic Link** - `RESEND_API_KEY`
+- **Credentials** - Requires Payload CMS (database + `PAYLOAD_SECRET`)
+
+### 4. Payments (Optional)
+
+Pick a payment provider:
+
+- **Stripe** - `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` + `STRIPE_WEBHOOK_SECRET`
+- **Lemon Squeezy** - `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` + `LEMONSQUEEZY_WEBHOOK_SECRET`
+- **Polar** - `POLAR_ACCESS_TOKEN` + `POLAR_WEBHOOK_SECRET`
+
+### 5. Admin Access
+
+Set which emails get admin privileges:
+
+```env
+ADMIN_EMAIL=you@example.com,cofounder@example.com
+```
+
+### 6. Vercel Integration (Optional)
+
+Connect your Vercel account for deployment management from the Shipkit dashboard.
+
+Requires: `VERCEL_ACCESS_TOKEN`, `VERCEL_CLIENT_ID`, `VERCEL_CLIENT_SECRET`.
+
+## Skipping the Wizard
+
+You can skip the wizard entirely by setting env vars directly. Shipkit auto-detects configured services and enables features accordingly. See [Environment Variables](/docs/getting-started/environment).

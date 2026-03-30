@@ -1,0 +1,177 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Shipkit Graceful Degradation
+
+## Overview
+
+Shipkit implements graceful degradation to provide a seamless experience whether users have a database configured or not. When no `DATABASE_URL` is provided, the application automatically falls back to local storage for data persistence.
+
+## Architecture
+
+### Database Detection
+
+The system checks for database availability in multiple places:
+
+1. **[src/server/db/index.ts](mdc:src/server/db/index.ts)** - Database connection with graceful degradation
+2. **[src/payload.config.ts](mdc:src/payload.config.ts)** - Payload CMS conditional initialization
+3. **[src/lib/payload/payload.ts](mdc:src/lib/payload/payload.ts)** - Payload client initialization with null fallback
+4. **Service layer** - All data operations check `db` availability before proceeding
+
+### Local Storage Fallbacks
+
+When database is unavailable, the following local storage services are used:
+
+- **[src/lib/local-storage/project-storage.ts](mdc:src/lib/local-storage/project-storage.ts)** - Project management
+- **[src/lib/local-storage/team-storage.ts](mdc:src/lib/local-storage/team-storage.ts)** - Team management
+
+## Implementation Patterns
+
+### Service Pattern
+
+All services follow this pattern for graceful degradation:
+
+```typescript
+async someMethod(params: any) {
+  if (!db) {
+    // Use local storage fallback
+    return LocalStorageService.someMethod(params);
+  }
+
+  // Use database
+  return await this.database.someMethod(params);
+}
+```
+
+### Payload Client Pattern
+
+Always use `getPayloadClient()` function, never import singleton:
+
+```typescript
+// ✅ Correct
+import { getPayloadClient } from "@/lib/payload/payload";
+
+const payload = await getPayloadClient();
+if (!payload) {
+  // Handle gracefully - CMS not available
+  return null;
+}
+
+// ❌ Wrong - Don't use singleton (causes crashes)
+import { payload } from "@/lib/payload/payload";
+```
+
+### Conditional Configuration
+
+Configuration files check for environment variables before initializing database-dependent features:
+
+```typescript
+const isFeatureEnabled = !!process.env.DATABASE_URL && process.env.FEATURE_FLAG === "true";
+
+if (isFeatureEnabled) {
+  // Initialize database-dependent features
+}
+```
+
+## Key Files
+
+### Core Database Files
+- **[src/server/db/index.ts](mdc:src/server/db/index.ts)** - Main database connection with null fallback
+- **[src/payload.config.ts](mdc:src/payload.config.ts)** - Conditional Payload initialization
+
+### Local Storage Services
+- **[src/lib/local-storage/project-storage.ts](mdc:src/lib/local-storage/project-storage.ts)** - Project CRUD operations
+- **[src/lib/local-storage/team-storage.ts](mdc:src/lib/local-storage/team-storage.ts)** - Team CRUD operations
+
+### Service Integration
+- **[src/server/services/project-service.ts](mdc:src/server/services/project-service.ts)** - Project service with fallbacks
+- **[src/server/services/team-service.ts](mdc:src/server/services/team-service.ts)** - Team service with fallbacks
+
+## Data Models
+
+Local storage services mirror the database schema exactly:
+
+### Projects
+```typescript
+interface LocalProject {
+  id: string;
+  name: string;
+  teamId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  members: LocalProjectMember[];
+}
+```
+
+### Teams
+```typescript
+interface LocalTeam {
+  id: string;
+  name: string;
+  type: "personal" | "workspace";
+  createdAt: Date;
+  updatedAt: Date | null;
+  deletedAt: Date | null;
+}
+```
+
+## Environment Variables
+
+### Required for Database Mode
+- `DATABASE_URL` - PostgreSQL connection string
+- `PAYLOAD_SECRET` - Secret key to enable Payload CMS (optional, can use `DISABLE_PAYLOAD=true` to disable)
+
+### Optional Feature Flags
+- `NEXT_PUBLIC_FEATURE_S3_ENABLED` - Enable S3 storage
+- `NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED` - Enable Vercel Blob storage
+- `NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED` - Enable Resend email
+
+## Demo Data
+
+When no database is available and no local data exists, the system automatically initializes with demo data:
+
+- Demo user account
+- Sample personal team
+- Example projects
+- Realistic project members
+
+## Best Practices
+
+### 1. Always Check Database Availability
+```typescript
+if (!db) {
+  // Local storage fallback
+  return LocalStorage.method();
+}
+```
+
+### 2. Mirror Database APIs
+Local storage services should exactly match database service method signatures.
+
+### 3. Handle User Sessions
+Demo mode creates a consistent user session that persists across browser sessions.
+
+### 4. Data Consistency
+Local storage maintains referential integrity similar to database constraints.
+
+### 5. Error Handling
+Graceful degradation should never throw errors - always provide fallbacks.
+
+## Debugging
+
+### Check Database Status
+```typescript
+import { db } from "@/server/db";
+console.log("Database available:", !!db);
+```
+
+### Inspect Local Storage
+```typescript
+console.log("Projects:", LocalProjectStorage.getAllProjects());
+console.log("Teams:", LocalTeamStorage.getAllTeams());
+```
+
+### Environment Validation
+Check that all required environment variables are set for the desired mode of operation.

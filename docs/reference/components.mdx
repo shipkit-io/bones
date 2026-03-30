@@ -1,0 +1,117 @@
+---
+title: "Components"
+description: "UI component library overview"
+---
+
+# Components
+
+Shipkit includes 300+ React components organized in `src/components/`.
+
+## Structure
+
+```
+src/components/
+├── ui/                  # Design system (shadcn/ui + extensions)
+│   ├── button.tsx       # Base shadcn components
+│   ├── card.tsx
+│   ├── dialog.tsx
+│   ├── data-table/      # Advanced table with sorting, filtering
+│   ├── shipkit/         # Shipkit-specific UI
+│   ├── magicui/         # Animation components (confetti, etc.)
+│   └── backgrounds/     # Background effects (waves, beams)
+├── primitives/          # Base building blocks
+│   ├── link.tsx         # Link with view transitions
+│   ├── error-boundary.tsx
+│   ├── analytics.tsx
+│   └── modal-context.tsx
+├── blocks/              # Page sections
+│   └── ai/              # AI demo components (SmolLM WebGPU)
+├── modules/             # Feature modules
+│   ├── auth/            # Auth UI (sign-in, sign-up, profile)
+│   ├── payments/        # Payment/subscription UI
+│   ├── builder/         # Builder.io components
+│   ├── deploy/          # Deployment UI
+│   ├── devtools/        # Dev tools overlay
+│   ├── search/          # Search interface
+│   └── user/            # User profile/settings
+├── forms/               # Form components
+├── headers/             # Header/nav layouts
+├── footers/             # Footer layouts
+├── layouts/             # Page layouts
+├── buttons/             # Button variants
+├── inputs/              # Input field variants
+├── loaders/             # Loading states
+├── pages/               # Full page templates
+└── providers/           # Context providers
+```
+
+## Using shadcn/ui Components
+
+All [shadcn/ui](https://ui.shadcn.com) components are available. Add new ones with:
+
+```bash
+bunx shadcn@latest add [component-name]
+```
+
+Import from `@/components/ui/`:
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+```
+
+## Key Components
+
+### Link with View Transitions
+
+```tsx
+import { Link } from "@/components/primitives/link-with-transition";
+
+<Link href="/about">About</Link>
+```
+
+### Theme Switching
+
+```tsx
+import { ThemeToggle, ThemeChooser } from "@/components/ui/theme";
+
+<ThemeToggle />    // Light/dark toggle
+<ThemeChooser />   // Light/dark/system chooser
+```
+
+### Error Boundaries
+
+```tsx
+import ErrorBoundary from "@/components/primitives/error-boundary";
+
+// Used automatically in layouts via error.tsx files
+```
+
+### Data Table
+
+```tsx
+import { DataTable } from "@/components/ui/data-table";
+
+<DataTable columns={columns} data={data} />
+```
+
+## Adding Components
+
+### From shadcn/ui
+
+```bash
+bunx shadcn@latest add button card dialog
+```
+
+### Custom Components
+
+Follow the existing patterns:
+- **Server Components first** unless interactivity is required
+- **Named exports** (`export const MyComponent = () => {}`)
+- **kebab-case filenames** (`my-component.tsx`)
+- Place in the appropriate directory based on purpose
+
+## Code Snippets
+
+See the [snippets](/docs/reference/snippets/components) for copy-paste component examples including server components, client components, suspense boundaries, error boundaries, and modals.

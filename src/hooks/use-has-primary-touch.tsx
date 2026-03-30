@@ -1,30 +1,28 @@
-"use client";
-
 import { useEffect, useState } from "react";
 
-export function useHasPrimaryTouch() {
-  const [isTouchPrimary, setIsTouchPrimary] = useState(false);
+export function useTouchPrimary() {
+	const [isTouchPrimary, setIsTouchPrimary] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+	useEffect(() => {
+		if (typeof window === "undefined") return;
 
-    const controller = new AbortController();
-    const { signal } = controller;
+		const controller = new AbortController();
+		const { signal } = controller;
 
-    const handleTouch = () => {
-      const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      const prefersTouch = window.matchMedia("(pointer: coarse)").matches;
-      setIsTouchPrimary(hasTouch && prefersTouch);
-    };
+		const handleTouch = () => {
+			const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+			const prefersTouch = window.matchMedia("(pointer: coarse)").matches;
+			setIsTouchPrimary(hasTouch && prefersTouch);
+		};
 
-    const mq = window.matchMedia("(pointer: coarse)");
-    mq.addEventListener("change", handleTouch, { signal });
-    window.addEventListener("pointerdown", handleTouch, { signal });
+		const mq = window.matchMedia("(pointer: coarse)");
+		mq.addEventListener("change", handleTouch, { signal });
+		window.addEventListener("pointerdown", handleTouch, { signal });
 
-    handleTouch();
+		handleTouch();
 
-    return () => controller.abort();
-  }, []);
+		return () => controller.abort();
+	}, []);
 
-  return isTouchPrimary;
+	return isTouchPrimary;
 }

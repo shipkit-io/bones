@@ -1,0 +1,53 @@
+name: Run Codex
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Prompt for Codex CLI'
+        required: true
+        default: 'update CHANGELOG for next release'
+      approvalMode:
+        description: 'Approval mode (suggest, auto-edit, full-auto)'
+        required: false
+        default: 'auto-edit'
+
+jobs:
+  run-codex:
+    name: Run Codex CLI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Skip if OpenAI not configured
+        if: env.OPENAI_API_KEY == ''
+        run: |
+          echo 'Skipping Run Codex: OPENAI_API_KEY not set'
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Codex CLI
+        if: env.OPENAI_API_KEY != ''
+        run: npm install -g @openai/codex
+
+      - name: Run Codex
+        if: env.OPENAI_API_KEY != ''
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CODEX_QUIET_MODE: '1'
+        run: codex --approval-mode ${{ inputs.approvalMode }} --quiet "${{ inputs.prompt }}"
+
+      - name: Commit changes
+        if: env.OPENAI_API_KEY != ''
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m 'chore: update via Codex' || echo 'No changes to commit'

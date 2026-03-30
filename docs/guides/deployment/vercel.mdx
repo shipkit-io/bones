@@ -1,0 +1,71 @@
+---
+title: "Vercel Deployment"
+description: "Deploy Shipkit to Vercel"
+---
+
+# Vercel Deployment
+
+Shipkit deploys to Vercel with zero configuration.
+
+## One-Click Deploy
+
+1. Click **Deploy to Vercel** in the README
+2. Connect your GitHub repo
+3. Add environment variables (at minimum: `AUTH_SECRET`)
+4. Deploy
+
+## Manual Deploy
+
+```bash
+npm install -g vercel
+vercel login
+vercel deploy
+```
+
+## Environment Variables
+
+1. Copy `.env.example` to `.env.local` for reference
+2. In the Vercel dashboard, add variables under **Settings > Environment Variables**
+3. Set different values for production/staging as needed
+
+Key variables:
+- `AUTH_SECRET` - Required. Generate with `openssl rand -base64 32`
+- `DATABASE_URL` - Required for CMS and most features
+- Auth provider keys - Per provider (GitHub, Google, etc.)
+- Payment provider keys - Per provider (Stripe, Lemon Squeezy, Polar)
+
+See [Environment Variables](/docs/getting-started/environment) for the full list.
+
+## What Vercel Provides
+
+- Automatic HTTPS
+- Edge Functions and global CDN
+- Preview deployments on every PR
+- CI/CD from Git pushes
+- Vercel Analytics and Speed Insights (built into Shipkit)
+
+## Custom Domains
+
+1. Add your domain in the Vercel dashboard
+2. Update DNS records as instructed
+3. SSL certificate is automatic
+
+## Production Checklist
+
+- [ ] Environment variables configured for all enabled features
+- [ ] Domain connected
+- [ ] Analytics enabled (`NEXT_PUBLIC_POSTHOG_KEY` or Vercel Analytics)
+- [ ] Error monitoring set up
+- [ ] Admin email set (`ADMIN_EMAIL`)
+
+## Troubleshooting
+
+**Build failing?** Check env vars are set, database is accessible, run `bun run typecheck` locally.
+
+**OOM during build?** Use `bun run build:vercel` which sets `--max-old-space-size=8192`.
+
+**Slow performance?** Enable Vercel Analytics, check image optimization, run `bun run analyze`.
+
+## Multi-Zone Deployment
+
+For deploying multiple Shipkit apps under one domain, see [Multi-Zone Architecture](/docs/guides/deployment/multi-zone).

@@ -72,6 +72,13 @@
     "src/components/ui/**/*.tsx",
     "src/app/(app)/(ai)/**/*",
     "src/app/(app)/(demo)/examples/**/*",
-    "src/workers/**/*.ts"
+    "src/workers/**/*.ts",
+    "playwright.config.ts",
+    "next-sitemap.config.js",
+    "scripts/**/*",
+    "tests/**/*",
+    "vitest.config.ts",
+    "vitest.config.node.ts",
+    "vitest.config.browser.ts"
   ]
 }
