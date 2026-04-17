@@ -28,7 +28,7 @@ interface HeaderProps {
   logoIcon?: React.ReactNode;
   logoText?: string;
   searchPlaceholder?: string;
-  variant?: "default" | "sticky" | "floating";
+  variant?: "default" | "sticky" | "floating" | "minimal";
 }
 
 const headerVariants = cva("translate-z-0 z-50 p-md", {
@@ -38,6 +38,7 @@ const headerVariants = cva("translate-z-0 z-50 p-md", {
       floating: "sticky top-0 h-24",
       sticky:
         "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+      minimal: "relative",
     },
   },
   defaultVariants: {
@@ -59,6 +60,23 @@ export const Header: React.FC<HeaderProps> = ({
   );
   const { data: session } = useSession();
   const signInRedirectUrl = useSignInRedirectUrl();
+
+  if (variant === "minimal") {
+    return (
+      <header className={cn(headerVariants({ variant: "minimal" }))}>
+        <nav className="container flex items-center justify-between gap-md">
+          <Link
+            href={logoHref}
+            className="flex items-center gap-2 text-lg font-semibold md:text-base"
+          >
+            {logoIcon}
+            <span className="block whitespace-nowrap">{logoText}</span>
+          </Link>
+          <ThemeToggle variant="ghost" size="icon" className="rounded-full" />
+        </nav>
+      </header>
+    );
+  }
 
   return (
     <>

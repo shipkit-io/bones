@@ -7,3 +7,11 @@ export const BlogPostSkeleton = () => (
     <Skeleton className="h-32 w-full" />
   </div>
 );
+
+export const BlogPostListSkeleton = ({ count = 3 }: { count?: number }) => (
+  <div className="space-y-8">
+    {Array.from({ length: count }).map((_, i) => (
+      <BlogPostSkeleton key={i} />
+    ))}
+  </div>
+);
