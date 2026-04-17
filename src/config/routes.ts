@@ -26,6 +26,13 @@ export const routes = {
   // Legal routes
   terms: "/terms-of-service",
   privacy: "/privacy-policy",
+  eula: "/eula",
+  legal: "/legal",
+
+  // Content routes
+  faq: "/faq",
+  changelog: "/changelog",
+  contact: "/contact",
 
   // Bones specific routes
   bones: {
@@ -39,7 +46,6 @@ export const routes = {
   launch: "/launch",
   docs: "/docs",
   // blog: "/blog",
-  // faq: "/faq",
   // pricing: "/pricing",
   // download: "/download",
   // components: "/components",
