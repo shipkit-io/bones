@@ -50,6 +50,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@statsig/react-bindings": "^3.31.2",
+    "@statsig/session-replay": "^3.31.2",
+    "@statsig/web-analytics": "^3.31.2",
     "@auth/drizzle-adapter": "1.11.1",
     "@builder.io/dev-tools": "1.26.12",
     "@builder.io/react": "9.1.0",
