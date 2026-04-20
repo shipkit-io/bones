@@ -54,6 +54,7 @@
     "@builder.io/dev-tools": "1.26.12",
     "@builder.io/react": "9.1.0",
     "@builder.io/sdk": "6.2.0",
+    "@c15t/nextjs": "^2.0.0",
     "@formkit/auto-animate": "^0.9.0",
     "@fortawesome/fontawesome-svg-core": "7.2.0",
     "@fortawesome/free-solid-svg-icons": "7.2.0",
