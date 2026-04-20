@@ -141,6 +141,12 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: 1.2.8
         version: 1.2.8(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@statsig/js-client':
+        specifier: ^3.32.6
+        version: 3.32.6
+      '@statsig/react-bindings':
+        specifier: ^3.32.6
+        version: 3.32.6(react@19.2.4)
       '@t3-oss/env-core':
         specifier: ^0.13.10
         version: 0.13.10(typescript@5.9.3)(valibot@1.3.1(typescript@5.9.3))(zod@3.25.74)
@@ -2970,6 +2976,17 @@ packages:
 
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
+
+  '@statsig/client-core@3.32.6':
+    resolution: {integrity: sha512-VailldiMHr5GSI18tBB3yiqrVNMim9b5iE38JZJYSywJcb5WclJkbJMOAf2ql+g1OtIS0QzrjEQ7dP3Vf6sYAw==}
+
+  '@statsig/js-client@3.32.6':
+    resolution: {integrity: sha512-F6yRAgzFuboVsgsRnxcr7hJrSZu4TK7B5I9DRkQKGxk+Em3oSLFz53SkzWgUcPqtt3htsFjic2aNhIfpeBFEqg==}
+
+  '@statsig/react-bindings@3.32.6':
+    resolution: {integrity: sha512-MQ+cqFPWEwkbM90T8Rr3XZg3VKSuyPaysFCl94sUVJpKOCmMkPbD8qnBuC7zs6ROo4oKmotXQKOH9NdFJ7GV6g==}
+    peerDependencies:
+      react: 19.2.4
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
@@ -10261,6 +10278,18 @@ snapshots:
   '@standard-schema/spec@1.1.0': {}
 
   '@standard-schema/utils@0.3.0': {}
+
+  '@statsig/client-core@3.32.6': {}
+
+  '@statsig/js-client@3.32.6':
+    dependencies:
+      '@statsig/client-core': 3.32.6
+
+  '@statsig/react-bindings@3.32.6(react@19.2.4)':
+    dependencies:
+      '@statsig/client-core': 3.32.6
+      '@statsig/js-client': 3.32.6
+      react: 19.2.4
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     dependencies:

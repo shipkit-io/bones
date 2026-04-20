@@ -96,6 +96,8 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "1.2.8",
+    "@statsig/js-client": "^3.32.6",
+    "@statsig/react-bindings": "^3.32.6",
     "@t3-oss/env-core": "^0.13.10",
     "@t3-oss/env-nextjs": "0.13.10",
     "@tabler/icons-react": "3.36.1",
