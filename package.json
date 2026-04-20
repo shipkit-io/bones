@@ -60,6 +60,7 @@
     "@fortawesome/free-solid-svg-icons": "7.2.0",
     "@fortawesome/react-fontawesome": "3.2.0",
     "@hookform/resolvers": "5.2.2",
+    "@mantine/hooks": "^9.0.2",
     "@mdx-js/react": "3.1.1",
     "@number-flow/react": "^0.5.12",
     "@qwik.dev/partytown": "^0.11.2",
