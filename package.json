@@ -52,9 +52,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@statsig/react-bindings": "^3.31.2",
-    "@statsig/session-replay": "^3.31.2",
-    "@statsig/web-analytics": "^3.31.2",
     "@auth/drizzle-adapter": "1.11.1",
     "@builder.io/dev-tools": "1.26.12",
     "@builder.io/react": "9.1.0",
@@ -100,6 +97,8 @@
     "@radix-ui/react-tooltip": "1.2.8",
     "@statsig/js-client": "^3.32.6",
     "@statsig/react-bindings": "^3.32.6",
+    "@statsig/session-replay": "^3.32.6",
+    "@statsig/web-analytics": "^3.32.6",
     "@t3-oss/env-core": "^0.13.10",
     "@t3-oss/env-nextjs": "0.13.10",
     "@tabler/icons-react": "3.36.1",
@@ -134,7 +133,7 @@
     "next-themes": "0.4.6",
     "next-view-transitions": "0.3.5",
     "nuqs": "^2.8.8",
-    "postgres": "3.4.8",
+    "postgres": "3.4.7",
     "posthog-js": "^1.369.2",
     "react": "19.2.4",
     "react-day-picker": "9.13.2",
@@ -208,7 +207,8 @@
   "pnpm": {
     "overrides": {
       "react": "19.2.4",
-      "react-dom": "19.2.4"
+      "react-dom": "19.2.4",
+      "postgres": "3.4.7"
     },
     "onlyBuiltDependencies": [
       "@vercel/speed-insights",
