@@ -84,11 +84,11 @@ async function main(): Promise<void> {
 	for (let i = 0; i < maxIters; i++) {
 		console.log(`\n[loop] Iteration ${i + 1}/${maxIters}`);
 
-		const runArgs = ["scripts/lighthouse/run.ts", ...urls];
-		const runRes = await exec("tsx", runArgs, { LH_OUT_DIR });
+		const runArgs = ["run", "scripts/lighthouse/run.ts", ...urls];
+		const runRes = await exec("bun", runArgs, { LH_OUT_DIR });
 		if (runRes.code !== 0) throw new Error("lighthouse run failed");
 
-		const analyzeRes = await exec("tsx", ["scripts/lighthouse/analyze.ts"], { LH_OUT_DIR });
+		const analyzeRes = await exec("bun", ["run", "scripts/lighthouse/analyze.ts"], { LH_OUT_DIR });
 		if (analyzeRes.code !== 0) throw new Error("analyze failed");
 
 		const categories = await readLatestSummary(LH_OUT_DIR);
