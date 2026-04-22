@@ -24,7 +24,6 @@ function cleanAnsi(text: string): string {
 
 export function Terminal({ output, className }: TerminalProps) {
 	const scrollRef = useRef<HTMLDivElement>(null)
-	const scrollAreaRef = useRef<HTMLDivElement>(null)
 	const convert = useMemo(
 		() =>
 			new Convert({
@@ -39,21 +38,7 @@ export function Terminal({ output, className }: TerminalProps) {
 
 	// Auto-scroll to bottom when output changes
 	useEffect(() => {
-		if (scrollRef.current && scrollAreaRef.current) {
-			const scrollElement = scrollRef.current
-			const viewportElement = scrollAreaRef.current
-
-			// Check if scroll is near bottom before auto-scrolling
-			const isNearBottom =
-				viewportElement.scrollHeight -
-				viewportElement.scrollTop -
-				viewportElement.clientHeight <
-				50
-
-			if (isNearBottom) {
-				scrollElement.scrollIntoView({ behavior: 'smooth', block: 'end' })
-			}
-		}
+		scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
 	}, [output])
 
 	// Process the output to handle newlines properly
@@ -62,7 +47,7 @@ export function Terminal({ output, className }: TerminalProps) {
 	}, [output])
 
 	return (
-		<ScrollArea className={cn('bg-[#1E1E1E] rounded-md', className)} ref={scrollAreaRef}>
+		<ScrollArea className={cn('bg-[#1E1E1E] rounded-md', className)}>
 			<div className="p-4 font-mono text-sm text-[#D4D4D4] leading-5">
 				{processedOutput.map((line, i) => (
 					<div

@@ -11,3 +11,24 @@ export const db = client ? drizzle(client, { schema }) : undefined;
 export const isDatabaseInitialized = () => {
 	return !!db;
 };
+
+/**
+ * Safely execute a database operation with fallback when db is not initialized.
+ * Returns defaultValue if DATABASE_URL is not set or the operation fails.
+ */
+export const safeDbExecute = async <T>(
+	callback: (db: NonNullable<typeof import("./index").db>) => Promise<T>,
+	defaultValue: T
+): Promise<T> => {
+	if (!db) {
+		console.warn("Database not initialized, returning default value");
+		return defaultValue;
+	}
+
+	try {
+		return await callback(db);
+	} catch (error) {
+		console.error("Database operation failed:", error);
+		return defaultValue;
+	}
+};

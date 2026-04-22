@@ -185,3 +185,19 @@ export const authenticators = createTable(
 		}),
 	})
 );
+
+// Feedback
+export const feedback = createTable("feedback", {
+	id: varchar("id", { length: 255 })
+		.notNull()
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	content: text("content").notNull(),
+	source: varchar("source", { length: 50 }).notNull(),
+	metadata: text("metadata").default("{}"),
+	status: varchar("status", { length: 20 }).notNull().default("new"),
+	createdAt: timestamp("created_at", { withTimezone: true })
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
+});
