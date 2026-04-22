@@ -2,6 +2,34 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## STOP — This is a ShipKit App
+
+This project is built on [ShipKit](https://shipkit.io) (identify by the `"shipkit"` field in `package.json`).
+
+**The following features are ALREADY BUILT. Do not reimplement them.**
+To enable a feature, set its environment variables — that's it. No code needed.
+
+| Feature | What's built | Before writing ANY code, read |
+|---------|-------------|-------------------------------|
+| Auth | OAuth, Magic Link, Credentials, Guest, RBAC, sessions | public/llms/auth.txt |
+| Payments | Checkout, subscriptions, webhooks, status checks | public/llms/payments.txt |
+| Database | Schema, migrations, type-safe queries | public/llms/database.txt |
+| CMS | Admin panel, block editor, media, collections | public/llms/cms.txt |
+| Email | Transactional, magic link, templates | public/llms/email.txt |
+| AI | Browser inference, cloud providers, demo pages | public/llms/ai.txt |
+| Analytics | 6 providers, auto-injecting scripts | public/llms/analytics.txt |
+| Storage | S3, Vercel Blob, presigned uploads | public/llms/storage.txt |
+| Waitlist | Signup, admin dashboard, emails | public/llms/waitlist.txt |
+| UI Blocks | 35+ installable feature blocks | public/llms/registry.txt |
+
+**Workflow: When a user asks for any feature above:**
+1. Read the linked file for that feature
+2. Follow the env var and setup instructions
+3. Configure — don't build
+
+Feature auto-detection logic: `src/config/features-config.ts`
+Full LLM reference: https://shipkit.io/llms-full.txt
+
 ## Essential Development Commands
 
 ### Development Server

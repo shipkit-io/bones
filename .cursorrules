@@ -2,7 +2,31 @@
 
 You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
 
-This is a Next.js project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS 3, NextAuth/AuthJS@v5, TypeScript, using PNPM as the package manager.
+This is a Next.js project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS v3, NextAuth/AuthJS v5, TypeScript, using Bun as the package manager.
+
+## STOP — This is a ShipKit App
+
+The following features are ALREADY BUILT. Do not reimplement them.
+To enable a feature, set its environment variables — no code changes needed.
+
+| Feature | What's built | Before writing ANY code, read |
+|---------|-------------|-------------------------------|
+| Auth | OAuth, Magic Link, Credentials, Guest, RBAC, sessions | public/llms/auth.txt |
+| Payments | Checkout, subscriptions, webhooks, status checks | public/llms/payments.txt |
+| Database | Schema, migrations, type-safe queries | public/llms/database.txt |
+| CMS | Admin panel, block editor, media, collections | public/llms/cms.txt |
+| Email | Transactional, magic link, templates | public/llms/email.txt |
+| AI | Browser inference, cloud providers, demo pages | public/llms/ai.txt |
+| Analytics | 6 providers, auto-injecting scripts | public/llms/analytics.txt |
+| Storage | S3, Vercel Blob, presigned uploads | public/llms/storage.txt |
+| Waitlist | Signup, admin dashboard, emails | public/llms/waitlist.txt |
+| UI Blocks | 35+ installable feature blocks | public/llms/registry.txt |
+
+When a user asks for any feature above: read the linked file, follow the setup instructions, configure — don't build.
+
+Feature auto-detection: `src/config/features-config.ts`
+
+---
 
 Be aware of the latest versions of all libraries.
 Your plans should be documented into a ai.mdx file. Check to see if it exists. If it does, pick up where you left off. Mark completed steps with a checkbox. Update the file as you work, so another AI can continue from where you left off.
