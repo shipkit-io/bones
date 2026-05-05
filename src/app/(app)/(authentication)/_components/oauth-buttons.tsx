@@ -39,8 +39,8 @@ export function OAuthButtons({ variant = "default", className }: OAuthButtonsPro
 	const nextUrl = searchParams?.get(SEARCH_PARAM_KEYS.nextUrl);
 	const options = nextUrl ? { redirectTo: nextUrl } : {};
 
-	const handleSignIn = (providerId: string) => {
-		void signInWithOAuthAction({ providerId, options });
+	const handleSignIn = async (providerId: string) => {
+		await signInWithOAuthAction({ providerId, options });
 	};
 
 	return (
@@ -70,9 +70,7 @@ export function OAuthButtons({ variant = "default", className }: OAuthButtonsPro
 				return (
 					<form
 						key={id}
-						action={() => {
-							handleSignIn(id);
-						}}
+						action={() => handleSignIn(id)}
 					>
 						{variant === "icons" ? (
 							<Tooltip>
