@@ -86,7 +86,7 @@ Report it on [GitHub Issues](https://github.com/shipkit-io/shipkit/issues).
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details
+AGPL-3.0 License - see [LICENSE](LICENSE) for details
 
 ## Local Development
 
