@@ -75,7 +75,7 @@ export const defaultMetadata: Metadata = {
 	// 	yandex: "your-yandex-verification",
 	// },
 	alternates: {
-		canonical: siteConfig.url,
+		canonical: "./",
 		// languages: {
 		// 	"en-US": "/en-US",
 		// },
