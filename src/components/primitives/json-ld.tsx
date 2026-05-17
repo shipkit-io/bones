@@ -1,4 +1,3 @@
-import Script from "next/script";
 import { siteConfig } from "@/config/site-config";
 
 interface JsonLdProps {
@@ -199,8 +198,10 @@ export function JsonLd({
 	};
 
 	return (
-		<Script id="json-ld" type="application/ld+json" strategy="lazyOnload">
-			{`${JSON.stringify(structuredData)}`}
-		</Script>
+		<script
+			type="application/ld+json"
+			// biome-ignore lint/security/noDangerouslySetInnerHtml: structured data must be inline for SEO
+			dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+		/>
 	);
 }

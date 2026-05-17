@@ -1,13 +1,17 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { routeMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
 import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { Faq } from "@/payload-types";
+
+export const metadata: Metadata = routeMetadata.faq;
 
 // Define types for static content structure
 type StaticFaq = {
