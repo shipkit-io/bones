@@ -183,4 +183,24 @@ export const routeMetadata = {
 		description:
 			`Get in touch with the ${siteConfig.branding.projectName} team. We're here to help with questions, feedback, and support.`,
 	},
+	about: {
+		title: `About | ${siteConfig.branding.projectName}`,
+		description:
+			`Learn about ${siteConfig.branding.projectName}, our mission, and the team behind the platform. Building modern tools for developers who ship fast.`,
+	},
+	privacy: {
+		title: `Privacy Policy | ${siteConfig.branding.projectName}`,
+		description:
+			`How ${siteConfig.branding.projectName} handles your data. Our commitment to transparency, security, and your privacy rights.`,
+	},
+	terms: {
+		title: `Terms of Service | ${siteConfig.branding.projectName}`,
+		description:
+			`Terms and conditions for using ${siteConfig.branding.projectName}. Read our service agreement, usage policies, and your rights.`,
+	},
+	changelog: {
+		title: `Changelog | ${siteConfig.branding.projectName}`,
+		description:
+			`Latest updates, improvements, and releases for ${siteConfig.branding.projectName}. See what's new and what's coming next.`,
+	},
 };
