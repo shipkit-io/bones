@@ -75,7 +75,7 @@ export const defaultMetadata: Metadata = {
 	// 	yandex: "your-yandex-verification",
 	// },
 	alternates: {
-		canonical: siteConfig.url,
+		canonical: "./",
 		// languages: {
 		// 	"en-US": "/en-US",
 		// },
@@ -172,5 +172,15 @@ export const routeMetadata = {
 		title: `Documentation - Build Better Apps Faster | ${siteConfig.branding.projectName}`,
 		description:
 			`Comprehensive guides, API references, and examples to help you build production-ready apps with ${siteConfig.branding.projectName}. From quick starts to advanced topics.`,
+	},
+	faq: {
+		title: `FAQ - Frequently Asked Questions | ${siteConfig.branding.projectName}`,
+		description:
+			`Answers to common questions about ${siteConfig.branding.projectName}. Get help with setup, pricing, features, and more.`,
+	},
+	contact: {
+		title: `Contact Us | ${siteConfig.branding.projectName}`,
+		description:
+			`Get in touch with the ${siteConfig.branding.projectName} team. We're here to help with questions, feedback, and support.`,
 	},
 };

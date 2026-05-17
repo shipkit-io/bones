@@ -4,11 +4,14 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/primitives/page-header";
+import { JsonLd } from "@/components/primitives/json-ld";
 import { Attribution } from "@/components/ui/attribution";
 import { buttonVariants } from "@/components/ui/button";
 import { TextLoop } from "@/components/ui/text-loop";
 import { routes } from "@/config/routes";
+import { routeMetadata } from "@/config/metadata";
 import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { Space_Grotesk } from "next/font/google";
 import Link from "next/link";
@@ -20,9 +23,12 @@ const font = Space_Grotesk({
   variable: "--font-space-grotesk",
 });
 
+export const metadata: Metadata = routeMetadata.home;
+
 export default function Page() {
   return (
     <>
+      <JsonLd organization website softwareSourceCode />
       <div className="container flex flex-col items-center justify-center gap-2xl py-6 text-center min-h-screen">
         <PageHeader className="flex flex-col items-center justify-center">
           <PageHeaderHeading
