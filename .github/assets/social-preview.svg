@@ -41,23 +41,23 @@
 	<g transform="translate(440, 396)" font-family="Inter" font-size="20" font-weight="600">
 		<g>
 			<rect x="0" y="0" width="118" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
-			<text x="59" y="29" text-anchor="middle" fill="#1a2235">Next.js 15</text>
+			<text x="59" y="29" text-anchor="middle" fill="#1a2235">Next.js 16</text>
 		</g>
 		<g transform="translate(130, 0)">
+			<rect x="0" y="0" width="110" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
+			<text x="55" y="29" text-anchor="middle" fill="#1a2235">React 19</text>
+		</g>
+		<g transform="translate(252, 0)">
 			<rect x="0" y="0" width="84" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
 			<text x="42" y="29" text-anchor="middle" fill="#1a2235">Auth</text>
 		</g>
-		<g transform="translate(226, 0)">
+		<g transform="translate(348, 0)">
 			<rect x="0" y="0" width="116" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
 			<text x="58" y="29" text-anchor="middle" fill="#1a2235">Payments</text>
 		</g>
-		<g transform="translate(354, 0)">
+		<g transform="translate(476, 0)">
 			<rect x="0" y="0" width="74" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
 			<text x="37" y="29" text-anchor="middle" fill="#1a2235">CMS</text>
-		</g>
-		<g transform="translate(440, 0)">
-			<rect x="0" y="0" width="58" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
-			<text x="29" y="29" text-anchor="middle" fill="#1a2235">AI</text>
 		</g>
 	</g>
 
@@ -67,7 +67,7 @@
 	<!-- Footer left -->
 	<text x="108" y="560"
 		font-family="Inter" font-size="22" font-weight="500"
-		fill="#5a6478">Free · Open source (AGPL-3.0) · Deploy in 30 seconds</text>
+		fill="#5a6478">Free · Open source (FSL-1.1-MIT) · Deploy in 30 seconds</text>
 
 	<!-- Footer right -->
 	<text x="1172" y="560" text-anchor="end"

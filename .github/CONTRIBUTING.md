@@ -1,6 +1,6 @@
 # Contributing to Shipkit Bones
 
-Thanks for your interest. **Shipkit Bones** is the free, source-available (FSL-1.1-MIT) boilerplate that the rest of the Shipkit ecosystem builds on. It's a Next.js 15 (App Router + TypeScript) starter with Tailwind, Shadcn/UI, Drizzle ORM, Payload CMS, and integrations across auth, payments, email, and AI providers.
+Thanks for your interest. **Shipkit Bones** is the free, source-available (FSL-1.1-MIT) boilerplate that the rest of the Shipkit ecosystem builds on. It's a Next.js 16 + React 19 (App Router + TypeScript) starter with Tailwind, Shadcn/UI, Drizzle ORM, Payload CMS, and integrations across auth, payments, email, and AI providers.
 
 ## Quick start
 
