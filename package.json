@@ -37,7 +37,7 @@
     "lint:biome": "biome lint .",
     "lint:eslint": "next lint",
     "lint:prettier": "prettier --check \"**/*.{ts,tsx,md,mdx,json}\"",
-    "lint:fix": "npm run lint:fix:biome && npm run lint:fix:eslint && npm run format",
+    "lint:fix": "npm run lint:fix:biome && npm run lint:fix:eslint && npm run lint:fix:prettier",
     "lint:fix:biome": "biome check --write .",
     "lint:fix:eslint": "next lint --fix",
     "lint:fix:prettier": "prettier --write \"**/*.{ts,tsx,md,mdx,json}\"",
