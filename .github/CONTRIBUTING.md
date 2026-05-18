@@ -1,6 +1,6 @@
 # Contributing to Shipkit Bones
 
-Thanks for your interest. **Shipkit Bones** is the free, AGPL-licensed boilerplate that the rest of the Shipkit ecosystem builds on. It's a Next.js 15 (App Router + TypeScript) starter with Tailwind, Shadcn/UI, Drizzle ORM, Payload CMS, and integrations across auth, payments, email, and AI providers.
+Thanks for your interest. **Shipkit Bones** is the free, source-available (FSL-1.1-MIT) boilerplate that the rest of the Shipkit ecosystem builds on. It's a Next.js 15 (App Router + TypeScript) starter with Tailwind, Shadcn/UI, Drizzle ORM, Payload CMS, and integrations across auth, payments, email, and AI providers.
 
 ## Quick start
 
@@ -64,4 +64,4 @@ Please **do not open public issues for security vulnerabilities**. See [SECURITY
 
 ## License
 
-Bones is licensed under [AGPL-3.0-only](../LICENSE). By contributing, you agree that your contributions will be licensed under the same terms. AGPL is copyleft: any network-deployed derivative must also be open-sourced under AGPL. If that's a deal-breaker for your use case, the premium [Shipkit](https://shipkit.io) framework is available under a commercial license.
+Bones is licensed under [FSL-1.1-MIT](../LICENSE) — the Functional Source License with an MIT future grant. By contributing, you agree that your contributions will be licensed under the same terms. FSL is source-available: free to use, modify, and create derivative works for any Permitted Purpose (internal use, education, research, professional services). It excludes Competing Use, then converts to standard MIT two years after each release. If you want commercial support or the premium downstream framework, see [Shipkit](https://shipkit.io).
