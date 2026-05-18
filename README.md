@@ -86,7 +86,7 @@ Report it on [GitHub Issues](https://github.com/shipkit-io/shipkit/issues).
 
 ## License
 
-AGPL-3.0 License - see [LICENSE](LICENSE) for details
+FSL-1.1-MIT — source-available, free for any Permitted Purpose (internal use, education, research, professional services). Converts to MIT after 2 years. See [LICENSE](LICENSE) for full terms.
 
 ## Local Development
 

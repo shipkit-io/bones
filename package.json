@@ -9,7 +9,7 @@
   "shipkit": {
     "bones": "0.2.1"
   },
-  "license": "AGPL-3.0-only",
+  "license": "FSL-1.1-MIT",
   "private": true,
   "type": "module",
   "scripts": {
