@@ -18,14 +18,12 @@ No environment variables needed to start! Our setup wizard will guide you throug
 
 ## What's Included
 
-- 🔐 **Authentication** - Multiple providers (Discord, GitHub, Google)
-- 💳 **Payments** - Integrated with Lemon Squeezy
-- 📝 **CMS** - Built-in Payload CMS
-- 🎨 **Visual Editor** - Builder.io integration
-- 📧 **Email** - Resend for transactional emails
-- 🤖 **AI Ready** - OpenAI/Anthropic integration
-- 🎯 **Analytics** - Track user behavior
-- 🚀 **Performance** - Edge-optimized
+- ⚡️ **Next.js 16 + React 19** — Modern App Router foundation
+- 🔐 **Authentication** — Multiple providers (Discord, GitHub, Google) via NextAuth + Better Auth
+- 🎨 **Shadcn/UI** — Production-ready component library, fully owned in your repo
+- 🚀 **Performance** — Edge-optimized defaults
+
+> Looking for the full stack — database, payments, CMS, AI, and 100+ premium components? See [Shipkit](https://shipkit.io), the paid framework built on top of Bones.
 
 ## Quick Start Guide
 

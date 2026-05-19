@@ -52,12 +52,8 @@
 			<text x="42" y="29" text-anchor="middle" fill="#1a2235">Auth</text>
 		</g>
 		<g transform="translate(348, 0)">
-			<rect x="0" y="0" width="116" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
-			<text x="58" y="29" text-anchor="middle" fill="#1a2235">Payments</text>
-		</g>
-		<g transform="translate(476, 0)">
-			<rect x="0" y="0" width="74" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
-			<text x="37" y="29" text-anchor="middle" fill="#1a2235">CMS</text>
+			<rect x="0" y="0" width="130" height="44" rx="22" fill="#f0ecdf" stroke="#1a2235" stroke-opacity="0.08"/>
+			<text x="65" y="29" text-anchor="middle" fill="#1a2235">Shadcn/UI</text>
 		</g>
 	</g>
 
