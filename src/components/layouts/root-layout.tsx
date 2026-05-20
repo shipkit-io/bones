@@ -10,7 +10,6 @@ import {
   Space_Grotesk as FontSans,
   Noto_Serif as FontSerif,
 } from "next/font/google";
-import Head from "next/head";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 
@@ -32,11 +31,10 @@ const fontSans = FontSans({
 export function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ViewTransitions>
-      <Head>
-        {/* React Scan */}
-        <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
-      </Head>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          <meta charSet="utf-8" />
+        </head>
         <body
           className={cn(
             "min-h-screen antialiased",

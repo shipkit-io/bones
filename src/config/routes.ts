@@ -30,6 +30,7 @@ export const routes = {
   legal: "/legal",
 
   // Content routes
+  about: "/about",
   faq: "/faq",
   changelog: "/changelog",
   contact: "/contact",
