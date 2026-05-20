@@ -1,13 +1,13 @@
 {
   "name": "bones",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://bones.sh",
   "repository": {
     "type": "git",
     "url": "https://github.com/shipkit-io/bones"
   },
   "shipkit": {
-    "bones": "0.2.1"
+    "bones": "0.2.2"
   },
   "license": "FSL-1.1-MIT",
   "private": true,
