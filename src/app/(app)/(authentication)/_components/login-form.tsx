@@ -1,6 +1,7 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { type ComponentPropsWithoutRef, type ReactNode, Suspense } from "react";
 
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
@@ -40,7 +41,9 @@ export function AuthForm({
 				</CardHeader>
 				<CardContent>
 					<div className="grid gap-6">
-						<OAuthButtons />
+						<Suspense fallback={<SuspenseFallback />}>
+							<OAuthButtons />
+						</Suspense>
 						{/* Only show email sign-in if credentials provider is enabled */}
 						{authProvidersArray.includes("credentials") && (
 							<>
