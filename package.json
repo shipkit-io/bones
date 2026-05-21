@@ -4,7 +4,7 @@
   "homepage": "https://bones.sh",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shipkit-io/bones"
+    "url": "git+https://github.com/shipkit-io/bones.git"
   },
   "shipkit": {
     "bones": "0.2.2"
