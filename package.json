@@ -168,8 +168,6 @@
     "zustand": "5.0.11"
   },
   "devDependencies": {
-    "chrome-launcher": "^1.2.1",
-    "lighthouse": "^13.0.3",
     "@biomejs/biome": "2.4.0",
     "@eslint/eslintrc": "^3.3.3",
     "@mdx-js/loader": "3.1.1",
@@ -178,6 +176,8 @@
     "@next/eslint-plugin-next": "16.1.6",
     "@next/mdx": "16.1.6",
     "@tailwindcss/typography": "0.5.19",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/color": "^4.2.0",
     "@types/next-pwa": "^5.6.9",
     "@types/node": "25.2.3",
@@ -186,7 +186,9 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "@typescript-eslint/parser": "^8.55.0",
+    "@vitejs/plugin-react": "^6.0.3",
     "autoprefixer": "10.4.24",
+    "chrome-launcher": "^1.2.1",
     "commander": "^14.0.3",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
@@ -195,6 +197,8 @@
     "drizzle-kit": "0.31.9",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "jsdom": "^29.1.1",
+    "lighthouse": "^13.0.3",
     "npm-check-updates": "^19.3.2",
     "postcss": "8.5.6",
     "postcss-load-config": "^6.0.1",
@@ -203,7 +207,9 @@
     "remark-frontmatter": "^5.0.0",
     "remark-mdx-frontmatter": "^5.2.0",
     "tailwindcss": "3.4.17",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.10"
   },
   "pnpm": {
     "overrides": {

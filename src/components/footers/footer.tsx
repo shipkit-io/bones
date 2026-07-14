@@ -26,17 +26,17 @@ type FooterElement =
   | { type: "group"; content: FooterGroup }
   | { type: "node"; content: ReactNode };
 
-const defaultGroups: FooterElement[] = [
+export const defaultFooterGroups: FooterElement[] = [
   {
     type: "group",
     content: {
       header: { label: "Product" },
       items: [
         { href: routes.home, label: "Home" },
-        // { href: routes.features, label: "Features" },
-        // { href: routes.pricing, label: "Pricing" },
-        { href: routes.external.bones, label: "Shipkit Bones" },
-        { href: routes.external.bones, label: "Shipkit" },
+        { href: routes.features, label: "Features" },
+        { href: routes.cli, label: "CLI" },
+        { href: routes.bones.cliWww, label: "CLI Demo" },
+        { href: routes.changelog, label: "Changelog" },
       ],
     },
   },
@@ -45,10 +45,11 @@ const defaultGroups: FooterElement[] = [
     content: {
       header: { label: "Resources" },
       items: [
-        // { href: routes.docs, label: "Documentation" },
-        // { href: routes.blog, label: "Blog" }, // TODO: Add blog
+        { href: routes.about, label: "About" },
+        { href: routes.faq, label: "FAQ" },
+        { href: routes.contact, label: "Contact" },
         { href: routes.auth.signIn, label: "Sign in" },
-        { href: routes.external.support, label: "Support" },
+        { href: routes.external.shipkit, label: "Shipkit" },
       ],
     },
   },
@@ -59,6 +60,8 @@ const defaultGroups: FooterElement[] = [
       items: [
         { href: routes.terms, label: "Terms of Service" },
         { href: routes.privacy, label: "Privacy Policy" },
+        { href: routes.eula, label: "EULA" },
+        { href: routes.legal, label: "Legal" },
       ],
     },
   },
@@ -82,7 +85,7 @@ interface FooterProps extends HTMLAttributes<HTMLDivElement> {
 
 export const Footer: FC<FooterProps> = ({
   variant = "default",
-  groups = defaultGroups,
+  groups = defaultFooterGroups,
   ...props
 }) => {
   const { className, ...rest } = props;

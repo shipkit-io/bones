@@ -49,6 +49,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/og",
     "/trpc",
     "/launch",
+    "/docs", // planned route, no page exists yet (LAC-2783)
+    "/v1", // CLI logger API endpoint, not a page (LAC-2783)
   ];
 
   // Filter routes
