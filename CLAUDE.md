@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Deployment: this repo is canonical for bones.sh
+
+**Production for [bones.sh](https://bones.sh) deploys from THIS repo** (`shipkit-io/bones`, branch `main`) via the Vercel project `bones` (`prj_GoLdhv6ei8JKqK9jydtLv5wgLzzx`). Changes intended for bones.sh production must land here.
+
+Do NOT use `lacymorrow/bones-www` for bones.sh work — it is archived and deploys nowhere (its Vercel project was deleted; see LAC-2792). Fixes merged there between Feb and Jun 2026 never reached production.
+
 ## Essential Development Commands
 
 ### Development Server

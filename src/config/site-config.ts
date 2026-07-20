@@ -126,7 +126,7 @@ export const siteConfig: SiteConfig = {
 	name: "Bones",
 	title: "Launch your app today",
 	url: "https://bones.sh",
-	ogImage: "https://shipkit.io/og",
+	ogImage: "https://bones.sh/og",
 	description:
 		"Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
 
