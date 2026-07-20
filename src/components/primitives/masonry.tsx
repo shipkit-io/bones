@@ -44,7 +44,7 @@ const ExampleMasonry: React.FC = () => {
 				<img
 					className="w-full rounded-lg object-contain"
 					src={imageUrl}
-					alt={`Random stock image ${idx + 1}`}
+					alt={`Random stock placeholder ${idx + 1}`}
 					loading="lazy"
 				/>
 			)}
