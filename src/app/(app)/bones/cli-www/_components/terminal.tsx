@@ -53,6 +53,7 @@ export function Terminal({ output, className }: TerminalProps) {
 					<div
 						key={`${i}-${line.slice(0, 20)}`}
 						className="min-h-[6px]"
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: ansi-to-html escapes input (escapeXML: true); only its own color spans are injected
 						dangerouslySetInnerHTML={{
 							__html: convert.toHtml(cleanAnsi(line)) || '&nbsp;',
 						}}

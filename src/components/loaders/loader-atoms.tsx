@@ -33,8 +33,10 @@ export interface LoaderAtomsProps
 export const LoaderAtoms = React.forwardRef<HTMLDivElement, LoaderAtomsProps>(
 	({ className, size, color, label, ...props }, ref) => {
 		return (
+			// biome-ignore lint/a11y/useSemanticElements: keeping a div preserves the exported HTMLDivElement ref type
 			<div
 				ref={ref}
+				role="status"
 				aria-live="polite"
 				aria-label={label || "Loading"}
 				className={cn("relative", className)}

@@ -58,7 +58,9 @@ function ensureCacheSize(): void {
 		entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
 
 		const toRemove = entries.slice(0, headingCache.size - MAX_CACHE_SIZE + 1);
-		toRemove.forEach(([key]) => headingCache.delete(key));
+		toRemove.forEach(([key]) => {
+			headingCache.delete(key);
+		});
 	}
 }
 
@@ -89,9 +91,8 @@ export function extractHeadings(content: string): Heading[] {
 	// Extract headings if not in cache or expired
 	const headingRegex = /^(#{1,6})\s+(.+)$/gm;
 	const headings: Heading[] = [];
-	let match;
 
-	while ((match = headingRegex.exec(content)) !== null) {
+	for (const match of content.matchAll(headingRegex)) {
 		const level = match[1]?.length ?? 0;
 		const text = match[2]?.trim() ?? "";
 		const id = slugify(text);
