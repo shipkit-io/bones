@@ -1,0 +1,30 @@
+# Secret scan — LAC-2555
+#
+# Fails the PR/push if plaintext credentials appear in the diff.
+# Config lives in .gitleaks.toml at the repo root.
+#
+# Local defense-in-depth: .husky/pre-commit runs the same tool on staged
+# changes when the gitleaks binary is installed.
+
+name: gitleaks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
