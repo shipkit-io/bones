@@ -128,7 +128,7 @@ export const siteConfig: SiteConfig = {
 	url: "https://bones.sh",
 	ogImage: "https://bones.sh/og",
 	description:
-		"Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
+		"Free, open-source Next.js SaaS boilerplate with authentication, Shadcn UI, and one-click Vercel deploy. The fastest way to launch a production-ready React app.",
 
 	branding: {
 		projectName: "Bones",
@@ -213,13 +213,18 @@ export const siteConfig: SiteConfig = {
 
 	metadata: {
 		keywords: [
-			"Next.js",
-			"React",
+			"Next.js boilerplate",
+			"Next.js SaaS starter",
+			"React starter kit",
+			"free Next.js template",
+			"open source SaaS boilerplate",
+			"Next.js authentication",
+			"Shadcn UI",
 			"Tailwind CSS",
+			"TypeScript starter",
+			"Vercel deploy",
 			"Server Components",
-			"Shipkit",
-			"Shadcn",
-			"UI Components",
+			"App Router",
 		],
 		themeColor: {
 			light: "white",

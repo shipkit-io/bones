@@ -28,7 +28,38 @@ export const metadata: Metadata = routeMetadata.home;
 export default function Page() {
   return (
     <>
-      <JsonLd organization website softwareSourceCode />
+      <JsonLd
+        organization
+        website
+        softwareSourceCode
+        product={{
+          name: "Bones - Next.js SaaS Boilerplate",
+          description: "Free, open-source Next.js starter kit with authentication, Shadcn UI, and one-click Vercel deploy.",
+          image: "https://bones.sh/og",
+          price: "0",
+          priceCurrency: "USD",
+        }}
+        faq={{
+          questions: [
+            {
+              question: "Is Bones free to use?",
+              answer: "Yes, Bones is completely free and open-source under the MIT license. You own 100% of the code.",
+            },
+            {
+              question: "What tech stack does Bones use?",
+              answer: "Bones uses Next.js 16, React 19, TypeScript, Tailwind CSS, Shadcn/UI, and supports NextAuth + Better Auth for authentication.",
+            },
+            {
+              question: "How do I deploy Bones?",
+              answer: "Click the Deploy with Vercel button for one-click deployment. No environment variables are needed to start — the setup wizard guides you through configuration.",
+            },
+            {
+              question: "What is the difference between Bones and ShipKit?",
+              answer: "Bones is the free, open-source foundation. ShipKit is the premium framework built on top of Bones that adds database (Drizzle + PostgreSQL), payments (Stripe), CMS (Payload + Builder.io), AI integrations, and 100+ additional components.",
+            },
+          ],
+        }}
+      />
       <div className="container flex flex-col items-center justify-center gap-2xl py-6 text-center min-h-screen">
         <PageHeader className="flex flex-col items-center justify-center">
           <PageHeaderHeading
