@@ -154,9 +154,9 @@ export const constructMetadata = ({
 // Route-specific metadata for better CTR
 export const routeMetadata = {
 	home: {
-		title: `${siteConfig.branding.projectName} - ${siteConfig.title}`,
+		title: `${siteConfig.branding.projectName} - Free Open-Source Next.js SaaS Boilerplate`,
 		description:
-			`Transform your app idea into reality with ${siteConfig.branding.projectName}'s all-in-one development platform. Built with Next.js, TypeScript, and modern tools for rapid, production-ready deployment.`,
+			`${siteConfig.branding.projectName} is a free, open-source Next.js starter kit with authentication, Shadcn UI, and one-click Vercel deploy. Ship production-ready React apps in minutes, not weeks.`,
 	},
 	features: {
 		title: `Features - Modern App Development Made Simple | ${siteConfig.branding.projectName}`,
