@@ -30,6 +30,10 @@ env/
 *.env*
 !.env.example
 
+# Secret-scan hygiene (LAC-3244)
+# .specstory persists chat transcripts that have historically captured live tokens.
+.specstory/
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
