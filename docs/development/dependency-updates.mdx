@@ -1,0 +1,61 @@
+---
+title: "Dependency Updates"
+description: "How Bones keeps its dependencies current, and how to run an update by hand"
+---
+
+# Dependency Updates
+
+Bones keeps dependencies fresh on a routine schedule so upgrades land as small,
+reviewable pull requests instead of one big painful sweep. Two layers cover this:
+automated Dependabot PRs (the default) and a manual escape hatch for one-off bumps.
+
+## Automated: Dependabot
+
+Dependabot is configured in [`.github/dependabot.yml`](https://github.com/shipkit-io/bones/blob/main/.github/dependabot.yml).
+Every Monday it opens grouped pull requests:
+
+- **Production minor/patch** — one PR batching all safe production dependency bumps.
+- **Dev dependencies** — one PR batching all dev dependency bumps.
+- **Major bumps** — opened individually so each gets a deliberate human review.
+- **GitHub Actions** — one PR for workflow action updates.
+
+Bones uses pnpm; Dependabot reads `pnpm-lock.yaml` via the `npm` ecosystem.
+
+### Reviewing a Dependabot PR
+
+1. Let CI run — a green build is the baseline gate.
+2. Skim the linked changelog/release notes for each bumped package, especially anything
+   touching auth, payments, or the consent/privacy layer (`@c15t/*`). Minor releases are
+   usually safe; read the notes anyway.
+3. For grouped minor/patch PRs with green CI, merge. For major bumps, treat it like a
+   feature change: read the migration guide, test the affected surface, then merge.
+
+## Manual: on-demand updates
+
+When you need to bump something before the weekly cadence (a security fix, a specific
+release you're waiting on), do it by hand:
+
+```bash
+pnpm run deps:check     # ncu — list what is outdated
+pnpm run deps:update    # ncu -u — rewrite package.json to latest ranges
+pnpm install            # refresh pnpm-lock.yaml
+pnpm run typecheck      # confirm nothing broke
+pnpm run lint           # confirm nothing broke
+```
+
+To bump a single package instead of everything:
+
+```bash
+pnpm update <package>           # within the current semver range
+# or edit the version in package.json, then:
+pnpm install
+```
+
+Always run `typecheck` and `lint` after any update, and open a PR — never push
+dependency bumps straight to `main`.
+
+## Where this applies
+
+This process ships in `bones` (the free starter) and flows to every downstream
+Shipkit site via the upstream sync. Each downstream repo inherits the same
+`.github/dependabot.yml`, so the whole family stays current without per-repo setup.

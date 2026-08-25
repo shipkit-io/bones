@@ -1,0 +1,60 @@
+# Dependabot keeps dependencies current on a routine schedule so upgrades land
+# as small, reviewable PRs instead of one big painful sweep (see LAC-3320).
+#
+# How it works: Dependabot opens grouped PRs every Monday. Minor/patch bumps are
+# batched into a single PR per ecosystem to avoid noise; major bumps open on their
+# own so they get individual review.
+#
+# pnpm note: the npm ecosystem drives pnpm projects — Dependabot reads pnpm-lock.yaml.
+version: 2
+updates:
+  # App JavaScript dependencies (root package.json)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    groups:
+      # One PR for all safe (minor + patch) production dependency bumps
+      production-minor-patch:
+        applies-to: version-updates
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      # One PR for all dev dependency bumps
+      development:
+        applies-to: version-updates
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    # Major bumps of framework-critical packages get opened individually (not
+    # grouped), but never auto-batched with the rest — they always need a human.
+
+  # GitHub Actions used by the workflows in .github/workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
