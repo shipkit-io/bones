@@ -1,10 +1,15 @@
-# Secret scan — LAC-2555
+# Secret scan — LAC-2555 (fix: LAC-3287)
 #
-# Fails the PR/push if plaintext credentials appear in the diff.
+# Scans the PR/push diff with the gitleaks CLI. We install the binary
+# directly instead of using gitleaks/gitleaks-action@v2 because that
+# action requires a paid license for GitHub Organizations
+# (shipkit-io is an org — v2 hard-errors with "missing gitleaks
+# license" and fails the check). The CLI has no such restriction.
+#
 # Config lives in .gitleaks.toml at the repo root.
 #
-# Local defense-in-depth: .husky/pre-commit runs the same tool on staged
-# changes when the gitleaks binary is installed.
+# Local defense-in-depth: .githooks/pre-commit runs the same tool on
+# staged changes when the gitleaks binary is installed.
 
 name: gitleaks
 
@@ -17,14 +22,46 @@ permissions:
   contents: read
 
 jobs:
-  gitleaks:
+  scan-diff:
     name: gitleaks
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
         with:
+          # Need history so gitleaks can walk the PR range or push delta.
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install gitleaks
+        run: |
+          set -euo pipefail
+          VERSION="8.21.2"
+          curl -sSfL -o /tmp/gitleaks.tgz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz"
+          tar -xzf /tmp/gitleaks.tgz -C /tmp gitleaks
+          sudo mv /tmp/gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+      - name: Determine scan range
+        id: range
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            echo "log_opts=--no-merges ${BASE}..${HEAD}" >> "$GITHUB_OUTPUT"
+          else
+            BEFORE="${{ github.event.before }}"
+            if [[ -z "$BEFORE" || "$BEFORE" == "0000000000000000000000000000000000000000" ]]; then
+              echo "log_opts=-1 HEAD" >> "$GITHUB_OUTPUT"
+            else
+              echo "log_opts=--no-merges ${BEFORE}..${{ github.sha }}" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+      - name: Scan diff
+        run: |
+          set -euo pipefail
+          gitleaks git \
+            --config .gitleaks.toml \
+            --redact \
+            --verbose \
+            --exit-code 1 \
+            --log-opts="${{ steps.range.outputs.log_opts }}"
