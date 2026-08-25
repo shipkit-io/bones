@@ -121,7 +121,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "0.45.1",
     "embla-carousel-react": "^8.6.0",
-    "framer-motion": "^12.34.0",
+    "framer-motion": "^13.1.1",
     "geist": "1.7.0",
     "holy-loader": "2.3.14",
     "input-otp": "^1.4.2",
