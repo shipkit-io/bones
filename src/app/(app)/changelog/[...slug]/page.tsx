@@ -6,8 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { constructMetadata } from "@/config/metadata";
-import { siteConfig } from "@/config/site-config";
+import { constructMetadata, routeMetadata } from "@/config/metadata";
 import { getChangelogEntries, getChangelogEntry } from "@/lib/changelog";
 import { cn } from "@/lib/utils";
 import { formatDate, formatDateTimeAttribute } from "@/lib/utils/format-date";
@@ -31,13 +30,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await getChangelogEntry(slug);
 
   if (!entry) {
-    return constructMetadata({
-      title: `Changelog | ${siteConfig.title}`,
-    });
+    return constructMetadata(routeMetadata.changelog);
   }
 
   return constructMetadata({
-    title: `${entry.title} | ${siteConfig.title} Changelog`,
+    title: `${entry.title} — Changelog`,
     description: entry.description,
   });
 }

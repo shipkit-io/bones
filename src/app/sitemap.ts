@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site-config";
 import { routes } from "@/config/routes";
+import { getChangelogEntries } from "@/lib/changelog";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
 
   // Helper to check if a route is external
@@ -76,6 +77,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
           ? 0.5
           : 0.8,
   }));
+
+  // Changelog entries are indexable pages linked from /changelog; without
+  // them Ahrefs flags "Indexable page not in sitemap" (LAC-3521). The helper
+  // returns [] if the GitHub API is unreachable, so the build never fails.
+  const changelogEntries = await getChangelogEntries();
+  for (const entry of changelogEntries) {
+    sitemapEntries.push({
+      url: `${baseUrl}/changelog/${entry.slug}`,
+      lastModified: entry.publishedAt ? new Date(entry.publishedAt) : new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    });
+  }
 
   // Sort by priority and then alphabetically
   sitemapEntries.sort((a, b) => {

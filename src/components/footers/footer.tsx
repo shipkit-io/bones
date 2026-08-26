@@ -135,7 +135,7 @@ export const Footer: FC<FooterProps> = ({
               href={routes.home}
               className="text-4xl font-bold hover:text-primary/80 transition-colors"
             >
-              <h1>{siteConfig.name}</h1>
+              <span>{siteConfig.name}</span>
             </Link>
           </div>
           <div className="flex flex-col flex-wrap md:flex-row lg:gap-20">

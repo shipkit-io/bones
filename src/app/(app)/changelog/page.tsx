@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { constructMetadata } from "@/config/metadata";
-import { siteConfig } from "@/config/site-config";
+import { constructMetadata, routeMetadata } from "@/config/metadata";
 import { getChangelogEntries } from "@/lib/changelog";
 import { formatDate } from "@/lib/utils/format-date";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = constructMetadata({
-  title: `Changelog | ${siteConfig.title}`,
-  description: `See what's new in ${siteConfig.title}. Latest updates, features, and fixes.`,
-});
+export const metadata: Metadata = constructMetadata(routeMetadata.changelog);
 
 export default async function ChangelogPage() {
   const entries = await getChangelogEntries();
