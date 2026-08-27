@@ -10,16 +10,16 @@ export default function MainLayout({
 	footer,
 }: {
 	children: React.ReactNode;
-	header?: React.ReactNode;
-	footer?: React.ReactNode;
+	header?: React.ReactNode | null;
+	footer?: React.ReactNode | null;
 	className?: string;
 }) {
 	return (
 		<>
 			<div className={cn("", className)}>
-				{header ?? <Header />}
+				{header === undefined ? <Header /> : header}
 				{children}
-				{footer ?? <Footer />}
+				{footer === undefined ? <Footer /> : footer}
 			</div>
 		</>
 	);
