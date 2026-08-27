@@ -30,8 +30,8 @@ interface GitHubTag {
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const REPO_OWNER = process.env.GITHUB_REPO_OWNER ?? "lacymorrow";
-const REPO_NAME = process.env.GITHUB_REPO_NAME ?? "shipkit";
+const REPO_OWNER = process.env.GITHUB_REPO_OWNER ?? "shipkit-io";
+const REPO_NAME = process.env.GITHUB_REPO_NAME ?? "bones";
 const GITHUB_API = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
 const COMMITS_PER_PAGE = 100;
 const MAX_PAGES = 5; // 500 commits max
