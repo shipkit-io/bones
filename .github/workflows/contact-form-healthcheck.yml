@@ -1,0 +1,63 @@
+name: Contact form health check
+
+# LAC-3572 (part of LAC-3570): verify the contact form's dependencies every day
+# so it can never silently break again. Two layers:
+#   1. GET /api/health/contact — confirms RESEND_API_KEY is set and still valid
+#      (lightweight authenticated Resend read) and siteConfig email addresses
+#      are configured. Sends no email.
+#   2. GET /contact — confirms the page carrying the form is deployed and
+#      serving 200 on the canonical domain. (The form submits via a Next.js
+#      server action, which has no stable REST route to probe, so the health
+#      endpoint above is the primary layer.)
+# If either fails the job fails, and GitHub emails the repo owner. Add a Slack
+# webhook secret (SLACK_WEBHOOK_URL) to also get a chat alert.
+
+on:
+  schedule:
+    - cron: '0 13 * * *' # 13:00 UTC daily (~9am ET)
+  workflow_dispatch: {} # allow manual runs
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://bones.sh
+      HEALTHCHECK_TOKEN: ${{ secrets.HEALTHCHECK_TOKEN }}
+    steps:
+      - name: Config health check (Resend credentials + email config)
+        run: |
+          echo "GET $SITE_URL/api/health/contact"
+          code=$(curl -s -o /tmp/health.json -w "%{http_code}" \
+            -H "x-healthcheck-token: $HEALTHCHECK_TOKEN" \
+            "$SITE_URL/api/health/contact")
+          echo "HTTP $code"; cat /tmp/health.json; echo
+          if [ "$code" != "200" ]; then
+            echo "::error::Contact form health check FAILED (HTTP $code). Email provider may be misconfigured."
+            exit 1
+          fi
+          # The site serves 200 HTML for unknown routes (CMS catch-all), so a
+          # status code alone can't prove the health route is deployed —
+          # require the endpoint's JSON body too.
+          if ! grep -q '"ok":\s*true' /tmp/health.json; then
+            echo "::error::Health endpoint did not return its JSON body — route may not be deployed (catch-all page served instead)."
+            exit 1
+          fi
+
+      - name: Contact page check (form is deployed and serving)
+        run: |
+          echo "GET $SITE_URL/contact"
+          code=$(curl -sL -o /dev/null -w "%{http_code}" "$SITE_URL/contact")
+          echo "HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Contact page is DOWN (HTTP $code)."
+            exit 1
+          fi
+
+      - name: Notify Slack on failure
+        if: failure() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -d '{"text":":rotating_light: bones.sh contact form health check FAILED. See GitHub Actions run '"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"}' || true
