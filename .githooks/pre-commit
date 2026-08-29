@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+# Secret scanner — LAC-2555
+#
+# Blocks commits that introduce plaintext credentials.
+# Requires `gitleaks` locally; if not installed we print a warning and
+# fall through — CI still runs the same scan on the PR, so this is
+# defense-in-depth, not the only gate.
+#
+# Install:
+#   macOS   → brew install gitleaks
+#   linux   → https://github.com/gitleaks/gitleaks/releases
+
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks protect --staged --redact --no-banner; then
+    echo ""
+    echo "gitleaks found a potential secret in staged changes."
+    echo "If real: rotate the credential first, then remove it from the diff."
+    echo "If a false positive: extend .gitleaks.toml allowlist or add an inline"
+    echo "'gitleaks:allow' comment. Do not disable the hook."
+    exit 1
+  fi
+else
+  echo "gitleaks not installed — skipping local secret scan (CI still runs)."
+  echo "  install: brew install gitleaks"
+fi
