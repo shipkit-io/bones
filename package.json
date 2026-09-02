@@ -197,7 +197,7 @@
     "drizzle-kit": "0.31.9",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "lighthouse": "^13.0.3",
     "npm-check-updates": "^19.3.2",
     "postcss": "8.5.6",
