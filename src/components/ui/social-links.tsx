@@ -1,15 +1,14 @@
 import {
-  Dribbble,
-  Facebook,
-  Github,
-  Globe,
-  Instagram,
-  Linkedin,
-  MessageCircle,
-  Twitter,
-  Youtube,
-} from "lucide-react";
-import type { ComponentType, SVGProps } from "react";
+  IconBrandDribbble,
+  IconBrandFacebook,
+  IconBrandGithub,
+  IconBrandInstagram,
+  IconBrandLinkedin,
+  IconBrandX,
+  IconBrandYoutube,
+} from "@tabler/icons-react";
+import { Globe, MessageCircle } from "lucide-react";
+import type { ComponentType } from "react";
 import { Link } from "@/components/primitives/link";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
@@ -34,17 +33,18 @@ interface SocialLinksProps {
   labelled?: boolean;
 }
 
-const platformIcon: Record<SocialPlatform, ComponentType<SVGProps<SVGSVGElement>>> = {
-  github: Github,
-  twitter: Twitter,
-  x: Twitter,
-  linkedin: Linkedin,
-  instagram: Instagram,
-  facebook: Facebook,
-  youtube: Youtube,
+// lucide-react 1.0 removed its brand icons; brand marks come from @tabler/icons-react instead.
+const platformIcon: Record<SocialPlatform, ComponentType<{ className?: string }>> = {
+  github: IconBrandGithub,
+  twitter: IconBrandX,
+  x: IconBrandX,
+  linkedin: IconBrandLinkedin,
+  instagram: IconBrandInstagram,
+  facebook: IconBrandFacebook,
+  youtube: IconBrandYoutube,
   tiktok: Globe,
   discord: MessageCircle,
-  dribbble: Dribbble,
+  dribbble: IconBrandDribbble,
   threads: Globe,
 };
 

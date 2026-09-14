@@ -1,6 +1,7 @@
 "use client";
 
-import { Facebook, Linkedin, Link as LinkIcon, Share2, Twitter } from "lucide-react";
+import { IconBrandFacebook, IconBrandLinkedin, IconBrandX } from "@tabler/icons-react";
+import { Link as LinkIcon, Share2 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -108,15 +109,15 @@ export const Share = ({
       {!supportsNativeShare && (
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => openShareWindow(twitterUrl)}>
-            <Twitter className="mr-2 h-4 w-4" />
+            <IconBrandX className="mr-2 h-4 w-4" />
             Share on Twitter
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => openShareWindow(facebookUrl)}>
-            <Facebook className="mr-2 h-4 w-4" />
+            <IconBrandFacebook className="mr-2 h-4 w-4" />
             Share on Facebook
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => openShareWindow(linkedinUrl)}>
-            <Linkedin className="mr-2 h-4 w-4" />
+            <IconBrandLinkedin className="mr-2 h-4 w-4" />
             Share on LinkedIn
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleCopyLink}>
