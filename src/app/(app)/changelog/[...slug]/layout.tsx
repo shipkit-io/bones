@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { ReactNode } from "react";
-import { getChangelogEntry } from "@/lib/changelog";
+import { getChangelogEntry, isLegacyUnreleasedSlug, UNRELEASED_SLUG } from "@/lib/changelog";
 
 interface Props {
 	children: ReactNode;
@@ -14,10 +14,18 @@ interface Props {
  * here runs before Next streams the shell and the response gets a real 404.
  * The page below keeps its skeleton for slow renders. getChangelogEntry is
  * cached (unstable_cache), so the page's own lookup costs nothing extra.
+ *
+ * The untagged group used to be named after its newest commit
+ * (`updates-YYYY-MM-DD`), so cached list pages, sitemaps and search results
+ * still carry those slugs. They redirect to the stable slug instead of 404ing.
  */
 export default async function ChangelogEntryLayout({ children, params }: Props) {
 	const { slug } = await params;
-	const entry = await getChangelogEntry(slug.join("/"));
-	if (!entry) notFound();
+	const key = slug.join("/");
+	const entry = await getChangelogEntry(key);
+	if (!entry) {
+		if (isLegacyUnreleasedSlug(key)) permanentRedirect(`/changelog/${UNRELEASED_SLUG}`);
+		notFound();
+	}
 	return children;
 }
