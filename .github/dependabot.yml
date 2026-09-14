@@ -1,7 +1,7 @@
 # Dependabot keeps dependencies current on a routine schedule so upgrades land
 # as small, reviewable PRs instead of one big painful sweep (see LAC-3320).
 #
-# How it works: Dependabot opens grouped PRs every Monday. Minor/patch bumps are
+# How it works: Dependabot opens grouped PRs monthly (weekly burned paid Actions minutes on every PR). Minor/patch bumps are
 # batched into a single PR per ecosystem to avoid noise; major bumps open on their
 # own so they get individual review.
 #
@@ -12,11 +12,11 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "monday"
       time: "06:00"
       timezone: "America/New_York"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
     commit-message:
@@ -44,7 +44,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "monday"
       time: "06:00"
       timezone: "America/New_York"
