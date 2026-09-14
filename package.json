@@ -177,7 +177,7 @@
     "@next/eslint-plugin-next": "16.3.5",
     "@next/mdx": "16.3.5",
     "@tailwindcss/typography": "0.5.20",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/color": "^4.2.1",
     "@types/next-pwa": "^5.6.9",
@@ -198,7 +198,7 @@
     "drizzle-kit": "0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "lighthouse": "^13.4.1",
     "npm-check-updates": "^23.1.0",
     "postcss": "8.5.28",
@@ -210,7 +210,7 @@
     "tailwindcss": "3.4.17",
     "typescript": "^5",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.0"
   },
   "pnpm": {
     "overrides": {
