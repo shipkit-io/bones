@@ -233,8 +233,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(@types/react@19.2.18)(react@19.2.4)
       lucide-react:
-        specifier: 0.564.0
-        version: 0.564.0(react@19.2.4)
+        specifier: 1.46.0
+        version: 1.46.0(react@19.2.4)
       motion:
         specifier: ^13.3.0
         version: 13.3.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -6418,8 +6418,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.564.0:
-    resolution: {integrity: sha512-JJ8GVTQqFwuliifD48U6+h7DXEHdkhJ/E87kksGByII3qHxtPciVb8T8woQONHBQgHVOl7rSMrrip3SeVNy7Fg==}
+  lucide-react@1.46.0:
+    resolution: {integrity: sha512-Bv+FZXgZPrxc/NCl1e7JJVQFLdiCxYgxNVhqoV7X0p6I8ADJo8DxBnK1auH0fZz4AmqOJ3jgneL4f1i8LJQRAA==}
     peerDependencies:
       react: 19.2.4
 
@@ -15009,7 +15009,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@0.564.0(react@19.2.4):
+  lucide-react@1.46.0(react@19.2.4):
     dependencies:
       react: 19.2.4
 
@@ -17447,7 +17447,7 @@ snapshots:
   vite@8.1.4(@types/node@26.5.1)(esbuild@0.28.2)(jiti@1.21.7)(terser@5.50.0)(tsx@4.23.13)(yaml@2.8.2):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       postcss: 8.5.28
       rolldown: 1.1.5
       tinyglobby: 0.2.17

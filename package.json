@@ -128,7 +128,7 @@
     "holy-loader": "2.3.14",
     "input-otp": "^1.5.0",
     "jotai": "3.0.0",
-    "lucide-react": "0.564.0",
+    "lucide-react": "1.46.0",
     "motion": "^13.3.0",
     "next": "16.3.5",
     "next-auth": "5.0.0-beta.32",
