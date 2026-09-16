@@ -51,7 +51,8 @@
     "test:browser": "vitest --config=vitest.config.browser.ts",
     "test:node": "vitest --config=vitest.config.node.ts",
     "typecheck": "tsc --noEmit",
-    "verify": "bash scripts/verify.sh"
+    "verify": "bash scripts/verify.sh",
+    "postinstall": "git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "1.11.3",

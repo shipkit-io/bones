@@ -1,0 +1,23 @@
+# gitleaks config — LAC-2555
+#
+# Extends the built-in rule set. Allowlist covers files that legitimately
+# contain placeholder credentials (example env files, docs, changelogs).
+# When you add a new placeholder file that trips gitleaks, extend the
+# `paths` list here rather than removing the scan.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholder-credential files and generated docs"
+paths = [
+  '''(^|/)\.env\.example(\..+)?$''',
+  '''(^|/)\.env\.example\.local$''',
+  '''(^|/)\.env\.test$''',
+  '''(^|/)\.env\.example\.production$''',
+  '''(^|/)README\.md$''',
+  '''(^|/)CHANGELOG\.md$''',
+  '''(^|/)LICENSE$''',
+  '''(^|/)docs/''',
+  '''(^|/)public/llms(-full)?\.txt$''',
+]
