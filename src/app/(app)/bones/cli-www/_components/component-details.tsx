@@ -38,7 +38,7 @@ export function ComponentDetails({
 }: ComponentDetailsProps) {
 	const [selectedFile, setSelectedFile] = useState<string>()
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+	const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
 		if (e.key === 'Escape') {
 			onClose()
 		}
@@ -61,12 +61,12 @@ export function ComponentDetails({
 
 	return (
 		<>
-			<div
+			<button
+				type="button"
+				aria-label="Close"
 				className="absolute inset-0 bg-background/50 z-40"
 				onClick={onClose}
 				onKeyDown={handleKeyDown}
-				role="button"
-				tabIndex={0}
 			/>
 			<motion.div
 				initial={{ opacity: 0, scale: 0.95 }}

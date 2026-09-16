@@ -14,5 +14,8 @@ export interface NavLink {
 
 export const defaultNavLinks: NavLink[] = [
   { href: routes.home, label: "Home" },
+  { href: routes.features, label: "Features" },
+  { href: routes.cli, label: "CLI" },
+  { href: routes.faq, label: "FAQ" },
   { href: routes.external.shipkit, label: "Shipkit" },
 ];

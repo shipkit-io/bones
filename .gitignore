@@ -8,6 +8,7 @@ node_modules
 # Testing
 /testing-results
 /coverage
+/.vitest
 
 # Build output
 /build
@@ -29,6 +30,10 @@ yarn-debug.log*
 env/
 *.env*
 !.env.example
+
+# Secret-scan hygiene (LAC-3244)
+# .specstory persists chat transcripts that have historically captured live tokens.
+.specstory/
 
 # TypeScript
 *.tsbuildinfo

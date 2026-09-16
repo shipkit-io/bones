@@ -111,6 +111,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
+> **Note for maintainers:** [bones.sh](https://bones.sh) production deploys from **this repo** (`shipkit-io/bones`, branch `main`) via the Vercel project `bones`. The old `lacymorrow/bones-www` repo is archived and no longer deploys anywhere — changes for bones.sh belong here.
+
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

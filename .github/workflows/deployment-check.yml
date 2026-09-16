@@ -16,6 +16,9 @@ name: Deployment Check
 on:
   deployment_status:
 
+permissions:
+  statuses: write
+
 jobs:
   smoke-test:
     # Only run when the deployment is ready (not pending/failed)

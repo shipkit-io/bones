@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Deployment: this repo is canonical for bones.sh
+
+**Production for [bones.sh](https://bones.sh) deploys from THIS repo** (`shipkit-io/bones`, branch `main`) via the Vercel project `bones` (`prj_GoLdhv6ei8JKqK9jydtLv5wgLzzx`). Changes intended for bones.sh production must land here.
+
+Do NOT use `lacymorrow/bones-www` for bones.sh work — it is archived and deploys nowhere (its Vercel project was deleted; see LAC-2792). Fixes merged there between Feb and Jun 2026 never reached production.
+
 ## Essential Development Commands
 
 ### Development Server
@@ -151,6 +157,13 @@ Shipkit uses environment variables for feature toggles:
 - **Prefer Link over router.push** - Use `src/components/primitives/link-with-transition`
 - **Button-like links** - Use `<Link className={cn(buttonVariants(...))} ...>`
 - **Multi-zone navigation** - Use anchor tags (`<a>`) for cross-zone links
+
+### CI Minutes and Local Verification
+GitHub Actions minutes are billed on private repos, and automated upstream syncs and agent-authored PRs burn them on checks that were already run locally.
+- **Run `verify` before opening a PR** - `scripts/verify.sh` runs typecheck, lint, unit and node tests, a production build, and a `next start` smoke (`--routes "/ /blog /nope-404=404"` to customize). Paste its Markdown summary in the PR body.
+- **Skip Actions when you verified locally** - put `[skip ci]` in the commit message (GitHub-native; also skips CodeQL and gitleaks, so run `gitleaks protect --staged` locally). Vercel still builds, and the Deployment Check smoke still runs because it triggers off the Vercel deployment.
+- **Ask for the full suite when it matters** - add the `ci:full` label to a PR (shipkit and downstreams gate the expensive jobs behind it; pushes to `main` always run everything).
+- **Suspense and loading files** - never add `loading.tsx` or `<Suspense>` above a page that calls `notFound()`; the shell streams a 200 first (see `tests/node/app/no-loading-above-not-found.test.ts`).
 
 ### Database Best Practices
 - **Use transactions** - `db.transaction()` for multi-operation changes

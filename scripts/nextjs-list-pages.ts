@@ -41,14 +41,20 @@ const htmlFiles = walk(serverDir)
 	.sort();
 
 console.log("\n📄 Static HTML files emitted:");
-htmlFiles.forEach((p) => console.log("  •", p));
+htmlFiles.forEach((p) => {
+	console.log("  •", p);
+});
 
 console.log("\n📦 SSG routes from prerender‑manifest.json:");
-ssgRoutes.forEach((p) => console.log("  •", p));
+ssgRoutes.forEach((p) => {
+	console.log("  •", p);
+});
 
 if (dynamicSsgRoutes.length) {
 	console.log("\n📦 Dynamic SSG routes (ISR/fallback):");
-	dynamicSsgRoutes.forEach((p) => console.log("  •", p));
+	dynamicSsgRoutes.forEach((p) => {
+		console.log("  •", p);
+	});
 }
 
 console.log("\n✅ Done.");

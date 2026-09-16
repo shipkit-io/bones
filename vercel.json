@@ -26,5 +26,6 @@
         }
       ]
     }
-  ]
+  ],
+  "ignoreCommand": "bash scripts/vercel-ignore-step.sh"
 }

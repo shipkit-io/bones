@@ -6,13 +6,13 @@ import {
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 
-export interface AccordionItem {
+export interface AccordionListItem {
   title: string;
   content: React.ReactNode;
 }
 
 interface AccordionListProps {
-  items: AccordionItem[];
+  items: AccordionListItem[];
   accordionProps?: any; // TODO: fix type
 }
 
