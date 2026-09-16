@@ -1,30 +1,16 @@
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
-import ts from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
+import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-	// Base config for all files
-	{
-		languageOptions: {
-			parserOptions: {
-				project: ["./tsconfig.json"],
-				tsconfigRootDir: __dirname,
-			},
-		},
-		linterOptions: {
-			reportUnusedDisableDirectives: true,
-		},
-	},
-
+// eslint-config-next 16 ships native flat configs, so they are imported directly.
+// The old FlatCompat bridge (@eslint/eslintrc) cannot convert them ("Converting circular
+// structure to JSON") and ESLint 10 dropped eslintrc support from core.
+const eslintConfig = tseslint.config(
 	// Configure global ignores (replaces .eslintignore)
 	{
 		ignores: [
@@ -37,19 +23,45 @@ const eslintConfig = [
 		],
 	},
 
+	// Base config for all files
+	{
+		linterOptions: {
+			reportUnusedDisableDirectives: true,
+		},
+	},
+
 	// Extend configurations
-	...compat.extends(
-		"plugin:@typescript-eslint/recommended-type-checked",
-		"plugin:@typescript-eslint/stylistic-type-checked",
-		"next/core-web-vitals",
-		"next/typescript"
-	),
+	...nextCoreWebVitals,
+	...nextTypescript,
+
+	// Files tsconfig.json excludes have no type information, so type-aware rules cannot run on them.
+	{
+		files: [
+			"scripts/**/*.{ts,tsx}",
+			"tests/**/*.{ts,tsx}",
+			"src/workers/**/*.ts",
+			"src/app/(app)/(ai)/**/*.{ts,tsx}",
+			"src/app/(app)/(demo)/examples/**/*.{ts,tsx}",
+			"*.config.ts",
+			"*.config.*.ts",
+		],
+		extends: [tseslint.configs.disableTypeChecked],
+	},
 
 	// TypeScript files configuration
 	{
 		files: ["**/*.{ts,tsx}"],
+		ignores: [
+			"scripts/**",
+			"tests/**",
+			"src/workers/**",
+			"src/app/(app)/(ai)/**",
+			"src/app/(app)/(demo)/examples/**",
+			"*.config.ts",
+			"*.config.*.ts",
+		],
+		extends: [tseslint.configs.recommendedTypeChecked, tseslint.configs.stylisticTypeChecked],
 		languageOptions: {
-			parser: tsParser,
 			parserOptions: {
 				project: ["./tsconfig.json"],
 				tsconfigRootDir: __dirname,
@@ -60,11 +72,7 @@ const eslintConfig = [
 				},
 			},
 		},
-		plugins: {
-			"@typescript-eslint": ts,
-		},
 		rules: {
-			...ts.configs.recommended.rules,
 			"@typescript-eslint/no-unused-vars": [
 				"warn",
 				{
@@ -90,7 +98,7 @@ const eslintConfig = [
 			"@typescript-eslint/no-unsafe-member-access": "warn",
 			"@typescript-eslint/no-unsafe-return": "warn",
 		},
-	},
-];
+	}
+);
 
 export default eslintConfig;
