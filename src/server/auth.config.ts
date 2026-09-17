@@ -1,5 +1,6 @@
-import { routes } from "@/config/routes";
 import type { NextAuthConfig } from "next-auth";
+import { routes } from "@/config/routes";
+import { isSignInEmailAllowed } from "@/server/magic-link-allowlist";
 import { providers } from "./auth.providers";
 
 // Extend the default session user type
@@ -31,6 +32,17 @@ export const authOptions: NextAuthConfig = {
 		error: routes.auth.error,
 		signIn: routes.auth.signIn,
 		signOut: routes.auth.signOut,
+	},
+	callbacks: {
+		// Magic link (Resend): Auth.js runs signIn before sendVerificationRequest,
+		// so refusing here blocks the email send. AUTH_ALLOWED_EMAILS (comma-separated
+		// addresses/domains) refuses unknown addresses; unset allows everyone.
+		signIn({ user, account }) {
+			if (account?.provider === "resend") {
+				return !!user.email && isSignInEmailAllowed(user.email);
+			}
+			return true;
+		},
 	},
 	// session: {
 	// 	strategy: "database",
