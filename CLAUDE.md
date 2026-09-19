@@ -165,6 +165,14 @@ GitHub Actions minutes are billed on private repos, and automated upstream syncs
 - **Ask for the full suite when it matters** - add the `ci:full` label to a PR (shipkit and downstreams gate the expensive jobs behind it; pushes to `main` always run everything).
 - **Suspense and loading files** - never add `loading.tsx` or `<Suspense>` above a page that calls `notFound()`; the shell streams a 200 first (see `tests/node/app/no-loading-above-not-found.test.ts`).
 
+### GitHub Actions Are Advisory, Deploys Are Not Gated On Them
+Actions are not paid for on these repos, so jobs can stop running at any time. Nothing in the deploy path depends on them.
+- **Vercel deploys through its own Git integration.** A push deploys whether or not any workflow ran. Verified: shipkit-www shipped two production deployments while every one of its Actions jobs was failing on billing.
+- **No repo requires status checks.** Branch protection needs GitHub Pro on private repos, so there is nothing to satisfy. A red check cannot block a merge; only a person can.
+- **`ignoreCommand` never skips production.** `scripts/vercel-ignore-step.sh` exits 1 for `VERCEL_ENV=production`, so a live site can never be left stale by a skipped build. Only preview builds skip, and only on `[skip ci]`.
+- **Recognise a job that never ran.** Billing-blocked jobs fail in under ~10 seconds with "The job was not started because recent account payments have failed or your spending limit needs to be increased". That is not a code failure, it carries no signal, and it must not hold up a merge or a release. Check the annotation (`gh api repos/<owner>/<repo>/check-runs/<id>/annotations`) rather than guessing from a red X.
+- **So what actually gates a release?** Local `verify` plus the Vercel build. If those are green, ship. If Actions are also green, that is a bonus, not a requirement.
+
 ### Database Best Practices
 - **Use transactions** - `db.transaction()` for multi-operation changes
 - **Avoid booleans** - Use timestamps instead (e.g., `activeAt` vs `isActive`)
