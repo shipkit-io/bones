@@ -1,4 +1,5 @@
 import { Analytics } from "@/components/primitives/analytics";
+import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "@/lib/trpc/react";
@@ -47,16 +48,20 @@ export function RootLayout({ children }: { children: ReactNode }) {
             <TRPCReactProvider>
               <NuqsAdapter>
                 <ThemeProvider attribute="class" defaultTheme="dark">
-                  <TooltipProvider delayDuration={100}>
-                    {/* Content */}
-                    {children}
+                  {/* Keyboard shortcuts - binds every key in
+                      src/config/keyboard-shortcuts.ts */}
+                  <KeyboardShortcutProvider>
+                    <TooltipProvider delayDuration={100}>
+                      {/* Content */}
+                      {children}
 
-                    {/* Toast - Display messages to the user */}
-                    <SonnerToaster />
+                      {/* Toast - Display messages to the user */}
+                      <SonnerToaster />
 
-                    {/* Analytics */}
-                    <Analytics />
-                  </TooltipProvider>
+                      {/* Analytics */}
+                      <Analytics />
+                    </TooltipProvider>
+                  </KeyboardShortcutProvider>
                 </ThemeProvider>
               </NuqsAdapter>
             </TRPCReactProvider>
