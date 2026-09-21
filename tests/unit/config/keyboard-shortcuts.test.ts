@@ -76,4 +76,35 @@ describe("shortcutConfig", () => {
 			.map(([hotkey]) => hotkey);
 		expect(unmodified).toEqual(["/"]);
 	});
+
+	/**
+	 * Shift plus punctuation is a binding that can never fire.
+	 *
+	 * Holding shift rewrites `event.key` for a punctuation key: the comma key
+	 * reports "<", not ",". Mantine matches on `event.key` (`usePhysicalKeys` is
+	 * false and nothing here passes options), so "mod+shift+," waits for a
+	 * keystroke no keyboard produces, while `shortcutLabel` still renders a
+	 * convincing hint for it. Settings sat on that binding until it moved to
+	 * mod+shift+S.
+	 *
+	 * It even survived a browser test, because pressing the literal character
+	 * ("Meta+Shift+,") makes the driver report key "," rather than the "<" a
+	 * real press of that physical key produces. A unit test is the honest place
+	 * to catch it.
+	 *
+	 * Letters and digits are safe: shift only changes their case, and
+	 * `normalizeKey` folds case before comparing.
+	 */
+	it("never combines shift with a punctuation key", () => {
+		for (const [hotkey] of shortcutConfig) {
+			const parts = hotkey.split("+").map((part) => part.trim());
+			const key = parts[parts.length - 1] ?? "";
+			const hasShift = parts.slice(0, -1).some((part) => part.toLowerCase() === "shift");
+			if (!hasShift) continue;
+			expect(
+				key.length > 1 || /^[a-z0-9]$/i.test(key),
+				`"${hotkey}" puts shift on "${key}"; shift rewrites event.key for punctuation, so it can never fire`
+			).toBe(true);
+		}
+	});
 });
