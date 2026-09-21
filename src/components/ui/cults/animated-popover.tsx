@@ -5,8 +5,6 @@ import { X } from "lucide-react";
 import type React from "react";
 import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
 
-import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
-import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { cn } from "@/lib/utils";
 
 const TRANSITION = {
@@ -124,14 +122,23 @@ export function PopoverContent({ children, className, align = "start" }: Popover
 
   useClickOutside(formContainerRef as React.RefObject<HTMLElement>, closePopover);
 
-  useKeyboardShortcut(
-    ShortcutAction.CLOSE_POPOVER,
-    (event) => {
-      closePopover();
-    },
-    () => isOpen,
-    [closePopover, isOpen]
-  );
+  /*
+   * Escape belongs to whichever overlay is on screen, not to the app, so this
+   * listens for itself instead of going through the global shortcut config.
+   * A global Escape binding would have to call preventDefault on every Escape
+   * press anywhere in the app, popover open or not, to close a popover that is
+   * usually not there.
+   */
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closePopover();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, closePopover]);
 
   return (
     <AnimatePresence>

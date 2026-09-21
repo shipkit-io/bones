@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { docsConfig } from "@/components/search/example";
+import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
+import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
@@ -24,6 +26,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { DialogTitle } from "@/components/ui/dialog";
+import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { cn } from "@/lib/utils";
 import type { MainNavItem } from "@/types/nav";
 
@@ -32,26 +35,16 @@ export function Search({ ...props }: DialogProps) {
   const [open, setOpen] = React.useState(false);
   const { setTheme } = useTheme();
 
-  React.useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
-        if (
-          (e.target instanceof HTMLElement && e.target.isContentEditable) ||
-          e.target instanceof HTMLInputElement ||
-          e.target instanceof HTMLTextAreaElement ||
-          e.target instanceof HTMLSelectElement
-        ) {
-          return;
-        }
-
-        e.preventDefault();
-        setOpen((open) => !open);
-      }
-    };
-
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
+  /*
+   * Both keys bound to OPEN_SEARCH (mod+K and "/") land here. The provider is
+   * the only thing listening on the document, so the key shown on the button
+   * and the key that opens this dialog cannot drift apart. Mantine already
+   * skips an INPUT, TEXTAREA, SELECT or contenteditable target, which is the
+   * guard this component used to carry itself.
+   */
+  useKeyboardShortcut(ShortcutAction.OPEN_SEARCH, () => {
+    setOpen((open) => !open);
+  });
 
   const runCommand = React.useCallback((command: () => unknown) => {
     setOpen(false);
@@ -70,9 +63,10 @@ export function Search({ ...props }: DialogProps) {
       >
         <span className="hidden lg:inline-flex">Search...</span>
         <span className="inline-flex lg:hidden">Search...</span>
-        <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-          <span className="text-xs">⌘</span>K
-        </kbd>
+        <ShortcutDisplay
+          action={ShortcutAction.OPEN_SEARCH}
+          className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden opacity-100 sm:inline-flex"
+        />
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <DialogTitle className="sr-only">Search</DialogTitle>

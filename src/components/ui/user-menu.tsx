@@ -1,5 +1,7 @@
 "use client";
 
+import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
+import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -18,6 +20,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-sign-in-redirect-url";
@@ -29,6 +32,7 @@ import { UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 
 type Theme = "light" | "dark" | "system";
@@ -41,11 +45,13 @@ interface UserMenuProps {
 export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className }) => {
 	const { data: session, status } = useSession();
 	const signInRedirectUrl = useSignInRedirectUrl();
+	const router = useRouter();
 	const { theme, setTheme } = useTheme();
 	const { toast } = useToast();
 	const [isOpen, setIsOpen] = React.useState(false);
 
-	const isAdmin = session?.user?.email && siteConfig.admin.isAdmin(session.user.email);
+	const isAdmin = Boolean(session?.user?.email && siteConfig.admin.isAdmin(session.user.email));
+	const isAuthenticated = Boolean(session?.user);
 
 	const handleThemeChange = React.useCallback(
 		async (value: string) => {
@@ -82,33 +88,46 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 		[session?.user, setTheme, toast]
 	);
 
-	// Handle keyboard shortcuts
-	React.useEffect(() => {
-		const handleKeyDown = async (e: KeyboardEvent) => {
-			// Only handle if Command/Control is pressed
-			if (!(e.metaKey || e.ctrlKey)) return;
-
-			switch (e.key) {
-				case "l":
-					e.preventDefault();
-					await handleThemeChange("light");
-					break;
-				case "d":
-					if (e.shiftKey) {
-						e.preventDefault();
-						await handleThemeChange("dark");
-					}
-					break;
-				case "b":
-					e.preventDefault();
-					await handleThemeChange("system");
-					break;
-			}
-		};
-
-		window.addEventListener("keydown", handleKeyDown);
-		return () => window.removeEventListener("keydown", handleKeyDown);
-	}, [handleThemeChange]);
+	/*
+	 * The keys this menu advertises, wired to the same code the rows run.
+	 *
+	 * Every hint comes from `shortcutConfig` via `ShortcutDisplay`, and every
+	 * entry it binds is handled here or by the header search, so nothing in the
+	 * config is left bound to nothing. This used to be a hand-rolled window
+	 * listener that watched for plain Cmd+L, Cmd+D and Cmd+B: it fired while you
+	 * were typing in a text field, and it took Cmd+L (the address bar) and Cmd+D
+	 * (bookmark) away from the browser.
+	 */
+	useKeyboardShortcut(ShortcutAction.SET_THEME_LIGHT, () => {
+		void handleThemeChange("light");
+	});
+	useKeyboardShortcut(ShortcutAction.SET_THEME_DARK, () => {
+		void handleThemeChange("dark");
+	});
+	useKeyboardShortcut(ShortcutAction.SET_THEME_SYSTEM, () => {
+		void handleThemeChange("system");
+	});
+	useKeyboardShortcut(
+		ShortcutAction.GOTO_ADMIN,
+		() => {
+			router.push(routes.admin.root);
+		},
+		() => isAdmin
+	);
+	useKeyboardShortcut(
+		ShortcutAction.GOTO_SETTINGS,
+		() => {
+			router.push(routes.app.settings);
+		},
+		() => isAuthenticated
+	);
+	useKeyboardShortcut(
+		ShortcutAction.LOGOUT_USER,
+		() => {
+			void signOut();
+		},
+		() => isAuthenticated
+	);
 
 	// Loading state
 	if (status === "loading") {
@@ -169,27 +188,21 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 						<DropdownMenuItem asChild>
 							<Link href={routes.admin.root}>
 								Admin
-								<DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
+								<ShortcutDisplay action={ShortcutAction.GOTO_ADMIN} as={DropdownMenuShortcut} />
 							</Link>
 						</DropdownMenuItem>
 					)}
 					<DropdownMenuItem asChild>
-						<Link href={routes.app.dashboard}>
-							Dashboard
-							<DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
-						</Link>
+						<Link href={routes.app.dashboard}>Dashboard</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
 						<Link href={routes.app.settings}>
 							Settings
-							<DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+							<ShortcutDisplay action={ShortcutAction.GOTO_SETTINGS} as={DropdownMenuShortcut} />
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
-						<Link href={routes.app.apiKeys}>
-							API Keys
-							<DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-						</Link>
+						<Link href={routes.app.apiKeys}>API Keys</Link>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
@@ -203,17 +216,17 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 							<DropdownMenuRadioItem value="light" className="flex items-center gap-2">
 								<SunIcon className="size-4" />
 								<span>Light</span>
-								<DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
+								<ShortcutDisplay action={ShortcutAction.SET_THEME_LIGHT} as={DropdownMenuShortcut} />
 							</DropdownMenuRadioItem>
 							<DropdownMenuRadioItem value="dark" className="flex items-center gap-2">
 								<MoonIcon className="size-4" />
 								<span>Dark</span>
-								<DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
+								<ShortcutDisplay action={ShortcutAction.SET_THEME_DARK} as={DropdownMenuShortcut} />
 							</DropdownMenuRadioItem>
 							<DropdownMenuRadioItem value="system" className="flex items-center gap-2">
 								<DesktopIcon className="size-4" />
 								<span>System</span>
-								<DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+								<ShortcutDisplay action={ShortcutAction.SET_THEME_SYSTEM} as={DropdownMenuShortcut} />
 							</DropdownMenuRadioItem>
 						</DropdownMenuRadioGroup>
 					</DropdownMenuSubContent>
@@ -227,7 +240,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 					}}
 				>
 					Sign out
-					<DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+					<ShortcutDisplay action={ShortcutAction.LOGOUT_USER} as={DropdownMenuShortcut} />
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

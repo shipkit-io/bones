@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
-import { type ShortcutActionType, shortcutConfig } from "@/config/keyboard-shortcuts";
+import type * as React from "react";
+import { type ShortcutActionType, shortcutLabel } from "@/config/keyboard-shortcuts";
 import { useIsMac } from "@/hooks/use-is-mac";
 import { cn } from "@/lib/utils";
 
@@ -19,54 +19,17 @@ const defaultKbdStyles =
 	"h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium";
 
 /**
- * Finds the primary shortcut string for a given action.
- * Ignores alternatives like '/' for OPEN_SEARCH.
+ * The key bound to an action, as a person reads it.
+ *
+ * This is the only way a shortcut should reach the screen. Anything that
+ * hand-writes "⌘S" into markup drifts from the binding or outlives it: the
+ * user menu did exactly that, and all eight of its hints named a key nothing
+ * was listening for.
+ *
+ * When an action has more than one binding, `shortcutConfig` order decides
+ * which is shown, so list the one you want advertised first (mod+K before "/"
+ * for search). Formatting itself is pure and lives in the config module.
  */
-function findPrimaryShortcut(action: ShortcutActionType): string | null {
-	for (const [shortcut, act] of shortcutConfig) {
-		if (act === action) {
-			// Basic heuristic: prefer shortcuts with modifiers
-			if (
-				shortcut.includes("mod+") ||
-				shortcut.includes("shift+") ||
-				shortcut.includes("alt+") ||
-				shortcut.includes("ctrl+")
-			) {
-				return shortcut;
-			}
-			// If no modified shortcut found yet, keep track of the first simple one
-			if (!shortcut.includes("+ ")) return shortcut; // Return simple keys like 'Escape' or '/'
-		}
-	}
-	// Fallback to the first match if no modified shortcut found
-	const firstMatch = shortcutConfig.find(([, act]) => act === action);
-	return firstMatch ? firstMatch[0] : null;
-}
-
-/**
- * Parses a shortcut string (e.g., "mod+shift+K") into display parts.
- */
-function parseShortcut(shortcut: string, isMac: boolean): string[] {
-	return shortcut.split("+").map((part) => {
-		switch (part.toLowerCase()) {
-			case "mod":
-				return isMac ? "⌘" : "Ctrl";
-			case "shift":
-				return isMac ? "⇧" : "Shift";
-			case "alt":
-				return isMac ? "⌥" : "Alt";
-			case "ctrl":
-				return "Ctrl";
-			case "enter":
-				return "Enter"; // Or maybe an icon?
-			case "escape":
-				return "Esc";
-			default:
-				return part.toUpperCase(); // Return the key itself, capitalized
-		}
-	});
-}
-
 export const ShortcutDisplay = ({
 	action,
 	className,
@@ -74,36 +37,16 @@ export const ShortcutDisplay = ({
 	baseClassName = defaultKbdStyles,
 }: ShortcutDisplayProps) => {
 	const isMac = useIsMac();
-	const primaryShortcut = findPrimaryShortcut(action);
+	const label = shortcutLabel(action, isMac);
 
-	if (!primaryShortcut) {
-		console.warn(`ShortcutDisplay: No shortcut found for action: ${action}`);
-		return null; // Don't render if no shortcut is defined
-	}
+	// No binding means nothing to advertise. Rendering an empty element here
+	// would put a stray box in a menu row.
+	if (!label) return null;
 
-	const parts = parseShortcut(primaryShortcut, isMac);
-
-	// For single keys like '/', just render the key without special styling
-	if (parts.length === 1 && primaryShortcut.length === 1) {
-		// Use baseClassName only if Component is kbd, otherwise just className
-		const finalClassName = Component === "kbd" ? cn(baseClassName, className) : className;
-		return <Component className={finalClassName}>{parts[0]}</Component>;
-	}
-
-	// Render modifiers and key separately
-	// Apply base styles only if Component is kbd
 	const finalClassName =
-		Component === "kbd"
-			? cn("inline-flex", baseClassName, className) // Combine base styles with specific className
-			: cn("inline-flex items-center gap-1", className); // Use simpler base for non-kbd elements
+		Component === "kbd" ? cn("inline-flex", baseClassName, className) : className;
 
-	return (
-		<Component className={finalClassName}>
-			{parts.map((part, index) => (
-				<React.Fragment key={index}>{part}</React.Fragment>
-			))}
-		</Component>
-	);
+	return <Component className={finalClassName}>{label}</Component>;
 };
 
 ShortcutDisplay.displayName = "ShortcutDisplay";
