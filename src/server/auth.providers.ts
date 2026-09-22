@@ -1,4 +1,3 @@
-import { siteConfig } from "@/config/site-config";
 import type { NextAuthConfig } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
@@ -6,11 +5,15 @@ import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 
 export const providers: NextAuthConfig["providers"] = [
-	// Magic Link Provider
-	process.env.AUTH_RESEND_KEY &&
+	// Magic Link Provider. Works in production; RESEND_FROM_EMAIL must be a
+	// sender on a Resend-verified domain. Gating matches the AUTH_RESEND_ENABLED
+	// flag in features-config.ts.
+	process.env.RESEND_API_KEY &&
+	process.env.RESEND_FROM_EMAIL &&
 	process.env.DATABASE_URL &&
 	Resend({
-		from: siteConfig.email.support,
+		apiKey: process.env.RESEND_API_KEY,
+		from: process.env.RESEND_FROM_EMAIL,
 	}),
 	// Credentials({
 	// 	name: "credentials", // Used by Oauth buttons to determine the active sign-in options

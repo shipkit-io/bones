@@ -178,11 +178,11 @@ buildTimeFeatures.AUTH_STACK_ENABLED =
 buildTimeFeatures.AUTH_CREDENTIALS_ENABLED =
   buildTimeFeatures.PAYLOAD_ENABLED && !envIsTrue("DISABLE_AUTH_CREDENTIALS");
 buildTimeFeatures.AUTH_RESEND_ENABLED =
-  // Resend-based auth is development-only to avoid accidental email abuse in production.
-  // Enable locally when `RESEND_API_KEY` is set, unless explicitly disabled.
-  process.env.NODE_ENV !== "production" &&
-  hasEnv("RESEND_API_KEY") &&
-  !envIsTrue("DISABLE_AUTH_RESEND");
+  // Magic link is a real sign-in method in every environment, including production.
+  // RESEND_FROM_EMAIL must be a sender on a Resend-verified domain. Abuse control
+  // (AUTH_ALLOWED_EMAILS allowlist) lives in the Auth.js signIn callback; see
+  // src/server/magic-link-allowlist.ts.
+  hasEnv("RESEND_API_KEY", "RESEND_FROM_EMAIL") && !envIsTrue("DISABLE_AUTH_RESEND");
 buildTimeFeatures.AUTH_BITBUCKET_ENABLED =
   hasEnv("AUTH_BITBUCKET_ID", "AUTH_BITBUCKET_SECRET") && !envIsTrue("DISABLE_AUTH_BITBUCKET");
 buildTimeFeatures.AUTH_DISCORD_ENABLED =
