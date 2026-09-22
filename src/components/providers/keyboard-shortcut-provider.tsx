@@ -82,13 +82,17 @@ export function KeyboardShortcutProvider({
   );
 
   const hotkeys = useMemo<readonly HotkeyItem[]>(() => {
-    return shortcutConfig.map(([hotkey, action]) => [
+    return shortcutConfig.map(([hotkey, action, binding]) => [
       hotkey,
       (event: KeyboardEvent) => {
-        // Prevent default browser behavior for handled shortcuts if necessary
-        // event.preventDefault(); // Uncomment if needed for specific shortcuts
         triggerAction(action, event);
       },
+      // Mantine swallows the key unless told otherwise, and that default was
+      // being applied to Escape: every Escape press anywhere in the app was
+      // consumed to close a popover that was usually not even mounted. A
+      // binding that shares its key with the browser sets preventDefault
+      // false and leaves the choice to the handler that actually acts.
+      { preventDefault: binding?.preventDefault ?? true },
     ]);
   }, [triggerAction]);
 
@@ -119,8 +123,11 @@ export function KeyboardShortcutProvider({
  * advertised. bones shipped every one of its menu hints this way.
  *
  * One pass a second after mount, so components that register on their own
- * screens are not accused before they render. Development only: this is a
- * message to whoever is adding a shortcut, not to the person using the app.
+ * screens are not accused before they render. Bindings marked `onDemand` are
+ * skipped entirely: their handler mounts with something transient, so its
+ * absence is the normal case and naming it every time would turn this into
+ * noise nobody reads. Development only: this is a message to whoever is adding
+ * a shortcut, not to the person using the app.
  */
 function useUnhandledShortcutWarning(
   handlers: Map<ShortcutActionType, Set<ShortcutHandler>>
@@ -129,6 +136,7 @@ function useUnhandledShortcutWarning(
     if (process.env.NODE_ENV !== "development") return;
     const timer = setTimeout(() => {
       const orphans = shortcutConfig
+        .filter(([, , binding]) => !binding?.onDemand)
         .filter(([, action]) => (handlers.get(action)?.size ?? 0) === 0)
         .map(([hotkey, action]) => `${hotkey} (${action})`);
       if (orphans.length > 0) {
