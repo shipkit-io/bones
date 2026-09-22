@@ -126,6 +126,12 @@ export function PopoverContent({ children, className, align = "start" }: Popover
 
   // Escape is not swallowed globally (see `shortcutConfig`), so the popover
   // consumes it only on the presses it actually handles.
+  //
+  // This covers Escape pressed while focus is somewhere else on the page.
+  // Mantine deliberately ignores keys raised from an INPUT, TEXTAREA or
+  // SELECT, which is right for mod+K and wrong here, because the first thing
+  // people do with this popover is type in it. `closeOnEscape` below catches
+  // those: a keydown from anything inside the panel bubbles to the panel.
   useKeyboardShortcut(
     ShortcutAction.CLOSE_POPOVER,
     (event) => {
@@ -136,11 +142,20 @@ export function PopoverContent({ children, className, align = "start" }: Popover
     [closePopover, isOpen]
   );
 
+  const closeOnEscape = (event: React.KeyboardEvent) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    // The global handler would fire too when focus is on the panel itself.
+    event.stopPropagation();
+    closePopover();
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           ref={formContainerRef}
+          onKeyDown={closeOnEscape}
           layoutId={`popover-${uniqueId}`}
           className={cn(
             "absolute z-50 h-[200px] w-[364px] overflow-hidden border border-zinc-950/10 bg-white outline-none dark:bg-zinc-700",
