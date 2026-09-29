@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Link } from "@/components/primitives/link";
-import { constructMetadata, routeMetadata } from "@/config/metadata";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
-export const metadata: Metadata = constructMetadata(routeMetadata.about);
+export const metadata: Metadata = constructMetadata({
+  title: "About",
+  description: `Learn about ${siteConfig.branding.projectName}, our mission, and the team behind the platform. Building modern tools for developers who ship fast.`,
+});
 
 export default function AboutPage() {
   return (

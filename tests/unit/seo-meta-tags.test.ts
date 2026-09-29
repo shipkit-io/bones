@@ -1,14 +1,12 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { render } from "@testing-library/react";
 import { createElement } from "react";
 import { describe, expect, it } from "vitest";
-import { metadata as authLayoutMetadata } from "@/app/(app)/(authentication)/layout";
 import { Footer } from "@/components/footers/footer";
-import {
-  constructMetadata,
-  defaultMetadata,
-  noIndexRobots,
-  routeMetadata,
-} from "@/config/metadata";
+import { noIndexHeaders, noIndexPaths } from "@/config/bones-routes";
+import { constructMetadata, defaultMetadata, routeMetadata } from "@/config/metadata";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
 /**
@@ -57,8 +55,31 @@ describe("meta description lengths (LAC-3521)", () => {
 });
 
 describe("auth pages are noindex (LAC-3521)", () => {
-  it("marks the authentication segment noindex to match its sitemap exclusion", () => {
-    expect(authLayoutMetadata.robots).toBe(noIndexRobots);
+  // The auth layout is a shared ShipKit file, so the noindex policy rides on
+  // an X-Robots-Tag header that next.config.ts spreads from noIndexHeaders().
+  it("covers every auth page that has no sitemap entry", () => {
+    for (const path of [
+      routes.auth.signIn,
+      routes.auth.signUp,
+      routes.auth.forgotPassword,
+      routes.auth.resetPassword,
+      routes.auth.error,
+    ]) {
+      expect(noIndexPaths).toContain(path);
+    }
+  });
+
+  it("emits an X-Robots-Tag noindex header for each of them", () => {
+    const headers = noIndexHeaders();
+    expect(headers.map((entry) => entry.source)).toEqual(noIndexPaths);
+    for (const entry of headers) {
+      expect(entry.headers).toEqual([{ key: "X-Robots-Tag", value: "noindex, follow" }]);
+    }
+  });
+
+  it("is wired into next.config.ts headers()", async () => {
+    const source = await readFile(join(process.cwd(), "next.config.ts"), "utf8");
+    expect(source).toMatch(/\.\.\.noIndexHeaders\(\)/);
   });
 });
 

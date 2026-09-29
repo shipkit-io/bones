@@ -1,3 +1,4 @@
+import { bonesRoutes } from "@/config/bones-routes";
 import { routes } from "@/config/routes";
 
 export interface NavLink {
@@ -15,7 +16,7 @@ export interface NavLink {
 export const defaultNavLinks: NavLink[] = [
   { href: routes.home, label: "Home" },
   { href: routes.features, label: "Features" },
-  { href: routes.cli, label: "CLI" },
+  { href: bonesRoutes.cli, label: "CLI" },
   { href: routes.faq, label: "FAQ" },
   { href: routes.external.shipkit, label: "Shipkit" },
 ];

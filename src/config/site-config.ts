@@ -13,6 +13,7 @@ interface PayloadConfig {
   emailFromName: string;
 }
 
+import type { Metadata } from "next";
 import type { Manifest } from "next/dist/lib/metadata/types/manifest-types";
 
 interface ManifestConfig {
@@ -134,6 +135,7 @@ interface SiteConfig {
 
   // E-commerce store configuration
   store: {
+    id: string;
     domain: string;
     products: Record<string, string>;
     format: {
@@ -155,6 +157,26 @@ interface SiteConfig {
       light: string;
       dark: string;
     };
+    locale: string;
+    generator: string;
+    referrer: Metadata["referrer"];
+    category: string;
+    classification: string;
+    openGraph: {
+      imageWidth: number;
+      imageHeight: number;
+    };
+    twitter: {
+      card: "summary" | "summary_large_image" | "app" | "player";
+    };
+    robots: Metadata["robots"];
+    formatDetection: Metadata["formatDetection"];
+    alternates: Metadata["alternates"];
+    appleWebApp: Metadata["appleWebApp"];
+    appLinks: Metadata["appLinks"];
+    assetsPath: string;
+    bookmarksPath: string;
+    blogPath?: string;
   };
 
   // Application settings
@@ -272,6 +294,7 @@ export const siteConfig: SiteConfig = {
   },
 
   store: {
+    id: "shipkit",
     domain: "shipkit.lemonsqueezy.com",
     products: {
       bones: "eb159dba-96a3-40f2-a97b-7b9117e635a1",
@@ -312,6 +335,48 @@ export const siteConfig: SiteConfig = {
       light: "white",
       dark: "black",
     },
+    locale: "en-US",
+    generator: "Next.js, bones.sh",
+    referrer: "origin-when-cross-origin",
+    category: "technology",
+    classification: "Business Software",
+    openGraph: {
+      imageWidth: 1200,
+      imageHeight: 630,
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    alternates: {},
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      startupImage: [
+        {
+          url: "/apple-touch-icon.png",
+          media: "(device-width: 768px) and (device-height: 1024px)",
+        },
+      ],
+    },
+    appLinks: {},
+    assetsPath: "/assets",
+    bookmarksPath: "/",
   },
 
   payload: {
