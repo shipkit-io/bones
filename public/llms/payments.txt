@@ -1,0 +1,70 @@
+# ShipKit: Payments
+
+Payments are implemented. Don't build checkout or subscriptions, configure a provider.
+
+## What's Already Built
+
+- PaymentService (src/server/services/payment-service.ts): getUserPaymentStatus, hasUserPurchasedProduct, hasUserPurchasedVariant, hasUserActiveSubscription, getUserPurchasedProducts, getUserPayments, createPayment, updatePaymentStatus, getPaymentByOrderId, getPaymentsWithUsers, getUsersWithPayments, importAllPayments, createCheckoutUrl, getProviders
+- Provider clients: src/lib/stripe.ts, src/lib/polar.ts, src/lib/lemonsqueezy/
+- Webhook routes at /webhooks/stripe, /webhooks/polar, /webhooks/lemonsqueezy
+- Idempotent webhook processing for Lemon Squeezy (webhook_event table)
+- payment and plan tables
+- Server actions: createLemonSqueezyPayment, createPolarCheckoutUrl, getUserPaymentStatus, importPayments, refreshAllPayments (src/server/actions/payments.ts)
+- API: /api/payments/check-purchase, /api/payments/check-subscription
+- Admin page at /admin/payments
+- Stripe checkout page at src/app/(app)/(integrations)/stripe/checkout, success page at /checkout/success
+- Polar products page at /settings/payments/polar-products
+
+## Providers
+
+### Stripe
+
+```
+STRIPE_SECRET_KEY                  - API key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY - Client key (STRIPE_PUBLISHABLE_KEY is mirrored to it). Both keys are required to enable Stripe
+STRIPE_WEBHOOK_SECRET              - Webhook verification
+STRIPE_API_VERSION                 - Optional
+```
+
+### Lemon Squeezy
+
+```
+LEMONSQUEEZY_API_KEY        - API key
+LEMONSQUEEZY_STORE_ID       - Store ID (required with the API key to enable)
+LEMONSQUEEZY_WEBHOOK_SECRET - Webhook verification
+```
+
+### Polar
+
+```
+POLAR_ACCESS_TOKEN                      - API token
+POLAR_PLATFORM_URL                      - Optional
+NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID - Subscription product shown on the Polar products page
+NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID     - One-time product shown on the Polar products page
+```
+
+Each provider has a DISABLE_{PROVIDER}=true switch.
+
+## Key Files
+
+```
+src/server/services/payment-service.ts - Unified payment service
+src/server/actions/payments.ts         - Payment server actions
+src/lib/stripe.ts, src/lib/polar.ts, src/lib/lemonsqueezy/ - Provider clients
+src/app/(app)/webhooks/                - Webhook handlers
+src/config/site-config.ts              - store.products (Lemon Squeezy variant IDs)
+src/content/pricing/                   - Pricing page content
+```
+
+## Common Tasks
+
+### Enable payments
+1. Set the env vars for your provider
+2. Add product IDs to `store.products` in src/config/site-config.ts
+3. Point the provider's webhook URL to https://your-app.com/webhooks/{stripe|polar|lemonsqueezy}
+
+### Check subscription status
+Call getUserPaymentStatus() or hasUserActiveSubscription() on PaymentService.
+
+### Add a product
+Add it to `store.products` in src/config/site-config.ts and to the pricing content.

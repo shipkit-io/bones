@@ -1,0 +1,30 @@
+# ShipKit: Waitlist
+
+Waitlist signup with database, email and an admin page.
+
+## Setup
+
+```
+DATABASE_URL   - Required
+RESEND_API_KEY - For the welcome email (optional)
+```
+
+## What's Already Built
+
+- Public page at /waitlist with hero, stats, social proof, features and FAQ sections
+- waitlist_entry table: email (unique), name, company, role, project_type, timeline, interests, is_notified, notified_at, source, metadata
+- Duplicate prevention (isEmailOnWaitlist)
+- Welcome email through Resend
+- Admin page at /admin/waitlist
+- Server actions: addToWaitlist(), addToWaitlistSimple()
+- Service: waitlist-service.ts (stats, lookups)
+
+## Key Files
+
+```
+src/server/actions/waitlist-actions.ts   - Server actions
+src/server/services/waitlist-service.ts  - Business logic
+src/server/db/schema.ts                  - waitlist_entry table
+src/app/(app)/waitlist/                  - Public page and components
+src/app/(app)/(admin)/admin/waitlist/    - Admin page
+```

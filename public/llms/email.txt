@@ -1,0 +1,40 @@
+# ShipKit: Email
+
+Transactional email through Resend. Wired into auth, contact, waitlist and Payload CMS.
+
+## Setup
+
+```
+RESEND_API_KEY     - Resend API key (client is null without it)
+RESEND_AUDIENCE_ID - Optional, for audience sign-ups
+RESEND_FROM_EMAIL  - Optional sender, falls back to siteConfig.email.support
+```
+
+## What's Already Built
+
+- Resend client: `resend` from src/lib/resend.ts
+- Sign-up verification email (src/server/actions/auth.ts)
+- Magic link sign-in through the Auth.js Resend provider (dev only, see auth.txt)
+- Contact form email (submitContactForm in src/server/actions/contact.ts)
+- Waitlist welcome email (src/server/actions/waitlist-actions.ts)
+- Feedback email (sendFeedbackEmail in src/server/services/resend-service.ts)
+- Audience sign-up: addAudienceUser (resend-actions.ts) and addContactToAudience (subscribe.ts)
+- Payload CMS email (password reset etc.) through @payloadcms/email-resend
+
+Emails are inline HTML/text. @react-email/render is installed but there is no templates directory.
+
+## Key Files
+
+```
+src/lib/resend.ts                      - Client
+src/server/services/resend-service.ts  - Feedback email
+src/server/actions/resend-actions.ts   - Audience
+src/server/actions/subscribe.ts        - Newsletter sign-up
+src/server/actions/contact.ts          - Contact form
+src/config/constants.ts                - RESEND_FROM_EMAIL default
+```
+
+## Notes
+
+- Magic link auth is off in production builds
+- Verify a sending domain in Resend before production

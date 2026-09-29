@@ -1,0 +1,44 @@
+# ShipKit: AI
+
+Browser inference with SmolLM, cloud inference with OpenAI. Demo components included.
+
+## Providers
+
+### SmolLM (Browser, no config)
+Runs in a Web Worker through WebGPU and Transformers.js. Zero env vars.
+
+### Cloud
+
+```
+OPENAI_API_KEY        - Enables the OpenAI client (OPENAI_ENABLED)
+ANTHROPIC_API_KEY     - Detected as ANTHROPIC_ENABLED; no built-in call site yet
+GOOGLE_GEMINI_API_KEY - Detected for the preferred provider used by devtools
+```
+
+DISABLE_OPENAI=true and DISABLE_ANTHROPIC=true turn each off.
+
+## What's Already Built
+
+- SmolLM WebGPU component: src/components/blocks/ai/smollm-web/ (page, worker, chat UI)
+- Demo components: ai-demo.tsx, ai-demo-cloud.tsx, ai-section.tsx in src/components/blocks/, rendered on the (kit) landing page
+- OpenAI client: `openai` from src/lib/open-ai.ts (null without a key)
+- OpenAI-backed docs search at /api/docs/search
+- Provider detection in src/config/features-config.ts (preferredAiProvider)
+- Registry block `ai` (15 files) installs all of the above
+
+There is no /ai route and no src/server/actions/ai directory.
+
+## Key Files
+
+```
+src/components/blocks/ai/smollm-web/ - Browser inference
+src/components/blocks/ai-*.tsx       - Demo components
+src/lib/open-ai.ts                   - OpenAI client
+src/lib/ai/                          - AI assistant, analyzer, loader helpers
+src/app/(app)/api/docs/search/       - OpenAI usage example
+```
+
+## Common Tasks
+
+### Add a custom AI endpoint
+Create a server action in src/server/actions/ that imports `openai` from @/lib/open-ai and returns the completion. Guard on `openai` being null.

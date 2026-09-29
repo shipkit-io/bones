@@ -19,7 +19,7 @@ No environment variables needed to start. Features turn on when you add their en
 ## What's Included
 
 - ⚡️ **Next.js 16 + React 19** — Modern App Router foundation
-- 🔐 **Authentication** — Better Auth by default, Auth.js still supported, with Discord, GitHub and Google providers
+- 🔐 **Authentication** — Auth.js v5 today with Discord, GitHub and Google providers; Better Auth is the chosen default and the switch is in progress
 - 🎨 **Shadcn/UI** — Production-ready component library, fully owned in your repo
 - 🚀 **Performance** — Edge-optimized defaults
 
@@ -52,7 +52,7 @@ Built with modern technologies:
 - 🎨 [Tailwind CSS](https://tailwindcss.com) - Styling
 - 🔧 [Shadcn/UI](https://ui.shadcn.com) - Components
 - 🛠 [Drizzle](https://orm.drizzle.team) - Database ORM
-- 🔑 [Better Auth](https://better-auth.com) - Authentication ([Auth.js](https://authjs.dev) still supported)
+- 🔑 [Auth.js](https://authjs.dev) - Authentication today; [Better Auth](https://better-auth.com) is the chosen default, switch in progress
 - 📧 [Resend](https://resend.com) - Email Service
 
 ## Documentation
