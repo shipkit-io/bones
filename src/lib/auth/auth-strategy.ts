@@ -6,8 +6,59 @@ import { env } from "@/env";
 export type AuthStrategy = "clerk" | "stack" | "authjs" | "better-auth" | "guest";
 
 /**
- * Determines which authentication strategy to use based on environment variables
- * Priority: Clerk > Stack Auth > Better Auth > Auth.js > Guest
+ * The explicit `AUTH_STRATEGY` choice, if any.
+ *
+ * The client bundle only sees the `NEXT_PUBLIC_` mirror (features-config.ts
+ * copies it at build time); the server can read either, and falls back to the
+ * raw variable in scripts and tests where next.config never ran.
+ */
+function configuredStrategy(): "better-auth" | "authjs" | undefined {
+  const isServer = typeof window === "undefined";
+  return env.NEXT_PUBLIC_AUTH_STRATEGY ?? (isServer ? env.AUTH_STRATEGY : undefined);
+}
+
+/**
+ * Whether any Auth.js provider is switched on.
+ *
+ * This has to be `.some`, not a `??` chain. These flags are optional booleans,
+ * so an explicit `NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED=false` is non-nullish
+ * and a `??` chain stops right there, reporting guest mode even when GitHub or
+ * Google is switched on.
+ */
+function hasAuthJsProvider(): boolean {
+  return [
+    env.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED,
+  ].some(Boolean);
+}
+
+/**
+ * Something only an Auth.js deployment would set: a session strategy override,
+ * or the Payload-backed credentials provider.
+ */
+function hasAuthJsSignal(): boolean {
+  const isServer = typeof window === "undefined";
+  const sessionStrategy = isServer ? env.NEXTAUTH_SESSION_STRATEGY : undefined;
+  return Boolean(sessionStrategy) || env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED === true;
+}
+
+/**
+ * Determines which authentication strategy to use.
+ *
+ * Priority: Clerk > Stack Auth > explicit AUTH_STRATEGY > Better Auth > Auth.js > Guest
+ *
+ * - `AUTH_STRATEGY=better-auth` picks Better Auth when it is configured
+ *   (DATABASE_URL plus BETTER_AUTH_SECRET or APP_SECRET).
+ * - `AUTH_STRATEGY=authjs` keeps the Auth.js provider detection.
+ * - Unset: Better Auth when it is configured and nothing Auth.js-specific is,
+ *   otherwise the Auth.js detection. That makes Better Auth the default for a
+ *   new project while an existing Auth.js deployment keeps working untouched.
  */
 export function getAuthStrategy(): AuthStrategy {
   // // Check if Clerk is configured
@@ -20,29 +71,18 @@ export function getAuthStrategy(): AuthStrategy {
   // 	return "stack";
   // }
 
-  // // Check if Better Auth is configured
-  // if (env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED === true) {
-  // 	return "better-auth";
-  // }
+  const configured = configuredStrategy();
+  const betterAuthReady = env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED === true;
 
-  // Check if any Auth.js providers are configured.
-  //
-  // This has to be `.some`, not a `??` chain. These flags are optional booleans,
-  // so an explicit `NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED=false` is non-nullish
-  // and a `??` chain stops right there, reporting guest mode even when GitHub or
-  // Google is switched on.
-  const hasAuthJS = [
-    env.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED,
-    env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED,
-    env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED,
-    env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED,
-    env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED,
-    env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED,
-    env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED,
-    env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED,
-  ].some(Boolean);
+  if (configured === "better-auth" && betterAuthReady) {
+    return "better-auth";
+  }
 
-  if (hasAuthJS) {
+  if (configured === undefined && betterAuthReady && !hasAuthJsSignal()) {
+    return "better-auth";
+  }
+
+  if (hasAuthJsProvider()) {
     return "authjs";
   }
 
@@ -69,6 +109,13 @@ export function isClerkActive(): boolean {
  */
 export function isAuthJSActive(): boolean {
   return getAuthStrategy() === "authjs";
+}
+
+/**
+ * Check if Better Auth is the active auth strategy
+ */
+export function isBetterAuthActive(): boolean {
+  return getAuthStrategy() === "better-auth";
 }
 
 /**

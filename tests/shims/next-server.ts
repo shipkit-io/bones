@@ -16,8 +16,4 @@ export function cookies(): { get: (name: string) => undefined } {
   return { get: () => undefined };
 }
 
-// Also provide CommonJS compatibility for require() from next-auth/env
-// @ts-expect-error
-module.exports = { NextRequest, NextResponse, headers, cookies };
-
 export default {} as any;

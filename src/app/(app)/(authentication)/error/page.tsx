@@ -1,15 +1,18 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
+import { constructMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site-config";
 import { AuthErrorContent } from "./_components/auth-error-content";
 
-/**
- * The content reads `?error=` with useSearchParams, which bails static
- * prerendering unless it sits inside a Suspense boundary. The root
- * loading.tsx used to provide that boundary implicitly (and caused soft 404s
- * site-wide); this page owns its own now.
- */
+export const metadata: Metadata = constructMetadata({
+  title: "Authentication Error",
+  description: `An error occurred during authentication. Please try again or contact ${siteConfig.name} support.`,
+  noIndex: true,
+});
+
 export default function AuthErrorPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense>
       <AuthErrorContent />
     </Suspense>
   );
