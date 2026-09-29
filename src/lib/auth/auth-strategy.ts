@@ -11,10 +11,15 @@ export type AuthStrategy = "clerk" | "stack" | "authjs" | "better-auth" | "guest
  * The client bundle only sees the `NEXT_PUBLIC_` mirror (features-config.ts
  * copies it at build time); the server can read either, and falls back to the
  * raw variable in scripts and tests where next.config never ran.
+ *
+ * The accepted values are the `AUTH_STRATEGY` enum in `src/env.ts`. The result
+ * is widened to `AuthStrategy` so a project whose `env.ts` predates one of the
+ * strategies (a Bones checkout before the `clerk` item, say) still compiles.
  */
-function configuredStrategy(): "better-auth" | "authjs" | undefined {
+function configuredStrategy(): AuthStrategy | undefined {
   const isServer = typeof window === "undefined";
-  return env.NEXT_PUBLIC_AUTH_STRATEGY ?? (isServer ? env.AUTH_STRATEGY : undefined);
+  const configured = env.NEXT_PUBLIC_AUTH_STRATEGY ?? (isServer ? env.AUTH_STRATEGY : undefined);
+  return configured as AuthStrategy | undefined;
 }
 
 /**
@@ -51,28 +56,32 @@ function hasAuthJsSignal(): boolean {
 /**
  * Determines which authentication strategy to use.
  *
- * Priority: Clerk > Stack Auth > explicit AUTH_STRATEGY > Better Auth > Auth.js > Guest
+ * Priority: explicit AUTH_STRATEGY > Better Auth > Auth.js > Guest
  *
+ * - `AUTH_STRATEGY=clerk` picks Clerk when it is configured
+ *   (NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY plus CLERK_SECRET_KEY). Clerk is a paid,
+ *   hosted service, so it is never picked automatically: the keys alone do
+ *   nothing until this variable says so.
  * - `AUTH_STRATEGY=better-auth` picks Better Auth when it is configured
  *   (DATABASE_URL plus BETTER_AUTH_SECRET or APP_SECRET).
  * - `AUTH_STRATEGY=authjs` keeps the Auth.js provider detection.
  * - Unset: Better Auth when it is configured and nothing Auth.js-specific is,
  *   otherwise the Auth.js detection. That makes Better Auth the default for a
  *   new project while an existing Auth.js deployment keeps working untouched.
+ *
+ * A strategy that is selected but not configured falls through to the
+ * detection below, the same way `AUTH_STRATEGY=better-auth` without a database
+ * does, so a half-configured deployment degrades to Auth.js or guest mode
+ * instead of a provider that cannot start.
  */
 export function getAuthStrategy(): AuthStrategy {
-  // // Check if Clerk is configured
-  // if (env.NEXT_PUBLIC_FEATURE_AUTH_CLERK_ENABLED === true) {
-  // 	return "clerk";
-  // }
-
-  // // Check if Stack Auth is configured
-  // if (env.NEXT_PUBLIC_FEATURE_AUTH_STACK_ENABLED === true) {
-  // 	return "stack";
-  // }
-
   const configured = configuredStrategy();
+  const clerkReady = env.NEXT_PUBLIC_FEATURE_AUTH_CLERK_ENABLED === true;
   const betterAuthReady = env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED === true;
+
+  if (configured === "clerk" && clerkReady) {
+    return "clerk";
+  }
 
   if (configured === "better-auth" && betterAuthReady) {
     return "better-auth";
