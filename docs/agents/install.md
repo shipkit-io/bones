@@ -63,10 +63,13 @@ cd <slug>
 # 2. Rebrand
 pnpm dlx tsx scripts/rebrand.ts --name "<App Name>" --slug <slug> --domain <domain>
 
-# 3. Add the chosen items (one command; add --overwrite only when the table says so)
+# 3. Add the chosen items (one command; --overwrite is added automatically for items
+#    that replace a stub). `npx create-shipkit-app add <items>` does the same.
 npx shadcn add @shipkit/<item> @shipkit/<item> -y [--overwrite]
 
 # 4. Secrets that are generated, not typed
+#    create-shipkit-app 0.4.1+ already wrote .env.local with a random APP_SECRET and
+#    AUTH_STRATEGY=better-auth. Only if you used the gh template fallback:
 echo "APP_SECRET=$(openssl rand -hex 32)" >> .env.local
 echo "AUTH_STRATEGY=better-auth" >> .env.local        # or authjs
 ```
