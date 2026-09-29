@@ -202,7 +202,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-mdx-frontmatter": "^5.2.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5",
+    "typescript": "^6.0.3",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^5.0.0"
   },
