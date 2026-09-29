@@ -1,0 +1,108 @@
+# ShipKit: Authentication
+
+Auth is fully implemented. Don't build auth, configure it.
+
+## Library
+
+Auth.js v5 (NextAuth) is what runs by default: src/server/auth.ts builds the NextAuth instance and src/lib/auth/auth-strategy.ts picks "authjs" when any Auth.js provider is configured, else "guest".
+Better Auth is wired as an alternative: config in src/server/better-auth/, client in src/lib/better-auth/client.ts, routes at /api/better-auth/*, enabled by BETTER_AUTH_SECRET (or APP_SECRET). Clerk, Stack Auth and Supabase Auth have env detection and UI in the tree but are not selected by getAuthStrategy() today. Treat them as opt-in.
+
+## What's Already Built
+
+- Sessions: database strategy via the Drizzle adapter when DATABASE_URL is set, JWT otherwise. 30-day max age (Auth.js), 7-day (Better Auth)
+- Role-based access control: role, permission and role_permission tables, src/server/services/rbac.ts
+- Admin detection by ADMIN_EMAIL (comma list) or ADMIN_DOMAINS, src/config/admin-config.ts
+- Route protection: `const session = await auth({ protect: true })` from @/server/auth redirects to /sign-in
+- Server actions: signInAction, signInWithOAuthAction, signInWithCredentialsAction, signUpWithCredentialsAction, signOutAction, forgotPasswordAction, resetPasswordAction
+- Password hashing with scrypt (src/server/services/auth-service.ts)
+- allowDangerousEmailAccountLinking is on for every OAuth provider (accounts link by email)
+- Pages: /sign-in, /sign-up, /sign-out, /forgot-password, /reset-password, /error
+
+## Providers
+
+Set env vars to enable a provider. Several can be active at once.
+
+### OAuth (Auth.js)
+
+```
+AUTH_GITHUB_ID    + AUTH_GITHUB_SECRET      - GitHub
+AUTH_GOOGLE_ID    + AUTH_GOOGLE_SECRET      - Google
+AUTH_DISCORD_ID   + AUTH_DISCORD_SECRET     - Discord
+AUTH_TWITTER_ID   + AUTH_TWITTER_SECRET     - Twitter
+AUTH_GITLAB_ID    + AUTH_GITLAB_SECRET      - GitLab
+AUTH_BITBUCKET_ID + AUTH_BITBUCKET_SECRET   - Bitbucket
+VERCEL_CLIENT_ID  + VERCEL_CLIENT_SECRET    - Vercel (account linking)
+```
+
+Each has a DISABLE_AUTH_{PROVIDER}=true switch.
+
+### Magic Link
+
+```
+RESEND_API_KEY - Login links by email. Only active when NODE_ENV is not production, and needs DATABASE_URL.
+```
+
+### Credentials (Email + Password)
+
+Enabled when Payload CMS is enabled (DATABASE_URL + PAYLOAD_SECRET). No extra env vars. Off with DISABLE_AUTH_CREDENTIALS=true.
+
+### Guest
+
+```
+ENABLE_AUTH_GUEST=true - JWT-only sessions, no database record. Off unless set.
+```
+
+### Better Auth
+
+```
+BETTER_AUTH_SECRET   - Secret (or APP_SECRET). DISABLE_BETTER_AUTH=true turns it off
+BETTER_AUTH_BASE_URL - Optional, defaults to the site URL
+```
+
+Email + password, plus Google and GitHub using the same AUTH_GOOGLE_* / AUTH_GITHUB_* pairs.
+
+### Clerk, Stack Auth, Supabase Auth
+
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY + CLERK_SECRET_KEY (+ CLERK_WEBHOOK_SECRET)
+STACK_PROJECT_ID + STACK_PUBLISHABLE_CLIENT_KEY + STACK_SECRET_SERVER_KEY
+NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY (+ SUPABASE_SERVICE_ROLE_KEY)
+```
+
+CLERK_PUBLISHABLE_KEY, SUPABASE_URL and SUPABASE_ANON_KEY are mirrored to their NEXT_PUBLIC_ names at build time.
+
+## Required Base Config
+
+```
+AUTH_SECRET - Encryption key (or APP_SECRET to derive all secrets)
+AUTH_URL    - Your app URL (auto-detected on Vercel)
+```
+
+## Key Files
+
+```
+src/server/auth.ts                  - Auth.js entry: auth, handlers, signIn, signOut
+src/server/auth-js/                 - auth.config.ts, auth-providers.config.ts, provider utils
+src/server/better-auth/             - Better Auth config, schema, service
+src/lib/auth/                       - auth-strategy.ts, Clerk config + utils
+src/lib/better-auth/client.ts       - Better Auth client
+src/server/actions/auth.ts          - Sign in/up/out, forgot/reset password actions
+src/server/services/auth-service.ts - Credentials, hashing, password reset
+src/server/services/rbac.ts         - Roles and permissions
+src/config/admin-config.ts          - Admin emails and domains
+src/app/(app)/(authentication)/     - Pages and API routes
+src/components/modules/auth/        - Forms, OAuth buttons, Clerk provider
+```
+
+## Common Tasks
+
+### Add an OAuth provider
+1. Get a client ID + secret from the provider's developer console
+2. Set AUTH_{PROVIDER}_ID and AUTH_{PROVIDER}_SECRET in .env
+3. The provider appears on the sign-in page
+
+### Protect a route
+`const session = await auth({ protect: true })` in a Server Component or layout.
+
+### Set an admin
+Add the email to ADMIN_EMAIL (or the domain to ADMIN_DOMAINS), or assign the admin role in the database.

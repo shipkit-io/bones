@@ -1,0 +1,174 @@
+# ShipKit: Full Reference
+
+Production-ready Next.js 16 starter. Auth, payments, CMS, email, AI, analytics, database, storage are pre-wired. Configure with env vars. Don't build what's already built.
+
+Bones is the root template and the upstream of everything. ShipKit is the everything-included build downstream of Bones; integrations are shadcn registry items you add one at a time.
+
+Overview: https://shipkit.io/llms.txt
+
+## Create a New App
+
+```bash
+# npm initializer (package: create-shipkit-app)
+npm create shipkit-app@latest my-app
+
+# or the GitHub template
+gh repo create my-app --template shipkit-io/bones --clone --public
+
+cd my-app && <pm> install && cp .env.example .env && <pm> run dev
+```
+
+`<pm>` is the package manager named in package.json's `packageManager` field (Bones: pnpm, ShipKit: bun).
+
+## Required Env Vars
+
+```
+DATABASE_URL - PostgreSQL connection string
+AUTH_SECRET  - Encryption key (or APP_SECRET to derive all secrets)
+```
+
+## Project Structure
+
+ShipKit layout (Bones ships the same shape with fewer route groups: (authentication), (demo), (legal), about, api, changelog, contact, faq, features).
+
+```
+src/
+├── app/
+│   ├── (app)/                 # Every app route lives under this group
+│   │   ├── (authentication)/  # sign-in, sign-up, sign-out, forgot/reset-password, api/auth/[...nextauth], api/better-auth/[...path]
+│   │   ├── (admin)/admin/     # users, payments, waitlist, feedback, cms, github, integrations
+│   │   ├── (dashboard)/       # dashboard, projects, teams, api-keys, deployments
+│   │   ├── (demo)/            # example pages (upload, pricing-01, landing-01, examples)
+│   │   ├── (integrations)/    # builder.io, stripe, polar, lemonsqueezy, google-docs
+│   │   ├── (kit)/             # shipkit.io marketing pages (home, pricing, features, faq, bones)
+│   │   ├── (legal)/           # privacy-policy, terms-of-service, eula
+│   │   ├── api/               # route handlers (payments, docs, teams, projects, setup, ...)
+│   │   ├── webhooks/          # stripe, polar, lemonsqueezy
+│   │   └── blog/ docs/ changelog/ contact/ faq/ settings/ waitlist/ checkout/
+│   └── (cms)/                 # Payload admin at /cms, REST/GraphQL at /cms-api, [...slug] page catch-all
+├── components/
+│   ├── ui/                    # shadcn/ui primitives
+│   ├── primitives/            # base components
+│   ├── blocks/                # feature blocks
+│   ├── modules/               # auth, payments, blog, search, sidebar, ...
+│   └── providers/             # analytics, consent, better-auth, theme, ...
+├── config/                    # site-config, features-config, routes, navigation, fonts, admin-config
+├── content/                   # blog, changelog, faq, features, pricing, testimonials (MDX + JSON)
+├── hooks/
+├── lib/                       # utilities + per-service clients (stripe.ts, polar.ts, resend.ts, open-ai.ts, payload/, posthog/, ...)
+├── server/
+│   ├── actions/               # Server Actions (mutations)
+│   ├── services/              # business logic
+│   ├── db/                    # Drizzle schema + connection
+│   ├── auth.ts                # Auth.js v5 entry (exports auth, handlers, signIn, signOut)
+│   ├── auth-js/               # Auth.js config + providers
+│   └── better-auth/           # Better Auth config, schema, service
+├── payload.config.ts          # Payload CMS config
+├── env.ts                     # T3 env schema
+└── migrations/                # drizzle-kit output from db:generate (generated, not committed)
+docs/                          # MDX docs served at /docs
+registry.json                  # shadcn registry source (ShipKit only)
+```
+
+## Features
+
+Features auto-enable when env vars are set. Detection: src/config/features-config.ts
+Fetch deep docs only for the features you need.
+
+### Auth - https://shipkit.io/llms/auth.txt
+Library: Auth.js v5 (NextAuth) runs by default. Better Auth is wired as an alternative. Clerk, Stack Auth and Supabase Auth have config in the tree.
+Providers: GitHub, Google, Discord, Twitter, GitLab, Bitbucket, Vercel, Magic Link (Resend, dev only), Credentials (needs Payload), Guest (ENABLE_AUTH_GUEST=true)
+Setup: AUTH_SECRET + a provider ID/SECRET pair
+Built in: sessions (database or JWT), RBAC, `auth({ protect: true })` route protection, sign in/up/out/reset actions, admin roles via ADMIN_EMAIL / ADMIN_DOMAINS
+
+### Payments - https://shipkit.io/llms/payments.txt
+Providers: Stripe, Lemon Squeezy, Polar
+Setup: STRIPE_SECRET_KEY + NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY + STRIPE_WEBHOOK_SECRET
+Built in: PaymentService, checkout URLs, webhooks at /webhooks/{provider}, subscription checks, admin page at /admin/payments
+
+### Database - https://shipkit.io/llms/database.txt
+Stack: PostgreSQL + Drizzle ORM
+Setup: DATABASE_URL (DB_PREFIX optional, default "db")
+Built in: schema, migrations, type-safe queries, Drizzle Studio, seed script
+
+### CMS - https://shipkit.io/llms/cms.txt
+Stack: Payload CMS v3 + optional Builder.io
+Setup: DATABASE_URL + PAYLOAD_SECRET (disable: DISABLE_PAYLOAD=true)
+Built in: admin panel at /cms, Lexical editor, block-based pages, media library, auto-seeding
+
+### Email - https://shipkit.io/llms/email.txt
+Provider: Resend
+Setup: RESEND_API_KEY
+Built in: Resend client, contact form, waitlist welcome, sign-up verification, magic link (dev), Payload email adapter, audience sign-up
+
+### AI - https://shipkit.io/llms/ai.txt
+Providers: SmolLM (browser, WebGPU, zero config), OpenAI, Anthropic
+Setup: OPENAI_API_KEY or ANTHROPIC_API_KEY
+Built in: SmolLM component, OpenAI client, AI demo components, OpenAI-backed docs search
+
+### Analytics - https://shipkit.io/llms/analytics.txt
+Providers: PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, Statsig, Vercel Analytics, c15t consent
+Setup: provider key env var (see deep docs)
+Built in: AnalyticsProvider wrapper, per-provider script components gated on feature flags, PostHog reverse proxy
+
+### Storage - https://shipkit.io/llms/storage.txt
+Providers: AWS S3, Vercel Blob
+Setup: AWS_REGION + AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY + AWS_BUCKET_NAME, or VERCEL_BLOB_READ_WRITE_TOKEN
+Built in: presigned S3 uploads, file service + actions, Payload media adapters
+
+### Waitlist - https://shipkit.io/llms/waitlist.txt
+Setup: DATABASE_URL (+ RESEND_API_KEY for emails)
+Built in: signup page at /waitlist, admin page at /admin/waitlist, duplicate prevention, welcome email
+
+### Component Registry - https://shipkit.io/llms/registry.txt
+Docs: https://shipkit.io/docs/features/registry
+Install: add `"@shipkit": "https://shipkit.io/r/{name}.json"` to `registries` in components.json, then `npx shadcn add @shipkit/<name>`
+36 items: auth, payments, dashboard, blog, docs, admin, settings, rbac, demo, faq, pricing, legal, changelog, contact, waitlist, builder-io, cms-pages, email, feedback, analytics, ai, github-connect, vercel-connect, storage, caching, cn, routes-config, features-config, data-table, marquee, border-beam, retro-grid, shimmer-button, dock, use-copy-to-clipboard, use-mobile
+
+## Dev Commands
+
+`<pm>` = pnpm in Bones, bun in ShipKit.
+
+```
+<pm> run dev            - Dev server
+<pm> run build          - Production build
+<pm> run test           - Tests (vitest)
+<pm> run lint           - Lint (Biome + ESLint + Prettier)
+<pm> run lint:fix       - Auto-fix lint
+<pm> run typecheck      - TypeScript check
+<pm> run db:push        - Push schema to DB
+<pm> run db:studio      - Drizzle Studio
+<pm> run db:generate    - Generate migration from schema changes
+<pm> run db:migrate     - Run migrations
+<pm> run db:reset       - Drop, generate, migrate, push
+<pm> run db:seed        - Seed test data
+<pm> run build:registry - Build registry JSON (ShipKit only, runs `npx shadcn build`)
+<pm> run analyze        - Bundle analysis (ShipKit only)
+```
+
+## Code Conventions
+
+- Package manager from package.json's packageManager field (Bones: pnpm, ShipKit: bun)
+- Server Components first, minimize 'use client'
+- Server Actions for mutations (src/server/actions/)
+- Services for business logic (src/server/services/)
+- Actions call services; components use actions, never the DB directly
+- Named exports, no default exports (Next.js pages excepted)
+- kebab-case files, PascalCase components, camelCase variables
+- Arrow functions for components, function keyword for utilities
+- Interfaces over types, no enums (use objects/maps)
+- Files under 500 lines
+- nuqs for URL search params
+- React Hook Form + Zod for forms
+- Wrap client components in Suspense
+- Database: db.transaction() for multi-step changes, timestamps over booleans (activeAt not isActive), try-catch around DB calls
+
+## Disabling Features
+
+Set DISABLE_{FEATURE}=true (for example DISABLE_PAYLOAD, DISABLE_STRIPE, DISABLE_POSTHOG). The NEXT_PUBLIC_FEATURE_*_ENABLED flags are computed from the service keys at build time; do not set them by hand.
+
+## Links
+
+- Docs: https://shipkit.io/docs
+- Root template (Bones): https://github.com/shipkit-io/bones
+- Everything-included build (ShipKit): https://github.com/lacymorrow/shipkit

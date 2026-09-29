@@ -1,0 +1,42 @@
+# ShipKit: Storage
+
+File storage on S3 or Vercel Blob. Wired into the Payload CMS media library.
+
+## Providers
+
+### AWS S3 (all four required)
+
+```
+AWS_REGION            - Region (e.g. us-east-1)
+AWS_ACCESS_KEY_ID     - Access key
+AWS_SECRET_ACCESS_KEY - Secret key
+AWS_BUCKET_NAME       - Bucket name
+```
+
+### Vercel Blob
+
+```
+VERCEL_BLOB_READ_WRITE_TOKEN - Token (Vercel sets it when a Blob store is attached)
+```
+
+DISABLE_S3=true and DISABLE_VERCEL_BLOB=true turn each off.
+
+## What's Already Built
+
+- Presigned S3 uploads: generatePresignedUrl(), deleteFromS3() in src/server/services/s3.ts
+- File service: uploadFile(), deleteFile() in src/server/services/file.ts
+- Server actions: uploadFileAction, deleteFileAction in src/server/actions/file.ts
+- Upload size limit: FILE_UPLOAD_MAX_SIZE (2 MB) in src/config/file.ts
+- user_file table
+- Payload media adapters: @payloadcms/storage-s3 and @payloadcms/storage-vercel-blob, each gated on its feature flag. Vercel Blob is used only through Payload today
+- Demo upload page at src/app/(app)/(demo)/upload
+
+## Key Files
+
+```
+src/server/services/file.ts - File service
+src/server/services/s3.ts   - S3 operations
+src/server/actions/file.ts  - Upload/delete actions
+src/config/file.ts          - Size limits
+src/payload.config.ts       - Media storage adapters
+```

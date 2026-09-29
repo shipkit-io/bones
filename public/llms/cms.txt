@@ -1,0 +1,60 @@
+# ShipKit: CMS
+
+Payload CMS v3 is embedded in the Next.js app. Content management is already built.
+
+## Setup
+
+```
+DATABASE_URL   - Required (shared with the main app)
+PAYLOAD_SECRET - CMS secret (or APP_SECRET to derive)
+```
+
+Enabled when both are set. Disable with DISABLE_PAYLOAD=true.
+
+## What's Already Built
+
+- Admin panel at /cms (src/app/(cms)/cms/[[...segments]]), plus a shell at /admin/cms
+- REST and GraphQL API at /cms-api
+- Block-based pages: Hero, Content, Features, Testimonials (src/lib/payload/blocks/)
+- Lexical rich text editor
+- Media library: S3 or Vercel Blob adapter when that storage feature is enabled, local disk otherwise
+- Collections: Users, Pages, Media, FAQs, Features, Testimonials, RBAC, VercelDeployments. Global: Settings
+- Auto-seeding on first init (RBAC collection is the marker)
+- Page catch-all at src/app/(cms)/[...slug]/page.tsx: Payload page first, Builder.io fallback
+- Email through the Payload Resend adapter when RESEND_API_KEY is set
+- Credentials sign-in for the app uses Payload users
+
+## Builder.io (Optional Visual Editor)
+
+```
+NEXT_PUBLIC_BUILDER_API_KEY - Drag-and-drop page building (BUILDER_API_KEY is mirrored to it). DISABLE_BUILDER=true turns it off
+```
+
+## Optional Env Vars
+
+```
+PAYLOAD_AUTO_SEED=false - Skip seeding (seeding is on by default)
+PAYLOAD_SEED_FORCE=true - Re-seed even if data exists
+```
+
+## Key Files
+
+```
+src/payload.config.ts        - Collections, globals, editor, storage, email, seed hook
+src/lib/payload/collections/ - One file per collection
+src/lib/payload/blocks/      - Page blocks
+src/lib/payload/globals/     - Settings global
+src/lib/payload/seed/        - Seed data (seed-utils.ts runs it)
+src/lib/payload/payload.ts   - getPayloadClient()
+src/app/(cms)/               - Admin UI, API, page catch-all, block renderers
+src/lib/builder-io/          - Builder.io rendering
+src/payload-types.ts         - Generated types
+```
+
+## Common Tasks
+
+### Add a collection
+Create it in src/lib/payload/collections/ and add it to `collections` in src/payload.config.ts.
+
+### Edit content
+Open /cms in the running app.

@@ -1,0 +1,72 @@
+# ShipKit: Analytics
+
+Several providers, each enabled by its env var. Scripts inject from one provider component.
+
+Base names without the prefix (POSTHOG_KEY, UMAMI_WEBSITE_ID, DATAFAST_WEBSITE_ID, DATAFAST_DOMAIN, STATSIG_CLIENT_KEY, GOOGLE_ANALYTICS_ID, GOOGLE_GTM_ID, C15T_URL) are mirrored to NEXT_PUBLIC_ at build time.
+
+## Providers
+
+### PostHog
+
+```
+NEXT_PUBLIC_POSTHOG_KEY  - Project API key
+NEXT_PUBLIC_POSTHOG_HOST - Optional. Defaults to the built-in reverse-proxy path
+```
+
+### Umami
+
+```
+NEXT_PUBLIC_UMAMI_WEBSITE_ID - Website ID
+```
+
+### DataFast
+
+```
+NEXT_PUBLIC_DATAFAST_WEBSITE_ID - Website ID
+NEXT_PUBLIC_DATAFAST_DOMAIN     - Domain
+```
+
+### Google Analytics
+
+```
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID - Measurement ID (G-XXXXXXX)
+```
+
+### Google Tag Manager
+
+```
+NEXT_PUBLIC_GOOGLE_GTM_ID - Container ID
+```
+
+### Statsig
+
+```
+NEXT_PUBLIC_STATSIG_CLIENT_KEY - Client SDK key
+```
+
+### Consent (c15t)
+
+```
+NEXT_PUBLIC_C15T_URL   - c15t backend URL
+ENABLE_CONSENT_MANAGER - Show the consent banner without c15t
+```
+
+Each provider has a DISABLE_{PROVIDER}=true switch (DISABLE_POSTHOG, DISABLE_GOOGLE_ANALYTICS, DISABLE_GOOGLE_TAG_MANAGER, ...).
+
+## What's Already Built
+
+- AnalyticsProvider in the root layout renders GoogleAnalytics, GoogleTagManager, UmamiAnalytics, DataFastAnalytics, Vercel Analytics, Speed Insights and WebVitals, inside a Statsig provider
+- Each script component returns null unless its NEXT_PUBLIC_FEATURE_*_ENABLED flag is on
+- PostHog initialised in src/instrumentation-client.ts, loaded lazily, with reverse-proxy rewrites in next.config.ts
+- Statsig client provider bootstrapped (call gates and experiments yourself)
+- Consent banner and dialog from @c15t/nextjs
+
+## Key Files
+
+```
+src/components/providers/analytics-provider.tsx - Wrapper
+src/components/providers/consent-provider.tsx   - c15t consent
+src/instrumentation-client.ts                   - PostHog init
+src/lib/posthog/, src/lib/umami/, src/lib/datafast/, src/lib/google-analytics/, src/lib/google-tag-manager/, src/lib/statsig/ - Provider components
+src/config/features-config.ts                   - Feature detection
+```

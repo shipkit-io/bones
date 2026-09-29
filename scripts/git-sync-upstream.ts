@@ -56,7 +56,7 @@ function getUpstreamUrl(): string {
 
 /**
  * Ensures the upstream remote exists.
- * An existing remote is kept as-is (it was set by create-shipkit or by hand) unless
+ * An existing remote is kept as-is (it was set by create-shipkit-app or by hand) unless
  * UPSTREAM_REPO_URL is set, which forces that URL.
  */
 function ensureUpstreamRemote(): void {

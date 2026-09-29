@@ -15,7 +15,7 @@ import { execSync } from "node:child_process";
 const UPSTREAM_REMOTE = "upstream";
 
 // Bones is the root template. Projects created from another template (for example
-// lacymorrow/shipkit) get their upstream remote set by create-shipkit, or set
+// lacymorrow/shipkit) get their upstream remote set by create-shipkit-app, or set
 // UPSTREAM_REPO_URL to override.
 const UPSTREAM_REPOS: string[] = process.env.UPSTREAM_REPO_URL
 	? [process.env.UPSTREAM_REPO_URL]

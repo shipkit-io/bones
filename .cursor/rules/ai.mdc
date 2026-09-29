@@ -10,7 +10,7 @@ You are a experienced software engineer. Use idiomatic best coding practices. Wh
 
 You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
 
-This is a Next.js 16 project using App Router, Shadcn/UI, Tailwind, Resend, Better Auth (default) with Auth.js v5 still supported, TypeScript, using pnpm as the package manager. Payments, CMS and other integrations come from the ShipKit registry (`npx shadcn add @shipkit/<item>`).
+This is a Next.js 16 project using App Router, Shadcn/UI, Tailwind, Resend, Auth.js v5 (Better Auth is the chosen default, switch in progress), TypeScript, using pnpm as the package manager. Payments, CMS and other integrations come from the ShipKit registry (`npx shadcn add @shipkit/<item>`).
 
 ## Multi-Zone Architecture Support
 

@@ -8,6 +8,15 @@ import type { Registry, RegistryFilters, RegistryItem } from "./types";
  */
 const BUILT_IN_REGISTRIES = [
 	{
+		name: "ShipKit",
+		url: "https://shipkit.io/r/registry.json",
+		description:
+			"ShipKit integrations and blocks: auth, payments, email, analytics, CMS, storage and more",
+		baseComponentUrl: "https://shipkit.io/r",
+		baseBlockUrl: "https://shipkit.io/r",
+		baseDocsUrl: "https://shipkit.io/docs/features/registry",
+	},
+	{
 		name: "shadcn/ui",
 		url: "https://ui.shadcn.com/r",
 		description:
@@ -36,6 +45,35 @@ const BUILT_IN_REGISTRIES = [
 ] as const;
 
 const STORAGE_KEY = "reg-browser:custom-registries";
+
+/**
+ * Registries come in two layouts:
+ * - shadcn style: `<base>/index.json` is an array, items live at `<base>/styles/<style>/<name>.json`
+ * - flat style (what `npx shadcn build` produces): `<base>/registry.json` is `{ items: [...] }`,
+ *   items live at `<base>/<name>.json`
+ */
+function isFlatRegistryUrl(url: string): boolean {
+	return url.endsWith("registry.json");
+}
+
+function registryIndexUrl(registryUrl: string): string {
+	const trimmed = registryUrl.replace(/\/$/, "");
+	if (isFlatRegistryUrl(trimmed) || trimmed.endsWith("index.json"))
+		return trimmed;
+	return `${trimmed}/index.json`;
+}
+
+function itemsFromIndex(data: unknown): RegistryItem[] {
+	if (Array.isArray(data)) return data as RegistryItem[];
+	if (
+		data &&
+		typeof data === "object" &&
+		Array.isArray((data as { items?: unknown }).items)
+	) {
+		return (data as { items: RegistryItem[] }).items;
+	}
+	return [];
+}
 
 export type RegistryName = (typeof BUILT_IN_REGISTRIES)[number]["name"];
 
@@ -68,6 +106,8 @@ function saveCustomRegistries(registries: Registry[]): void {
 /**
  * Get all available registries
  */
+// Async signature kept stable for callers that await this API.
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getRegistries(): Promise<Registry[]> {
 	return [...BUILT_IN_REGISTRIES, ...getCustomRegistries()];
 }
@@ -84,12 +124,7 @@ export async function validateRegistry(registry: Registry): Promise<void> {
 	}
 
 	try {
-		// Ensure URL ends with index.json for registry indexes
-		const url = registry.url.endsWith("index.json")
-			? registry.url
-			: registry.url.endsWith("/")
-				? `${registry.url}index.json`
-				: `${registry.url}/index.json`;
+		const url = registryIndexUrl(registry.url);
 
 		// Try to fetch the registry index
 		const response = await fetch(url);
@@ -97,11 +132,8 @@ export async function validateRegistry(registry: Registry): Promise<void> {
 			throw new Error(`Failed to fetch registry: ${response.statusText}`);
 		}
 
-		// Validate the registry structure
-		const items = await response.json();
-		if (!Array.isArray(items)) {
-			throw new Error("Registry index must be an array");
-		}
+		// Validate the registry structure (array, or `{ items }` from `npx shadcn build`)
+		const items = itemsFromIndex(await response.json());
 
 		// Validate at least one item has the correct structure
 		if (items.length === 0) {
@@ -150,6 +182,7 @@ export function removeCustomRegistry(name: string): void {
 /**
  * Get a specific registry by name
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getRegistry(name: RegistryName): Promise<Registry> {
 	const registry = [...BUILT_IN_REGISTRIES, ...getCustomRegistries()].find(
 		(r) => r.name === name,
@@ -166,27 +199,22 @@ export async function getRegistry(name: RegistryName): Promise<Registry> {
 export async function fetchRegistryIndex(
 	registryUrl: string,
 ): Promise<RegistryItem[]> {
-	const url = new URL(
-		registryUrl.endsWith("index.json")
-			? registryUrl
-			: `${registryUrl.replace(/\/$/, "")}/index.json`,
-	);
+	const url = new URL(registryIndexUrl(registryUrl));
 
 	try {
 		const response = await fetch(url, {
 			next: { revalidate: 3600 }, // Cache for 1 hour
 		}).catch((error) => {
 			console.error(`Failed to fetch registry index from ${url}:`, error);
-			return
+			return;
 		});
 
 		if (!response) {
 			return [];
 		}
 
-		const data = await response.json();
-		return Array.isArray(data) ? data : [];
-	} catch (error) {
+		return itemsFromIndex(await response.json());
+	} catch (_error) {
 		return [];
 	}
 }
@@ -199,10 +227,11 @@ export async function fetchItemDetails(
 	itemName: string,
 	style = "default",
 ): Promise<RegistryItem> {
-	const baseUrlWithoutIndex = baseUrl.replace(/\/index\.json$/, "");
-	const detailsUrl = new URL(
-		`${baseUrlWithoutIndex}/styles/${style}/${itemName}.json`,
-	);
+	const detailsUrl = isFlatRegistryUrl(baseUrl)
+		? new URL(`${baseUrl.replace(/\/registry\.json$/, "")}/${itemName}.json`)
+		: new URL(
+				`${baseUrl.replace(/\/index\.json$/, "")}/styles/${style}/${itemName}.json`,
+			);
 
 	try {
 		const response = await fetch(detailsUrl, {
@@ -233,9 +262,7 @@ export function categorizeItems(
 	return items.reduce(
 		(acc, item) => {
 			const category = item.type === "registry:block" ? "Blocks" : "Components";
-			if (!acc[category]) {
-				acc[category] = [];
-			}
+			acc[category] ??= [];
 			acc[category].push(item);
 			return acc;
 		},
@@ -251,11 +278,9 @@ export function groupItemsByType(
 ): Record<string, RegistryItem[]> {
 	return items.reduce(
 		(acc, item) => {
-			const categories = item.categories || ["Uncategorized"];
+			const categories = item.categories ?? ["Uncategorized"];
 			for (const category of categories) {
-				if (!acc[category]) {
-					acc[category] = [];
-				}
+				acc[category] ??= [];
 				acc[category].push(item);
 			}
 			return acc;
@@ -268,7 +293,7 @@ export function groupItemsByType(
  * Search and filter items
  */
 export function searchItems(
-	items: RegistryItem[] | { [key: string]: RegistryItem[] },
+	items: RegistryItem[] | Record<string, RegistryItem[]>,
 	query = "",
 	filters: RegistryFilters = {},
 ): RegistryItem[] {
@@ -312,7 +337,7 @@ export function getInstallCommand(
 	registry?: Registry,
 ) {
 	const componentUrl =
-		component.componentUrl ||
+		component.componentUrl ??
 		`${registry?.baseComponentUrl}/default/${component.name}.json`;
 	return `npx shadcn@latest add "${componentUrl}"`;
 }
@@ -333,10 +358,10 @@ export function getDocumentationUrl(
  */
 export function isValidUrl(str: string): boolean {
 	try {
-		new URL(str.trim())
-		return true
+		new URL(str.trim());
+		return true;
 	} catch {
-		return false
+		return false;
 	}
 }
 
@@ -347,13 +372,13 @@ export function isValidCommand(str: string): boolean {
 	const commandPatterns = [
 		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add/,
 		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add "https?:\/\/[^"]+"/,
-	]
-	return commandPatterns.some(pattern => pattern.test(str.trim()))
+	];
+	return commandPatterns.some((pattern) => pattern.test(str.trim()));
 }
 
 /**
  * Format a URL into a valid install command
  */
 export function formatUrlToCommand(url: string): string {
-	return `npx shadcn@latest add "${url.trim()}"`
+	return `npx shadcn@latest add "${url.trim()}"`;
 }

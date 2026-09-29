@@ -1,0 +1,82 @@
+# ShipKit: Component Registry
+
+36 installable items in the shadcn registry format. Start from Bones and add features one at a time.
+
+Docs: https://shipkit.io/docs/features/registry
+
+## Install an Item
+
+1. Add the registry to components.json:
+
+```json
+{
+  "registries": {
+    "@shipkit": "https://shipkit.io/r/{name}.json"
+  }
+}
+```
+
+2. Install:
+
+```
+npx shadcn add @shipkit/auth
+```
+
+Or by URL: `npx shadcn add https://shipkit.io/r/auth.json`
+
+## Available Items
+
+### Core Feature Blocks
+
+```
+auth (42 files)       - Auth.js v5: OAuth, credentials, magic link, guest
+payments (31 files)   - Stripe, Lemon Squeezy, Polar: checkout, webhooks, subscriptions
+dashboard (64 files)  - Projects, teams, API keys, deployments, charts
+blog (24 files)       - MDX blog with authors and categories
+docs (12 files)       - Documentation with sidebar and search
+admin (31 files)      - Role-based admin panel
+settings (12 files)   - Profile, appearance, account
+rbac (3 files)        - Role-based access control
+demo (93 files)       - Showcase pages
+```
+
+### Content and Marketing
+
+```
+faq (3), pricing (7), legal (5), changelog (6), contact (4), waitlist (10)
+```
+
+### CMS
+
+```
+builder-io (11) - Builder.io visual page builder
+cms-pages (11)  - Payload + Builder.io catch-all with fallback
+```
+
+### Integrations
+
+```
+email (6), feedback (4), analytics (9), ai (15), github-connect (10), vercel-connect (13), storage (6), caching (4)
+```
+
+### Shared Infrastructure (pulled in as dependencies)
+
+```
+cn              - Tailwind class merging utility
+routes-config   - Centralized routing
+features-config - Feature flag detection
+```
+
+### UI and Hooks
+
+```
+data-table, marquee, border-beam, retro-grid, shimmer-button, dock, use-copy-to-clipboard, use-mobile
+```
+
+## How It Works
+
+- Source: registry.json in the ShipKit repo (Bones has none)
+- Build: `bun run build:registry` runs `npx shadcn build` and writes public/r/*.json
+- Files install to their original paths, so blocks land under src/app/(app)/
+- Internal dependencies use the @shipkit prefix (cn, routes-config, features-config)
+- Each item embeds full file contents in its JSON

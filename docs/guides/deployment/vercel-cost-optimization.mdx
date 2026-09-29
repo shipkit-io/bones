@@ -1,0 +1,257 @@
+---
+title: "Vercel Cost Optimization"
+description: "Understand and reduce Active CPU and Fast Origin Transfer on Vercel"
+---
+
+# Vercel Cost Optimization
+
+Two Vercel usage meters surprise most teams: **Active CPU** and **Fast Origin
+Transfer**. This guide explains what they actually measure, then gives a ranked
+set of fixes — most are one-line changes in a Next.js App Router project.
+
+> The exact numbers below (included allowances and per-unit prices) change over
+> time. Treat them as ballpark and confirm current values on your
+> [Vercel usage dashboard](https://vercel.com/docs/pricing) before making
+> billing decisions. The _techniques_ are stable; the _prices_ drift.
+
+## What is Active CPU?
+
+**Active CPU is the time your server-side code is actually executing** — running
+logic, rendering React Server Components, serializing responses. With Vercel's
+Fluid compute model, it does **not** include time spent _waiting_ on a database,
+an upstream API, or an LLM response. Idle wait is not metered; only real CPU work
+is.
+
+What draws Active CPU:
+
+- **Dynamically rendered pages** — any route that opts out of static generation
+  (via `cookies()`, `headers()`, `connection()`, `export const dynamic = "force-dynamic"`,
+  or `revalidate = 0`) runs a function on every request.
+- **Route handlers** (`app/**/route.ts`) — each invocation burns CPU.
+- **ISR revalidation** — regenerating a cached page on expiry uses CPU (once per
+  interval, not per request).
+- **AI / LLM calls** — the CPU around the call (building the prompt, parsing and
+  formatting the response) is metered; the network wait for the model is **not**.
+
+Across many projects this pools: every dynamic render on every site draws from
+the same monthly Active CPU budget.
+
+## What is Fast Origin Transfer?
+
+**Fast Origin Transfer is data moving between Vercel's CDN edge and your
+functions** — the "backstage" bandwidth. The edge asks a function for a page, the
+function returns HTML / the RSC payload / JSON; that response size is Fast Origin
+Transfer.
+
+It is **not** the same as visitor bandwidth — that is _Fast Data Transfer_
+(edge → browser), a separate, larger meter. Fast Origin Transfer is incurred when
+the edge has to talk to the origin function at all: cache misses, dynamic
+renders, ISR regenerations, and **prefetch requests for dynamic routes**.
+
+What draws Fast Origin Transfer:
+
+- Dynamically rendered pages (every request hits a function).
+- Route handlers returning large JSON payloads.
+- ISR revalidations (each rebuild ships a fresh payload to the edge).
+- **Middleware without a `matcher`** — middleware runs in front of matching
+  requests, so an unscoped middleware adds an origin hop to assets and static
+  pages that would otherwise be served purely from cache.
+- Large RSC payloads — Server Components that inline big datasets serialize that
+  data into every response.
+
+## Hobby vs. Pro
+
+On **Hobby**, these are hard-capped per month (currently **4 CPU-hrs Active CPU**,
+plus included Function Invocations and Edge Requests). Exceed a cap and the
+feature pauses until the cycle resets. Note Hobby is **non-commercial use only** —
+any revenue-generating site needs Pro.
+
+On **Pro**, both are usage-based with a monthly credit; you are billed for
+overages rather than blocked (Active CPU is roughly **$0.13 / CPU-hr** and Fast
+Origin Transfer single-digit cents per GB, as of writing). The optimizations
+below keep the bill small either way.
+
+## How to reduce both — ranked by impact
+
+### 1. Make pages static or ISR instead of dynamic (biggest win)
+
+Any page that does not need per-request data should be statically generated at
+build time. Pages that change occasionally should use ISR with a revalidation
+interval. This eliminates **both** Active CPU and Fast Origin Transfer for every
+cache hit.
+
+```tsx
+// ❌ Dynamic: runs a function on every request
+export const dynamic = "force-dynamic";
+
+// ✅ ISR: regenerate at most once per hour, serve from cache otherwise
+export const revalidate = 3600;
+
+// ✅ Or fully static (no per-request data at all)
+export const dynamic = "force-static";
+```
+
+Most content and marketing pages (about, pricing, blog, docs, landing pages)
+have no per-request data and should be static or long-interval ISR. Reserve
+dynamic rendering for genuinely per-request routes: authenticated dashboards,
+personalized pages, and anything reading `cookies()` / `headers()`.
+
+> **Watch for accidental dynamic rendering.** Calling `cookies()`, `headers()`,
+> `connection()`, or `noStore()` anywhere in a route (even in a shared layout or
+> a deep child) opts the whole route into dynamic rendering. Audit shared
+> layouts first — one `cookies()` in a root layout can make the entire app
+> dynamic. (This starter's changelog pages already use `revalidate = 3600` ISR
+> with `generateStaticParams` as a reference pattern.)
+
+### 2. Scope middleware with a `matcher`
+
+If `middleware.ts` runs without a `matcher`, it executes on **every** request —
+including static assets, images, and prefetches — adding an origin hop each time.
+
+```ts
+// middleware.ts
+export const config = {
+	matcher: [
+		// Run only where you actually need middleware...
+		"/dashboard/:path*",
+		"/api/:path*",
+		// ...and explicitly exclude static assets and metadata files:
+		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+	],
+};
+```
+
+Pick the matcher that fits your middleware's job — a narrow allowlist
+(`/dashboard`, `/api`) if it only guards a few areas, or the negative-lookahead
+exclusion pattern if it must run broadly but should skip assets.
+
+### 3. Tame `<Link>` prefetching
+
+Next.js `<Link>` prefetches routes as they enter the viewport. The cost depends
+on the destination's render mode:
+
+| Destination      | Prefetched?                     | Server roundtrip on click    | Origin cost                                 |
+| ---------------- | ------------------------------- | ---------------------------- | ------------------------------------------- |
+| **Static page**  | Yes — full route                | No (served from CDN cache)   | RSC payload transfer on the prefetch itself |
+| **Dynamic page** | No (unless it has `loading.js`) | Yes — streamed on navigation | Function hit on prefetch _and_ on click     |
+
+So prefetching a **static** page does **not** burn Active CPU (it comes from the
+edge cache), but it still ships an RSC payload as Fast Origin Transfer. A page
+with dozens of links in the viewport can prefetch all of them — real bandwidth.
+
+Controls (note: there is **no** global `next.config` prefetch toggle, and
+`prefetch={true}` is **deprecated**):
+
+```tsx
+// Disable viewport prefetch for low-priority / numerous links (footers, long lists):
+<Link href="/about" prefetch={false}>
+	About
+</Link>
+```
+
+For a large list (infinite scroll, tables), default to `prefetch={false}`. To
+keep instant navigation without viewport prefetching everything, prefetch on
+**hover intent** instead:
+
+```tsx
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+
+export function HoverPrefetchLink({
+	href,
+	children,
+}: {
+	href: string;
+	children: React.ReactNode;
+}) {
+	const [active, setActive] = useState(false);
+	// prefetch={null} restores default prefetching once intent is shown;
+	// false until then = no viewport prefetch.
+	return (
+		<Link
+			href={href}
+			prefetch={active ? null : false}
+			onMouseEnter={() => setActive(true)}
+		>
+			{children}
+		</Link>
+	);
+}
+```
+
+You can also tune how long prefetched payloads stay cached client-side with the
+[`staleTimes`](https://nextjs.org/docs/app/api-reference/config/next-config-js/staleTimes)
+experimental config, reducing repeat prefetch fetches:
+
+```ts
+// next.config.ts
+const nextConfig = {
+	experimental: {
+		staleTimes: { dynamic: 30, static: 180 },
+	},
+};
+```
+
+> **Prefetch side-effects:** prefetching renders the destination's layouts/pages
+> ahead of the click. Keep them pure — move analytics or other side-effects into
+> a `useEffect` in a client component, or they fire on prefetch, not on visit.
+
+### 4. Cache route handler responses
+
+Route handlers (`app/**/route.ts`) are dynamic by default in the App Router. If a
+GET handler returns data that does not change per request, let the CDN cache it:
+
+```ts
+// app/api/data/route.ts
+export async function GET() {
+	return Response.json(data, {
+		headers: {
+			"Cache-Control": "s-maxage=3600, stale-while-revalidate=86400",
+		},
+	});
+}
+```
+
+`s-maxage=3600` caches the response at the edge for an hour; `stale-while-revalidate`
+serves the stale copy while refreshing in the background. Cache hits cost neither
+Active CPU nor Fast Origin Transfer. Alternatively, `export const revalidate = 3600`
+on the handler achieves a similar effect. Never cache responses that contain
+per-user or authenticated data.
+
+> **Image responses:** routes built with `next/og`'s `ImageResponse` already set
+> a long-lived immutable `Cache-Control` by default in production, so OG image
+> routes are cached per-URL at the edge without extra configuration.
+
+### 5. Shrink response payloads
+
+- Return only the fields the client needs — not whole database rows.
+- Avoid inlining large datasets into Server Components; the data is serialized
+  into every RSC payload (Fast Origin Transfer) and rendering it costs CPU.
+- Use `next/image` so images are optimized and served from the image cache.
+- Paginate or stream large lists instead of returning them whole.
+
+## Quick audit checklist
+
+Run these from a project root to find the usual culprits:
+
+```bash
+# Forced-dynamic and no-store opt-outs
+grep -rn "force-dynamic\|revalidate = 0\|force-no-store\|noStore\|unstable_noStore" src/app
+
+# cookies()/headers()/connection() in layouts (can make whole subtrees dynamic)
+grep -rn "cookies()\|headers()\|connection()" src/app/**/layout.tsx
+
+# Middleware matcher present?
+grep -n "matcher" src/middleware.ts middleware.ts 2>/dev/null
+
+# Route handlers — check each for Cache-Control / revalidate
+grep -rL "Cache-Control\|revalidate" $(grep -rl "export async function GET" src/app)
+```
+
+## See also
+
+- [Vercel Deployment](/docs/guides/deployment/vercel) — base deployment setup.
+- [Next.js Prefetching guide](https://nextjs.org/docs/app/guides/prefetching)
+- [Vercel Hobby plan limits](https://vercel.com/docs/plans/hobby)

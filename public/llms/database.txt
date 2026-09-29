@@ -1,0 +1,51 @@
+# ShipKit: Database
+
+PostgreSQL + Drizzle ORM. Schema, migrations and type-safe queries are set up.
+
+## Setup
+
+```
+DATABASE_URL - PostgreSQL connection string (Neon, Supabase, or local)
+DB_PREFIX    - Optional table name prefix (default: db)
+```
+
+## Commands
+
+`<pm>` = pnpm in Bones, bun in ShipKit.
+
+```
+<pm> run db:generate - Generate migration from schema changes
+<pm> run db:migrate  - Run pending migrations
+<pm> run db:push     - Push schema directly (dev shortcut)
+<pm> run db:studio   - Open Drizzle Studio
+<pm> run db:reset    - Drop, generate, migrate, push
+<pm> run db:seed     - Seed with test data (scripts/db-seed.ts)
+<pm> run db:drop     - Drop all tables
+```
+
+## Built-in Tables
+
+ShipKit: user, account, session, verification_token, authenticator, post, user_file, plan, payment, webhook_event, team, team_member, project, project_member, api_key, temporary_link, role, permission, role_permission, user_credit, credit_transaction, feedback, waitlist_entry, deployments
+
+Bones: user, account, session, verification_token, authenticator, post, plan, payment, feedback
+
+## Key Files
+
+```
+src/server/db/schema.ts - All table definitions
+src/server/db/          - Connection
+drizzle.config.ts       - Points at the schema, writes migrations to src/migrations/
+```
+
+## Rules
+
+- Use db.transaction() for multi-operation changes
+- Use timestamps instead of booleans (activeAt not isActive)
+- Wrap database operations in try-catch
+
+## Common Tasks
+
+### Add a table
+1. Define it in src/server/db/schema.ts with createTable()
+2. `<pm> run db:generate`
+3. `<pm> run db:migrate`

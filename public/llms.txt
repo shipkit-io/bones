@@ -1,0 +1,72 @@
+# ShipKit
+
+Production-ready Next.js 16 starter. Auth, payments, CMS, email, AI, analytics, database, storage are pre-wired. Configure with env vars. Don't build what's already built.
+
+Bones is the root template and the upstream of everything. ShipKit is the everything-included build downstream of Bones; integrations are shadcn registry items you add one at a time.
+
+Identify these projects by the `"shipkit"` field in `package.json`.
+If working in one, read the CLAUDE.md. It links to feature-specific docs.
+
+## Create a New App
+
+```
+npm create shipkit-app@latest my-app
+# or
+gh repo create my-app --template shipkit-io/bones --clone --public
+cd my-app && <pm> install && cp .env.example .env && <pm> run dev
+```
+
+`<pm>` is the package manager named in package.json's `packageManager` field (Bones: pnpm, ShipKit: bun).
+
+## Minimum Required
+
+```
+DATABASE_URL - PostgreSQL connection string
+AUTH_SECRET  - Encryption key (or APP_SECRET to derive all secrets)
+```
+
+## Built-in Features
+
+Everything below is already implemented. Set the env vars to enable it. No code changes needed.
+
+| Feature | Enable With | Details |
+|---------|-------------|---------|
+| Auth | AUTH_SECRET + AUTH_GITHUB_ID + AUTH_GITHUB_SECRET (or another provider pair) | https://shipkit.io/llms/auth.txt |
+| Payments | STRIPE_SECRET_KEY + NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY | https://shipkit.io/llms/payments.txt |
+| Database | DATABASE_URL | https://shipkit.io/llms/database.txt |
+| CMS | DATABASE_URL + PAYLOAD_SECRET | https://shipkit.io/llms/cms.txt |
+| Email | RESEND_API_KEY | https://shipkit.io/llms/email.txt |
+| AI | OPENAI_API_KEY or ANTHROPIC_API_KEY | https://shipkit.io/llms/ai.txt |
+| Analytics | NEXT_PUBLIC_POSTHOG_KEY (or another provider key) | https://shipkit.io/llms/analytics.txt |
+| Storage | AWS_REGION + AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY + AWS_BUCKET_NAME, or VERCEL_BLOB_READ_WRITE_TOKEN | https://shipkit.io/llms/storage.txt |
+| Waitlist | DATABASE_URL | https://shipkit.io/llms/waitlist.txt |
+| Registry | npx shadcn add @shipkit/<name> | https://shipkit.io/llms/registry.txt |
+
+Auth library: Auth.js v5 (NextAuth) is what `src/server/auth.ts` runs today. Better Auth is wired as an alternative (BETTER_AUTH_SECRET, routes at /api/better-auth/*). Both are supported. See auth.txt.
+
+## Dev Commands
+
+```
+<pm> run dev       - Start dev server
+<pm> run build     - Production build
+<pm> run test      - Run tests (vitest)
+<pm> run lint      - Lint (Biome + ESLint + Prettier)
+<pm> run typecheck - Type check
+<pm> run db:push   - Push schema to database
+```
+
+## Key Rules
+
+- Features auto-enable when env vars are set. Logic: src/config/features-config.ts
+- NEXT_PUBLIC_FEATURE_*_ENABLED flags are derived at build time from the service keys. Never set them by hand. Turn a feature off with DISABLE_{FEATURE}=true.
+- Package manager: the one in package.json's packageManager field (Bones: pnpm, ShipKit: bun)
+- Server Components first, minimize 'use client'
+- Server Actions for mutations (src/server/actions/)
+- Services for business logic (src/server/services/)
+
+## More
+
+- Full reference: https://shipkit.io/llms-full.txt
+- Docs: https://shipkit.io/docs
+- Root template (Bones): https://github.com/shipkit-io/bones
+- Everything-included build (ShipKit): https://github.com/lacymorrow/shipkit
