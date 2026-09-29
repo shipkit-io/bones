@@ -32,11 +32,7 @@ export function register() {
  * Handles server errors and reports them to a custom observability provider.
  * This function is triggered when the Next.js server captures an error.
  */
-export const onRequestError: Instrumentation.onRequestError = (
-  error,
-  request,
-  context,
-) => {
+export const onRequestError: Instrumentation.onRequestError = (error, request, context) => {
   console.debug("error", error);
   console.debug("request", request);
   console.debug("context", context);

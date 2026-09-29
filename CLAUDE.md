@@ -13,6 +13,7 @@ Do NOT use `lacymorrow/bones-www` for bones.sh work — it is archived and deplo
 ## Essential Development Commands
 
 ### Development Server
+
 ```bash
 bun dev             # Start development server with Turbo
 bun run dev:legacy  # Start development server without Turbo
@@ -21,6 +22,7 @@ bun run dev:all     # Start both dev server and workers
 ```
 
 ### Testing
+
 ```bash
 bun run test           # Run all tests
 bun run test:watch     # Run tests in watch mode
@@ -31,6 +33,7 @@ bun run test:e2e       # Run Playwright E2E tests
 ```
 
 ### Linting & Type Checking
+
 ```bash
 bun run lint           # Run all linting (Biome, ESLint, Prettier)
 bun run lint:fix       # Fix all linting issues
@@ -38,6 +41,7 @@ bun run typecheck      # Run TypeScript type checking
 ```
 
 ### Database Operations
+
 ```bash
 bun run db:generate    # Generate Drizzle schema
 bun run db:migrate     # Run database migrations
@@ -48,6 +52,7 @@ bun run db:seed        # Seed database with test data
 ```
 
 ### Build & Deployment
+
 ```bash
 bun run build          # Build for production
 bun run build:vercel   # Build with increased memory (8GB heap)
@@ -58,6 +63,7 @@ bun run analyze        # Analyze bundle size
 ## Architecture Overview
 
 ### Core Framework Stack
+
 - **Next.js 16** with App Router - Full-stack React framework
 - **TypeScript** - Type safety throughout
 - **Tailwind CSS** - Utility-first styling
@@ -66,6 +72,7 @@ bun run analyze        # Analyze bundle size
 - **Bun** - Package manager
 
 ### Authentication & Authorization
+
 - **NextAuth.js v5** - Core authentication system
 - **Better Auth** - Alternative auth provider
 - **Payload CMS** - User management for credentials auth
@@ -73,23 +80,27 @@ bun run analyze        # Analyze bundle size
 - **Role-based access control** - Admin and user roles
 
 ### Database & Data Layer
+
 - **PostgreSQL** - Primary database
 - **Drizzle ORM** - Database schema and queries
 - **Schema prefix support** - Multi-tenant capable with `DB_PREFIX`
 - **Comprehensive schema** - Users, payments, plans, API keys, teams, waitlists
 
 ### Content Management
+
 - **Payload CMS v3** - Headless CMS with admin panel
 - **Builder.io** - Visual page builder integration
 - **MDX** - Rich content with React components
 - **Fumadocs** - Documentation system
 
 ### Payment Processing
+
 - **Multiple providers** - Lemon Squeezy, Stripe, Polar
 - **Subscription management** - Plans, billing, webhooks
 - **Usage-based billing** - Flexible pricing models
 
 ### Performance & Monitoring
+
 - **Vercel Analytics** - Web analytics
 - **PostHog** - Product analytics
 - **OpenTelemetry** - Observability
@@ -98,11 +109,12 @@ bun run analyze        # Analyze bundle size
 ## Key Architectural Patterns
 
 ### File Structure Convention
+
 ```
 src/
 ├── app/                    # Next.js App Router
 │   ├── (app)/             # Main app routes
-│   ├── (authentication)/  # Auth pages  
+│   ├── (authentication)/  # Auth pages
 │   ├── (dashboard)/       # Protected routes
 │   ├── (demo)/           # Demo pages
 │   └── api/              # API routes
@@ -116,25 +128,30 @@ src/
 ```
 
 ### Component Architecture
+
 - **Atomic design** - Primitives → Blocks → Layouts → Pages
 - **Server Components first** - Minimize client-side JavaScript
 - **Named exports** - Prefer `export const Component = () => {}` over default exports
 - **TypeScript interfaces** - Type all props and return values
 
 ### Server-Side Patterns
+
 - **Server Actions** - Form handling and mutations (in `server/actions/`)
 - **Services** - Business logic and data access (in `server/services/`)
 - **Separation of concerns** - Actions call services, components use actions
 - **Never use server actions for data fetching** - Use Server Components instead
 
 ### State Management
+
 - **Server state** - React Server Components handle most state
 - **Client state** - Minimal use of useState/useEffect
 - **URL state** - Use `nuqs` for search parameters
 - **Form state** - React Hook Form with Zod validation
 
 ### Feature Flag System
+
 Shipkit uses environment variables for feature toggles:
+
 - Features turn on when their env vars are present. Set `DISABLE_<FEATURE>=true` to force one off. Logic: `src/config/features-config.ts`
 - Each enabled feature is exposed to the client as `NEXT_PUBLIC_FEATURE_<NAME>_ENABLED`, for example `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`, `NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED`, `NEXT_PUBLIC_FEATURE_STRIPE_ENABLED`, `NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED`. The full list is in `src/env.ts`
 - Auth: Auth.js v5 runs today; Better Auth is the chosen default and the switch is in progress. Both are detected (`NEXT_PUBLIC_FEATURE_AUTH_JS_ENABLED`, `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`)
@@ -143,6 +160,7 @@ Shipkit uses environment variables for feature toggles:
 ## Critical Development Rules
 
 ### Code Style (Enforced by Cursor Rules)
+
 - **File size limit** - Keep files under 500 lines
 - **Naming conventions** - kebab-case files, PascalCase components, camelCase variables
 - **Function style** - Arrow functions for components, function keyword for utilities
@@ -150,25 +168,31 @@ Shipkit uses environment variables for feature toggles:
 - **Comments** - Explain "why" not "what", preserve existing comments
 
 ### Performance Requirements
+
 - **Minimize client components** - Use 'use client' sparingly
 - **Suspense boundaries** - Wrap client components with fallbacks
 - **Image optimization** - Use Next.js Image with proper sizing
 - **Bundle analysis** - Run `bun run analyze` before major changes
 
 ### Navigation Patterns
+
 - **Prefer Link over router.push** - Use `src/components/primitives/link-with-transition`
 - **Button-like links** - Use `<Link className={cn(buttonVariants(...))} ...>`
 - **Multi-zone navigation** - Use anchor tags (`<a>`) for cross-zone links
 
 ### CI Minutes and Local Verification
+
 GitHub Actions minutes are billed on private repos, and automated upstream syncs and agent-authored PRs burn them on checks that were already run locally.
+
 - **Run `verify` before opening a PR** - `scripts/verify.sh` runs typecheck, lint, unit and node tests, a production build, and a `next start` smoke (`--routes "/ /blog /nope-404=404"` to customize). Paste its Markdown summary in the PR body.
 - **Skip Actions when you verified locally** - put `[skip ci]` in the commit message (GitHub-native; also skips CodeQL and gitleaks, so run `gitleaks protect --staged` locally). Vercel still builds, and the Deployment Check smoke still runs because it triggers off the Vercel deployment.
 - **Ask for the full suite when it matters** - add the `ci:full` label to a PR (shipkit and downstreams gate the expensive jobs behind it; pushes to `main` always run everything).
 - **Suspense and loading files** - never add `loading.tsx` or `<Suspense>` above a page that calls `notFound()`; the shell streams a 200 first (see `tests/node/app/no-loading-above-not-found.test.ts`).
 
 ### GitHub Actions Are Advisory, Deploys Are Not Gated On Them
+
 Actions are not paid for on these repos, so jobs can stop running at any time. Nothing in the deploy path depends on them.
+
 - **Vercel deploys through its own Git integration.** A push deploys whether or not any workflow ran. Verified: shipkit-www shipped two production deployments while every one of its Actions jobs was failing on billing.
 - **No repo requires status checks.** Branch protection needs GitHub Pro on private repos, so there is nothing to satisfy. A red check cannot block a merge; only a person can.
 - **`ignoreCommand` never skips production.** `scripts/vercel-ignore-step.sh` exits 1 for `VERCEL_ENV=production`, so a live site can never be left stale by a skipped build. Only preview builds skip, and only on `[skip ci]`.
@@ -176,6 +200,7 @@ Actions are not paid for on these repos, so jobs can stop running at any time. N
 - **So what actually gates a release?** Local `verify` plus the Vercel build. If those are green, ship. If Actions are also green, that is a bonus, not a requirement.
 
 ### Database Best Practices
+
 - **Use transactions** - `db.transaction()` for multi-operation changes
 - **Avoid booleans** - Use timestamps instead (e.g., `activeAt` vs `isActive`)
 - **Type safety** - All queries are type-safe through Drizzle
@@ -184,6 +209,7 @@ Actions are not paid for on these repos, so jobs can stop running at any time. N
 ## Common Tasks
 
 ### Adding New Features
+
 1. Check for existing environment variable feature flags
 2. Add new feature flag if needed
 3. Implement server action in `server/actions/`
@@ -192,18 +218,21 @@ Actions are not paid for on these repos, so jobs can stop running at any time. N
 6. Add tests for new functionality
 
 ### Database Schema Changes
+
 1. Modify schema in `src/server/db/schema.ts`
 2. Run `bun run db:generate` to create migration
 3. Run `bun run db:migrate` to apply changes
 4. Update TypeScript types if needed
 
 ### Adding New Routes
+
 1. Create route in appropriate `app/` directory
 2. Follow route grouping conventions: `(app)`, `(dashboard)`, etc.
 3. Use Server Components when possible
 4. Add proper error and loading states
 
 ### Testing Strategy
+
 - **Unit tests** - Vitest for utilities and components
 - **Integration tests** - Test server actions and services
 - **E2E tests** - Playwright for critical user flows
@@ -214,13 +243,16 @@ Actions are not paid for on these repos, so jobs can stop running at any time. N
 Shipkit supports multi-zone deployments for scalable applications:
 
 ### Zone Structure
+
 - **Main zone** - Core app functionality
 - **Content zones** - `/docs`, `/blog`, `/ui`, `/tools`
 - **Shared authentication** - Single sign-on across zones
 - **Consistent design** - Shared component library
 
 ### Zone Development
+
 Each zone is a full Shipkit installation with:
+
 - `basePath` and `assetPrefix` configuration
 - Environment variables for zone-specific settings
 - Anchor tag navigation between zones
@@ -229,6 +261,7 @@ Each zone is a full Shipkit installation with:
 ## Environment Configuration
 
 ### Required for Basic Functionality
+
 ```env
 DATABASE_URL=                 # PostgreSQL connection string
 APP_SECRET=                   # One secret; AUTH_SECRET, BETTER_AUTH_SECRET and PAYLOAD_SECRET derive from it
@@ -236,7 +269,9 @@ AUTH_URL=                     # App URL
 ```
 
 ### Optional Feature Enablement
+
 Features turn on when their env vars exist. Never set `NEXT_PUBLIC_FEATURE_*` by hand; the build derives those.
+
 ```env
 AUTH_GITHUB_ID=              # + AUTH_GITHUB_SECRET for GitHub login
 LEMONSQUEEZY_API_KEY=        # + LEMONSQUEEZY_STORE_ID for payments
@@ -248,6 +283,7 @@ RESEND_API_KEY=              # Email
 ## Troubleshooting
 
 ### Common Issues
+
 - **Type errors** - Run `bun run typecheck` and fix before proceeding
 - **Linting failures** - Run `bun run lint:fix` to auto-fix issues
 - **Database connection** - Check `DATABASE_URL` and run `bun run db:push`
@@ -255,6 +291,7 @@ RESEND_API_KEY=              # Email
 - **Out of Memory (OOM) errors** - Use `bun run build:vercel` for larger builds
 
 ### Debug Commands
+
 ```bash
 bun run deps:check             # Check for outdated dependencies
 bun run check:metadata         # Validate site metadata
@@ -268,6 +305,7 @@ Always run `bun run lint` and `bun run typecheck` before committing changes.
 Use the ShipKit CLI to create new sites from this template:
 
 ### Using the CLI
+
 ```bash
 # From anywhere — interactive
 cd cli && bun run build && node dist/index.js create my-new-site
@@ -277,6 +315,7 @@ node cli/dist/index.js create my-new-site --yes
 ```
 
 ### Manual Steps (if CLI unavailable)
+
 ```bash
 # 1. Create repo from template
 gh repo create my-new-site --template shipkit-io/bones --clone --public
@@ -297,6 +336,7 @@ bun dev
 ```
 
 ### Syncing Upstream Changes
+
 ```bash
 # Via CLI (creates PR branch)
 node cli/dist/index.js sync --yes
@@ -309,7 +349,9 @@ node cli/dist/index.js sync --yes --direct
 ```
 
 ### CLI Development
+
 The CLI lives in `cli/` and uses Commander + @clack/prompts:
+
 ```bash
 cd cli
 bun install

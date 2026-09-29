@@ -27,12 +27,6 @@ export function getNumericEnvVar(name: string, defaultValue = 0): number {
 /**
  * Check if an environment feature flag is enabled
  */
-export function isFeatureEnabled(
-  featureName: string,
-  defaultValue = false,
-): boolean {
-  return getBooleanEnvVar(
-    `FEATURE_${featureName.toUpperCase()}_ENABLED`,
-    defaultValue,
-  );
+export function isFeatureEnabled(featureName: string, defaultValue = false): boolean {
+  return getBooleanEnvVar(`FEATURE_${featureName.toUpperCase()}_ENABLED`, defaultValue);
 }

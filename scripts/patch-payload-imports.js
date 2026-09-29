@@ -23,37 +23,27 @@ const dirsToPath = [
 ];
 
 // File extensions that Node.js ESM cannot handle
-const problematicExtensions =
-  "css|scss|svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|eot|ttf|otf";
+const problematicExtensions = "css|scss|svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|eot|ttf|otf";
 
 // Patterns to match problematic imports (both formatted and minified)
 const problematicImportPatterns = [
   // Style imports: import './something.scss';
-  new RegExp(
-    `import\\s+['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`,
-    "g",
-  ),
+  new RegExp(`import\\s+['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`, "g"),
   // Minified style imports: import"./something.scss";
   new RegExp(`import["'][^"']*\\.(${problematicExtensions})["'];?`, "g"),
   // Asset imports with variable: import something from './file.svg';
-  new RegExp(
-    `import\\s+(\\w+)\\s+from\\s+['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`,
-    "g",
-  ),
+  new RegExp(`import\\s+(\\w+)\\s+from\\s+['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`, "g"),
   // Minified asset imports: import a from"./file.svg";
-  new RegExp(
-    `import\\s*(\\w+)\\s*from["'][^"']*\\.(${problematicExtensions})["'];?`,
-    "g",
-  ),
+  new RegExp(`import\\s*(\\w+)\\s*from["'][^"']*\\.(${problematicExtensions})["'];?`, "g"),
   // Re-export: export { default as name } from './file.svg';
   new RegExp(
     `export\\s*\\{\\s*default\\s+as\\s+(\\w+)\\s*\\}\\s*from\\s*['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`,
-    "g",
+    "g"
   ),
   // Minified re-export: export{default as name}from"./file.svg";
   new RegExp(
     `export\\s*\\{\\s*default\\s+as\\s+(\\w+)\\s*\\}\\s*from\\s*["'][^"']*\\.(${problematicExtensions})["'];?`,
-    "g",
+    "g"
   ),
 ];
 
@@ -122,14 +112,10 @@ for (const relDir of dirsToPath) {
   }
 }
 
-console.log(
-  `[patch] Scanned ${filesScanned} files, patched ${patchedCount} file(s)`,
-);
+console.log(`[patch] Scanned ${filesScanned} files, patched ${patchedCount} file(s)`);
 
 if (patchedCount > 0) {
-  console.log(
-    "[patch] Successfully removed problematic imports from Payload packages",
-  );
+  console.log("[patch] Successfully removed problematic imports from Payload packages");
 } else {
   console.log("[patch] No problematic imports found to patch");
 }

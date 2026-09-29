@@ -34,7 +34,7 @@ export const HoverInfo = ({
       <HoverCardTrigger asChild>
         <span
           className={cn(
-            "font-medium inline-block cursor-help transition-colors duration-200",
+            "inline-block cursor-help font-medium transition-colors duration-200",
             className
           )}
         >

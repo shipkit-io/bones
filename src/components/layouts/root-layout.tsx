@@ -7,10 +7,7 @@ import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ViewTransitions } from "next-view-transitions";
-import {
-  Space_Grotesk as FontSans,
-  Noto_Serif as FontSerif,
-} from "next/font/google";
+import { Space_Grotesk as FontSans, Noto_Serif as FontSerif } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 

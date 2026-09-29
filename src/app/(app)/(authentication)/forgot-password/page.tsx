@@ -3,15 +3,15 @@ import { CardContent, CardDescription, CardHeader, CardTitle } from "@/component
 import { AuthenticationCard } from "../_components/authentication-card";
 
 export default function ForgotPasswordPage() {
-	return (
-		<AuthenticationCard>
-			<CardHeader>
-				<CardTitle className="text-2xl">Forgot Password</CardTitle>
-				<CardDescription>Enter your email below to reset your password</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<ForgotPasswordForm />
-			</CardContent>
-		</AuthenticationCard>
-	);
+  return (
+    <AuthenticationCard>
+      <CardHeader>
+        <CardTitle className="text-2xl">Forgot Password</CardTitle>
+        <CardDescription>Enter your email below to reset your password</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ForgotPasswordForm />
+      </CardContent>
+    </AuthenticationCard>
+  );
 }

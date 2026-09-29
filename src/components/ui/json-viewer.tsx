@@ -26,7 +26,7 @@ export function JsonViewer({ data, title, className }: JsonViewerProps) {
   return (
     <Card className={cn("relative", className)}>
       {title && (
-        <div className="flex items-center justify-between px-4 py-2 border-b">
+        <div className="flex items-center justify-between border-b px-4 py-2">
           <h3 className="text-sm font-medium">{title}</h3>
           <Button variant="ghost" size="sm" onClick={copyToClipboard} className="h-8 gap-1 text-xs">
             {copied ? (
@@ -43,7 +43,7 @@ export function JsonViewer({ data, title, className }: JsonViewerProps) {
           </Button>
         </div>
       )}
-      <pre className="overflow-auto p-4 text-xs font-mono">{jsonString}</pre>
+      <pre className="overflow-auto p-4 font-mono text-xs">{jsonString}</pre>
     </Card>
   );
 }

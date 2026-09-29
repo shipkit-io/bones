@@ -2,10 +2,10 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
 import {
-	PopoverContent,
-	PopoverRoot,
-	PopoverTextarea,
-	PopoverTrigger,
+  PopoverContent,
+  PopoverRoot,
+  PopoverTextarea,
+  PopoverTrigger,
 } from "@/components/ui/cults/animated-popover";
 
 /**
@@ -25,48 +25,48 @@ import {
  */
 
 function press(target: Element | Document, key: string): boolean {
-	const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
-	target.dispatchEvent(event);
-	return event.defaultPrevented;
+  const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+  target.dispatchEvent(event);
+  return event.defaultPrevented;
 }
 
 function renderPopover() {
-	render(
-		<KeyboardShortcutProvider>
-			<PopoverRoot>
-				<PopoverTrigger>Note</PopoverTrigger>
-				<PopoverContent>
-					<PopoverTextarea />
-				</PopoverContent>
-			</PopoverRoot>
-		</KeyboardShortcutProvider>
-	);
+  render(
+    <KeyboardShortcutProvider>
+      <PopoverRoot>
+        <PopoverTrigger>Note</PopoverTrigger>
+        <PopoverContent>
+          <PopoverTextarea />
+        </PopoverContent>
+      </PopoverRoot>
+    </KeyboardShortcutProvider>
+  );
 }
 
 function open() {
-	renderPopover();
-	fireEvent.click(screen.getByText("Note"));
-	return screen.getByRole("textbox");
+  renderPopover();
+  fireEvent.click(screen.getByText("Note"));
+  return screen.getByRole("textbox");
 }
 
 describe("popover Escape", () => {
-	it("is consumed when pressed inside the text field", () => {
-		const textarea = open();
-		expect(press(textarea, "Escape")).toBe(true);
-	});
+  it("is consumed when pressed inside the text field", () => {
+    const textarea = open();
+    expect(press(textarea, "Escape")).toBe(true);
+  });
 
-	it("is consumed when pressed with focus elsewhere", () => {
-		open();
-		expect(press(document.documentElement, "Escape")).toBe(true);
-	});
+  it("is consumed when pressed with focus elsewhere", () => {
+    open();
+    expect(press(document.documentElement, "Escape")).toBe(true);
+  });
 
-	it("is left alone while the popover is closed", () => {
-		renderPopover();
-		expect(press(document.documentElement, "Escape")).toBe(false);
-	});
+  it("is left alone while the popover is closed", () => {
+    renderPopover();
+    expect(press(document.documentElement, "Escape")).toBe(false);
+  });
 
-	it("leaves other keys in the field alone", () => {
-		const textarea = open();
-		expect(press(textarea, "a")).toBe(false);
-	});
+  it("leaves other keys in the field alone", () => {
+    const textarea = open();
+    expect(press(textarea, "a")).toBe(false);
+  });
 });

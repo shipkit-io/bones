@@ -22,9 +22,7 @@ interface FooterGroup {
   items: FooterItem[];
 }
 
-type FooterElement =
-  | { type: "group"; content: FooterGroup }
-  | { type: "node"; content: ReactNode };
+type FooterElement = { type: "group"; content: FooterGroup } | { type: "node"; content: ReactNode };
 
 export const defaultFooterGroups: FooterElement[] = [
   {
@@ -133,14 +131,12 @@ export const Footer: FC<FooterProps> = ({
           <div className="flex flex-col gap-2xl">
             <Link
               href={routes.home}
-              className="text-4xl font-bold hover:text-primary/80 transition-colors"
+              className="text-4xl font-bold transition-colors hover:text-primary/80"
             >
               <span>{siteConfig.name}</span>
             </Link>
           </div>
-          <div className="flex flex-col flex-wrap md:flex-row lg:gap-20">
-            {groupElements}
-          </div>
+          <div className="flex flex-col flex-wrap md:flex-row lg:gap-20">{groupElements}</div>
         </div>
       </div>
     </footer>
@@ -149,10 +145,5 @@ export const Footer: FC<FooterProps> = ({
 
 // Type guard for LinkItem
 function isLinkItem(item: FooterItem): item is LinkItem {
-  return (
-    item !== null &&
-    typeof item === "object" &&
-    "href" in item &&
-    "label" in item
-  );
+  return item !== null && typeof item === "object" && "href" in item && "label" in item;
 }

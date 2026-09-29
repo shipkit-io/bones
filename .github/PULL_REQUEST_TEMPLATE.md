@@ -12,12 +12,12 @@ Thanks for the contribution! A few things that make review faster:
 
 ## Changes
 
-<!-- Bullet list of notable changes. Skip if Summary already covers it. -->
--
+## <!-- Bullet list of notable changes. Skip if Summary already covers it. -->
 
 ## Test plan
 
 <!-- How a reviewer can verify this. Be specific. -->
+
 - [ ] `bun run typecheck` passes
 - [ ] `bun run lint` passes
 - [ ] `bun test` passes (if relevant)

@@ -68,7 +68,7 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 ```tsx
 import { Link } from "@/components/primitives/link-with-transition";
 
-<Link href="/about">About</Link>
+<Link href="/about">About</Link>;
 ```
 
 ### Theme Switching
@@ -93,7 +93,7 @@ import ErrorBoundary from "@/components/primitives/error-boundary";
 ```tsx
 import { DataTable } from "@/components/ui/data-table";
 
-<DataTable columns={columns} data={data} />
+<DataTable columns={columns} data={data} />;
 ```
 
 ## Adding Components
@@ -107,6 +107,7 @@ bunx shadcn@latest add button card dialog
 ### Custom Components
 
 Follow the existing patterns:
+
 - **Server Components first** unless interactivity is required
 - **Named exports** (`export const MyComponent = () => {}`)
 - **kebab-case filenames** (`my-component.tsx`)

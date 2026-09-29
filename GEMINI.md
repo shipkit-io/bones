@@ -6,14 +6,14 @@ This project, **Shipkit**, is a comprehensive Next.js starter kit designed for r
 
 **Key Technologies:**
 
-*   **Framework:** Next.js 16
-*   **Styling:** Tailwind CSS with Shadcn/UI components
-*   **Database ORM:** Drizzle
-*   **Authentication:** Auth.js with multiple providers (Google, GitHub, etc.)
-*   **CMS:** Payload CMS
-*   **Visual Editor:** Builder.io
-*   **Email:** Resend
-*   **Deployment:** Vercel
+- **Framework:** Next.js 16
+- **Styling:** Tailwind CSS with Shadcn/UI components
+- **Database ORM:** Drizzle
+- **Authentication:** Auth.js with multiple providers (Google, GitHub, etc.)
+- **CMS:** Payload CMS
+- **Visual Editor:** Builder.io
+- **Email:** Resend
+- **Deployment:** Vercel
 
 **Architecture:**
 
@@ -45,28 +45,28 @@ bun run build
 
 The project uses `vitest` for unit testing and `playwright` for end-to-end testing.
 
-*   Run all tests:
-    ```bash
-    bun run test
-    ```
-*   Run unit tests:
-    ```bash
-    bun run test:node
-    ```
-*   Run browser tests:
-    ```bash
-    bun run test:browser
-    ```
-*   Run end-to-end tests:
-    ```bash
-    bun run test:e2e
-    ```
+- Run all tests:
+  ```bash
+  bun run test
+  ```
+- Run unit tests:
+  ```bash
+  bun run test:node
+  ```
+- Run browser tests:
+  ```bash
+  bun run test:browser
+  ```
+- Run end-to-end tests:
+  ```bash
+  bun run test:e2e
+  ```
 
 ## Development Conventions
 
-*   **Feature Flagging:** Features are enabled or disabled using environment variables. The configuration for this is in `src/config/features-config.ts`. To enable a feature, you typically set an environment variable like `ENABLE_FEATURE_X` to `true`.
-*   **Styling:** The project uses Tailwind CSS for styling. Custom styles are located in the `src/styles` directory.
-*   **Components:** Reusable UI components are located in the `src/components` directory.
-*   **Linting and Formatting:** The project uses ESLint, Prettier, and Biome for code linting and formatting. You can run the linters with `bun run lint` and fix issues with `bun run lint:fix`.
-*   **Committing:** The project uses `lint-staged` to run linters on staged files before committing.
-*   **Database:** The project uses Drizzle ORM for database access. Database-related scripts are available in `package.json` (e.g., `bun run db:generate`, `bun run db:migrate`).
+- **Feature Flagging:** Features are enabled or disabled using environment variables. The configuration for this is in `src/config/features-config.ts`. To enable a feature, you typically set an environment variable like `ENABLE_FEATURE_X` to `true`.
+- **Styling:** The project uses Tailwind CSS for styling. Custom styles are located in the `src/styles` directory.
+- **Components:** Reusable UI components are located in the `src/components` directory.
+- **Linting and Formatting:** The project uses ESLint, Prettier, and Biome for code linting and formatting. You can run the linters with `bun run lint` and fix issues with `bun run lint:fix`.
+- **Committing:** The project uses `lint-staged` to run linters on staged files before committing.
+- **Database:** The project uses Drizzle ORM for database access. Database-related scripts are available in `package.json` (e.g., `bun run db:generate`, `bun run db:migrate`).

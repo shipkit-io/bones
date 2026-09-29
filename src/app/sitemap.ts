@@ -18,11 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const [key, value] of Object.entries(obj)) {
       if (typeof value === "string" && !isExternalRoute(value)) {
         result.push(value);
-      } else if (
-        typeof value === "object" &&
-        value !== null &&
-        !("params" in value)
-      ) {
+      } else if (typeof value === "object" && value !== null && !("params" in value)) {
         // Recursively flatten nested objects (but skip route objects with params)
         result = [...result, ...flattenRoutes(value)];
       }
@@ -70,12 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
-    priority:
-      route === "/"
-        ? 1
-        : route.includes("auth") || route.includes("sign")
-          ? 0.5
-          : 0.8,
+    priority: route === "/" ? 1 : route.includes("auth") || route.includes("sign") ? 0.5 : 0.8,
   }));
 
   // Changelog entries are indexable pages linked from /changelog; without

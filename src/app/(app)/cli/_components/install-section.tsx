@@ -126,11 +126,7 @@ export function InstallSection() {
             onClick={copyToClipboard}
             className="grow bg-blue-600 text-white hover:bg-blue-700"
           >
-            {copied ? (
-              <Check className="mr-2 h-4 w-4" />
-            ) : (
-              <Copy className="mr-2 h-4 w-4" />
-            )}
+            {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
             {copied ? "Copied!" : "Copy Command"}
           </Button>
 

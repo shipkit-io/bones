@@ -82,7 +82,7 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
         <div
           className={cn(
             "grid gap-6",
-            form.formState.isSubmitting && "opacity-60 pointer-events-none"
+            form.formState.isSubmitting && "pointer-events-none opacity-60"
           )}
         >
           {/* Name Field */}

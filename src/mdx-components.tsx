@@ -15,12 +15,12 @@ function filterForMDXComponents(module: Record<string, any>): MDXComponents {
     Object.entries(module).filter(([key, value]) => {
       // Only include valid React component types
       return isValidElementType(value);
-    }),
+    })
   ) as MDXComponents;
 }
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <div id="sk-mdx-wrapper" className="prose container mx-auto py-10">
+  <div id="sk-mdx-wrapper" className="container prose mx-auto py-10">
     {children}
   </div>
 );

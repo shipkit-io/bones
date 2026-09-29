@@ -52,7 +52,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
   const displayDate = formatDate(entry.publishedAt);
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="mx-auto w-full max-w-3xl">
       <Link
         href="/changelog"
         className={cn(
@@ -66,7 +66,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
 
       <article>
         <header className="mb-8 border-b pb-6">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="mb-2 flex items-center gap-3">
             {entry.badge && (
               <Badge variant="secondary" className="font-mono">
                 {entry.badge}
@@ -88,7 +88,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
           )}
         </header>
 
-        <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.content}</ReactMarkdown>
         </div>
       </article>

@@ -7,14 +7,14 @@ import withPWA from "next-pwa";
  * @returns The modified Next.js configuration object with PWA support.
  */
 export function withPWAConfig(nextConfig: NextConfig): NextConfig {
-	const pwaConfig = {
-		dest: "public",
-		register: true,
-		skipWaiting: true,
-		disable: process.env.NODE_ENV === "development",
-	};
+  const pwaConfig = {
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+    disable: process.env.NODE_ENV === "development",
+  };
 
-	// The 'withPWA' type might be complex, using 'any' for simplicity here.
-	// Ensure 'next-pwa' types are correctly installed if issues arise.
-	return (withPWA as any)(pwaConfig)(nextConfig) as NextConfig;
+  // The 'withPWA' type might be complex, using 'any' for simplicity here.
+  // Ensure 'next-pwa' types are correctly installed if issues arise.
+  return (withPWA as any)(pwaConfig)(nextConfig) as NextConfig;
 }

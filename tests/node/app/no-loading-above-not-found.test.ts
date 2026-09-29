@@ -24,45 +24,46 @@ const APP_DIR = join(process.cwd(), "src", "app");
 const LOADING_FILES = ["loading.tsx", "loading.ts", "loading.jsx", "loading.js"];
 
 function walk(dir: string, out: string[] = []): string[] {
-	for (const name of readdirSync(dir)) {
-		const full = join(dir, name);
-		if (statSync(full).isDirectory()) walk(full, out);
-		else if (/^page\.tsx?$/.test(name)) out.push(full);
-	}
-	return out;
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name);
+    if (statSync(full).isDirectory()) walk(full, out);
+    else if (/^page\.tsx?$/.test(name)) out.push(full);
+  }
+  return out;
 }
 
 const callsNotFound = (file: string) => /\bnotFound\(\)/.test(readFileSync(file, "utf8"));
 
 const loadingFilesIn = (dir: string) =>
-	LOADING_FILES.map((f) => join(dir, f)).filter((f) => existsSync(f));
+  LOADING_FILES.map((f) => join(dir, f)).filter((f) => existsSync(f));
 
 const notFoundPages = walk(APP_DIR).filter(callsNotFound);
 
 describe("no loading.tsx above a page that calls notFound()", () => {
-	it("finds at least one page that can 404 (sanity)", () => {
-		expect(notFoundPages.length).toBeGreaterThan(0);
-	});
+  it("finds at least one page that can 404 (sanity)", () => {
+    expect(notFoundPages.length).toBeGreaterThan(0);
+  });
 
-	it.each(
-		notFoundPages.map((file) => [relative(APP_DIR, file), file])
-	)("%s: loading files above it cannot commit a 200 first", (_label, file) => {
-		const pageDir = dirname(file);
-		const offenders: string[] = [];
+  it.each(notFoundPages.map((file) => [relative(APP_DIR, file), file]))(
+    "%s: loading files above it cannot commit a 200 first",
+    (_label, file) => {
+      const pageDir = dirname(file);
+      const offenders: string[] = [];
 
-		// Own folder: allowed only if a sibling layout settles the 404 first.
-		const layout = join(pageDir, "layout.tsx");
-		const layoutSettles404 = existsSync(layout) && callsNotFound(layout);
-		if (!layoutSettles404) offenders.push(...loadingFilesIn(pageDir));
+      // Own folder: allowed only if a sibling layout settles the 404 first.
+      const layout = join(pageDir, "layout.tsx");
+      const layoutSettles404 = existsSync(layout) && callsNotFound(layout);
+      if (!layoutSettles404) offenders.push(...loadingFilesIn(pageDir));
 
-		// Ancestors: never allowed.
-		let dir = dirname(pageDir);
-		while (dir.startsWith(APP_DIR)) {
-			offenders.push(...loadingFilesIn(dir));
-			if (dir === APP_DIR) break;
-			dir = dirname(dir);
-		}
+      // Ancestors: never allowed.
+      let dir = dirname(pageDir);
+      while (dir.startsWith(APP_DIR)) {
+        offenders.push(...loadingFilesIn(dir));
+        if (dir === APP_DIR) break;
+        dir = dirname(dir);
+      }
 
-		expect(offenders.map((f) => relative(APP_DIR, f))).toEqual([]);
-	});
+      expect(offenders.map((f) => relative(APP_DIR, f))).toEqual([]);
+    }
+  );
 });

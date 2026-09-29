@@ -3,36 +3,36 @@ import { cn } from "@/lib/utils";
 import * as React from "react";
 
 export interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
-	/**
-	 * The size of the loading indicator
-	 */
-	size?: "sm" | "default" | "lg";
+  /**
+   * The size of the loading indicator
+   */
+  size?: "sm" | "default" | "lg";
 
-	/**
-	 * The color variant of the loading indicator
-	 */
-	color?: "default" | "primary" | "secondary" | "muted";
+  /**
+   * The color variant of the loading indicator
+   */
+  color?: "default" | "primary" | "secondary" | "muted";
 
-	/**
-	 * Whether to show a full-page loading state
-	 */
-	fullPage?: boolean;
+  /**
+   * Whether to show a full-page loading state
+   */
+  fullPage?: boolean;
 
-	/**
-	 * Custom loading text for accessibility
-	 */
-	label?: string;
+  /**
+   * Custom loading text for accessibility
+   */
+  label?: string;
 
-	/**
-	 * Whether to show a backdrop behind the loader
-	 */
-	backdrop?: boolean;
+  /**
+   * Whether to show a backdrop behind the loader
+   */
+  backdrop?: boolean;
 
-	/**
-	 * Whether to fade in the loading indicator
-	 * @default false
-	 */
-	fade?: boolean;
+  /**
+   * Whether to fade in the loading indicator
+   * @default false
+   */
+  fade?: boolean;
 }
 
 /**
@@ -48,33 +48,33 @@ export interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  */
 export const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
-	(
-		{
-			className,
-			size = "default",
-			color = "default",
-			fullPage = false,
-			label = "Loading...",
-			backdrop = true,
-			fade = false,
-			...props
-		},
-		ref
-	) => {
-		return (
-			<div
-				ref={ref}
-				className={cn(
-					"flex items-center justify-center",
-					fullPage && "fixed inset-0 z-50",
-					backdrop && "bg-background/80 backdrop-blur-sm",
-					fade && "duration-300 animate-in fade-in",
-					className
-				)}
-				{...props}
-			>
-				<LoaderAtoms size={size} color={color} label={label} />
-			</div>
-		);
-	}
+  (
+    {
+      className,
+      size = "default",
+      color = "default",
+      fullPage = false,
+      label = "Loading...",
+      backdrop = true,
+      fade = false,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex items-center justify-center",
+          fullPage && "fixed inset-0 z-50",
+          backdrop && "bg-background/80 backdrop-blur-sm",
+          fade && "duration-300 animate-in fade-in",
+          className
+        )}
+        {...props}
+      >
+        <LoaderAtoms size={size} color={color} label={label} />
+      </div>
+    );
+  }
 );

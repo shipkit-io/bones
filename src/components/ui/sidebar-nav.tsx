@@ -43,7 +43,7 @@ function LinkStatusDot() {
   const { pending } = useLinkStatus();
 
   if (pending) {
-    return <div className="w-2 h-2 bg-green-500 rounded-full" />;
+    return <div className="h-2 w-2 rounded-full bg-green-500" />;
   }
 
   return null;

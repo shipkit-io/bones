@@ -91,7 +91,7 @@ export const SocialLinks = ({
             rel="noopener noreferrer"
             aria-label={labelled ? undefined : label}
             className={cn(
-              "inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              "inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
             )}
           >
             <Icon className={cn("h-5 w-5", iconClassName)} />

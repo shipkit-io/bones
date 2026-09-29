@@ -15,41 +15,41 @@ import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortc
  */
 
 function press(key: string, init: Partial<KeyboardEventInit> = {}): KeyboardEvent {
-	const event = new KeyboardEvent("keydown", {
-		key,
-		bubbles: true,
-		cancelable: true,
-		...init,
-	});
-	document.documentElement.dispatchEvent(event);
-	return event;
+  const event = new KeyboardEvent("keydown", {
+    key,
+    bubbles: true,
+    cancelable: true,
+    ...init,
+  });
+  document.documentElement.dispatchEvent(event);
+  return event;
 }
 
 describe("KeyboardShortcutProvider", () => {
-	it("leaves Escape to whatever is open", () => {
-		render(
-			<KeyboardShortcutProvider>
-				<div />
-			</KeyboardShortcutProvider>
-		);
-		expect(press("Escape").defaultPrevented).toBe(false);
-	});
+  it("leaves Escape to whatever is open", () => {
+    render(
+      <KeyboardShortcutProvider>
+        <div />
+      </KeyboardShortcutProvider>
+    );
+    expect(press("Escape").defaultPrevented).toBe(false);
+  });
 
-	it("swallows a key the app owns outright", () => {
-		render(
-			<KeyboardShortcutProvider>
-				<div />
-			</KeyboardShortcutProvider>
-		);
-		expect(press("K", { metaKey: true }).defaultPrevented).toBe(true);
-	});
+  it("swallows a key the app owns outright", () => {
+    render(
+      <KeyboardShortcutProvider>
+        <div />
+      </KeyboardShortcutProvider>
+    );
+    expect(press("K", { metaKey: true }).defaultPrevented).toBe(true);
+  });
 
-	it("ignores a key it does not bind", () => {
-		render(
-			<KeyboardShortcutProvider>
-				<div />
-			</KeyboardShortcutProvider>
-		);
-		expect(press("Q", { metaKey: true }).defaultPrevented).toBe(false);
-	});
+  it("ignores a key it does not bind", () => {
+    render(
+      <KeyboardShortcutProvider>
+        <div />
+      </KeyboardShortcutProvider>
+    );
+    expect(press("Q", { metaKey: true }).defaultPrevented).toBe(false);
+  });
 });

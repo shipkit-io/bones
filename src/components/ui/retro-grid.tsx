@@ -1,12 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export function RetroGrid({
-  className,
-  angle = 65,
-}: {
-  className?: string;
-  angle?: number;
-}) {
+export function RetroGrid({ className, angle = 65 }: { className?: string; angle?: number }) {
   return (
     <div
       className={cn(

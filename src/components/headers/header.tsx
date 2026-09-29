@@ -54,10 +54,7 @@ export const Header: React.FC<HeaderProps> = ({
   variant = "default",
 }) => {
   const [{ y }] = useWindowScroll();
-  const isOpaque = useMemo(
-    () => variant === "floating" && y && y > 100,
-    [y, variant]
-  );
+  const isOpaque = useMemo(() => variant === "floating" && y && y > 100, [y, variant]);
   const { data: session } = useSession();
   const signInRedirectUrl = useSignInRedirectUrl();
 
@@ -106,21 +103,14 @@ export const Header: React.FC<HeaderProps> = ({
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0 md:hidden"
-              >
+              <Button variant="outline" size="icon" className="shrink-0 md:hidden">
                 <HamburgerMenuIcon className="h-5 w-5" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
               <nav className="grid gap-6 font-medium">
-                <Link
-                  href={logoHref}
-                  className="flex items-center gap-2 text-lg font-semibold"
-                >
+                <Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
                   {logoIcon}
                   <span className="sr-only">{logoText}</span>
                 </Link>
@@ -149,10 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
                     </Link>
                     <Link
                       href={signInRedirectUrl}
-                      className={cn(
-                        buttonVariants({ variant: "ghost" }),
-                        "w-full justify-center"
-                      )}
+                      className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-center")}
                     >
                       Login
                     </Link>
@@ -162,9 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <>
                     <Link
                       href={routes.docs}
-                      className={cn(
-                        "text-muted-foreground hover:text-foreground"
-                      )}
+                      className={cn("text-muted-foreground hover:text-foreground")}
                     >
                       Documentation
                     </Link>
@@ -188,9 +173,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <Link
                   key={routes.docs}
                   href={routes.docs}
-                  className={cn(
-                    "text-muted-foreground transition-colors hover:text-foreground"
-                  )}
+                  className={cn("text-muted-foreground transition-colors hover:text-foreground")}
                 >
                   Documentation
                 </Link>
@@ -209,13 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
               ))}
             </div>
             <div className="flex items-center gap-2">
-              {!session && (
-                <ThemeToggle
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                />
-              )}
+              {!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
 
               <UserMenu size="sm" />
 

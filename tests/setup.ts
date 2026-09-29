@@ -5,8 +5,8 @@ import { afterEach, beforeAll, expect, vi } from "vitest";
 
 // Augment the global namespace for TypeScript
 declare global {
-	// biome-ignore lint/suspicious/noVar: global augmentation requires var
-	var IS_REACT_ACT_ENVIRONMENT: boolean;
+  // biome-ignore lint/suspicious/noVar: global augmentation requires var
+  var IS_REACT_ACT_ENVIRONMENT: boolean;
 }
 
 // Set React testing environment
@@ -17,31 +17,31 @@ expect.extend(matchers);
 
 // Cleanup after each test case
 afterEach(() => {
-	cleanup();
-	vi.clearAllMocks();
+  cleanup();
+  vi.clearAllMocks();
 });
 
 // Mock database module only if needed for specific tests
 // This allows tests to run without a database connection
 vi.mock("@/server/db", () => ({
-	db: undefined,
-	isDatabaseInitialized: async () => false,
-	safeDbExecute: async (callback: Function, defaultValue: any) => defaultValue,
+  db: undefined,
+  isDatabaseInitialized: async () => false,
+  safeDbExecute: async (callback: Function, defaultValue: any) => defaultValue,
 }));
 
 // Suppress specific console errors during tests
 beforeAll(async () => {
-	const originalError = console.error;
-	console.error = (...args: unknown[]) => {
-		if (
-			typeof args[0] === "string" &&
-			(args[0].includes("Warning: ReactDOM.render is no longer supported") ||
-				args[0].includes("Invariant: AsyncLocalStorage accessed in runtime"))
-		) {
-			return;
-		}
-		originalError.call(console, ...args);
-	};
+  const originalError = console.error;
+  console.error = (...args: unknown[]) => {
+    if (
+      typeof args[0] === "string" &&
+      (args[0].includes("Warning: ReactDOM.render is no longer supported") ||
+        args[0].includes("Invariant: AsyncLocalStorage accessed in runtime"))
+    ) {
+      return;
+    }
+    originalError.call(console, ...args);
+  };
 });
 
 /*
@@ -49,18 +49,18 @@ beforeAll(async () => {
  * This is needed for components that use useRouter
  */
 vi.mock("next/navigation", () => ({
-	useRouter: () => ({
-		push: vi.fn(),
-		replace: vi.fn(),
-		prefetch: vi.fn(),
-		back: vi.fn(),
-		forward: vi.fn(),
-		refresh: vi.fn(),
-		pathname: "/",
-		query: {},
-	}),
-	usePathname: () => "/",
-	useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    pathname: "/",
+    query: {},
+  }),
+  usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 /*
@@ -68,6 +68,6 @@ vi.mock("next/navigation", () => ({
  * This is needed for components that use next/image
  */
 vi.mock("next/image", () => ({
-	__esModule: true,
-	default: vi.fn().mockImplementation(() => null),
+  __esModule: true,
+  default: vi.fn().mockImplementation(() => null),
 }));

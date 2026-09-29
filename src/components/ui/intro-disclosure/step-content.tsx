@@ -32,11 +32,11 @@ export function StepContent({
 
     if (action.href) {
       return (
-        <Button asChild className="w-full " size="sm" variant="link">
+        <Button asChild className="w-full" size="sm" variant="link">
           <a href={action.href} target="_blank" rel="noopener noreferrer">
             <span className="flex items-center gap-2">
               {action.label}
-              <ExternalLinkIcon className="w-4 h-4" />
+              <ExternalLinkIcon className="h-4 w-4" />
             </span>
           </a>
         </Button>
@@ -56,14 +56,14 @@ export function StepContent({
   };
 
   return (
-    <div className="flex h-full flex-col max-w-3xl mx-auto">
+    <div className="mx-auto flex h-full max-w-3xl flex-col">
       {isDesktop && (
-        <div className="flex-1  px-2 py-3">
+        <div className="flex-1 px-2 py-3">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-            className="space-y-2 flex flex-col justify-center items-center px-1"
+            className="flex flex-col items-center justify-center space-y-2 px-1"
           >
             {steps.map((step, index) => (
               <StepTab
@@ -78,15 +78,15 @@ export function StepContent({
         </div>
       )}
       <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={currentStep} {...slideInOut(direction)} className="mt-6 space-y-4 ">
+        <motion.div key={currentStep} {...slideInOut(direction)} className="mt-6 space-y-4">
           {!isDesktop && steps[currentStep]?.media && (
-            <AspectRatio ratio={16 / 9} className="lg:overflow-hidden rounded-lg bg-muted ">
+            <AspectRatio ratio={16 / 9} className="rounded-lg bg-muted lg:overflow-hidden">
               {steps[currentStep]?.media?.type === "image" ? (
                 <Image
                   src={steps[currentStep]?.media?.src || "/placeholder.svg"}
                   alt={steps[currentStep]?.media?.alt || ""}
                   fill
-                  className="object-cover "
+                  className="object-cover"
                 />
               ) : (
                 <video
@@ -99,7 +99,7 @@ export function StepContent({
           )}
 
           {steps[currentStep]?.action ? (
-            <div className=" px-2">{renderActionButton(steps[currentStep]?.action)}</div>
+            <div className="px-2">{renderActionButton(steps[currentStep]?.action)}</div>
           ) : (
             <div className="h-10" />
           )}
@@ -110,7 +110,7 @@ export function StepContent({
             <Button
               variant="ghost"
               onClick={onSkip}
-              className="text-muted-foreground hover:bg-card rounded-full"
+              className="rounded-full text-muted-foreground hover:bg-card"
             >
               Skip all
             </Button>
@@ -140,7 +140,7 @@ export function StepContent({
               </Button>
             </div>
           </div>
-          <div className="flex items-center space-x-2 pb-4 px-4">
+          <div className="flex items-center space-x-2 px-4 pb-4">
             <Checkbox
               id="skipNextTime"
               checked={skipNextTime}

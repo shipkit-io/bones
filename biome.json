@@ -1,57 +1,63 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
-	"files": {
-		"ignoreUnknown": false,
-		"includes": [
-			"**",
-			"!**/node_modules",
-			"!**/.next",
-			"!**/*.css",
-			"!**/src/components/ui/**/*",
-			"!**/public/workers/**"
-		]
-	},
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab",
-		"indentWidth": 2,
-		"lineWidth": 100,
-		"formatWithErrors": true
-	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "double",
-			"semicolons": "always",
-			"trailingCommas": "es5",
-			"arrowParentheses": "always"
-		},
-		"globals": ["React"]
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"preset": "recommended",
-			"correctness": {
-				"noUnusedVariables": "warn",
-				"noUndeclaredVariables": "error",
-				"useExhaustiveDependencies": "off"
-			},
-			"suspicious": {
-				"noExplicitAny": "warn",
-				"noControlCharactersInRegex": "off",
-				"noShadowRestrictedNames": "off",
-				"noConsole": "warn",
-				"noArrayIndexKey": "warn"
-			},
-			"style": {
-				"noNonNullAssertion": "warn",
-				"useNodejsImportProtocol": "warn",
-				"useTemplate": "error"
-			},
-			"a11y": {
-				"noSvgWithoutTitle": "warn"
-			}
-		}
-	},
-	"assist": { "actions": { "source": { "organizeImports": "on" } } }
+  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/*.css",
+      "!**/src/components/ui/**/*",
+      "!**/public/workers/**"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "formatWithErrors": true
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "es5",
+      "arrowParentheses": "always"
+    },
+    "globals": ["React"]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "noUndeclaredVariables": "error",
+        "useExhaustiveDependencies": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noControlCharactersInRegex": "off",
+        "noShadowRestrictedNames": "off",
+        "noConsole": "warn",
+        "noArrayIndexKey": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "warn",
+        "useNodejsImportProtocol": "warn",
+        "useTemplate": "error"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
 }
