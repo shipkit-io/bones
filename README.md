@@ -10,11 +10,11 @@ Get started with ShipKit in three easy steps:
 2. **Connect to Vercel**
 3. **Follow the Setup Wizard**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fbones&project-name=bones-app&repository-name=bones-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fx%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Bones%20%E2%80%93%20Next.js%20SaaS%20Starter&demo-description=Full-stack%20Next.js%20starter%20with%20Auth%2C%20Payments%2C%20CMS%2C%20AI%2C%20and%20100%2B%20components.%20Deploy%20in%2030%20seconds.&demo-url=https%3A%2F%2Fbones.sh&demo-image=https%3A%2F%2Fshipkit.io%2Fimages%2Fdemo.png)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fbones&project-name=bones-app&repository-name=bones-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fx%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Bones%20%E2%80%93%20Next.js%20SaaS%20Starter&demo-description=Full-stack%20Next.js%20starter%20with%20Auth%2C%20Payments%2C%20CMS%2C%20AI%2C%20and%20100%2B%20components.%20Deploy%20in%2030%20seconds.&demo-url=https%3A%2F%2Fbones.sh&demo-image=https%3A%2F%2Fshipkit.io%2Fimages%2Fdemo.png&env=APP_SECRET&envDescription=Session%20secret.%20Generate%20one%20with%3A%20openssl%20rand%20-hex%2032&envLink=https%3A%2F%2Fshipkit.io%2Fdocs%2Fenv)
 
 [![Open in Codeflow](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https://pr.new/shipkit-io/bones)
 
-No environment variables needed to start. Features turn on when you add their env vars.
+One env var to start: `APP_SECRET`. The deploy button asks for it; generate one with `openssl rand -hex 32`. Everything else turns on when you add its keys.
 
 ## What's Included
 
