@@ -3,18 +3,14 @@
 import { logger } from "@/lib/logger";
 
 /**
- * The slice of Payload's Local API that hub services (admin-service) touch.
- * Typing the stub structurally lets the shared ShipKit files compile before
- * the item is installed; the item replaces this file with the real client.
+ * Payload is not installed, so there is no real client type to import. Hub
+ * services (admin-service, auth-service, vercel) call many Local API methods
+ * behind the NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED flag and null-check the
+ * client; typing the stub as `any` keeps those shared ShipKit files compiling
+ * until the @shipkit/payload item replaces this file with the real client.
  */
-export interface PayloadClient {
-  find(args: {
-    collection: string;
-    where?: Record<string, unknown>;
-    limit?: number;
-    depth?: number;
-  }): Promise<{ docs: Array<Record<string, unknown>>; totalDocs: number }>;
-}
+// biome-ignore lint/suspicious/noExplicitAny: stub until @shipkit/payload replaces this file
+export type PayloadClient = any;
 
 /**
  * Payload is not installed. Hub services call this behind the

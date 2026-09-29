@@ -13,10 +13,32 @@ interface PayloadConfig {
   emailFromName: string;
 }
 
+import type { Manifest } from "next/dist/lib/metadata/types/manifest-types";
+
+interface ManifestConfig {
+  startUrl: string;
+  display: Manifest["display"];
+  displayOverride?: Manifest["display_override"];
+  orientation: Manifest["orientation"];
+  categories: Manifest["categories"];
+  dir: Manifest["dir"];
+  lang: Manifest["lang"];
+  preferRelatedApplications: Manifest["prefer_related_applications"];
+  scope: Manifest["scope"];
+  launchHandler?: Manifest["launch_handler"];
+  icons: {
+    favicon: string;
+    appIcon192: string;
+    appIcon512: string;
+  };
+  relatedApplications?: Manifest["related_applications"];
+}
+
 interface SiteConfig {
   // Core site information
   name: string;
   title: string;
+  tagline: string;
   url: string;
   ogImage: string;
   description: string;
@@ -52,6 +74,26 @@ interface SiteConfig {
     x_follow: string;
     github: string;
   };
+
+  /**
+   * Centralized social links for the project/org. Empty strings mean "disabled".
+   */
+  social: {
+    github?: string;
+    twitter?: string;
+    x?: string;
+    linkedin?: string;
+    instagram?: string;
+    facebook?: string;
+    youtube?: string;
+    tiktok?: string;
+    discord?: string;
+    dribbble?: string;
+    threads?: string;
+  };
+
+  // PWA Manifest settings
+  manifest: ManifestConfig;
 
   // Repository information
   repo: {
@@ -93,14 +135,9 @@ interface SiteConfig {
   // E-commerce store configuration
   store: {
     domain: string;
-    products: {
-      bones: string;
-      muscles: string;
-      brains: string;
-      shipkit: string;
-    };
+    products: Record<string, string>;
     format: {
-      buyUrl: (product: keyof SiteConfig["store"]["products"]) => string;
+      buyUrl: (product: string) => string;
     };
   };
 
@@ -136,6 +173,7 @@ export const siteConfig: SiteConfig = {
 
   name: "Bones",
   title: "Launch your app today",
+  tagline: "Launch your app at light speed.",
   url: "https://bones.sh",
   ogImage: "https://bones.sh/og",
   description:
@@ -164,6 +202,39 @@ export const siteConfig: SiteConfig = {
     x: "https://x.com/lacybuilds",
     x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
     github: "https://github.com/lacymorrow/shipkit",
+  },
+
+  // Configure social profiles here. Leave any you don't use as empty strings.
+  social: {
+    github: "https://github.com/shipkit-io/bones",
+    x: "https://x.com/lacybuilds",
+    linkedin: "",
+    instagram: "",
+    facebook: "",
+    youtube: "",
+    tiktok: "",
+    discord: "",
+    dribbble: "",
+    threads: "",
+  },
+
+  manifest: {
+    startUrl: "/",
+    display: "standalone",
+    displayOverride: ["window-controls-overlay"],
+    orientation: "portrait-primary",
+    categories: ["development", "productivity", "utilities"],
+    dir: "ltr",
+    lang: "en-US",
+    preferRelatedApplications: false,
+    scope: "/",
+    launchHandler: { client_mode: ["navigate-existing", "auto"] },
+    icons: {
+      favicon: "/favicon.ico",
+      appIcon192: "/app/web-app-manifest-192x192.png",
+      appIcon512: "/app/web-app-manifest-512x512.png",
+    },
+    relatedApplications: [],
   },
 
   repo: {
