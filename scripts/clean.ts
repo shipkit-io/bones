@@ -69,7 +69,6 @@ const filesToRemove = [
 	"scripts/db-seed.ts",
 	"scripts/db-sync.ts",
 	"scripts/env-sync.sh",
-	"scripts/sync-upstream.ts",
 	"scripts/tsconfig.json",
 
 	// Source directories to remove

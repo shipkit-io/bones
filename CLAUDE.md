@@ -56,7 +56,7 @@ bun run analyze        # Analyze bundle size
 ## Architecture Overview
 
 ### Core Framework Stack
-- **Next.js 15** with App Router - Full-stack React framework
+- **Next.js 16** with App Router - Full-stack React framework
 - **TypeScript** - Type safety throughout
 - **Tailwind CSS** - Utility-first styling
 - **Shadcn/UI** - Component library built on Radix UI
@@ -133,9 +133,9 @@ src/
 
 ### Feature Flag System
 Shipkit uses environment variables for feature toggles:
-- `NEXT_PUBLIC_FEATURE_AUTH_*_ENABLED` - Authentication providers
-- `NEXT_PUBLIC_FEATURE_PAYMENTS_*_ENABLED` - Payment providers
-- `NEXT_PUBLIC_FEATURE_CMS_ENABLED` - CMS functionality
+- Features turn on when their env vars are present. Set `DISABLE_<FEATURE>=true` to force one off. Logic: `src/config/features-config.ts`
+- Each enabled feature is exposed to the client as `NEXT_PUBLIC_FEATURE_<NAME>_ENABLED`, for example `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`, `NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED`, `NEXT_PUBLIC_FEATURE_STRIPE_ENABLED`, `NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED`. The full list is in `src/env.ts`
+- Auth: Better Auth is the default library. Auth.js v5 (`NEXT_PUBLIC_FEATURE_AUTH_JS_ENABLED`) stays supported
 - **Graceful degradation** - Features disable cleanly when not configured
 
 ## Critical Development Rules
@@ -229,17 +229,18 @@ Each zone is a full Shipkit installation with:
 ### Required for Basic Functionality
 ```env
 DATABASE_URL=                 # PostgreSQL connection string
-NEXTAUTH_SECRET=             # Auth encryption key
-NEXTAUTH_URL=               # App URL
+APP_SECRET=                   # One secret; AUTH_SECRET, BETTER_AUTH_SECRET and PAYLOAD_SECRET derive from it
+AUTH_URL=                     # App URL
 ```
 
 ### Optional Feature Enablement
+Features turn on when their env vars exist. Never set `NEXT_PUBLIC_FEATURE_*` by hand; the build derives those.
 ```env
-NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED=true
-NEXT_PUBLIC_FEATURE_PAYMENTS_LEMONSQUEEZY_ENABLED=true
-NEXT_PUBLIC_FEATURE_CMS_ENABLED=true
-BUILDER_IO_API_KEY=          # For visual editing
-RESEND_API_KEY=             # For email
+AUTH_GITHUB_ID=              # + AUTH_GITHUB_SECRET for GitHub login
+LEMONSQUEEZY_API_KEY=        # + LEMONSQUEEZY_STORE_ID for payments
+PAYLOAD_SECRET=              # Payload CMS (or rely on APP_SECRET)
+NEXT_PUBLIC_BUILDER_API_KEY= # Builder.io visual editing
+RESEND_API_KEY=              # Email
 ```
 
 ## Troubleshooting
@@ -279,8 +280,7 @@ node cli/dist/index.js create my-new-site --yes
 gh repo create my-new-site --template shipkit-io/bones --clone --public
 cd my-new-site
 
-# 2. Add upstream remote (premium first, bones fallback)
-git remote add upstream https://github.com/shipkit-io/shipkit.git || \
+# 2. Add upstream remote. Bones is the root template.
 git remote add upstream https://github.com/shipkit-io/bones.git
 
 # 3. Graft upstream history

@@ -58,21 +58,21 @@ See [env.mdx](../env.mdx) for the full list. Key ones to set up first:
 
 - `ADMIN_EMAIL` — comma-separated admin emails
 - `DATABASE_URL` — your database connection string
-- `NEXTAUTH_SECRET` — generate with `openssl rand -base64 32`
+- `APP_SECRET` — generate with `openssl rand -base64 32`; `AUTH_SECRET` and the other library secrets derive from it
 
 ## Package Manager
 
-Shipkit uses [Bun](https://bun.sh).
+Bones uses [pnpm](https://pnpm.io). ShipKit, the everything-included downstream, uses [Bun](https://bun.sh).
 
 ```bash
-# Install bun
-curl -fsSL https://bun.sh/install | bash
+# Install pnpm
+npm install -g pnpm
 
 # Install dependencies
-bun install --frozen-lockfile
+pnpm install --frozen-lockfile
 
 # Start dev server
-bun dev
+pnpm dev
 ```
 
 ## Recommended VS Code Extensions

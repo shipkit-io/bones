@@ -12,7 +12,7 @@ description: "Get Shipkit running in under 5 minutes"
 3. Set `AUTH_SECRET` (run `openssl rand -base64 32` to generate)
 4. Deploy
 
-You now have a live site with auth, UI components, and a full Next.js 15 app.
+You now have a live site with auth, UI components, and a full Next.js 16 app.
 
 ## Local Development
 
@@ -34,15 +34,16 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## What You Get Out of the Box
 
-- **Authentication** with multiple OAuth providers, magic link, and guest mode. [Details](/docs/features/authentication)
-- **Payments** via Stripe, Lemon Squeezy, or Polar. [Details](/docs/features/payments)
-- **CMS** with Payload CMS v3 and Builder.io visual editor. [Details](/docs/features/cms)
-- **UI Components** from shadcn/ui, plus 300+ custom components. [Details](/docs/reference/components)
+Bones is the root template. It ships the foundation and stays small.
+
+- **Authentication** with Better Auth (default) or Auth.js, OAuth providers, magic link, and guest mode. [Details](/docs/features/authentication)
+- **UI Components** from shadcn/ui, plus custom components. [Details](/docs/reference/components)
 - **Database** with PostgreSQL and Drizzle ORM. [Details](/docs/features/database)
 - **Email** via Resend. [Details](/docs/features/email)
 - **Analytics** with PostHog, Vercel Analytics, and more. [Details](/docs/features/analytics)
-- **AI** integrations with OpenAI and Anthropic. [Details](/docs/features/ai)
 - **Feature flags** that auto-detect from env vars. [Details](/docs/development/feature-flags)
+
+Payments, CMS, AI, storage and the rest come from the [ShipKit registry](https://shipkit.io/docs/features/registry) as shadcn items, one `npx shadcn add` each. [ShipKit](https://github.com/lacymorrow/shipkit) is the everything-included build of Bones that proves the integrations work together.
 
 ## First Customization
 

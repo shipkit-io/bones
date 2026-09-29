@@ -5,20 +5,21 @@
  * configure the upstream remote for new developers.
  *
  * It will:
- * 1. Check if an upstream remote already exists
- * 2. If not, try to add shipkit-io/shipkit (premium) first
- * 3. Fall back to shipkit-io/bones (public) if premium is inaccessible
+ * 1. Check if an upstream remote already exists (an existing remote always wins)
+ * 2. If not, add UPSTREAM_REPO_URL when set
+ * 3. Otherwise add shipkit-io/bones, the root of every ShipKit project
  */
 
 import { execSync } from "node:child_process";
 
 const UPSTREAM_REMOTE = "upstream";
 
-// Upstream repos in order of preference (premium first, then public fallback)
-const UPSTREAM_REPOS = [
-	"https://github.com/shipkit-io/shipkit.git", // Premium (try first)
-	"https://github.com/shipkit-io/bones.git", // Public fallback
-];
+// Bones is the root template. Projects created from another template (for example
+// lacymorrow/shipkit) get their upstream remote set by create-shipkit, or set
+// UPSTREAM_REPO_URL to override.
+const UPSTREAM_REPOS: string[] = process.env.UPSTREAM_REPO_URL
+	? [process.env.UPSTREAM_REPO_URL]
+	: ["https://github.com/shipkit-io/bones.git"];
 
 /**
  * Run a command silently and return success status
