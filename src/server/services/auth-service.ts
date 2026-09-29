@@ -215,7 +215,6 @@ export const AuthService = {
         bio: user.bio,
         githubUsername: user.githubUsername,
         theme: user.theme as "system" | "light" | "dark" | undefined,
-        emailNotifications: user.emailNotifications ?? undefined,
       };
     } catch (error) {
       console.error("Auth error:", error);

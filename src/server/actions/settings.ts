@@ -26,7 +26,6 @@ interface ProfileData {
 
 interface SettingsData {
   theme: "light" | "dark" | "system";
-  emailNotifications: boolean;
 }
 
 export async function updateProfile(data: ProfileData) {
@@ -62,14 +61,10 @@ export async function updateSettings(data: SettingsData) {
       return { success: false, error: "Not authenticated" };
     }
 
-    // Ensure boolean type
-    const emailNotifications = Boolean(data.emailNotifications);
-
     await db
       ?.update(users)
       .set({
         theme: data.theme,
-        emailNotifications,
         updatedAt: new Date(),
       })
       .where(eq(users.id, session.user.id));
