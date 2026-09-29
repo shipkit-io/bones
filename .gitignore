@@ -62,3 +62,6 @@ public/workbox*
 
 # generated content manifests (created by scripts/prebuild-content.mjs)
 src/lib/generated/
+
+# Vercel CLI
+.vercel

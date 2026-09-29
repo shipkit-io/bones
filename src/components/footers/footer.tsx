@@ -1,4 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
+import { bonesRoutes } from "@/config/bones-routes";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
@@ -32,9 +33,9 @@ export const defaultFooterGroups: FooterElement[] = [
       items: [
         { href: routes.home, label: "Home" },
         { href: routes.features, label: "Features" },
-        { href: routes.cli, label: "CLI" },
-        { href: routes.bones.cliWww, label: "CLI Demo" },
-        { href: routes.changelog, label: "Changelog" },
+        { href: bonesRoutes.cli, label: "CLI" },
+        { href: bonesRoutes.cliWww, label: "CLI Demo" },
+        { href: bonesRoutes.changelog, label: "Changelog" },
       ],
     },
   },
@@ -43,7 +44,7 @@ export const defaultFooterGroups: FooterElement[] = [
     content: {
       header: { label: "Resources" },
       items: [
-        { href: routes.about, label: "About" },
+        { href: bonesRoutes.about, label: "About" },
         { href: routes.faq, label: "FAQ" },
         { href: routes.contact, label: "Contact" },
         { href: routes.auth.signIn, label: "Sign in" },

@@ -4,7 +4,8 @@ import {
   buildTimePublicEnv,
 } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
-import { redirects } from "@/config/routes";
+import { noIndexHeaders } from "@/config/bones-routes";
+import { redirects } from "@/config/redirects";
 import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import type { NextConfig } from "next";
@@ -55,7 +56,7 @@ const nextConfig: NextConfig = {
   },
 
   /*
-   * Redirects are located in the `src/config/routes.ts` file
+   * Redirects are located in the `src/config/redirects.ts` file
    */
   redirects,
 
@@ -64,6 +65,8 @@ const nextConfig: NextConfig = {
    */
   async headers() {
     return Promise.resolve([
+      // Auth pages are noindex (LAC-3521); see src/config/bones-routes.ts
+      ...noIndexHeaders(),
       {
         source: "/(.*)",
         headers: [

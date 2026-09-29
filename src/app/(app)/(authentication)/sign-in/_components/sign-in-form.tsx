@@ -1,10 +1,11 @@
 "use client";
 
-import { signInSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,15 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import { toast } from "sonner";
+import { signInSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 export const SignInForm = () => {
   const searchParams = useSearchParams();
-  const nextUrl = searchParams.get(SEARCH_PARAM_KEYS.nextUrl);
+  const nextUrl = searchParams?.get(SEARCH_PARAM_KEYS.nextUrl) ?? null;
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -50,7 +49,7 @@ export const SignInForm = () => {
         formData.append(SEARCH_PARAM_KEYS.nextUrl, nextUrl);
       }
 
-      await signInWithCredentialsAction(values, formData);
+      await signInWithCredentialsAction(values);
 
       toast.success("Success", {
         description: "Signed in successfully.",

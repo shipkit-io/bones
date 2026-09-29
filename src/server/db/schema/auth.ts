@@ -33,6 +33,9 @@ export const users = createTable("user", {
     mode: "date",
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
+  // Better Auth models email verification as a boolean. Auth.js keeps the
+  // timestamp above; both columns stay so either strategy can read its own.
+  emailVerifiedFlag: boolean("email_verified_flag").default(false),
   image: varchar("image", { length: 255 }),
   password: varchar("password", { length: 255 }),
   githubUsername: varchar("github_username", { length: 255 }),
@@ -105,6 +108,15 @@ export const accounts = createTable(
     scope: text("scope"),
     id_token: text("id_token"),
     session_state: text("session_state"),
+    // Better Auth columns. Nullable so existing Auth.js rows are untouched.
+    // providerId/accountId/accessToken/refreshToken/idToken map onto the
+    // Auth.js columns above; these are the ones Auth.js has no home for.
+    id: varchar("id", { length: 255 }),
+    accessTokenExpiresAt: timestamp("access_token_expires_at", { withTimezone: true }),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", { withTimezone: true }),
+    password: text("password"),
+    createdAt: timestamp("created_at", { withTimezone: true }),
+    updatedAt: timestamp("updated_at", { withTimezone: true }),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -124,6 +136,13 @@ export const sessions = createTable("session", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
+  // Better Auth columns. Its `token` maps onto sessionToken and `expiresAt`
+  // onto expires; the rest are nullable extras Auth.js never writes.
+  id: varchar("id", { length: 255 }),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at", { withTimezone: true }),
+  updatedAt: timestamp("updated_at", { withTimezone: true }),
 });
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -136,6 +155,11 @@ export const verificationTokens = createTable(
     identifier: text("identifier").notNull(),
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
+    // Better Auth columns. Its `value` maps onto token and `expiresAt` onto
+    // expires; these are nullable extras Auth.js never writes.
+    id: varchar("id", { length: 255 }),
+    createdAt: timestamp("created_at", { withTimezone: true }),
+    updatedAt: timestamp("updated_at", { withTimezone: true }),
   },
   (verificationToken) => ({
     compositePk: primaryKey({
