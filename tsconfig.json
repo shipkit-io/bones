@@ -56,21 +56,21 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
+    ".next",
     "node_modules",
+    ".vercel",
+    "tests",
     "public",
-    "src/components/blocks/**/*.ts",
-    "src/components/blocks/**/*.tsx",
-    "src/components/ui/**/*.ts",
-    "src/components/ui/**/*.tsx",
-    "src/app/(app)/(ai)/**/*",
+    "packages",
+    "docs-site",
+    "debug/**/*.ts",
+    "scripts",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts",
     "playwright.config.ts",
-    "next-sitemap.config.js",
-    "scripts/**/*",
-    "tests/**/*",
     "vitest.config.ts",
     "vitest.config.node.ts",
-    "vitest.config.browser.ts"
+    "vitest.config.browser.ts",
+    "next-sitemap.config.js"
   ]
 }
