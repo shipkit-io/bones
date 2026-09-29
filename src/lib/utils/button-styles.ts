@@ -57,7 +57,7 @@ export const createLoadingButtonConfig = ({
   disabled,
 }: LoadingButtonConfig) => ({
   className: cn(className),
-  disabled: disabled || isLoading,
+  disabled: disabled ?? isLoading,
   text: isLoading ? loadingText : defaultText,
   showSpinner: isLoading,
 });

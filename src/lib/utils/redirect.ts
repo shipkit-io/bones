@@ -1,6 +1,5 @@
 import { redirect as nextRedirect } from "next/navigation";
 import { NextResponse } from "next/server";
-import type { Route } from "next";
 import { BASE_URL } from "../../config/base-url";
 import { SEARCH_PARAM_KEYS } from "../../config/search-param-keys";
 import { logger } from "../logger";
@@ -40,7 +39,7 @@ export function routeRedirect(
     url = new URL(destination, BASE_URL);
     url.searchParams.set(SEARCH_PARAM_KEYS.statusCode, options);
   } else {
-    const baseUrl = options.request?.url || BASE_URL;
+    const baseUrl = options.request?.url ?? BASE_URL;
     url = new URL(destination, baseUrl);
 
     if (options?.nextUrl) {
@@ -55,21 +54,3 @@ export function routeRedirect(
   logger.info(`routeRedirect: Redirecting to ${url}`);
   return NextResponse.redirect(url);
 }
-
-export interface Redirect {
-  source: Route;
-  destination: Route;
-  permanent: boolean;
-}
-
-export const createRedirects = (
-  sources: Route[],
-  destination: Route,
-  permanent = false
-): Redirect[] => {
-  if (!sources.length) return [];
-
-  return sources
-    .filter((source) => source !== destination)
-    .map((source) => ({ source, destination, permanent }));
-};

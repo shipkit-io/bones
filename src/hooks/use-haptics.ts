@@ -13,7 +13,7 @@
  * @see https://github.com/lochie/web-haptics
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import type { HapticInput, TriggerOptions } from "web-haptics";
 import { useWebHaptics } from "web-haptics/react";
 
@@ -67,8 +67,10 @@ export function hapticCancel(): void {
 export function useHaptics() {
   const { trigger, cancel, isSupported } = useWebHaptics();
 
-  imperativeHaptics.trigger = trigger;
-  imperativeHaptics.cancel = cancel;
+  useEffect(() => {
+    imperativeHaptics.trigger = trigger;
+    imperativeHaptics.cancel = cancel;
+  }, [trigger, cancel]);
 
   return useMemo(
     () => ({

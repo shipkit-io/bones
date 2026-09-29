@@ -53,7 +53,7 @@ export const createFeedback = async (
           .values({
             content: input.content,
             source: input.source,
-            metadata: JSON.stringify(input.metadata || {}),
+            metadata: JSON.stringify(input.metadata ?? {}),
           })
           .returning();
         dbResult = result;

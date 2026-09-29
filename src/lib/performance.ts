@@ -1,5 +1,5 @@
 /**
- * Performance Utilities for Next.js 15
+ * Performance Utilities for Next.js 16
  *
  * Helpers for fetch caching, performance monitoring, and optimization
  */
@@ -93,7 +93,7 @@ export const PerformanceMonitor = {
 };
 
 /**
- * Web Vitals tracking for Next.js 15
+ * Web Vitals tracking for Next.js 16
  */
 export interface WebVitalsMetric {
   id: string;

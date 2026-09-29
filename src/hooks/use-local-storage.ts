@@ -34,9 +34,7 @@ export function useLocalStorage<T>(
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {
       try {
-        setStoredValue((prev) =>
-          value instanceof Function ? (value as (val: T) => T)(prev) : value
-        );
+        setStoredValue((prev) => (value instanceof Function ? value(prev) : value));
       } catch (error) {
         console.warn(`Error setting localStorage key "${key}":`, error);
       }

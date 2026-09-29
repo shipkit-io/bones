@@ -1,6 +1,6 @@
 import "server-only";
+import { adminConfig } from "@/config/admin-config";
 import { env } from "@/env";
-import { siteConfig } from "@/config/site-config";
 
 interface MailtoOptions {
   to?: string | string[];
@@ -60,12 +60,12 @@ export function generateMailtoLink(options: MailtoOptions): string {
  * @returns Formatted mailto URL for feedback
  */
 export function generateFeedbackMailto(content: string, source: string): string {
-  const adminEmail =
-    process.env.ADMIN_EMAIL?.split(",")[0]?.trim() || siteConfig.email?.support || "";
-  const subject = `Feedback from ${source}`;
+  const adminEmails = adminConfig.emails;
+  const subject = `Feedback from ${source} - Shipkit`;
 
   return generateMailtoLink({
-    to: adminEmail,
+    to: adminEmails[0], // Use first admin email as primary recipient
+    cc: adminEmails.length > 1 ? adminEmails.slice(1) : undefined,
     subject,
     body: content,
   });

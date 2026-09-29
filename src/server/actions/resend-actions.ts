@@ -28,7 +28,7 @@ export const addAudienceUser = async (email: string) => {
       throw new Error("Resend client not initialized");
     }
 
-    const result = await resend.contacts.create({
+    const _result = await resend.contacts.create({
       email,
       audienceId: env.RESEND_AUDIENCE_ID,
     });

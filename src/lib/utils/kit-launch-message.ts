@@ -52,15 +52,15 @@ function createGradient(text: string): string {
 }
 
 /**
- * ASCII art for Bones logo with a smooth left-to-right gradient
+ * ASCII art for Shipkit logo with a smooth left-to-right gradient
  */
-const bonesArt = `
-${createGradient("   ██████╗  ██████╗ ███╗   ██╗███████╗███████╗")}
-${createGradient("   ██╔══██╗██╔═══██╗████╗  ██║██╔════╝██╔════╝")}
-${createGradient("   ██████╔╝██║   ██║██╔██╗ ██║█████╗  ███████╗")}
-${createGradient("   ██╔══██╗██║   ██║██║╚██╗██║██╔══╝  ╚════██║")}
-${createGradient("   ██████╔╝╚██████╔╝██║ ╚████║███████╗███████║")}
-${createGradient("   ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚══════╝")}
+const shipArt = `
+${createGradient("   ███████╗██╗  ██╗██╗██████╗ ██╗  ██╗██╗████████╗")}
+${createGradient("   ██╔════╝██║  ██║██║██╔══██╗██║ ██╔╝██║╚══██╔══╝")}
+${createGradient("   ███████╗███████║██║██████╔╝█████╔╝ ██║   ██║   ")}
+${createGradient("   ╚════██║██╔══██║██║██╔═══╝ ██╔═██╗ ██║   ██║   ")}
+${createGradient("   ███████║██║  ██║██║██║     ██║  ██╗██║   ██║   ")}
+${createGradient("   ╚══════╝╚═╝  ╚═╝╚═╝╚═╝     ╚═╝  ╚═╝╚═╝   ╚═╝   ")}
 `;
 
 // Track if the message has been displayed in this session
@@ -71,7 +71,7 @@ let hasDisplayedMessage = false;
  * Display a colorful launch message in the console
  *
  * This function prints a fun, colorful ASCII art logo and launch message
- * for Bones, making the startup experience more engaging for non-coders.
+ * for Shipkit, making the startup experience more engaging for non-coders.
  *
  * The message will only be displayed once per process.
  */
@@ -85,7 +85,7 @@ export function displayLaunchMessage(): void {
   hasDisplayedMessage = true;
 
   // Print the ASCII art logo
-  console.info(bonesArt);
+  console.info(shipArt);
 
   // Print a divider
   console.info(`${colors.dim("=".repeat(50))}`);

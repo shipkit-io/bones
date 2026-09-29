@@ -41,10 +41,11 @@ export function debounce<T extends unknown[], R>(
 
   const now = () => Date.now();
 
-  const later = function () {
+  const later = () => {
     const passed = now() - previous;
     if (wait > passed) {
-      timeout = setTimeout(later, wait - passed);
+      const remainingWait = Math.max(wait - passed, 0);
+      timeout = setTimeout(later, remainingWait);
     } else {
       timeout = null;
       if (!immediate) {
@@ -58,6 +59,7 @@ export function debounce<T extends unknown[], R>(
   };
 
   const debounced = restArguments(function (this: unknown, _args: unknown) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- intentional: debounce needs to preserve caller's `this`
     context = this;
     args = _args as T;
     previous = now();
@@ -70,12 +72,12 @@ export function debounce<T extends unknown[], R>(
     return result;
   });
 
-  (debounced as typeof debounced & { cancel: () => void }).cancel = function () {
+  (debounced as typeof debounced & { cancel: () => void }).cancel = () => {
     if (timeout) clearTimeout(timeout);
     timeout = null;
     args = undefined;
     context = undefined;
   };
 
-  return debounced as typeof debounced & { cancel: () => void };
+  return debounced as unknown as ((...args: T) => R | undefined) & { cancel: () => void };
 }
