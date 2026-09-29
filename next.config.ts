@@ -114,15 +114,6 @@ const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
   /*
-   * Server External Packages
-   * Externalize packages that cause bundling issues with Turbopack/Vercel
-   */
-  serverExternalPackages: [
-    // Native module (transitive dep of @builder.io/react) that fails to compile on Vercel
-    "isolated-vm",
-  ],
-
-  /*
    * Experimental configuration
    */
   experimental: {

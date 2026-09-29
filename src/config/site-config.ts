@@ -5,6 +5,14 @@
  * Used throughout the application for consistent branding and functionality.
  */
 
+interface PayloadConfig {
+  adminTitleSuffix: string;
+  adminIconPath: string;
+  adminLogoPath: string;
+  dbSchemaName: string;
+  emailFromName: string;
+}
+
 interface SiteConfig {
   // Core site information
   name: string;
@@ -116,6 +124,9 @@ interface SiteConfig {
   app: {
     apiKeyPrefix: string;
   };
+
+  // Payload CMS settings (seam for the @shipkit/payload registry item)
+  payload: PayloadConfig;
 }
 
 export const siteConfig: SiteConfig = {
@@ -232,7 +243,18 @@ export const siteConfig: SiteConfig = {
     },
   },
 
+  payload: {
+    adminTitleSuffix: " CMS", // Updated below
+    adminIconPath: "./lib/payload/components/payload-icon",
+    adminLogoPath: "./lib/payload/components/payload-logo",
+    dbSchemaName: "payload",
+    emailFromName: "Payload CMS",
+  },
+
   app: {
     apiKeyPrefix: "sk",
   },
 };
+
+// Assign dynamic values AFTER the main object is defined
+siteConfig.payload.adminTitleSuffix = ` - ${siteConfig.title} CMS`;
