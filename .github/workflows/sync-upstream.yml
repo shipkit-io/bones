@@ -10,7 +10,8 @@ permissions:
   pull-requests: write # To create Pull Requests
 
 env:
-  UPSTREAM_REPO: lacymorrow/shipkit
+  # Set the UPSTREAM_REPO repository variable to track something other than bones
+  UPSTREAM_REPO: ${{ vars.UPSTREAM_REPO || 'shipkit-io/bones' }}
   UPSTREAM_BRANCH: main
   TARGET_BRANCH: main
 

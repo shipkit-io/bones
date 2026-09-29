@@ -13,11 +13,11 @@ const UPSTREAM_REMOTE = "upstream";
 const UPSTREAM_BRANCH = "main";
 const CURRENT_BRANCH = "main";
 
-// Upstream repos in order of preference (premium first, then public fallback)
-const UPSTREAM_REPOS = [
-	"https://github.com/shipkit-io/shipkit.git", // Premium (try first)
-	"https://github.com/shipkit-io/bones.git", // Public fallback
-];
+// Bones is the root template. An existing `upstream` remote always wins; set
+// UPSTREAM_REPO_URL to force a different upstream.
+const UPSTREAM_REPOS: string[] = process.env.UPSTREAM_REPO_URL
+	? [process.env.UPSTREAM_REPO_URL]
+	: ["https://github.com/shipkit-io/bones.git"];
 
 interface SyncOptions {
 	direct: boolean;
@@ -38,8 +38,7 @@ function canAccessRepo(url: string): boolean {
 }
 
 /**
- * Gets the first accessible upstream URL
- * Falls back from Shipkit (premium) to Bones (public) if access is denied
+ * Gets the first accessible upstream URL from the default list
  */
 function getUpstreamUrl(): string {
 	for (const url of UPSTREAM_REPOS) {
@@ -56,25 +55,27 @@ function getUpstreamUrl(): string {
 }
 
 /**
- * Ensures upstream remote exists, adding or updating it if necessary
- * Automatically selects the best available upstream (Shipkit or Bones fallback)
+ * Ensures the upstream remote exists.
+ * An existing remote is kept as-is (it was set by create-shipkit or by hand) unless
+ * UPSTREAM_REPO_URL is set, which forces that URL.
  */
 function ensureUpstreamRemote(): void {
-	const upstreamUrl = getUpstreamUrl();
+	const forcedUrl = process.env.UPSTREAM_REPO_URL;
 
 	try {
 		const existingUrl = runCommand(`git remote get-url ${UPSTREAM_REMOTE}`).trim();
 
-		if (existingUrl !== upstreamUrl) {
+		if (forcedUrl && existingUrl !== forcedUrl) {
 			console.info(
-				`Updating upstream remote '${UPSTREAM_REMOTE}' from '${existingUrl}' to '${upstreamUrl}'`
+				`Updating upstream remote '${UPSTREAM_REMOTE}' from '${existingUrl}' to '${forcedUrl}'`
 			);
-			runCommand(`git remote set-url ${UPSTREAM_REMOTE} ${upstreamUrl}`);
+			runCommand(`git remote set-url ${UPSTREAM_REMOTE} ${forcedUrl}`);
 			return;
 		}
 
-		console.info(`Using existing remote '${UPSTREAM_REMOTE}'`);
+		console.info(`Using existing remote '${UPSTREAM_REMOTE}' -> ${existingUrl}`);
 	} catch {
+		const upstreamUrl = getUpstreamUrl();
 		console.info(`Adding upstream remote '${UPSTREAM_REMOTE}' -> ${upstreamUrl}`);
 		runCommand(`git remote add ${UPSTREAM_REMOTE} ${upstreamUrl}`);
 	}

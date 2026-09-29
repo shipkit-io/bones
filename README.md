@@ -14,16 +14,16 @@ Get started with ShipKit in three easy steps:
 
 [![Open in Codeflow](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https://pr.new/shipkit-io/bones)
 
-No environment variables needed to start! Our setup wizard will guide you through the configuration after deployment.
+No environment variables needed to start. Features turn on when you add their env vars.
 
 ## What's Included
 
 - ⚡️ **Next.js 16 + React 19** — Modern App Router foundation
-- 🔐 **Authentication** — Multiple providers (Discord, GitHub, Google) via NextAuth + Better Auth
+- 🔐 **Authentication** — Better Auth by default, Auth.js still supported, with Discord, GitHub and Google providers
 - 🎨 **Shadcn/UI** — Production-ready component library, fully owned in your repo
 - 🚀 **Performance** — Edge-optimized defaults
 
-> Looking for the full stack — database, payments, CMS, AI, and 100+ premium components? See [Shipkit](https://shipkit.io), the paid framework built on top of Bones.
+> Bones is the root template. Payments, CMS, AI, storage and more are [ShipKit registry](https://shipkit.io/docs/features/registry) items you add one at a time with `npx shadcn add @shipkit/<item>`. [ShipKit](https://github.com/lacymorrow/shipkit) is the everything-included build of Bones that proves those integrations work together.
 
 ## Quick Start Guide
 
@@ -33,22 +33,16 @@ Click the "Deploy with Vercel" button above and follow the prompts.
 
 ### 2. Run Setup Wizard
 
-After deployment, you'll be guided through setting up:
+After deployment, the wizard connects GitHub and Vercel and deploys. Everything else is env vars: add `DATABASE_URL`, `APP_SECRET` and the keys for the services you use, and the matching features turn on. See [Environment Variables](docs/env.mdx).
 
-- Database connection
-- Authentication providers
-- Payment processing
-- Content management
-- Optional services
+### 3. Add ShipKit integrations
 
-### 3. Start Building
+```bash
+npx shadcn add @shipkit/payments
+npx shadcn add @shipkit/email
+```
 
-Once setup is complete, you're ready to:
-
-- Customize your UI
-- Add content
-- Configure payments
-- Launch your product!
+Each integration is a shadcn registry item. Browse them at [shipkit.io/docs/features/registry](https://shipkit.io/docs/features/registry).
 
 ## Development Tools
 
@@ -58,29 +52,27 @@ Built with modern technologies:
 - 🎨 [Tailwind CSS](https://tailwindcss.com) - Styling
 - 🔧 [Shadcn/UI](https://ui.shadcn.com) - Components
 - 🛠 [Drizzle](https://orm.drizzle.team) - Database ORM
-- 🔑 [Auth.js](https://authjs.dev) - Authentication
-- 📝 [Payload CMS](https://payloadcms.com) - Content Management
-- 🎨 [Builder.io](https://builder.io) - Visual Editing
+- 🔑 [Better Auth](https://better-auth.com) - Authentication ([Auth.js](https://authjs.dev) still supported)
 - 📧 [Resend](https://resend.com) - Email Service
 
 ## Documentation
 
-- [Setup Guide](docs/development/deployment.mdx)
-- [Configuration](docs/development/environment.mdx)
+- [Quick Start](docs/getting-started/index.mdx)
+- [Environment Variables](docs/env.mdx)
 - [Development](docs/development.mdx)
 
 ## Support
 
 Need help? We're here for you:
 
-- 💬 [GitHub Discussions](https://github.com/shipkit-io/shipkit/discussions)
+- 💬 [GitHub Discussions](https://github.com/shipkit-io/bones/discussions)
 - 🐦 [Follow Updates](https://twitter.com/lacybuilds)
 - 📧 [Email Support](mailto:support@shipkit.io)
 - 🌐 [Website](https://shipkit.io)
 
 ## Found a bug?
 
-Report it on [GitHub Issues](https://github.com/shipkit-io/shipkit/issues).
+Report it on [GitHub Issues](https://github.com/shipkit-io/bones/issues).
 
 ## License
 
@@ -88,34 +80,16 @@ FSL-1.1-MIT — source-available, free for any Permitted Purpose (internal use, 
 
 ## Local Development
 
-First, run the development server:
-
 ```bash
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy on Vercel
 
 > **Note for maintainers:** [bones.sh](https://bones.sh) production deploys from **this repo** (`shipkit-io/bones`, branch `main`) via the Vercel project `bones`. The old `lacymorrow/bones-www` repo is archived and no longer deploys anywhere — changes for bones.sh belong here.
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ## Tools
 
@@ -135,7 +109,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ### Shadcn
 
 ```bash
-npx shadcn-ui@latest add
+npx shadcn@latest add
 ```
 
 ### [MagicUI](https://magicui.design/)

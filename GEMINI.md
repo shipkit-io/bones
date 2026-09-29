@@ -6,7 +6,7 @@ This project, **Shipkit**, is a comprehensive Next.js starter kit designed for r
 
 **Key Technologies:**
 
-*   **Framework:** Next.js 15
+*   **Framework:** Next.js 16
 *   **Styling:** Tailwind CSS with Shadcn/UI components
 *   **Database ORM:** Drizzle
 *   **Authentication:** Auth.js with multiple providers (Google, GitHub, etc.)
