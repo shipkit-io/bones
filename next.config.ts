@@ -10,6 +10,10 @@ import { withPlugins } from "@/config/with-plugins";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // evlog reads node:fs/node:module. src/instrumentation.ts imports it at
+  // runtime on Node only; keep it out of the webpack/turbopack bundle.
+  serverExternalPackages: ["evlog"],
+
   env: {
     // Add client-side feature flags
     ...buildTimeFeatureFlags,
