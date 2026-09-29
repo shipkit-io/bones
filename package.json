@@ -55,6 +55,7 @@
     "test:node": "vitest --config=vitest.config.node.ts",
     "typecheck": "fumadocs-mdx && tsc --noEmit",
     "verify": "bash scripts/verify.sh",
+    "doctor": "pnpm dlx tsx scripts/doctor.ts",
     "postinstall": "node scripts/prebuild-content.mjs && fumadocs-mdx && git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
@@ -114,7 +115,7 @@
     "holy-loader": "2.3.14",
     "input-otp": "^1.5.0",
     "jotai": "3.0.0",
-    "lucide-react": "1.46.0",
+    "lucide-react": "0.564.0",
     "motion": "^13.3.0",
     "nanoid": "^6.0.1",
     "next": "16.3.5",

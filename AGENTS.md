@@ -11,7 +11,7 @@ Instructions for coding agents working in this repository. Read this first. `CLA
 
 ## Built-in features: do not reimplement
 
-Features turn on when their env vars exist. Detection lives in `src/config/features-config.ts`. Never set `NEXT_PUBLIC_FEATURE_*` by hand; the build derives those. Before writing code for any of these, read its guide:
+Features turn on when their env vars exist. Every feature is declared once in `src/config/features-table.ts`; `src/config/features-config.ts` evaluates it. `pnpm run doctor` prints which features are on, waiting on a key, or off, and which key is missing. Never set `NEXT_PUBLIC_FEATURE_*` by hand; the build derives those. Before writing code for any of these, read its guide:
 
 | Feature   | Guide                       | Enable with                                   |
 | --------- | --------------------------- | --------------------------------------------- |

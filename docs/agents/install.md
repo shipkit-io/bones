@@ -104,7 +104,7 @@ pnpm db:push            # once DATABASE_URL is set
 pnpm dev
 ```
 
-Then, in another shell: `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/` must print 200, and with Better Auth `curl -s http://localhost:3000/api/better-auth/ok` must print `{"ok":true}`. Report the list of features that are on (read `NEXT_PUBLIC_FEATURE_*` from the dev server log, or run `pnpm dlx tsx -e 'import("./src/config/features-config").then(m => console.log(m.buildTimeFeatures))'`) next to the answers the person gave. Done means they match. A `shipkit doctor` command that prints this table is planned; until it exists, use the command above.
+Then, in another shell: `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/` must print 200, and with Better Auth `curl -s http://localhost:3000/api/better-auth/ok` must print `{"ok":true}`. Then run `pnpm run doctor` (`run` matters: `pnpm doctor` is a pnpm built-in). It reads `.env.local` and prints one table: every feature, whether it is `on`, `waiting` (some keys set, not all, or a dependency is off) or `off`, the keys still missing, and the URL where each comes from. It never prints a value and always exits 0. Show the person that table next to the answers they gave. Done means they match: each chosen feature is `on`, and nothing is `waiting`.
 
 ## Do not
 
