@@ -13,7 +13,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prebuild": "node scripts/generate-providers.ts && node scripts/prebuild-content.mjs",
+    "prebuild": "node scripts/generate-providers.ts && node scripts/prebuild-content.mjs && fumadocs-mdx",
     "build": "next build --webpack",
     "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192' next build --webpack",
     "clean": "rm next-env.d.ts && rm package-lock.json && rm pnpm-lock.yaml && rm bun.lockb && rm -rf .next && rm -rf node_modules && rm -rf .turbo",
@@ -53,9 +53,9 @@
     "test:coverage": "vitest run --coverage",
     "test:browser": "vitest --config=vitest.config.browser.ts",
     "test:node": "vitest --config=vitest.config.node.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "fumadocs-mdx && tsc --noEmit",
     "verify": "bash scripts/verify.sh",
-    "postinstall": "node scripts/prebuild-content.mjs && git config core.hooksPath .githooks 2>/dev/null || true"
+    "postinstall": "node scripts/prebuild-content.mjs && fumadocs-mdx && git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
     "@auth/core": "0.41.3",
@@ -107,6 +107,8 @@
     "embla-carousel-react": "^8.6.0",
     "evlog": "^2.29.0",
     "framer-motion": "^13.3.0",
+    "fumadocs-core": "^16.15.17",
+    "fumadocs-mdx": "^15.4.5",
     "geist": "1.7.2",
     "gray-matter": "4.0.3",
     "holy-loader": "2.3.14",
