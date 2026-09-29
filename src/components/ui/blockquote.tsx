@@ -14,7 +14,7 @@ export const BlockQuote = ({ quote, author }: { quote: string; author: string })
           className="ml-1 inline size-3 translate-y-1 fill-amber-700 stroke-none"
         />
       </p>
-      <p className="mt-1.5 text-end text-sm font-semibold italic tracking-tighter">{author}</p>
+      <p className="mt-1.5 text-end text-sm font-semibold tracking-tighter italic">{author}</p>
     </blockquote>
   );
 };

@@ -2,7 +2,8 @@
 
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Link } from "@/components/primitives/link";
 import { Button } from "@/components/ui/button";
@@ -85,13 +86,14 @@ export const PriorityNav: React.FC<PriorityNavProps> = ({ navLinks, className, i
       <div
         ref={measureRef}
         aria-hidden
-        className="pointer-events-none invisible absolute left-0 top-0 flex items-center gap-md"
+        className="pointer-events-none invisible absolute top-0 left-0 flex items-center gap-md"
       >
         {navLinks.map((link, i) => (
           <span
+            // biome-ignore lint/suspicious/noArrayIndexKey: hidden measurement clones; hrefs may repeat
             key={`measure-${i}-${link.href}`}
             data-measure-item
-            className={cn("whitespace-nowrap text-sm", itemClassName)}
+            className={cn("text-sm whitespace-nowrap", itemClassName)}
           >
             {link.label}
           </span>
@@ -105,7 +107,7 @@ export const PriorityNav: React.FC<PriorityNavProps> = ({ navLinks, className, i
             key={`${link.href}-${link.label}`}
             href={link.href}
             className={cn(
-              "shrink-0 whitespace-nowrap text-sm transition-colors hover:text-foreground",
+              "shrink-0 text-sm whitespace-nowrap transition-colors hover:text-foreground",
               link.isCurrent ? "text-foreground" : "text-muted-foreground",
               itemClassName
             )}
@@ -155,3 +157,5 @@ export const PriorityNav: React.FC<PriorityNavProps> = ({ navLinks, className, i
     </div>
   );
 };
+
+export default PriorityNav;

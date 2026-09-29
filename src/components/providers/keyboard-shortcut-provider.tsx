@@ -117,17 +117,17 @@ export function KeyboardShortcutProvider({
  * In development, name the shortcuts nothing is listening for.
  *
  * A key in `shortcutConfig` with no handler still binds, still swallows the
- * press, and still does nothing, with no build, lint or test failure anywhere,
- * so the only way to find out is to press it. That is a trap for anyone forking
- * this: removing a component removes its handler and leaves the key
- * advertised. bones shipped every one of its menu hints this way.
+ * press, and still does nothing -- with no build, lint or test failure
+ * anywhere, so the only way to find out is to press it. That is a trap for
+ * anyone forking this: removing a component removes its handler and leaves
+ * the key advertised. Keepsake shipped ten dead shortcuts this way.
  *
  * One pass a second after mount, so components that register on their own
  * screens are not accused before they render. Bindings marked `onDemand` are
  * skipped entirely: their handler mounts with something transient, so its
  * absence is the normal case and naming it every time would turn this into
- * noise nobody reads. Development only: this is a message to whoever is adding
- * a shortcut, not to the person using the app.
+ * noise nobody reads. Development only: this is a
+ * message to whoever is adding a shortcut, not to the person using the app.
  */
 function useUnhandledShortcutWarning(
   handlers: Map<ShortcutActionType, Set<ShortcutHandler>>
@@ -143,7 +143,7 @@ function useUnhandledShortcutWarning(
         console.warn(
           `[shortcuts] bound but handled by nothing: ${orphans.join(", ")}. ` +
             "Either register a handler with useKeyboardShortcut or take it out " +
-            "of src/config/keyboard-shortcuts.ts - a key that does nothing " +
+            "of src/config/keyboard-shortcuts.ts -- a key that does nothing " +
             "still swallows the press."
         );
       }

@@ -1,0 +1,8 @@
+/* Shipkit brand overrides — downstream sites should clear or replace this file during rebranding */
+:root {
+	--loader-color: linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8);
+}
+
+.dark {
+	--loader-color: linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8);
+}

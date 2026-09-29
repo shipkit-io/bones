@@ -51,7 +51,7 @@ export function LoadingBar({
   if (!visible) return null;
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-50 h-0.5 overflow-hidden bg-muted/20">
+    <div className="fixed top-0 right-0 left-0 z-50 h-0.5 overflow-hidden bg-muted/20">
       <div
         className={`h-full transition-all duration-500 ease-out ${className}`}
         style={{

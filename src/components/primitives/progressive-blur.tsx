@@ -1,12 +1,10 @@
-import React from "react";
-
-type ProgressiveBlurProps = {
+interface ProgressiveBlurProps {
   className?: string;
   backgroundColor?: string;
   position?: "top" | "bottom";
   height?: string;
   blurAmount?: string;
-};
+}
 
 const ProgressiveBlur = ({
   className = "",
@@ -46,13 +44,14 @@ const Skiper41 = () => {
 
       <div className="flex h-[calc(100vh-1rem)] w-full flex-col items-center overflow-scroll">
         <div className="mt-42 grid content-start justify-items-center gap-6 text-center text-black">
-          <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-white after:to-black after:content-['']">
+          <span className="relative max-w-[12ch] text-xs leading-tight uppercase opacity-40 after:absolute after:top-full after:left-1/2 after:h-16 after:w-px after:bg-linear-to-b after:from-white after:to-black after:content-['']">
             Scroll down to see the effect
           </span>
         </div>
 
         <div className="mt-24 w-full max-w-lg space-y-20 px-5 text-justify">
           {Array.from({ length: 10 }).map((_, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
             <div key={index}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, reiciendis eum
               vitae nostrum, temporibus repudiandae voluptatibus, natus iure ipsa velit odit

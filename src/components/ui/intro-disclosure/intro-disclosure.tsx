@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ExternalLinkIcon } from "lucide-react";
-import Image from "next/image";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -68,10 +67,6 @@ export function IntroDisclosure({
     }
   }, [initialCompletedSteps]);
 
-  if (!isVisible || !open) {
-    return null;
-  }
-
   const handleNext = () => {
     setDirection(1);
     setCompletedSteps((prev) => (prev.includes(currentStep) ? prev : [...prev, currentStep]));
@@ -131,6 +126,10 @@ export function IntroDisclosure({
   };
 
   const { handleDragEnd } = useSwipe(handleSwipe);
+
+  if (!isVisible || !open) {
+    return null;
+  }
 
   if (isDesktop) {
     return (
@@ -194,6 +193,7 @@ export function IntroDisclosure({
               <div className="mb-6 grid grid-cols-2 gap-2">
                 {steps.map((step, index) => (
                   <StepTab
+                    // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                     key={index}
                     step={step}
                     isActive={currentStep === index}
@@ -202,7 +202,7 @@ export function IntroDisclosure({
                   />
                 ))}
               </div>
-              <div className="relative aspect-[16/9] overflow-hidden rounded-lg ring-2 ring-border ring-offset-8 ring-offset-background">
+              <div className="relative aspect-video overflow-hidden rounded-lg ring-2 ring-border ring-offset-8 ring-offset-background">
                 {steps[currentStep] && (
                   <StepPreview step={steps[currentStep]} direction={direction} />
                 )}
@@ -227,7 +227,7 @@ export function IntroDisclosure({
                         <ExternalLinkIcon className="h-4 w-4" />
                       </a>
                     ) : (
-                      <button onClick={steps[currentStep]?.action?.onClick}>
+                      <button type="button" onClick={steps[currentStep]?.action?.onClick}>
                         {steps[currentStep]?.action?.label}
                       </button>
                     )}
@@ -237,7 +237,7 @@ export function IntroDisclosure({
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 border-t bg-background">
+          <div className="absolute right-0 bottom-0 left-0 border-t bg-background">
             <div className="p-4">
               <div className="mb-4 flex items-center justify-between">
                 <Button

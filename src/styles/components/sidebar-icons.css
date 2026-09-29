@@ -1,0 +1,85 @@
+/*
+ * Sidebar icons answer hover with one small move each: transform only, under half a second,
+ * on the spring from theme.css. An element opts in with data-icon-host; its icon names its
+ * move with data-icon. Nothing here runs when the person has asked for reduced motion.
+ */
+[data-icon-host] > svg[data-icon] {
+	transform-origin: center;
+	transition: transform 0.32s var(--ease-spring);
+}
+
+[data-icon-host]:hover > svg[data-icon="dashboard"] {
+	transform: scale(1.08);
+}
+[data-icon-host]:hover > svg[data-icon="folder"] {
+	transform: translateY(-1px) scale(1.05);
+}
+[data-icon-host]:hover > svg[data-icon="flask"] {
+	transform: rotate(-10deg);
+}
+[data-icon-host]:hover > svg[data-icon="wrench"] {
+	animation: wiggle 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+[data-icon-host]:hover > svg[data-icon="rocket"] {
+	transform: translate(1.5px, -1.5px) rotate(-6deg);
+}
+[data-icon-host]:hover > svg[data-icon="key"] {
+	transform: rotate(-30deg);
+}
+[data-icon-host]:hover > svg[data-icon="users"] {
+	transform: scale(1.1);
+}
+[data-icon-host]:hover > svg[data-icon="book"] {
+	transform: translateY(-1px) rotate(-4deg);
+}
+[data-icon-host]:hover > svg[data-icon="gear"] {
+	transform: rotate(45deg);
+}
+[data-icon-host]:hover > svg[data-icon="send"] {
+	transform: translate(1.5px, -1.5px);
+}
+[data-icon-host]:hover > svg[data-icon="bell"] {
+	transform-origin: 50% 8%;
+	animation: ring 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes wiggle {
+	0%,
+	100% {
+		transform: rotate(0);
+	}
+	25% {
+		transform: rotate(-14deg);
+	}
+	65% {
+		transform: rotate(10deg);
+	}
+}
+
+@keyframes ring {
+	0%,
+	100% {
+		transform: rotate(0);
+	}
+	20% {
+		transform: rotate(14deg);
+	}
+	40% {
+		transform: rotate(-12deg);
+	}
+	60% {
+		transform: rotate(8deg);
+	}
+	80% {
+		transform: rotate(-4deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-icon-host] > svg[data-icon],
+	[data-icon-host]:hover > svg[data-icon] {
+		transition: none;
+		animation: none;
+		transform: none;
+	}
+}

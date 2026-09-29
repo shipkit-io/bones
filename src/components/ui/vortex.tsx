@@ -44,9 +44,9 @@ export const Vortex = (props: VortexProps) => {
   let particleProps = new Float32Array(particlePropsLength);
   const center: [number, number] = [0, 0];
 
-  const HALF_PI: number = 0.5 * Math.PI;
+  const _HALF_PI: number = 0.5 * Math.PI;
   const TAU: number = 2 * Math.PI;
-  const TO_RAD: number = Math.PI / 180;
+  const _TO_RAD: number = Math.PI / 180;
   const rand = (n: number): number => n * Math.random();
   const randRange = (n: number): number => n - rand(2 * n);
   const fadeInOut = (t: number, m: number): number => {
@@ -83,7 +83,15 @@ export const Vortex = (props: VortexProps) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let x, y, vx, vy, life, ttl, speed, radius, hue;
+    let x: number;
+    let y: number;
+    let vx: number;
+    let vy: number;
+    let life: number;
+    let ttl: number;
+    let speed: number;
+    let radius: number;
+    let hue: number;
 
     x = rand(canvas.width);
     y = center[1] + randRange(rangeY);
@@ -123,15 +131,26 @@ export const Vortex = (props: VortexProps) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const i2 = 1 + i,
-      i3 = 2 + i,
-      i4 = 3 + i,
-      i5 = 4 + i,
-      i6 = 5 + i,
-      i7 = 6 + i,
-      i8 = 7 + i,
-      i9 = 8 + i;
-    let n, x, y, vx, vy, life, ttl, speed, x2, y2, radius, hue;
+    const i2 = 1 + i;
+    const i3 = 2 + i;
+    const i4 = 3 + i;
+    const i5 = 4 + i;
+    const i6 = 5 + i;
+    const i7 = 6 + i;
+    const i8 = 7 + i;
+    const i9 = 8 + i;
+    let n: number;
+    let x: number;
+    let y: number;
+    let vx: number;
+    let vy: number;
+    let life: number;
+    let ttl: number;
+    let speed: number;
+    let x2: number;
+    let y2: number;
+    let radius: number;
+    let hue: number;
 
     x = particleProps[i] || 0;
     y = particleProps[i2] || 0;
@@ -186,7 +205,7 @@ export const Vortex = (props: VortexProps) => {
     return x > canvas.width || x < 0 || y > canvas.height || y < 0;
   };
 
-  const resize = (canvas: HTMLCanvasElement, ctx?: CanvasRenderingContext2D) => {
+  const resize = (canvas: HTMLCanvasElement, _ctx?: CanvasRenderingContext2D) => {
     const { innerWidth, innerHeight } = window;
 
     canvas.width = innerWidth;

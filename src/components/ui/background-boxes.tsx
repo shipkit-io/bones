@@ -31,7 +31,7 @@ export const Boxes = () => {
       boxes.push(
         <motion.div
           key={`${i}-${j}`}
-          className="h-[50px] w-[50px] rounded-lg border border-neutral-200/[0.1] bg-neutral-100/[0.1] dark:border-neutral-800/[0.1] dark:bg-neutral-900/[0.1]"
+          className="h-[50px] w-[50px] rounded-lg border border-neutral-200/10 bg-neutral-100/10 dark:border-neutral-800/10 dark:bg-neutral-900/10"
           initial={{
             opacity: 0,
             scale: 0.5,

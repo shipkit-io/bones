@@ -132,7 +132,7 @@ export const WavesBackground: FC<WavesBackgroundProps> = ({
   return (
     <canvas
       ref={canvasRef}
-      className="fixed left-0 top-0 -z-10 h-full w-full"
+      className="fixed top-0 left-0 -z-10 h-full w-full"
       style={{
         background: config.transparent
           ? "transparent"

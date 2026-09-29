@@ -24,6 +24,7 @@ export const Card3d = ({
         <div
           aria-hidden="true"
           className={`tr-${i + 1} absolute inset-0 z-50 select-none`}
+          // biome-ignore lint/suspicious/noArrayIndexKey: fixed grid tracker cells, index maps to a grid area
           key={`tr-${i + 1}`}
           style={{
             gridArea: `tr-${i + 1}`,

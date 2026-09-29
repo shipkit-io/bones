@@ -19,7 +19,7 @@ interface CountdownProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  */
 export const Countdown = ({
-  targetDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
+  targetDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   showIcon = true,
   variant = "default",
   className,

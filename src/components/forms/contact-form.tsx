@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -16,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { submitContactForm } from "@/server/actions/contact";
 import { type ContactFormData, contactFormSchema } from "@/types/contact";
@@ -31,8 +31,6 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ defaultValues, onSuccess, className }: ContactFormProps) {
-  const { toast } = useToast();
-
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -54,24 +52,19 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
       const result = await submitContactForm(formData);
 
       if (result.success) {
-        toast({
-          title: "Message sent!",
+        toast.success("Message sent!", {
           description: "We'll get back to you as soon as possible.",
         });
         form.reset();
         onSuccess?.(data);
       } else {
-        toast({
-          title: "Error",
-          description: result.error || "Something went wrong. Please try again.",
-          variant: "destructive",
+        toast.error("Error", {
+          description: result.error ?? "Something went wrong. Please try again.",
         });
       }
-    } catch (error) {
-      toast({
-        title: "Error",
+    } catch (_error) {
+      toast.error("Error", {
         description: "Something went wrong. Please try again.",
-        variant: "destructive",
       });
     }
   }
@@ -153,7 +146,7 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
             control={form.control}
             name="newsletter"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start gap-x-3 gap-y-0">
                 <FormControl>
                   <Checkbox
                     checked={field.value}

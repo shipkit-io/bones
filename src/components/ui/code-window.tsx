@@ -20,7 +20,7 @@ const codeWindowVariants = cva("overflow-hidden rounded-lg border transition-all
     size: {
       default: "w-full",
       sm: "max-w-sm",
-      lg: "max-w-screen-lg",
+      lg: "max-w-(--breakpoint-lg)",
       inline: "w-auto",
     },
   },
@@ -139,7 +139,7 @@ export const CodeWindow = ({
               type="button"
               onClick={toggleExpand}
               className={cn(
-                "flex items-center gap-1 rounded px-2 py-1 text-xs",
+                "flex items-center gap-1 rounded-lg px-2 py-1 text-xs",
                 variant === "default"
                   ? "text-neutral-400 hover:bg-neutral-700"
                   : "text-muted-foreground hover:bg-muted"

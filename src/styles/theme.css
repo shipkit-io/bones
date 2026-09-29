@@ -1,0 +1,458 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--font-serif: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+	--color-border: var(--border);
+	--color-success: var(--success);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+
+	--color-sidebar: var(--sidebar-background);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+
+	--color-color-1: var(--color-1);
+	--color-color-2: var(--color-2);
+	--color-color-3: var(--color-3);
+	--color-color-4: var(--color-4);
+	--color-color-5: var(--color-5);
+
+	/* Radius scale, ground truth from the pre-v4 config: DEFAULT === lg === var(--radius). */
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+
+	--shadow-hairline: 0 0 0 0.5px var(--hairline), 0 1px 2px rgb(0 0 0 / 0.04);
+	--shadow-hairline-b: 0 0.5px 0 var(--hairline);
+	--shadow-hairline-t: 0 -0.5px 0 var(--hairline);
+
+	/* `--ease-spring` / `--ease-out-quart` are declared with real values below
+	   in :root/.dark; keeping them `inline` here (instead of a normal @theme
+	   declaration) avoids emitting a second, circular `--ease-*` custom
+	   property on :root - inline theme keys are only inlined into the
+	   generated `ease-*` utility, never redeclared as a variable. */
+	--ease-spring: var(--ease-spring);
+	--ease-out-quart: var(--ease-out-quart);
+
+	--spacing-2xs: 0.25rem;
+	--spacing-xs: 0.5rem;
+	--spacing-sm: 0.75rem;
+	--spacing-base: 1rem;
+	--spacing-md: 1.25rem;
+	--spacing-lg: 1.5rem;
+	--spacing-xl: 2rem;
+	--spacing-2xl: 2.5rem;
+	--spacing-header: 8rem;
+	--spacing-section: 4rem;
+	--spacing-gap: 1rem;
+
+	/* v4's max-w-* utility resolves named sizes via ["--max-width", "--spacing",
+	   "--container"], in that order - v3's did NOT fall back to the spacing
+	   scale (max-w-sm used the default, unrelated 24rem maxWidth.sm), so our
+	   xs/sm/md/lg/xl/2xl spacing keys above would otherwise silently hijack
+	   every `max-w-{xs,sm,md,lg,xl,2xl}` in the app (112 usages) down to
+	   spacing sizes as small as 0.75rem. Pin --max-width-* back to the
+	   stock container defaults (highest priority in that lookup chain) so
+	   max-w-* keeps its original, unrelated meaning. */
+	--max-width-xs: 20rem;
+	--max-width-sm: 24rem;
+	--max-width-md: 28rem;
+	--max-width-lg: 32rem;
+	--max-width-xl: 36rem;
+	--max-width-2xl: 42rem;
+
+	--transition-property-width: width margin;
+	--transition-property-height: height;
+	--transition-property-bg: background-color;
+	--transition-property-display: display opacity;
+	--transition-property-visibility: visibility;
+	--transition-property-padding: padding-top padding-right padding-bottom padding-left;
+
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+	--animate-border-beam: border-beam calc(var(--duration) * 1s) infinite linear;
+	--animate-shiny-text: shiny-text 8s infinite;
+	--animate-gradient: gradient 8s linear infinite;
+	--animate-rainbow: rainbow var(--speed, 2s) infinite linear;
+	--animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+	--animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+	--animate-grid: grid 120s linear infinite;
+	--animate-meteor: meteor 5s linear infinite;
+	--animate-background-position-spin: background-position-spin 3000ms infinite alternate;
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+	/* Same keyframes as marquee, just run backwards -- avoids a duplicate
+	   @keyframes block for the opposite-direction row of a marquee. */
+	--animate-marquee-reverse: marquee var(--duration) infinite linear reverse;
+	--animate-shine: shine 8s ease-in-out infinite;
+	--animate-spotlight: spotlight 2s ease .75s 1 forwards;
+	--animate-galaxy-shimmer: galaxy-shimmer 20s ease-in-out infinite 3s;
+	--animate-aurora: aurora 60s linear infinite;
+	--animate-fadeDown: fadeDown 0.2s ease-out;
+	--animate-fadeIn: fadeIn 0.2s ease-out;
+	--animate-caret-blink: caret-blink 1.25s ease-out infinite;
+
+	@keyframes accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--radix-accordion-content-height);
+		}
+	}
+	@keyframes accordion-up {
+		from {
+			height: var(--radix-accordion-content-height);
+		}
+		to {
+			height: 0;
+		}
+	}
+	@keyframes border-beam {
+		100% {
+			offset-distance: 100%;
+		}
+	}
+	@keyframes shiny-text {
+		0%, 90%, 100% {
+			background-position: calc(-100% - var(--shiny-width)) 0;
+		}
+		30%, 60% {
+			background-position: calc(100% + var(--shiny-width)) 0;
+		}
+	}
+	@keyframes gradient {
+		to {
+			background-position: var(--bg-size) 0;
+		}
+	}
+	@keyframes rainbow {
+		0% {
+			background-position: 0%;
+		}
+		100% {
+			background-position: 200%;
+		}
+	}
+	@keyframes shimmer-slide {
+		to {
+			transform: translate(calc(100cqw - 100%), 0);
+		}
+	}
+	@keyframes spin-around {
+		0% {
+			transform: translateZ(0) rotate(0);
+		}
+		15%, 35% {
+			transform: translateZ(0) rotate(90deg);
+		}
+		65%, 85% {
+			transform: translateZ(0) rotate(270deg);
+		}
+		100% {
+			transform: translateZ(0) rotate(360deg);
+		}
+	}
+	@keyframes grid {
+		0% {
+			transform: translateY(-50%);
+		}
+		100% {
+			transform: translateY(0);
+		}
+	}
+	@keyframes meteor {
+		0% {
+			transform: rotate(215deg) translateX(0);
+			opacity: 1;
+		}
+		70% {
+			opacity: 1;
+		}
+		100% {
+			transform: rotate(215deg) translateX(-500px);
+			opacity: 0;
+		}
+	}
+	@keyframes background-position-spin {
+		0% {
+			background-position: top center;
+		}
+		100% {
+			background-position: bottom center;
+		}
+	}
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(-100% - var(--gap)));
+		}
+	}
+	@keyframes marquee-vertical {
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(-100% - var(--gap)));
+		}
+	}
+	@keyframes shine {
+		from {
+			background-position: 200% 0;
+		}
+		to {
+			background-position: -200% 0;
+		}
+	}
+	@keyframes spotlight {
+		0% {
+			opacity: 0;
+			transform: translate(-72%, -62%) scale(0.5);
+		}
+		100% {
+			opacity: 1;
+			transform: translate(-50%, -40%) scale(1);
+		}
+	}
+	@keyframes galaxy-shimmer {
+		0% {
+			opacity: 0.0;
+		}
+		18% {
+			opacity: 0.2;
+		}
+		50% {
+			opacity: 0.1;
+		}
+		75% {
+			opacity: 0.35;
+		}
+		100% {
+			opacity: 0.0;
+		}
+	}
+	@keyframes aurora {
+		from {
+			background-position: 50% 50%, 50% 50%;
+		}
+		to {
+			background-position: 350% 50%, 350% 50%;
+		}
+	}
+	@keyframes fadeDown {
+		0% {
+			opacity: 0;
+			transform: translateY(-4px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+	/* shadcn input-otp caret */
+	@keyframes caret-blink {
+		0%,
+		70%,
+		100% {
+			opacity: 1;
+		}
+		20%,
+		50% {
+			opacity: 0;
+		}
+	}
+}
+
+/* Marquee's `reverse` prop sets this so the opposite-direction row plays the
+   same keyframes backwards instead of needing its own @keyframes block. */
+@utility direction-reverse {
+	animation-direction: reverse;
+}
+
+/* v3's container plugin only defined a custom "2xl" screen (1400px), so the
+   container had no responsive max-width steps below that - just centered,
+   2rem side padding, full-bleed until the 2xl breakpoint. v4 dropped the
+   container plugin entirely and ships its own built-in `.container` static
+   utility that steps max-width at EVERY `--breakpoint-*` (sm/md/lg/xl/2xl).
+   That built-in isn't replaced by a same-named `@utility` - both get
+   emitted and cascade together - so we have to explicitly cancel its sm
+   through xl steps (max-width: none) before applying our own 2xl -> 1400px
+   cap, or the app would shrink-to-fit at every breakpoint below 2xl. */
+@utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
+	@media (width >= theme(--breakpoint-sm)) {
+		max-width: none;
+	}
+	@media (width >= theme(--breakpoint-md)) {
+		max-width: none;
+	}
+	@media (width >= theme(--breakpoint-lg)) {
+		max-width: none;
+	}
+	@media (width >= theme(--breakpoint-xl)) {
+		max-width: none;
+	}
+	@media (width >= theme(--breakpoint-2xl)) {
+		max-width: 1400px;
+	}
+}
+
+@layer base {
+	:root {
+		/* Instrument palette: cool graphite neutrals, one periwinkle accent. */
+		/* Values below are converted 1:1 from the previous hsl palette via
+		   sRGB -> linear -> OKLab -> OKLCH (no perceptual re-tuning). */
+		--background: oklch(0.979 0.003 264.5);
+		--foreground: oklch(0.231 0.011 268.4);
+		--card: oklch(1 0 0);
+		--card-foreground: oklch(0.231 0.011 268.4);
+		--popover: oklch(1 0 0);
+		--popover-foreground: oklch(0.231 0.011 268.4);
+		--primary: oklch(0.557 0.2 270.9);
+		--primary-foreground: oklch(1 0 0);
+		--secondary: oklch(0.959 0.004 271.4);
+		--secondary-foreground: oklch(0.231 0.011 268.4);
+		--muted: oklch(0.959 0.004 271.4);
+		--muted-foreground: oklch(0.544 0.027 274.4);
+		--accent: oklch(0.959 0.004 271.4);
+		--accent-foreground: oklch(0.231 0.011 268.4);
+		--destructive: oklch(0.6 0.18 24.4);
+		--destructive-foreground: oklch(1 0 0);
+		--success: oklch(0.615 0.15 152.5);
+		--border: oklch(0.927 0.006 264.5);
+		--input: oklch(0.927 0.006 264.5);
+		--ring: oklch(0.557 0.2 270.9);
+		--radius: 0.625rem;
+		/* Materials: 0.5px hairlines instead of 1px borders (see shadow-hairline). */
+		--hairline: oklch(0.205 0.016 270.5 / 0.18);
+		/* Motion: Apple's spring (duration 0.5, bounce 0.2) sampled to a linear() curve. */
+		--ease-spring: linear(0, 0.0516, 0.1731, 0.3253, 0.4815, 0.6252, 0.7478, 0.8458, 0.9197, 0.972, 1.0063, 1.0264, 1.036, 1.0384, 1.0362, 1.0314, 1.0255, 1.0195, 1.0141, 1.0094, 1.0057, 1.0029, 1.001, 0.9997, 0.999, 0.9986, 0.9985, 0.9986, 0.9988, 0.999, 0.9993, 0.9995, 0.9996, 0.9998, 0.9999, 1);
+		--ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+		--chart-1: oklch(0.557 0.2 270.9);
+		--chart-2: oklch(0.615 0.15 152.5);
+		--chart-3: oklch(0.544 0.027 274.4);
+		--chart-4: oklch(0.788 0.141 86.3);
+		--chart-5: oklch(0.6 0.18 24.4);
+		--sidebar-background: oklch(0.959 0.004 271.4);
+		--sidebar-foreground: oklch(0.544 0.027 274.4);
+		--sidebar-primary: oklch(0.231 0.011 268.4);
+		--sidebar-primary-foreground: oklch(1 0 0);
+		--sidebar-accent: oklch(0.927 0.007 268.7);
+		--sidebar-accent-foreground: oklch(0.231 0.011 268.4);
+		--sidebar-border: oklch(0.927 0.006 264.5);
+		--sidebar-ring: oklch(0.557 0.2 270.9);
+		--color-1: oklch(0.662 0.225 25.9);
+		--color-2: oklch(0.604 0.26 301.6);
+		--color-3: oklch(0.696 0.165 251.4);
+		--color-4: oklch(0.802 0.134 225);
+		--color-5: oklch(0.907 0.231 132.9);
+		--loader-color: linear-gradient(90deg, var(--color-1), var(--color-2), var(--color-3), var(--color-1));
+	}
+
+	.dark {
+		--background: oklch(0.174 0.007 271);
+		--foreground: oklch(0.943 0.004 271.4);
+		--card: oklch(0.21 0.008 274.5);
+		--card-foreground: oklch(0.943 0.004 271.4);
+		--popover: oklch(0.21 0.008 274.5);
+		--popover-foreground: oklch(0.943 0.004 271.4);
+		--primary: oklch(0.672 0.175 275.9);
+		--primary-foreground: oklch(0.174 0.007 271);
+		--secondary: oklch(0.23 0.01 276.6);
+		--secondary-foreground: oklch(0.943 0.004 271.4);
+		--muted: oklch(0.23 0.01 276.6);
+		--muted-foreground: oklch(0.644 0.019 274.7);
+		--accent: oklch(0.23 0.01 276.6);
+		--accent-foreground: oklch(0.943 0.004 271.4);
+		--destructive: oklch(0.676 0.177 19.2);
+		--destructive-foreground: oklch(0.174 0.007 271);
+		--success: oklch(0.687 0.166 148);
+		--border: oklch(0.257 0.009 276.7);
+		--input: oklch(0.257 0.009 276.7);
+		--ring: oklch(0.672 0.175 275.9);
+		--hairline: oklch(1 0 0 / 0.12);
+		--chart-1: oklch(0.672 0.175 275.9);
+		--chart-2: oklch(0.687 0.166 148);
+		--chart-3: oklch(0.644 0.019 274.7);
+		--chart-4: oklch(0.806 0.134 87.2);
+		--chart-5: oklch(0.676 0.177 19.2);
+		--sidebar-background: oklch(0.191 0.008 274.4);
+		--sidebar-foreground: oklch(0.644 0.019 274.7);
+		--sidebar-primary: oklch(0.943 0.004 271.4);
+		--sidebar-primary-foreground: oklch(0.174 0.007 271);
+		--sidebar-accent: oklch(0.24 0.011 277.6);
+		--sidebar-accent-foreground: oklch(0.943 0.004 271.4);
+		--sidebar-border: oklch(0.252 0.009 276.7);
+		--sidebar-ring: oklch(0.672 0.175 275.9);
+		--color-1: oklch(0.662 0.225 25.9);
+		--color-2: oklch(0.604 0.26 301.6);
+		--color-3: oklch(0.696 0.165 251.4);
+		--color-4: oklch(0.802 0.134 225);
+		--color-5: oklch(0.907 0.231 132.9);
+		--loader-color: linear-gradient(90deg, var(--color-1), var(--color-2), var(--color-3), var(--color-1));
+	}
+
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+		/* Inter's alternate glyphs (single-storey a, open digits) and a tighter tracking for UI text. */
+		font-feature-settings: "cv11", "ss01";
+		letter-spacing: -0.006em;
+	}
+	/* v4 preflight stopped forcing `cursor: pointer` on buttons/[role=button];
+	   restore the v3/browser-native expectation used throughout this app. */
+	button:not(:disabled),
+	[role="button"]:not(:disabled) {
+		cursor: pointer;
+	}
+}

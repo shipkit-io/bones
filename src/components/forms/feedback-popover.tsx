@@ -21,7 +21,7 @@ export const FeedbackPopover = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEmailFallback, setShowEmailFallback] = useState(false);
-  const [feedbackContent, setFeedbackContent] = useState("");
+  const [_feedbackContent, setFeedbackContent] = useState("");
   const [mailtoLink, setMailtoLink] = useState<string | null>(null);
 
   const handleSubmit = async (content: string) => {
@@ -47,7 +47,7 @@ export const FeedbackPopover = () => {
       } else {
         setError(result.error ?? "Failed to send feedback. Please try again.");
       }
-    } catch (error) {
+    } catch (_error) {
       setError("Failed to send feedback. Please try again.");
     } finally {
       setLoading(false);

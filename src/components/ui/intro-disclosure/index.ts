@@ -1,2 +1,2 @@
 export { IntroDisclosure } from "./intro-disclosure";
-export type { Step, FeatureDisclosureProps, StepContentProps } from "./types";
+export type { FeatureDisclosureProps, Step, StepContentProps } from "./types";

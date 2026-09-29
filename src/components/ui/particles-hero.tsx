@@ -24,7 +24,7 @@ export function ParticlesHero({
     <div className={cn("relative w-full overflow-hidden bg-background", className)}>
       {children}
       <Particles
-        className="absolute inset-0 [mask-image:linear-gradient(to_bottom_right,white,transparent)]"
+        className="absolute inset-0 mask-[linear-gradient(to_bottom_right,white,transparent)]"
         quantity={100}
         ease={80}
         color={color}

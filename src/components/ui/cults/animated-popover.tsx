@@ -158,7 +158,7 @@ export function PopoverContent({ children, className, align = "start" }: Popover
           onKeyDown={closeOnEscape}
           layoutId={`popover-${uniqueId}`}
           className={cn(
-            "absolute z-50 h-[200px] w-[364px] overflow-hidden border border-zinc-950/10 bg-white outline-none dark:bg-zinc-700",
+            "absolute z-50 h-[200px] w-[364px] overflow-hidden border border-zinc-950/10 bg-white outline-hidden dark:bg-zinc-700",
             className
           )}
           style={{
@@ -214,7 +214,7 @@ export function PopoverLabel({ children, className }: PopoverLabelProps) {
         opacity: note ? 0 : 1,
       }}
       className={cn(
-        "absolute left-4 top-3 select-none text-sm text-zinc-500 dark:text-zinc-400",
+        "absolute top-3 left-4 text-sm text-zinc-500 select-none dark:text-zinc-400",
         className
       )}
     >
@@ -233,10 +233,9 @@ export function PopoverTextarea({ className }: PopoverTextareaProps) {
   return (
     <textarea
       className={cn(
-        "h-full w-full resize-none rounded-md bg-transparent px-4 py-3 text-sm outline-none",
+        "h-full w-full resize-none rounded-md bg-transparent px-4 py-3 text-sm outline-hidden",
         className
       )}
-      autoFocus
       value={note}
       onChange={(e) => setNote(e.target.value)}
     />
@@ -283,7 +282,7 @@ export function PopoverSubmitButton({ className }: PopoverSubmitButtonProps) {
   return (
     <button
       className={cn(
-        "relative ml-1 flex h-8 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 bg-transparent px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:text-zinc-50 dark:hover:bg-zinc-800",
+        "relative ml-1 flex h-8 shrink-0 scale-100 appearance-none items-center justify-center rounded-lg border border-zinc-950/10 bg-transparent px-2 text-sm text-zinc-500 transition-colors select-none hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:text-zinc-50 dark:hover:bg-zinc-800",
         className
       )}
       type="submit"
@@ -329,6 +328,7 @@ export function PopoverButton({
 }) {
   return (
     <button
+      type="button"
       className={cn(
         "flex w-full items-center gap-2 rounded-md px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700",
         className

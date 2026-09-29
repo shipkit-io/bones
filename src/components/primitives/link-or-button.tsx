@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type React from "react";
 import type { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 
 interface CommonProps {
   className?: string;

@@ -67,6 +67,7 @@ export function StepContent({
           >
             {steps.map((step, index) => (
               <StepTab
+                // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                 key={index}
                 step={step}
                 isActive={currentStep === index}
@@ -89,6 +90,7 @@ export function StepContent({
                   className="object-cover"
                 />
               ) : (
+                // biome-ignore lint/a11y/useMediaCaption: optional demo media without captions
                 <video
                   src={steps[currentStep]?.media?.src}
                   controls
