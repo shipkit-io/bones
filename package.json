@@ -55,6 +55,7 @@
     "test:node": "vitest --config=vitest.config.node.ts",
     "typecheck": "fumadocs-mdx && tsc --noEmit",
     "verify": "bash scripts/verify.sh",
+    "doctor": "pnpm dlx tsx scripts/doctor.ts",
     "postinstall": "node scripts/prebuild-content.mjs && fumadocs-mdx && git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
