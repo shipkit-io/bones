@@ -22,14 +22,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ES2022"
-    ],
-    "types": [
-      "node"
-    ],
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "types": ["node"],
     "plugins": [
       {
         "name": "next"
@@ -37,12 +31,8 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/public/*": [
-        "./public/*"
-      ],
-      "@/*": [
-        "./src/*"
-      ]
+      "@/public/*": ["./public/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": [

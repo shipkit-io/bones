@@ -9,11 +9,11 @@ Shipkit supports three payment providers through a unified provider interface. P
 
 ## Supported Providers
 
-| Provider | Best For | Feature Flag |
-|----------|----------|-------------|
-| [Stripe](/docs/integrations/payments/stripe) | Full payment processing, subscriptions | `STRIPE_SECRET_KEY` |
-| [Lemon Squeezy](/docs/integrations/payments/lemonsqueezy) | SaaS with built-in tax handling | `LEMONSQUEEZY_API_KEY` |
-| [Polar](/docs/integrations/payments/polar) | Open-source friendly payments | `POLAR_ACCESS_TOKEN` |
+| Provider                                                  | Best For                               | Feature Flag           |
+| --------------------------------------------------------- | -------------------------------------- | ---------------------- |
+| [Stripe](/docs/integrations/payments/stripe)              | Full payment processing, subscriptions | `STRIPE_SECRET_KEY`    |
+| [Lemon Squeezy](/docs/integrations/payments/lemonsqueezy) | SaaS with built-in tax handling        | `LEMONSQUEEZY_API_KEY` |
+| [Polar](/docs/integrations/payments/polar)                | Open-source friendly payments          | `POLAR_ACCESS_TOKEN`   |
 
 ## How It Works
 
@@ -86,6 +86,7 @@ const url = await provider.createCheckoutUrl({
 ```
 
 Shipkit includes pre-built checkout pages:
+
 - Stripe: `/stripe/checkout`
 - Lemon Squeezy: `/lemonsqueezy`
 - Polar: `/polar/checkout`

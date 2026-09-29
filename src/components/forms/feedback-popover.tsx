@@ -81,9 +81,9 @@ export const FeedbackPopover = () => {
         {success && <span className="text-green-500">Sent 🚀</span>}
         {error && <span className="text-red-500">{error}</span>}
         {showEmailFallback && (
-          <div className="p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
             <div className="flex items-start gap-2">
-              <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5" />
+              <Mail className="mt-0.5 h-4 w-4 text-blue-600 dark:text-blue-400" />
               <div className="space-y-2">
                 <p className="text-xs text-blue-800 dark:text-blue-200">
                   Email service not configured. Click to open your email client:
@@ -92,7 +92,7 @@ export const FeedbackPopover = () => {
                   type="button"
                   size="sm"
                   onClick={handleEmailFallback}
-                  className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+                  className="h-7 bg-blue-600 px-2 text-xs text-white hover:bg-blue-700"
                 >
                   <ExternalLink className="mr-1 h-3 w-3" />
                   Open Email

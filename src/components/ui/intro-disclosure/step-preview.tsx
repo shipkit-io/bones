@@ -21,14 +21,14 @@ export function StepPreview({ step, direction }: { step: Step; direction: 1 | -1
   return (
     <motion.div
       {...slideInOut(direction)}
-      className="relative h-full w-full overflow-hidden rounded-sm rounded-rb-lg rounded-tl-xl ring-2 ring-black/10 dark:ring-black/10 dark:ring-offset-black ring-offset-8"
+      className="rounded-rb-lg relative h-full w-full overflow-hidden rounded-sm rounded-tl-xl ring-2 ring-black/10 ring-offset-8 dark:ring-black/10 dark:ring-offset-black"
     >
       {step.media ? (
-        <div className="relative bg-black h-full w-full">
+        <div className="relative h-full w-full bg-black">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={controls}
-            className="h-full w-full max-h-[700px]"
+            className="h-full max-h-[700px] w-full"
           >
             {step.media.type === "image" ? (
               <Image
@@ -48,7 +48,7 @@ export function StepPreview({ step, direction }: { step: Step; direction: 1 | -1
             className="absolute bottom-0 left-0 right-0 p-6"
           >
             <h3 className="mb-2 text-2xl font-semibold text-white">{step.title}</h3>
-            <p className="text-white hidden md:block">{step.full_description}</p>
+            <p className="hidden text-white md:block">{step.full_description}</p>
           </motion.div>
         </div>
       ) : (

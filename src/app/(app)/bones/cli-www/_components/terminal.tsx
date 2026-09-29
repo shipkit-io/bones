@@ -1,66 +1,68 @@
-'use client'
+"use client";
 
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
-import Convert from 'ansi-to-html'
-import { useEffect, useMemo, useRef } from 'react'
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import Convert from "ansi-to-html";
+import { useEffect, useMemo, useRef } from "react";
 
 interface TerminalProps {
-	output: string[]
-	className?: string
+  output: string[];
+  className?: string;
 }
 
 // Clean up control sequences that ansi-to-html doesn't handle
 function cleanAnsi(text: string): string {
-	return text
-		// Remove cursor hide/show sequences
-		.replace(/\x1B\[\?25[hl]/g, '')
-		// Remove clear line and move cursor sequences
-		.replace(/\x1B\[2K/g, '')
-		.replace(/\x1B\[1G/g, '')
-		// Remove other control sequences
-		.replace(/\x1B\[\d*[ABCDEFGJKST]/g, '')
+  return (
+    text
+      // Remove cursor hide/show sequences
+      .replace(/\x1B\[\?25[hl]/g, "")
+      // Remove clear line and move cursor sequences
+      .replace(/\x1B\[2K/g, "")
+      .replace(/\x1B\[1G/g, "")
+      // Remove other control sequences
+      .replace(/\x1B\[\d*[ABCDEFGJKST]/g, "")
+  );
 }
 
 export function Terminal({ output, className }: TerminalProps) {
-	const scrollRef = useRef<HTMLDivElement>(null)
-	const convert = useMemo(
-		() =>
-			new Convert({
-				fg: '#D4D4D4',
-				bg: '#1E1E1E',
-				newline: false,
-				escapeXML: true,
-				stream: true,
-			}),
-		[]
-	)
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const convert = useMemo(
+    () =>
+      new Convert({
+        fg: "#D4D4D4",
+        bg: "#1E1E1E",
+        newline: false,
+        escapeXML: true,
+        stream: true,
+      }),
+    []
+  );
 
-	// Auto-scroll to bottom when output changes
-	useEffect(() => {
-		scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-	}, [output])
+  // Auto-scroll to bottom when output changes
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [output]);
 
-	// Process the output to handle newlines properly
-	const processedOutput = useMemo(() => {
-		return output.join('\n').split(/\r?\n/)
-	}, [output])
+  // Process the output to handle newlines properly
+  const processedOutput = useMemo(() => {
+    return output.join("\n").split(/\r?\n/);
+  }, [output]);
 
-	return (
-		<ScrollArea className={cn('bg-[#1E1E1E] rounded-md', className)}>
-			<div className="p-4 font-mono text-sm text-[#D4D4D4] leading-5">
-				{processedOutput.map((line, i) => (
-					<div
-						key={`${i}-${line.slice(0, 20)}`}
-						className="min-h-[6px]"
-						// biome-ignore lint/security/noDangerouslySetInnerHtml: ansi-to-html escapes input (escapeXML: true); only its own color spans are injected
-						dangerouslySetInnerHTML={{
-							__html: convert.toHtml(cleanAnsi(line)) || '&nbsp;',
-						}}
-					/>
-				))}
-				<div ref={scrollRef} />
-			</div>
-		</ScrollArea>
-	)
+  return (
+    <ScrollArea className={cn("rounded-md bg-[#1E1E1E]", className)}>
+      <div className="p-4 font-mono text-sm leading-5 text-[#D4D4D4]">
+        {processedOutput.map((line, i) => (
+          <div
+            key={`${i}-${line.slice(0, 20)}`}
+            className="min-h-[6px]"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: ansi-to-html escapes input (escapeXML: true); only its own color spans are injected
+            dangerouslySetInnerHTML={{
+              __html: convert.toHtml(cleanAnsi(line)) || "&nbsp;",
+            }}
+          />
+        ))}
+        <div ref={scrollRef} />
+      </div>
+    </ScrollArea>
+  );
 }

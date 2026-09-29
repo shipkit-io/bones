@@ -1,12 +1,7 @@
 "use client";
 import { LinkOrButton } from "@/components/primitives/link-or-button";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
@@ -46,12 +41,11 @@ const builtByVariants = cva(
     defaultVariants: {
       variant: "banner",
     },
-  },
+  }
 );
 
 export interface AttributionProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof builtByVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof builtByVariants> {
   heading?: React.ReactNode;
   description?: React.ReactNode;
   onClose?: () => void;
@@ -72,10 +66,7 @@ export function Attribution({
   onClose,
   ...props
 }: AttributionProps) {
-  const [wasClosed, setWasClosed] = useLocalStorage(
-    LOCAL_STORAGE_KEYS.attributionClosed,
-    false,
-  );
+  const [wasClosed, setWasClosed] = useLocalStorage(LOCAL_STORAGE_KEYS.attributionClosed, false);
   const [isOpen, setIsOpen] = useState(wasClosed ? false : open);
 
   const handleClose = () => {
@@ -123,12 +114,7 @@ export function Attribution({
             {renderContent()}
             {children}
             {onClose && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0"
-                onClick={handleClose}
-              >
+              <Button variant="ghost" size="icon" className="shrink-0" onClick={handleClose}>
                 <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </Button>
@@ -143,17 +129,14 @@ export function Attribution({
     return (
       <>
         <style>{styles}</style>
-        <Card
-          className={cn(builtByVariants({ variant }), className)}
-          {...props}
-        >
-          <CardHeader className="p-3 flex flex-row items-start justify-between">
+        <Card className={cn(builtByVariants({ variant }), className)} {...props}>
+          <CardHeader className="flex flex-row items-start justify-between p-3">
             {renderContent()}
             {onClose && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="shrink-0 h-6 w-6"
+                className="h-6 w-6 shrink-0"
                 onClick={handleClose}
               >
                 <X className="h-3 w-3" />
@@ -170,10 +153,7 @@ export function Attribution({
             <CardFooter className="mt-auto p-3 pt-0">
               <LinkOrButton
                 href={href}
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "sm" }),
-                  "w-full",
-                )}
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-full")}
                 variant="outline"
                 size="sm"
                 onClick={() => onClick?.()}

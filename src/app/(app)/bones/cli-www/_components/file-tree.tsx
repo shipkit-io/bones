@@ -112,14 +112,14 @@ function TreeNode({
           {node.type === "directory" ? (
             <>
               {isExpanded ? (
-                <ChevronDownIcon className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+                <ChevronDownIcon className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
               ) : (
-                <ChevronRightIcon className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+                <ChevronRightIcon className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
               )}
-              <Folder className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+              <Folder className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
             </>
           ) : (
-            <File className="h-4 w-4 shrink-0 mr-1 text-muted-foreground" />
+            <File className="mr-1 h-4 w-4 shrink-0 text-muted-foreground" />
           )}
           <span className="truncate">{node.name}</span>
         </div>
@@ -142,12 +142,7 @@ function TreeNode({
   );
 }
 
-export function FileTree({
-  files,
-  onFileSelect,
-  selectedFile,
-  currentStyle,
-}: FileTreeProps) {
+export function FileTree({ files, onFileSelect, selectedFile, currentStyle }: FileTreeProps) {
   const tree = buildTree(files);
 
   return (

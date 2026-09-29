@@ -43,7 +43,7 @@ export const Steps = ({ children, className }: StepsProps) => {
               <h6 className="mb-2 ml-1 text-lg font-medium tracking-tight text-neutral-700 dark:text-neutral-50">
                 {props.title}
               </h6>
-              <div className="ml-1 text-sm text-muted-foreground [&>pre]:my-2 [&>p]:my-1">
+              <div className="ml-1 text-sm text-muted-foreground [&>p]:my-1 [&>pre]:my-2">
                 {props.children}
               </div>
             </div>

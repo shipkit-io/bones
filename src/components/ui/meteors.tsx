@@ -38,4 +38,3 @@ export const Meteors = ({ number = 20 }: MeteorsProps) => {
     </>
   );
 };
-

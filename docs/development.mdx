@@ -1,6 +1,6 @@
 ---
-title: 'Development Guide'
-description: 'Get started developing with Shipkit'
+title: "Development Guide"
+description: "Get started developing with Shipkit"
 ---
 
 # Development Guide
@@ -12,17 +12,20 @@ Shipkit is built for developers who want to ship fast. Let's get you set up and 
 Get Shipkit running in 4 steps:
 
 1. **Clone the repo:**
+
    ```bash
    git clone https://github.com/your-repo/shipkit.git
    cd shipkit
    ```
 
 2. **Install dependencies:**
+
    ```bash
    bun install --frozen-lockfile
    ```
 
 3. **Set up environment:**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your values
@@ -38,6 +41,7 @@ That's it! You're ready to build.
 ## What You Need
 
 ### Required Tools
+
 - **Node.js** v18+ ([download](https://nodejs.org))
 - **Bun** v1.1+ ([install](https://bun.sh))
 - **PostgreSQL** v15+ (for database features)
@@ -73,22 +77,26 @@ src/
 ## Development Workflow
 
 ### Components
+
 - **Server components first** - Better performance, fewer bugs
 - **Client components only when needed** - For interactivity (forms, animations)
 - **Organize by purpose** - UI components in `ui/`, page blocks in `blocks/`
 
 ### API Routes
+
 - **Server actions** for forms and mutations
 - **API routes** for external integrations
 - **Zod validation** on all inputs
 - **Consistent error handling**
 
 ### Database
+
 - **Drizzle ORM** for type-safe queries
 - **Migrations** for schema changes
 - **Transactions** for data consistency
 
 ### Authentication
+
 - **Auth.js v5** for all auth needs
 - **Multiple providers** supported
 - **Server-side sessions** preferred
@@ -96,6 +104,7 @@ src/
 ## Common Tasks
 
 ### Add a New Page
+
 ```bash
 # Create app/(app)/my-page/page.tsx
 export default function MyPage() {
@@ -104,6 +113,7 @@ export default function MyPage() {
 ```
 
 ### Add a Component
+
 ```typescript
 // src/components/ui/my-component.tsx
 export function MyComponent() {
@@ -112,6 +122,7 @@ export function MyComponent() {
 ```
 
 ### Add Database Schema
+
 ```bash
 bun run db:generate
 # Edit the migration file

@@ -48,7 +48,7 @@ Each integration is a shadcn registry item. Browse them at [shipkit.io/docs/feat
 
 Built with modern technologies:
 
- - ⚡️ [Next.js 16](https://nextjs.org) - React Framework
+- ⚡️ [Next.js 16](https://nextjs.org) - React Framework
 - 🎨 [Tailwind CSS](https://tailwindcss.com) - Styling
 - 🔧 [Shadcn/UI](https://ui.shadcn.com) - Components
 - 🛠 [Drizzle](https://orm.drizzle.team) - Database ORM

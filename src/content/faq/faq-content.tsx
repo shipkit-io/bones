@@ -12,8 +12,7 @@ export const content = [
     category: "general",
   },
   {
-    question:
-      "I use Cursor, v0, or Windsurf. Does this work with AI coding tools?",
+    question: "I use Cursor, v0, or Windsurf. Does this work with AI coding tools?",
     answer:
       "Yes. Shipkit ships with Cursor rules, prompts, and project context files so AI tools understand the codebase from the start. Built for the AI-assisted workflow.",
     category: "technical",

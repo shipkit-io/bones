@@ -60,7 +60,8 @@ export function generateMailtoLink(options: MailtoOptions): string {
  * @returns Formatted mailto URL for feedback
  */
 export function generateFeedbackMailto(content: string, source: string): string {
-  const adminEmail = process.env.ADMIN_EMAIL?.split(",")[0]?.trim() || siteConfig.email?.support || "";
+  const adminEmail =
+    process.env.ADMIN_EMAIL?.split(",")[0]?.trim() || siteConfig.email?.support || "";
   const subject = `Feedback from ${source}`;
 
   return generateMailtoLink({

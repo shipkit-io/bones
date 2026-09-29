@@ -1,13 +1,7 @@
 "use client";
 
 import type { DialogProps } from "@radix-ui/react-dialog";
-import {
-  CircleIcon,
-  FileIcon,
-  LaptopIcon,
-  MoonIcon,
-  SunIcon,
-} from "@radix-ui/react-icons";
+import { CircleIcon, FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -56,7 +50,7 @@ export function Search({ ...props }: DialogProps) {
       <Button
         variant="outline"
         className={cn(
-          "relative h-8 w-full justify-start bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:max-w-40 lg:max-w-64",
+          "relative h-8 w-full justify-start bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:max-w-40 lg:max-w-64"
         )}
         onClick={() => setOpen(true)}
         {...props}
@@ -94,9 +88,7 @@ export function Search({ ...props }: DialogProps) {
                 <FileIcon className="mr-2 h-4 w-4" />
                 {navItem.title}
                 {navItem.external && (
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    ↗
-                  </span>
+                  <span className="ml-auto text-xs text-muted-foreground">↗</span>
                 )}
               </CommandItem>
             ))}
@@ -125,9 +117,7 @@ export function Search({ ...props }: DialogProps) {
                   </div>
                   {navItem.title}
                   {navItem.label && (
-                    <span className="ml-auto text-xs text-muted-foreground">
-                      {navItem.label}
-                    </span>
+                    <span className="ml-auto text-xs text-muted-foreground">{navItem.label}</span>
                   )}
                 </CommandItem>
               ))}

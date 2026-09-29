@@ -41,7 +41,7 @@ export const Countdown = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium",
+        "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium",
         variantStyles[variant],
         className
       )}

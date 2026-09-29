@@ -1,6 +1,6 @@
 ---
-title: 'Error Handling'
-description: 'Comprehensive guide to error handling in Shipkit'
+title: "Error Handling"
+description: "Comprehensive guide to error handling in Shipkit"
 ---
 
 # Error Handling
@@ -37,7 +37,7 @@ export class ErrorService {
     code: ErrorCode,
     message: string,
     cause?: unknown,
-    metadata?: Record<string, unknown>,
+    metadata?: Record<string, unknown>
   ): AppError {
     const error = new Error(message) as AppError;
     error.code = code;
@@ -57,11 +57,7 @@ export class ErrorService {
     }
 
     if (error instanceof Error) {
-      const appError = ErrorService.createError(
-        "INTERNAL_SERVER_ERROR",
-        error.message,
-        error,
-      );
+      const appError = ErrorService.createError("INTERNAL_SERVER_ERROR", error.message, error);
       logger.error(error.message, {
         code: appError.code,
         cause: error,
@@ -72,7 +68,7 @@ export class ErrorService {
     const appError = ErrorService.createError(
       "INTERNAL_SERVER_ERROR",
       "An unexpected error occurred",
-      error,
+      error
     );
     logger.error("Unknown error", { error });
     return appError;
@@ -99,10 +95,7 @@ export interface ValidationResult<T> {
 }
 
 export class ValidationService {
-  static async validate<T>(
-    schema: z.ZodType<T>,
-    data: unknown,
-  ): Promise<ValidationResult<T>> {
+  static async validate<T>(schema: z.ZodType<T>, data: unknown): Promise<ValidationResult<T>> {
     try {
       const validatedData = await schema.parseAsync(data);
       return {
@@ -116,7 +109,7 @@ export class ValidationService {
             acc[key] = Array.isArray(value) ? value : [value as string];
             return acc;
           },
-          {} as Record<string, string[]>,
+          {} as Record<string, string[]>
         );
 
         return {
@@ -206,7 +199,7 @@ class ErrorBoundary extends React.Component<
 
 ```typescript
 // Example server action with error handling
-"use server"
+"use server";
 
 import { ErrorService } from "@/server/services/error-service";
 import { ValidationService } from "@/server/services/validation-service";

@@ -111,13 +111,13 @@ including static assets, images, and prefetches — adding an origin hop each ti
 ```ts
 // middleware.ts
 export const config = {
-	matcher: [
-		// Run only where you actually need middleware...
-		"/dashboard/:path*",
-		"/api/:path*",
-		// ...and explicitly exclude static assets and metadata files:
-		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-	],
+  matcher: [
+    // Run only where you actually need middleware...
+    "/dashboard/:path*",
+    "/api/:path*",
+    // ...and explicitly exclude static assets and metadata files:
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
 ```
 
@@ -145,7 +145,7 @@ Controls (note: there is **no** global `next.config` prefetch toggle, and
 ```tsx
 // Disable viewport prefetch for low-priority / numerous links (footers, long lists):
 <Link href="/about" prefetch={false}>
-	About
+  About
 </Link>
 ```
 
@@ -159,25 +159,15 @@ keep instant navigation without viewport prefetching everything, prefetch on
 import Link from "next/link";
 import { useState } from "react";
 
-export function HoverPrefetchLink({
-	href,
-	children,
-}: {
-	href: string;
-	children: React.ReactNode;
-}) {
-	const [active, setActive] = useState(false);
-	// prefetch={null} restores default prefetching once intent is shown;
-	// false until then = no viewport prefetch.
-	return (
-		<Link
-			href={href}
-			prefetch={active ? null : false}
-			onMouseEnter={() => setActive(true)}
-		>
-			{children}
-		</Link>
-	);
+export function HoverPrefetchLink({ href, children }: { href: string; children: React.ReactNode }) {
+  const [active, setActive] = useState(false);
+  // prefetch={null} restores default prefetching once intent is shown;
+  // false until then = no viewport prefetch.
+  return (
+    <Link href={href} prefetch={active ? null : false} onMouseEnter={() => setActive(true)}>
+      {children}
+    </Link>
+  );
 }
 ```
 
@@ -188,9 +178,9 @@ experimental config, reducing repeat prefetch fetches:
 ```ts
 // next.config.ts
 const nextConfig = {
-	experimental: {
-		staleTimes: { dynamic: 30, static: 180 },
-	},
+  experimental: {
+    staleTimes: { dynamic: 30, static: 180 },
+  },
 };
 ```
 
@@ -206,11 +196,11 @@ GET handler returns data that does not change per request, let the CDN cache it:
 ```ts
 // app/api/data/route.ts
 export async function GET() {
-	return Response.json(data, {
-		headers: {
-			"Cache-Control": "s-maxage=3600, stale-while-revalidate=86400",
-		},
-	});
+  return Response.json(data, {
+    headers: {
+      "Cache-Control": "s-maxage=3600, stale-while-revalidate=86400",
+    },
+  });
 }
 ```
 

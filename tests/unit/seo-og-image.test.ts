@@ -11,7 +11,7 @@ import { siteConfig } from "@/config/site-config";
  */
 
 describe("og image", () => {
-	it("serves the OG image from the site's own domain", () => {
-		expect(new URL(siteConfig.ogImage).origin).toBe(new URL(siteConfig.url).origin);
-	});
+  it("serves the OG image from the site's own domain", () => {
+    expect(new URL(siteConfig.ogImage).origin).toBe(new URL(siteConfig.url).origin);
+  });
 });

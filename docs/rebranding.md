@@ -96,4 +96,4 @@ If you encounter any issues during rebranding:
 2. Look for any hardcoded references to "Shipkit" or "bones" in the codebase
 3. Update any references that weren't caught by the rebranding script
 
-If you find any hardcoded references that weren't updated by the rebranding script, please consider contributing to improve the script. 
+If you find any hardcoded references that weren't updated by the rebranding script, please consider contributing to improve the script.

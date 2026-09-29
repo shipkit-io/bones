@@ -8,9 +8,9 @@ import { AuthErrorContent } from "./_components/auth-error-content";
  * site-wide); this page owns its own now.
  */
 export default function AuthErrorPage() {
-	return (
-		<Suspense fallback={null}>
-			<AuthErrorContent />
-		</Suspense>
-	);
+  return (
+    <Suspense fallback={null}>
+      <AuthErrorContent />
+    </Suspense>
+  );
 }

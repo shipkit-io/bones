@@ -9,63 +9,60 @@ import { type InstallOptions } from "../_lib/types";
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function installComponent(
-	componentUrl: string,
-	options: InstallOptions = {},
+  componentUrl: string,
+  options: InstallOptions = {}
 ): Promise<ReadableStream<Uint8Array>> {
-	const encoder = new TextEncoder();
+  const encoder = new TextEncoder();
 
-	return new ReadableStream({
-		// eslint-disable-next-line @typescript-eslint/require-await
-		async start(controller) {
-			try {
-				const args = ["shadcn@latest", "add"];
+  return new ReadableStream({
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async start(controller) {
+      try {
+        const args = ["shadcn@latest", "add"];
 
-				// Add component name
-				args.push(componentUrl);
+        // Add component name
+        args.push(componentUrl);
 
-				// Add options
-				if (options.overwrite) args.push("--overwrite");
-				if (options.style) args.push("--style", options.style);
-				if (options.typescript) args.push("--typescript");
-				if (options.path) args.push("--path", options.path);
+        // Add options
+        if (options.overwrite) args.push("--overwrite");
+        if (options.style) args.push("--style", options.style);
+        if (options.typescript) args.push("--typescript");
+        if (options.path) args.push("--path", options.path);
 
-				const process = spawn("npx", args, {
-					stdio: ["pipe", "pipe", "pipe"],
-				});
+        const process = spawn("npx", args, {
+          stdio: ["pipe", "pipe", "pipe"],
+        });
 
-				// If not overwriting, automatically answer "n" to prompts
-				if (!options.overwrite && process.stdin) {
-					process.stdin.write("n\n");
-					process.stdin.end();
-				}
+        // If not overwriting, automatically answer "n" to prompts
+        if (!options.overwrite && process.stdin) {
+          process.stdin.write("n\n");
+          process.stdin.end();
+        }
 
-				process.stdout?.on("data", (data: Buffer) => {
-					controller.enqueue(encoder.encode(data.toString()));
-				});
+        process.stdout?.on("data", (data: Buffer) => {
+          controller.enqueue(encoder.encode(data.toString()));
+        });
 
-				process.stderr?.on("data", (data: Buffer) => {
-					controller.enqueue(encoder.encode(data.toString()));
-				});
+        process.stderr?.on("data", (data: Buffer) => {
+          controller.enqueue(encoder.encode(data.toString()));
+        });
 
-				process.on("close", (code) => {
-					if (code !== 0) {
-						controller.enqueue(
-							encoder.encode(`\nProcess exited with code ${code}`),
-						);
-					}
-					controller.close();
-				});
+        process.on("close", (code) => {
+          if (code !== 0) {
+            controller.enqueue(encoder.encode(`\nProcess exited with code ${code}`));
+          }
+          controller.close();
+        });
 
-				process.on("error", (err) => {
-					controller.enqueue(encoder.encode(`\nError: ${err.message}`));
-					controller.close();
-				});
-			} catch (error) {
-				const message =
-					error instanceof Error ? error.message : "Unknown error occurred";
-				controller.enqueue(encoder.encode(`\nError: ${message}`));
-				controller.close();
-			}
-		},
-	});
+        process.on("error", (err) => {
+          controller.enqueue(encoder.encode(`\nError: ${err.message}`));
+          controller.close();
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Unknown error occurred";
+        controller.enqueue(encoder.encode(`\nError: ${message}`));
+        controller.close();
+      }
+    },
+  });
 }

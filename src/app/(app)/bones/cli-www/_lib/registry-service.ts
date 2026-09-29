@@ -7,41 +7,39 @@ import type { Registry, RegistryFilters, RegistryItem } from "./types";
  * @see https://cli.bones.sh
  */
 const BUILT_IN_REGISTRIES = [
-	{
-		name: "ShipKit",
-		url: "https://shipkit.io/r/registry.json",
-		description:
-			"ShipKit integrations and blocks: auth, payments, email, analytics, CMS, storage and more",
-		baseComponentUrl: "https://shipkit.io/r",
-		baseBlockUrl: "https://shipkit.io/r",
-		baseDocsUrl: "https://shipkit.io/docs/features/registry",
-	},
-	{
-		name: "shadcn/ui",
-		url: "https://ui.shadcn.com/r",
-		description:
-			"Official shadcn/ui component registry with customizable components and blocks",
-		baseComponentUrl: "https://ui.shadcn.com/registry/styles",
-		baseBlockUrl: "https://ui.shadcn.com/registry/blocks",
-		baseDocsUrl: "https://ui.shadcn.com/docs/components",
-	},
-	{
-		name: "Magic UI",
-		url: "https://magicui.design/r/index.json",
-		description:
-			"Beautiful animated components and effects for modern web applications",
-		baseComponentUrl: "https://magicui.design/registry/styles",
-		baseBlockUrl: "https://magicui.design/registry/blocks",
-		baseDocsUrl: "https://magicui.design/docs/components",
-	},
-	{
-		name: "Bones Registry",
-		url: "https://cli.bones.sh",
-		description: "Community-driven component registry",
-		baseComponentUrl: "https://cli.bones.sh",
-		baseBlockUrl: "https://cli.bones.sh",
-		baseDocsUrl: "https://cli.bones.sh/docs/components",
-	},
+  {
+    name: "ShipKit",
+    url: "https://shipkit.io/r/registry.json",
+    description:
+      "ShipKit integrations and blocks: auth, payments, email, analytics, CMS, storage and more",
+    baseComponentUrl: "https://shipkit.io/r",
+    baseBlockUrl: "https://shipkit.io/r",
+    baseDocsUrl: "https://shipkit.io/docs/features/registry",
+  },
+  {
+    name: "shadcn/ui",
+    url: "https://ui.shadcn.com/r",
+    description: "Official shadcn/ui component registry with customizable components and blocks",
+    baseComponentUrl: "https://ui.shadcn.com/registry/styles",
+    baseBlockUrl: "https://ui.shadcn.com/registry/blocks",
+    baseDocsUrl: "https://ui.shadcn.com/docs/components",
+  },
+  {
+    name: "Magic UI",
+    url: "https://magicui.design/r/index.json",
+    description: "Beautiful animated components and effects for modern web applications",
+    baseComponentUrl: "https://magicui.design/registry/styles",
+    baseBlockUrl: "https://magicui.design/registry/blocks",
+    baseDocsUrl: "https://magicui.design/docs/components",
+  },
+  {
+    name: "Bones Registry",
+    url: "https://cli.bones.sh",
+    description: "Community-driven component registry",
+    baseComponentUrl: "https://cli.bones.sh",
+    baseBlockUrl: "https://cli.bones.sh",
+    baseDocsUrl: "https://cli.bones.sh/docs/components",
+  },
 ] as const;
 
 const STORAGE_KEY = "reg-browser:custom-registries";
@@ -53,26 +51,21 @@ const STORAGE_KEY = "reg-browser:custom-registries";
  *   items live at `<base>/<name>.json`
  */
 function isFlatRegistryUrl(url: string): boolean {
-	return url.endsWith("registry.json");
+  return url.endsWith("registry.json");
 }
 
 function registryIndexUrl(registryUrl: string): string {
-	const trimmed = registryUrl.replace(/\/$/, "");
-	if (isFlatRegistryUrl(trimmed) || trimmed.endsWith("index.json"))
-		return trimmed;
-	return `${trimmed}/index.json`;
+  const trimmed = registryUrl.replace(/\/$/, "");
+  if (isFlatRegistryUrl(trimmed) || trimmed.endsWith("index.json")) return trimmed;
+  return `${trimmed}/index.json`;
 }
 
 function itemsFromIndex(data: unknown): RegistryItem[] {
-	if (Array.isArray(data)) return data as RegistryItem[];
-	if (
-		data &&
-		typeof data === "object" &&
-		Array.isArray((data as { items?: unknown }).items)
-	) {
-		return (data as { items: RegistryItem[] }).items;
-	}
-	return [];
+  if (Array.isArray(data)) return data as RegistryItem[];
+  if (data && typeof data === "object" && Array.isArray((data as { items?: unknown }).items)) {
+    return (data as { items: RegistryItem[] }).items;
+  }
+  return [];
 }
 
 export type RegistryName = (typeof BUILT_IN_REGISTRIES)[number]["name"];
@@ -81,26 +74,26 @@ export type RegistryName = (typeof BUILT_IN_REGISTRIES)[number]["name"];
  * Get custom registries from local storage
  */
 function getCustomRegistries(): Registry[] {
-	if (typeof window === "undefined") return [];
-	try {
-		const stored = localStorage.getItem(STORAGE_KEY);
-		return stored ? JSON.parse(stored) : [];
-	} catch (error) {
-		console.error("Failed to parse custom registries:", error);
-		return [];
-	}
+  if (typeof window === "undefined") return [];
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error("Failed to parse custom registries:", error);
+    return [];
+  }
 }
 
 /**
  * Save custom registries to local storage
  */
 function saveCustomRegistries(registries: Registry[]): void {
-	if (typeof window === "undefined") return;
-	try {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(registries));
-	} catch (error) {
-		console.error("Failed to save custom registries:", error);
-	}
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(registries));
+  } catch (error) {
+    console.error("Failed to save custom registries:", error);
+  }
 }
 
 /**
@@ -109,7 +102,7 @@ function saveCustomRegistries(registries: Registry[]): void {
 // Async signature kept stable for callers that await this API.
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function getRegistries(): Promise<Registry[]> {
-	return [...BUILT_IN_REGISTRIES, ...getCustomRegistries()];
+  return [...BUILT_IN_REGISTRIES, ...getCustomRegistries()];
 }
 
 /**
@@ -117,66 +110,66 @@ export async function getRegistries(): Promise<Registry[]> {
  * @throws Error if the registry is invalid
  */
 export async function validateRegistry(registry: Registry): Promise<void> {
-	// Check if registry with this name already exists
-	const existingRegistries = await getRegistries();
-	if (existingRegistries.some((r) => r.name === registry.name)) {
-		throw new Error(`Registry "${registry.name}" already exists`);
-	}
+  // Check if registry with this name already exists
+  const existingRegistries = await getRegistries();
+  if (existingRegistries.some((r) => r.name === registry.name)) {
+    throw new Error(`Registry "${registry.name}" already exists`);
+  }
 
-	try {
-		const url = registryIndexUrl(registry.url);
+  try {
+    const url = registryIndexUrl(registry.url);
 
-		// Try to fetch the registry index
-		const response = await fetch(url);
-		if (!response.ok) {
-			throw new Error(`Failed to fetch registry: ${response.statusText}`);
-		}
+    // Try to fetch the registry index
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch registry: ${response.statusText}`);
+    }
 
-		// Validate the registry structure (array, or `{ items }` from `npx shadcn build`)
-		const items = itemsFromIndex(await response.json());
+    // Validate the registry structure (array, or `{ items }` from `npx shadcn build`)
+    const items = itemsFromIndex(await response.json());
 
-		// Validate at least one item has the correct structure
-		if (items.length === 0) {
-			throw new Error("Registry is empty");
-		}
+    // Validate at least one item has the correct structure
+    if (items.length === 0) {
+      throw new Error("Registry is empty");
+    }
 
-		const validItem = items.some(
-			(item) =>
-				typeof item === "object" &&
-				item !== null &&
-				typeof item.name === "string" &&
-				typeof item.type === "string" &&
-				(item.type === "registry:ui" || item.type === "registry:block"),
-		);
+    const validItem = items.some(
+      (item) =>
+        typeof item === "object" &&
+        item !== null &&
+        typeof item.name === "string" &&
+        typeof item.type === "string" &&
+        (item.type === "registry:ui" || item.type === "registry:block")
+    );
 
-		if (!validItem) {
-			throw new Error("Registry does not contain valid components");
-		}
-	} catch (error) {
-		if (error instanceof Error) {
-			throw error;
-		}
-		throw new Error("Failed to validate registry");
-	}
+    if (!validItem) {
+      throw new Error("Registry does not contain valid components");
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Failed to validate registry");
+  }
 }
 
 /**
  * Add a custom registry
  */
 export async function addCustomRegistry(registry: Registry): Promise<void> {
-	await validateRegistry(registry);
-	const customRegistries = getCustomRegistries();
-	customRegistries.push(registry);
-	saveCustomRegistries(customRegistries);
+  await validateRegistry(registry);
+  const customRegistries = getCustomRegistries();
+  customRegistries.push(registry);
+  saveCustomRegistries(customRegistries);
 }
 
 /**
  * Remove a custom registry
  */
 export function removeCustomRegistry(name: string): void {
-	const customRegistries = getCustomRegistries();
-	const filtered = customRegistries.filter((r) => r.name !== name);
-	saveCustomRegistries(filtered);
+  const customRegistries = getCustomRegistries();
+  const filtered = customRegistries.filter((r) => r.name !== name);
+  saveCustomRegistries(filtered);
 }
 
 /**
@@ -184,201 +177,187 @@ export function removeCustomRegistry(name: string): void {
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function getRegistry(name: RegistryName): Promise<Registry> {
-	const registry = [...BUILT_IN_REGISTRIES, ...getCustomRegistries()].find(
-		(r) => r.name === name,
-	);
-	if (!registry) {
-		throw new Error(`Registry ${name} not found`);
-	}
-	return registry;
+  const registry = [...BUILT_IN_REGISTRIES, ...getCustomRegistries()].find((r) => r.name === name);
+  if (!registry) {
+    throw new Error(`Registry ${name} not found`);
+  }
+  return registry;
 }
 
 /**
  * Fetch registry index with error handling and caching
  */
-export async function fetchRegistryIndex(
-	registryUrl: string,
-): Promise<RegistryItem[]> {
-	const url = new URL(registryIndexUrl(registryUrl));
+export async function fetchRegistryIndex(registryUrl: string): Promise<RegistryItem[]> {
+  const url = new URL(registryIndexUrl(registryUrl));
 
-	try {
-		const response = await fetch(url, {
-			next: { revalidate: 3600 }, // Cache for 1 hour
-		}).catch((error) => {
-			console.error(`Failed to fetch registry index from ${url}:`, error);
-			return;
-		});
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    }).catch((error) => {
+      console.error(`Failed to fetch registry index from ${url}:`, error);
+      return;
+    });
 
-		if (!response) {
-			return [];
-		}
+    if (!response) {
+      return [];
+    }
 
-		return itemsFromIndex(await response.json());
-	} catch (_error) {
-		return [];
-	}
+    return itemsFromIndex(await response.json());
+  } catch (_error) {
+    return [];
+  }
 }
 
 /**
  * Fetch item details with error handling and caching
  */
 export async function fetchItemDetails(
-	baseUrl: string,
-	itemName: string,
-	style = "default",
+  baseUrl: string,
+  itemName: string,
+  style = "default"
 ): Promise<RegistryItem> {
-	const detailsUrl = isFlatRegistryUrl(baseUrl)
-		? new URL(`${baseUrl.replace(/\/registry\.json$/, "")}/${itemName}.json`)
-		: new URL(
-				`${baseUrl.replace(/\/index\.json$/, "")}/styles/${style}/${itemName}.json`,
-			);
+  const detailsUrl = isFlatRegistryUrl(baseUrl)
+    ? new URL(`${baseUrl.replace(/\/registry\.json$/, "")}/${itemName}.json`)
+    : new URL(`${baseUrl.replace(/\/index\.json$/, "")}/styles/${style}/${itemName}.json`);
 
-	try {
-		const response = await fetch(detailsUrl, {
-			next: { revalidate: 3600 }, // Cache for 1 hour
-		});
+  try {
+    const response = await fetch(detailsUrl, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
 
-		if (!response.ok) {
-			throw new Error(`Failed to fetch item details: ${response.statusText}`);
-		}
+    if (!response.ok) {
+      throw new Error(`Failed to fetch item details: ${response.statusText}`);
+    }
 
-		const data = await response.json();
-		return {
-			...data,
-			componentUrl: detailsUrl.toString(),
-		};
-	} catch (error) {
-		console.error(`Failed to fetch item details from ${detailsUrl}:`, error);
-		throw error;
-	}
+    const data = await response.json();
+    return {
+      ...data,
+      componentUrl: detailsUrl.toString(),
+    };
+  } catch (error) {
+    console.error(`Failed to fetch item details from ${detailsUrl}:`, error);
+    throw error;
+  }
 }
 
 /**
  * Categorize items by type (Components/Blocks)
  */
-export function categorizeItems(
-	items: RegistryItem[],
-): Record<string, RegistryItem[]> {
-	return items.reduce(
-		(acc, item) => {
-			const category = item.type === "registry:block" ? "Blocks" : "Components";
-			acc[category] ??= [];
-			acc[category].push(item);
-			return acc;
-		},
-		{} as Record<string, RegistryItem[]>,
-	);
+export function categorizeItems(items: RegistryItem[]): Record<string, RegistryItem[]> {
+  return items.reduce(
+    (acc, item) => {
+      const category = item.type === "registry:block" ? "Blocks" : "Components";
+      acc[category] ??= [];
+      acc[category].push(item);
+      return acc;
+    },
+    {} as Record<string, RegistryItem[]>
+  );
 }
 
 /**
  * Group items by their categories
  */
-export function groupItemsByType(
-	items: RegistryItem[],
-): Record<string, RegistryItem[]> {
-	return items.reduce(
-		(acc, item) => {
-			const categories = item.categories ?? ["Uncategorized"];
-			for (const category of categories) {
-				acc[category] ??= [];
-				acc[category].push(item);
-			}
-			return acc;
-		},
-		{} as Record<string, RegistryItem[]>,
-	);
+export function groupItemsByType(items: RegistryItem[]): Record<string, RegistryItem[]> {
+  return items.reduce(
+    (acc, item) => {
+      const categories = item.categories ?? ["Uncategorized"];
+      for (const category of categories) {
+        acc[category] ??= [];
+        acc[category].push(item);
+      }
+      return acc;
+    },
+    {} as Record<string, RegistryItem[]>
+  );
 }
 
 /**
  * Search and filter items
  */
 export function searchItems(
-	items: RegistryItem[] | Record<string, RegistryItem[]>,
-	query = "",
-	filters: RegistryFilters = {},
+  items: RegistryItem[] | Record<string, RegistryItem[]>,
+  query = "",
+  filters: RegistryFilters = {}
 ): RegistryItem[] {
-	// Convert items object to array if needed
-	const itemsArray = Array.isArray(items) ? items : Object.values(items).flat();
+  // Convert items object to array if needed
+  const itemsArray = Array.isArray(items) ? items : Object.values(items).flat();
 
-	return itemsArray.filter((item) => {
-		// Type filter
-		if (filters.type && filters.type !== "all") {
-			if (filters.type === "components" && item.type !== "registry:ui") {
-				return false;
-			}
-			if (filters.type === "blocks" && item.type !== "registry:block") {
-				return false;
-			}
-		}
+  return itemsArray.filter((item) => {
+    // Type filter
+    if (filters.type && filters.type !== "all") {
+      if (filters.type === "components" && item.type !== "registry:ui") {
+        return false;
+      }
+      if (filters.type === "blocks" && item.type !== "registry:block") {
+        return false;
+      }
+    }
 
-		// Category filter
-		if (filters.category && filters.category !== "all") {
-			if (!item.categories?.includes(filters.category)) {
-				return false;
-			}
-		}
+    // Category filter
+    if (filters.category && filters.category !== "all") {
+      if (!item.categories?.includes(filters.category)) {
+        return false;
+      }
+    }
 
-		// Search query
-		if (query) {
-			const searchString = `${item.name} ${item.description}`.toLowerCase();
-			return searchString.includes(query.toLowerCase());
-		}
+    // Search query
+    if (query) {
+      const searchString = `${item.name} ${item.description}`.toLowerCase();
+      return searchString.includes(query.toLowerCase());
+    }
 
-		return true;
-	});
+    return true;
+  });
 }
 
 /**
  * Get the install command for a component
  * @see https://ui.shadcn.com/docs/cli
  */
-export function getInstallCommand(
-	component: RegistryItem,
-	registry?: Registry,
-) {
-	const componentUrl =
-		component.componentUrl ??
-		`${registry?.baseComponentUrl}/default/${component.name}.json`;
-	return `npx shadcn@latest add "${componentUrl}"`;
+export function getInstallCommand(component: RegistryItem, registry?: Registry) {
+  const componentUrl =
+    component.componentUrl ?? `${registry?.baseComponentUrl}/default/${component.name}.json`;
+  return `npx shadcn@latest add "${componentUrl}"`;
 }
 
 /**
  * Get the documentation URL for a component
  */
 export function getDocumentationUrl(
-	component: RegistryItem,
-	registry?: Registry,
+  component: RegistryItem,
+  registry?: Registry
 ): string | undefined {
-	if (!registry?.baseDocsUrl) return undefined;
-	return `${registry.baseDocsUrl}/${component.name}`;
+  if (!registry?.baseDocsUrl) return undefined;
+  return `${registry.baseDocsUrl}/${component.name}`;
 }
 
 /**
  * Validate if a string is a URL
  */
 export function isValidUrl(str: string): boolean {
-	try {
-		new URL(str.trim());
-		return true;
-	} catch {
-		return false;
-	}
+  try {
+    new URL(str.trim());
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /**
  * Validate if a string is a valid install command
  */
 export function isValidCommand(str: string): boolean {
-	const commandPatterns = [
-		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add/,
-		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add "https?:\/\/[^"]+"/,
-	];
-	return commandPatterns.some((pattern) => pattern.test(str.trim()));
+  const commandPatterns = [
+    /^(npx|pnpm dlx|bunx --bun) shadcn@latest add/,
+    /^(npx|pnpm dlx|bunx --bun) shadcn@latest add "https?:\/\/[^"]+"/,
+  ];
+  return commandPatterns.some((pattern) => pattern.test(str.trim()));
 }
 
 /**
  * Format a URL into a valid install command
  */
 export function formatUrlToCommand(url: string): string {
-	return `npx shadcn@latest add "${url.trim()}"`;
+  return `npx shadcn@latest add "${url.trim()}"`;
 }

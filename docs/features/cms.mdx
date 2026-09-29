@@ -26,14 +26,14 @@ The admin panel uses Payload's Lexical rich text editor for content authoring.
 
 Defined in `src/lib/payload/collections/`:
 
-| Collection | Purpose |
-|-----------|---------|
-| **Users** | Linked to app users table, manages credentials auth |
-| **Pages** | Dynamic pages with layout blocks |
-| **Media** | File and image uploads |
-| **FAQs** | FAQ entries |
-| **Features** | Feature definitions for marketing pages |
-| **Testimonials** | Customer testimonials |
+| Collection       | Purpose                                             |
+| ---------------- | --------------------------------------------------- |
+| **Users**        | Linked to app users table, manages credentials auth |
+| **Pages**        | Dynamic pages with layout blocks                    |
+| **Media**        | File and image uploads                              |
+| **FAQs**         | FAQ entries                                         |
+| **Features**     | Feature definitions for marketing pages             |
+| **Testimonials** | Customer testimonials                               |
 
 ## Globals
 
@@ -62,6 +62,7 @@ const pages = await payload.find({ collection: "pages" });
 ## Storage
 
 Payload supports two storage backends:
+
 - **AWS S3** - Set `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_BUCKET_NAME`
 - **Vercel Blob** - Set `BLOB_READ_WRITE_TOKEN`
 

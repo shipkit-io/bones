@@ -58,4 +58,3 @@ export const ShinyButton = ({ children, className, ...props }: ShinyButtonProps)
     </motion.button>
   );
 };
-

@@ -34,7 +34,8 @@ export default function Page() {
         softwareSourceCode
         product={{
           name: "Bones - Next.js SaaS Boilerplate",
-          description: "Free, open-source Next.js starter kit with authentication, Shadcn UI, and one-click Vercel deploy.",
+          description:
+            "Free, open-source Next.js starter kit with authentication, Shadcn UI, and one-click Vercel deploy.",
           image: "https://bones.sh/og",
           price: "0",
           priceCurrency: "USD",
@@ -43,29 +44,33 @@ export default function Page() {
           questions: [
             {
               question: "Is Bones free to use?",
-              answer: "Yes, Bones is completely free and open-source under the MIT license. You own 100% of the code.",
+              answer:
+                "Yes, Bones is completely free and open-source under the MIT license. You own 100% of the code.",
             },
             {
               question: "What tech stack does Bones use?",
-              answer: "Bones uses Next.js 16, React 19, TypeScript, Tailwind CSS, Shadcn/UI, and supports NextAuth + Better Auth for authentication.",
+              answer:
+                "Bones uses Next.js 16, React 19, TypeScript, Tailwind CSS, Shadcn/UI, and supports NextAuth + Better Auth for authentication.",
             },
             {
               question: "How do I deploy Bones?",
-              answer: "Click the Deploy with Vercel button for one-click deployment. No environment variables are needed to start — the setup wizard guides you through configuration.",
+              answer:
+                "Click the Deploy with Vercel button for one-click deployment. No environment variables are needed to start — the setup wizard guides you through configuration.",
             },
             {
               question: "What is the difference between Bones and ShipKit?",
-              answer: "Bones is the free, open-source foundation. ShipKit is the premium framework built on top of Bones that adds database (Drizzle + PostgreSQL), payments (Stripe), CMS (Payload + Builder.io), AI integrations, and 100+ additional components.",
+              answer:
+                "Bones is the free, open-source foundation. ShipKit is the premium framework built on top of Bones that adds database (Drizzle + PostgreSQL), payments (Stripe), CMS (Payload + Builder.io), AI integrations, and 100+ additional components.",
             },
           ],
         }}
       />
-      <div className="container flex flex-col items-center justify-center gap-2xl py-6 text-center min-h-screen">
+      <div className="container flex min-h-screen flex-col items-center justify-center gap-2xl py-6 text-center">
         <PageHeader className="flex flex-col items-center justify-center">
           <PageHeaderHeading
             className={cn(
-              "relative font-bold md:text-[6rem] py-6 flex items-center justify-center gap-3",
-              font.className,
+              "relative flex items-center justify-center gap-3 py-6 font-bold md:text-[6rem]",
+              font.className
             )}
           >
             Bones
@@ -74,8 +79,8 @@ export default function Page() {
             Ship websites fast with AI.
           </PageHeaderDescription>
           <PageHeaderDescription className="text-lg text-muted-foreground">
-            Launch a full-stack React + Next.js starter kit configured for
-            Cursor, Claude, and Shadcn UI.
+            Launch a full-stack React + Next.js starter kit configured for Cursor, Claude, and
+            Shadcn UI.
           </PageHeaderDescription>
 
           <div className="my-4 flex flex-col gap-md md:flex-row">
@@ -93,7 +98,7 @@ export default function Page() {
               href={routes.external.shipkit}
               className={cn(
                 buttonVariants({ variant: "link", size: "sm" }),
-                "text-muted-foreground hover:text-primary transition-colors",
+                "text-muted-foreground transition-colors hover:text-primary"
               )}
             >
               Need a starter with batteries included?

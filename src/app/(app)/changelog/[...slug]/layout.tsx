@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import { getChangelogEntry, isLegacyUnreleasedSlug, UNRELEASED_SLUG } from "@/lib/changelog";
 
 interface Props {
-	children: ReactNode;
-	params: Promise<{ slug: string[] }>;
+  children: ReactNode;
+  params: Promise<{ slug: string[] }>;
 }
 
 /**
@@ -20,12 +20,12 @@ interface Props {
  * still carry those slugs. They redirect to the stable slug instead of 404ing.
  */
 export default async function ChangelogEntryLayout({ children, params }: Props) {
-	const { slug } = await params;
-	const key = slug.join("/");
-	const entry = await getChangelogEntry(key);
-	if (!entry) {
-		if (isLegacyUnreleasedSlug(key)) permanentRedirect(`/changelog/${UNRELEASED_SLUG}`);
-		notFound();
-	}
-	return children;
+  const { slug } = await params;
+  const key = slug.join("/");
+  const entry = await getChangelogEntry(key);
+  if (!entry) {
+    if (isLegacyUnreleasedSlug(key)) permanentRedirect(`/changelog/${UNRELEASED_SLUG}`);
+    notFound();
+  }
+  return children;
 }
