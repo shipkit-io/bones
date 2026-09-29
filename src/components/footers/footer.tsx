@@ -126,7 +126,7 @@ export const Footer: FC<FooterProps> = ({
 
   return (
     <footer className={cn(footerStyles({ variant }), className)} {...rest}>
-      <div className="container relative flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
+      <div className="relative container flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
         <div className="flex flex-col justify-between gap-2xl lg:flex-row">
           <div className="flex flex-col gap-2xl">
             <Link
