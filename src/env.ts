@@ -57,6 +57,9 @@ export const env = createEnv({
     DB_PREFIX: z.string().default("db"),
 
     // ======== Authentication ========
+    // Which server-side auth implementation owns sessions. Unset lets
+    // src/lib/auth/auth-strategy.ts pick from the configured features.
+    AUTH_STRATEGY: z.enum(["better-auth", "authjs"]).optional(),
     AUTH_SECRET: z.string().optional(),
     AUTH_URL: z.string().url().optional(),
     // ======== Credentials (requires DB) ========
@@ -205,6 +208,9 @@ export const env = createEnv({
     // Clerk Authentication (alternative to Auth.js)
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
 
+    // Mirror of AUTH_STRATEGY (features-config.ts) so client code agrees with the server
+    NEXT_PUBLIC_AUTH_STRATEGY: z.enum(["better-auth", "authjs"]).optional(),
+
     // ======== Supabase Authentication ========
     NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
@@ -324,6 +330,7 @@ export const env = createEnv({
     DB_PREFIX: process.env.DB_PREFIX,
 
     // Authentication
+    AUTH_STRATEGY: process.env.AUTH_STRATEGY,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_URL: process.env.AUTH_URL,
     AUTH_CREDENTIALS_ENABLED: process.env.AUTH_CREDENTIALS_ENABLED,
@@ -461,6 +468,8 @@ export const env = createEnv({
 
     // Clerk Authentication (alternative to Auth.js)
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+
+    NEXT_PUBLIC_AUTH_STRATEGY: process.env.NEXT_PUBLIC_AUTH_STRATEGY,
 
     // Auth.js Feature Flags
     NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED: process.env.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED,

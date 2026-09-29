@@ -46,6 +46,8 @@ export function envIsTrue(name: string): boolean {
  * Security: Only whitelisted keys that are intended to be public are mirrored.
  */
 const PUBLIC_ENV_BASE_KEYS = [
+  // Which auth implementation is active; not a secret, and client code reads it
+  "AUTH_STRATEGY",
   // Core integrations that expect public keys
   "BUILDER_API_KEY",
   "CLERK_PUBLISHABLE_KEY",
@@ -168,9 +170,12 @@ buildTimeFeatures.DARK_MODE_ENABLED = !envIsTrue("DISABLE_DARK_MODE");
 buildTimeFeatures.HAPTICS_ENABLED = !envIsTrue("DISABLE_HAPTICS");
 
 // Authentication
-// Better Auth can also derive its secret from APP_SECRET
+// Better Auth can also derive its secret from APP_SECRET. Its adapter needs a
+// database, so DATABASE_URL is part of the check.
 buildTimeFeatures.BETTER_AUTH_ENABLED =
-  secretProvidedOrDerivable("BETTER_AUTH_SECRET") && !envIsTrue("DISABLE_BETTER_AUTH");
+  buildTimeFeatures.DATABASE_ENABLED &&
+  secretProvidedOrDerivable("BETTER_AUTH_SECRET") &&
+  !envIsTrue("DISABLE_BETTER_AUTH");
 buildTimeFeatures.AUTH_CLERK_ENABLED =
   hasEnv("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY") &&
   !envIsTrue("DISABLE_AUTH_CLERK");
