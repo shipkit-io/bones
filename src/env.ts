@@ -1,6 +1,7 @@
 import { vercel } from "@t3-oss/env-core/presets-zod";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+
 // Helper function for boolean feature flags defined at build time
 const zBooleanFeatureFlag = z
   .enum(["true", "false"])
@@ -59,7 +60,8 @@ export const env = createEnv({
     // ======== Authentication ========
     // Which server-side auth implementation owns sessions. Unset lets
     // src/lib/auth/auth-strategy.ts pick from the configured features.
-    AUTH_STRATEGY: z.enum(["better-auth", "authjs"]).optional(),
+    // "clerk" is never picked automatically (it needs a paid Clerk account).
+    AUTH_STRATEGY: z.enum(["better-auth", "authjs", "clerk"]).optional(),
     AUTH_SECRET: z.string().optional(),
     AUTH_URL: z.string().url().optional(),
     // ======== Credentials (requires DB) ========
@@ -209,7 +211,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
 
     // Mirror of AUTH_STRATEGY (features-config.ts) so client code agrees with the server
-    NEXT_PUBLIC_AUTH_STRATEGY: z.enum(["better-auth", "authjs"]).optional(),
+    NEXT_PUBLIC_AUTH_STRATEGY: z.enum(["better-auth", "authjs", "clerk"]).optional(),
 
     // ======== Supabase Authentication ========
     NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),

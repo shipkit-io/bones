@@ -6,7 +6,7 @@ import { buildTimeFeatures } from "@/config/features-config";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
-import { isBetterAuthActive } from "@/lib/auth/auth-strategy";
+import { isBetterAuthActive, isClerkActive } from "@/lib/auth/auth-strategy";
 import { logger } from "@/lib/logger";
 import { redirect, routeRedirect } from "@/lib/utils/redirect";
 import { authOptions } from "@/server/auth-js/auth.config";
@@ -16,6 +16,7 @@ import {
   betterAuthSignOut,
   getBetterAuthSession,
 } from "@/server/better-auth/facade";
+import { clerkSignIn, clerkSignOut, getClerkSession } from "@/server/clerk/facade";
 import { db } from "@/server/db";
 import { accounts, sessions, users, verificationTokens } from "@/server/db/schema";
 import type { UserRole } from "@/types/user";
@@ -122,29 +123,31 @@ const {
       unstable_update: () => Promise.resolve({} as any),
     };
 /**
- * Strategy dispatch. `getAuthStrategy()` picks Better Auth or Auth.js from the
- * environment; the exports below keep the Auth.js signatures either way so the
- * 50-odd importers of this module never see the difference. Auth.js stays
- * exactly as it was when it is the active strategy.
+ * Strategy dispatch. `getAuthStrategy()` picks Clerk, Better Auth or Auth.js
+ * from the environment; the exports below keep the Auth.js signatures either
+ * way so the 50-odd importers of this module never see the difference. Auth.js
+ * stays exactly as it was when it is the active strategy.
  */
 type NextAuthSignIn = NextAuthResult["signIn"];
 type NextAuthSignOut = NextAuthResult["signOut"];
 type NextAuthUpdate = NextAuthResult["unstable_update"];
 
 const signIn = (async (...args: Parameters<NextAuthSignIn>) => {
+  if (isClerkActive()) return clerkSignIn(args[0], args[1]);
   if (isBetterAuthActive()) return betterAuthSignIn(args[0], args[1]);
   return (nextAuthSignIn as NextAuthSignIn)(...args);
 }) as NextAuthSignIn;
 
 const signOut = (async (...args: Parameters<NextAuthSignOut>) => {
+  if (isClerkActive()) return clerkSignOut(args[0]);
   if (isBetterAuthActive()) return betterAuthSignOut(args[0]);
   return (nextAuthSignOut as NextAuthSignOut)(...args);
 }) as NextAuthSignOut;
 
 const update = (async (...args: Parameters<NextAuthUpdate>) => {
-  if (isBetterAuthActive()) {
-    // Better Auth sessions are rows, not tokens; there is nothing to refresh here.
-    logger.debug("[auth] update() is a no-op under Better Auth");
+  if (isClerkActive() || isBetterAuthActive()) {
+    // Clerk and Better Auth sessions are not tokens; there is nothing to refresh here.
+    logger.debug("[auth] update() is a no-op under Clerk and Better Auth");
     return null;
   }
   return (nextAuthUpdate as NextAuthUpdate)(...args);
@@ -164,13 +167,18 @@ type ProtectedSession = Session & { user: NonNullable<Session["user"]> };
 function authWithOptions(props: { protect: true } & AuthProps): Promise<ProtectedSession>;
 function authWithOptions(props?: AuthProps): Promise<Session | null>;
 async function authWithOptions(props?: AuthProps) {
-  const session = isBetterAuthActive() ? await getBetterAuthSession() : await nextAuthAuth();
+  const session = isClerkActive()
+    ? await getClerkSession()
+    : isBetterAuthActive()
+      ? await getBetterAuthSession()
+      : await nextAuthAuth();
   const { errorCode, redirect: shouldRedirect, nextUrl } = props ?? {};
 
   // Route protected
   // Use clear boolean logic without nullish coalescing on non-nullish expressions
   const protect =
     (props?.protect ?? false) || props?.redirectTo !== undefined || (shouldRedirect ?? false);
+  // Under Clerk, src/proxy.ts forwards the sign-in route to Clerk's hosted page.
   const redirectTo = props?.redirectTo ?? routes.auth.signIn;
 
   const handleRedirect = (code: string) => {

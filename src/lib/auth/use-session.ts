@@ -8,7 +8,8 @@ import {
 } from "next-auth/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { routes } from "@/config/routes";
-import { isBetterAuthActive } from "@/lib/auth/auth-strategy";
+import { isBetterAuthActive, isClerkActive } from "@/lib/auth/auth-strategy";
+import { clerkSignIn, clerkSignOut, useClerkSession } from "@/lib/auth/clerk-client";
 import { type BetterAuthSessionResult, mapBetterAuthSession } from "@/lib/auth/session-mapping";
 import { authClient } from "@/lib/better-auth/client";
 
@@ -19,11 +20,12 @@ import { authClient } from "@/lib/better-auth/client";
  * `next-auth/react`. Under Auth.js they are the `next-auth/react` originals.
  * Under Better Auth, `useSession` reads `authClient.useSession()` and maps it
  * to `{ data: { user, expires } | null, status, update }`, and `signIn` /
- * `signOut` call the Better Auth client. The strategy is fixed for the life of
- * the bundle, so the choice is made once at module load.
+ * `signOut` call the Better Auth client. Under Clerk the same three come from
+ * `@/lib/auth/clerk-client`. The strategy is fixed for the life of the bundle,
+ * so the choice is made once at module load.
  *
  * `SessionProvider` still comes from `next-auth/react`; it wraps the tree and
- * is harmless when Better Auth owns the session.
+ * is harmless when Better Auth or Clerk owns the session.
  */
 
 type NextAuthUseSession = typeof useNextAuthSession;
@@ -93,7 +95,11 @@ function useBetterAuthSession<R extends boolean>(options?: UseSessionOptions<R>)
 }
 
 export const useSession = (
-  isBetterAuthActive() ? useBetterAuthSession : useNextAuthSession
+  isClerkActive()
+    ? useClerkSession
+    : isBetterAuthActive()
+      ? useBetterAuthSession
+      : useNextAuthSession
 ) as NextAuthUseSession;
 
 async function betterAuthSignIn(provider: string | undefined, options?: SignInOptionsLike) {
@@ -135,7 +141,8 @@ async function betterAuthSignIn(provider: string | undefined, options?: SignInOp
  * client when it is active. Social providers start the OAuth flow, and
  * `"credentials"` signs in with email and password. `redirect: false` returns
  * the `{ ok, error, url }` response instead of navigating. Auth.js-only
- * providers (`guest`, `resend`) always go through Auth.js.
+ * providers (`guest`, `resend`) always go through Auth.js. Under Clerk every
+ * provider goes to Clerk's hosted sign-in page.
  */
 export const signIn = (async (
   provider?: string,
@@ -144,6 +151,7 @@ export const signIn = (async (
 ) => {
   const opts =
     options instanceof FormData ? (Object.fromEntries(options) as SignInOptionsLike) : options;
+  if (isClerkActive()) return clerkSignIn(provider, opts);
   if (!isBetterAuthActive() || (provider && AUTHJS_ONLY_PROVIDERS.has(provider))) {
     return (nextAuthSignIn as (...args: unknown[]) => Promise<unknown>)(
       provider,
@@ -155,11 +163,12 @@ export const signIn = (async (
 }) as NextAuthSignIn;
 
 /**
- * `signOut(options)` from `next-auth/react`, or the Better Auth client when it
- * is active: revokes the session, then navigates to `callbackUrl` /
+ * `signOut(options)` from `next-auth/react`, or the Better Auth or Clerk client
+ * when one is active: revokes the session, then navigates to `callbackUrl` /
  * `redirectTo` (default home) unless `redirect: false`.
  */
 export const signOut = (async (options?: SignOutOptionsLike) => {
+  if (isClerkActive()) return clerkSignOut(options);
   if (!isBetterAuthActive()) {
     return (nextAuthSignOut as (...args: unknown[]) => Promise<unknown>)(options);
   }
