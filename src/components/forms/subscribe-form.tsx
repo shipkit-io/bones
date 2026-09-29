@@ -3,16 +3,15 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import type React from "react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { addAudienceUser } from "@/server/actions/resend-actions";
 
 export const SubscribeForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,26 +23,21 @@ export const SubscribeForm: React.FC = () => {
       if (result.success) {
         setStatus("success");
         setEmail("");
-        toast({
-          title: "Subscribed!",
+        toast.success("Subscribed!", {
           description: "You've been successfully subscribed to our newsletter.",
         });
       } else {
         console.error("Error adding contact:", result.error);
         setStatus("error");
-        toast({
-          title: "Subscription failed",
-          description: result.error || "Failed to subscribe. Please try again.",
-          variant: "destructive",
+        toast.error("Subscription failed", {
+          description: result.error ?? "Failed to subscribe. Please try again.",
         });
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       setStatus("error");
-      toast({
-        title: "Subscription failed",
+      toast.error("Subscription failed", {
         description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
       });
     } finally {
       // Reset status after a delay
@@ -70,7 +64,7 @@ export const SubscribeForm: React.FC = () => {
           variant="outline"
           disabled={status === "loading"}
           className={cn(
-            "absolute bottom-0 right-0 top-0 z-10 rounded-s-none border-0 border-s-0 bg-transparent text-primary"
+            "absolute top-0 right-0 bottom-0 z-10 rounded-s-none border-0 border-s-0 bg-transparent text-primary"
           )}
         >
           {status === "loading" ? (

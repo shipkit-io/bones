@@ -14,12 +14,10 @@ export const addContactToAudience = async (email: string) => {
       throw new Error("Missing Resend API key or audience ID");
     }
 
-    const result = await resend?.contacts.create({
+    const _result = await resend?.contacts.create({
       email,
       audienceId: env.RESEND_AUDIENCE_ID,
     });
-
-    console.debug("result", result);
     return { success: true };
   } catch (error: unknown) {
     if (error instanceof Error) {

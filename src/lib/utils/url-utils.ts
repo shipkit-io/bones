@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/config/base-url";
+
 /**
  * Validate that a URL is properly formatted
  */
@@ -24,3 +26,8 @@ export const isVercel = Boolean(process.env.VERCEL);
  * Get the current environment
  */
 export const environment = process.env.NODE_ENV || "development";
+
+/**
+ * Check if we're running at shipkit.io
+ */
+export const isShipkitIo = BASE_URL.toLowerCase().includes("shipkit.io");

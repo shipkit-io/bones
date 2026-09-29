@@ -1,16 +1,18 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { getChangelogEntries } from "@/lib/changelog";
+import { describeEntrySize } from "@/lib/changelog-types";
 import { formatDate } from "@/lib/utils/format-date";
 
 /**
- * The slow part of /changelog (a GitHub fetch, cached for an hour). It lives
- * in its own async component so the page can wrap it in <Suspense> and stream
- * a skeleton, instead of relying on a segment loading.tsx. A segment-level
- * loading file would also wrap /changelog/[...slug] and turn its notFound()
- * into a soft 404.
+ * The slow part of /changelog. It lives in its own async component so the
+ * page can wrap it in <Suspense> and stream a skeleton, instead of relying on
+ * a segment loading.tsx. A segment-level loading file would also wrap
+ * /changelog/[...slug] and turn its notFound() into a soft 404.
  */
 export async function ChangelogEntries() {
+  await headers();
   const entries = await getChangelogEntries();
 
   if (entries.length === 0) {
@@ -19,13 +21,14 @@ export async function ChangelogEntries() {
 
   return (
     <div className="relative space-y-0">
-      <div className="absolute bottom-2 left-[7px] top-2 w-px bg-border" />
+      <div className="absolute top-2 bottom-2 left-[7px] w-px bg-border" />
 
       {entries.map((entry) => {
         const date = formatDate(entry.publishedAt);
+        const size = describeEntrySize(entry);
         return (
           <div key={entry.slug} className="relative pb-10 pl-8">
-            <div className="absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border-2 border-primary bg-background" />
+            <div className="absolute top-1.5 left-0 h-[15px] w-[15px] rounded-full border-2 border-primary bg-background" />
 
             <div className="mb-1 flex items-center gap-3">
               {entry.badge && (
@@ -34,10 +37,7 @@ export async function ChangelogEntries() {
                 </Badge>
               )}
               {date && <span className="text-sm text-muted-foreground">{date}</span>}
-              <span className="text-xs text-muted-foreground">
-                {entry.commitCount} commit
-                {entry.commitCount !== 1 ? "s" : ""}
-              </span>
+              {size && <span className="text-xs text-muted-foreground">{size}</span>}
             </div>
 
             <Link href={`/changelog/${entry.slug}`} className="group">

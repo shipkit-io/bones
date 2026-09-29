@@ -39,7 +39,7 @@ export const DismissibleCard = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-2 top-2 h-6 w-6"
+          className="absolute top-2 right-2 h-6 w-6"
           onClick={handleDismiss}
           title="Dismiss"
         >

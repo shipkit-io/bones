@@ -37,6 +37,12 @@ export default defineConfig({
   test: {
     environment: "jsdom", // DOM environment for React component testing
     globals: true, // Enable global test functions (describe, it, expect)
+    server: {
+      deps: {
+        // Inline next-auth so Vite aliases (e.g. next/server shim) apply during unit tests.
+        inline: ["next-auth", "next-view-transitions"],
+      },
+    },
     setupFiles: [
       "./tests/setup-env.ts", // Environment variables for testing
       "./tests/setup.ts", // Testing utilities and global setup

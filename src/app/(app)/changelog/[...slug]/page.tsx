@@ -1,17 +1,21 @@
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { constructMetadata, routeMetadata } from "@/config/metadata";
+import { constructMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site-config";
 import { getChangelogEntries, getChangelogEntry } from "@/lib/changelog";
+import { describeEntrySize } from "@/lib/changelog-types";
 import { cn } from "@/lib/utils";
 import { formatDate, formatDateTimeAttribute } from "@/lib/utils/format-date";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface Props {
   params: Promise<{ slug: string[] }>;
@@ -30,16 +34,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await getChangelogEntry(slug);
 
   if (!entry) {
-    return constructMetadata(routeMetadata.changelog);
+    return constructMetadata({
+      title: `Changelog | ${siteConfig.title}`,
+    });
   }
 
   return constructMetadata({
-    title: `${entry.title} — Changelog`,
+    title: `${entry.title} | ${siteConfig.title} Changelog`,
     description: entry.description,
   });
 }
 
 export default async function ChangelogEntryPage({ params }: Props) {
+  await headers();
   const resolvedParams = await params;
   const slug = resolvedParams.slug.join("/");
   const entry = await getChangelogEntry(slug);
@@ -50,6 +57,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
 
   const dateTimeAttr = formatDateTimeAttribute(entry.publishedAt);
   const displayDate = formatDate(entry.publishedAt);
+  const entrySize = describeEntrySize(entry);
 
   return (
     <div className="mx-auto w-full max-w-3xl">
@@ -77,10 +85,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
                 {displayDate}
               </time>
             )}
-            <span className="text-xs text-muted-foreground">
-              {entry.commitCount} commit
-              {entry.commitCount !== 1 ? "s" : ""}
-            </span>
+            {entrySize && <span className="text-xs text-muted-foreground">{entrySize}</span>}
           </div>
           <h1 className="text-3xl font-bold tracking-tight">{entry.title}</h1>
           {entry.description && (
@@ -88,7 +93,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
           )}
         </header>
 
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div className="prose max-w-none prose-neutral dark:prose-invert">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.content}</ReactMarkdown>
         </div>
       </article>

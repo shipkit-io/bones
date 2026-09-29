@@ -8,7 +8,9 @@
       "!**/.next",
       "!**/*.css",
       "!**/src/components/ui/**/*",
-      "!**/public/workers/**"
+      "!**/public/workers/**",
+      "!**/public/**/*.js",
+      "!**/public/**/*.mjs"
     ]
   },
   "formatter": {

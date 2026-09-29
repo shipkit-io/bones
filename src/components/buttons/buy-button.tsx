@@ -1,11 +1,11 @@
 "use client";
 
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 
 export const BuyButton = () => {
   const { data: session } = useSession();

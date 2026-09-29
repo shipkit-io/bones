@@ -1,11 +1,11 @@
 "use client";
 
 import "@/lib/fontawesome";
-import { cn } from "@/lib/utils";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LucideIcon } from "lucide-react";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -54,7 +54,7 @@ export function Card({ title, icon, children, className, ...props }: CardProps) 
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <h3 className="font-semibold">{title}</h3>
-            <div className="absolute right-6 top-6">{renderIcon()}</div>
+            <div className="absolute top-6 right-6">{renderIcon()}</div>
           </div>
           <div className="text-sm text-muted-foreground">{children}</div>
         </div>

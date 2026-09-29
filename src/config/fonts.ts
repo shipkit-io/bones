@@ -1,4 +1,4 @@
-import { Poppins as FontSans, Noto_Serif as FontSerif } from "next/font/google";
+import { Inter as FontSans, Noto_Serif as FontSerif } from "next/font/google";
 
 export const fontSerif = FontSerif({
   weight: ["400", "500", "600", "700"],
@@ -8,9 +8,8 @@ export const fontSerif = FontSerif({
   display: "swap",
 });
 
+// Inter is a variable font: one file covers every weight, so no `weight` list here.
 export const fontSans = FontSans({
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",

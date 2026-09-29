@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { BlogPostListSkeleton } from "@/components/modules/blog/skeleton";
-import { constructMetadata, routeMetadata } from "@/config/metadata";
+import { constructMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site-config";
 import { ChangelogEntries } from "./_components/changelog-entries";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-export const metadata: Metadata = constructMetadata(routeMetadata.changelog);
+export const metadata: Metadata = constructMetadata({
+  title: `Changelog | ${siteConfig.title}`,
+  description: `See what's new in ${siteConfig.title}. Latest updates, features, and fixes.`,
+});
 
 export default function ChangelogPage() {
   return (

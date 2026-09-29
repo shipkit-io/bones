@@ -38,14 +38,15 @@ export function StepPreview({ step, direction }: { step: Step; direction: 1 | -1
                 className="object-cover"
               />
             ) : (
+              // biome-ignore lint/a11y/useMediaCaption: optional demo media without captions
               <video src={step.media.src} controls className="h-full w-full object-cover" />
             )}
           </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={controls}
-            className="absolute bottom-0 left-0 right-0 p-6"
+            className="absolute right-0 bottom-0 left-0 p-6"
           >
             <h3 className="mb-2 text-2xl font-semibold text-white">{step.title}</h3>
             <p className="hidden text-white md:block">{step.full_description}</p>

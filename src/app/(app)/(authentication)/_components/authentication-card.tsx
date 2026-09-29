@@ -9,7 +9,7 @@ export function AuthenticationCard({
   className?: string;
 }) {
   return (
-    <Card className={cn("mx-auto min-w-[400px] max-w-[400px] overflow-hidden", className)}>
+    <Card className={cn("mx-auto max-w-[400px] min-w-[400px] overflow-hidden", className)}>
       {children}
     </Card>
   );

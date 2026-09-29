@@ -1,9 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
 import { getDependencies, getInstalledComponents } from "../_actions/registry";
 import type { RegistryItem } from "../_lib/types";
 import type { StyleMode } from "./types";
@@ -47,7 +47,7 @@ export function ComponentStats({ component, currentStyle }: ComponentStatsProps)
 
         // Check dependencies
         const dependencies: DependencyStats = {
-          total: component.dependencies?.length || 0,
+          total: component.dependencies?.length ?? 0,
           installed: 0,
           missing: [],
         };
@@ -66,7 +66,7 @@ export function ComponentStats({ component, currentStyle }: ComponentStatsProps)
 
         // Check registry dependencies
         const registryDependencies: DependencyStats = {
-          total: component.registryDependencies?.length || 0,
+          total: component.registryDependencies?.length ?? 0,
           installed: 0,
           missing: [],
         };

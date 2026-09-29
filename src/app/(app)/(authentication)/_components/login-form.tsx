@@ -68,7 +68,7 @@ export function AuthForm({
           </div>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
+      <div className="text-center text-xs text-balance text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
         By clicking continue, you agree to our <Link href={routes.terms}>Terms of Service</Link> and{" "}
         <Link href={routes.privacy}>Privacy Policy</Link>.
       </div>

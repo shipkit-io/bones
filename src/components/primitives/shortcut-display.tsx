@@ -16,19 +16,19 @@ interface ShortcutDisplayProps {
 
 // Default styles mimicking Shadcn kbd
 const defaultKbdStyles =
-  "h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium";
+  "h-5 select-none items-center gap-1 rounded-lg border bg-muted px-1.5 font-mono text-[10px] font-medium";
 
 /**
  * The key bound to an action, as a person reads it.
  *
  * This is the only way a shortcut should reach the screen. Anything that
  * hand-writes "⌘S" into markup drifts from the binding or outlives it: the
- * user menu did exactly that, and all eight of its hints named a key nothing
- * was listening for.
+ * user menus did exactly that, and six of their eight hints named a key
+ * nothing was listening for.
  *
  * When an action has more than one binding, `shortcutConfig` order decides
- * which is shown, so list the one you want advertised first (mod+K before "/"
- * for search). Formatting itself is pure and lives in the config module.
+ * which is shown, so list the one you want advertised first (mod+K before
+ * "/" for search). Formatting itself is pure and lives in the config module.
  */
 export const ShortcutDisplay = ({
   action,

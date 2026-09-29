@@ -1,5 +1,5 @@
-import type { MainNavItem, SidebarNavItem } from "@/types/nav";
 import { routes } from "@/config/routes";
+import type { MainNavItem, SidebarNavItem } from "@/types/nav";
 
 export interface DocsConfig {
   mainNav: MainNavItem[];
@@ -16,10 +16,6 @@ export const docsConfig: DocsConfig = {
     {
       title: "Features",
       href: routes.features,
-    },
-    {
-      title: "CLI",
-      href: routes.cli,
     },
     {
       title: "Sign In",
@@ -43,16 +39,6 @@ export const docsConfig: DocsConfig = {
         {
           title: "Features",
           href: routes.features,
-          items: [],
-        },
-        {
-          title: "CLI",
-          href: routes.cli,
-          items: [],
-        },
-        {
-          title: "Bones CLI WWW",
-          href: routes.bones.cliWww,
           items: [],
         },
       ],

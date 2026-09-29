@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 import { useEffect, useMemo } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,6 +22,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { debounce } from "@/lib/utils/debounce";
 import { ModalProvider } from "./modal-context";
 
@@ -106,7 +106,7 @@ export function Modal({
 
   useEffect(() => {
     return () => {
-      const debounced = debouncedRouteBack as typeof debouncedRouteBack & { cancel?: () => void };
+      const debounced = debouncedRouteBack;
       if (typeof debounced.cancel === "function") {
         debounced.cancel();
       }

@@ -1,9 +1,9 @@
 "use client";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 import Convert from "ansi-to-html";
 import { useEffect, useMemo, useRef } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 interface TerminalProps {
   output: string[];
@@ -53,9 +53,10 @@ export function Terminal({ output, className }: TerminalProps) {
       <div className="p-4 font-mono text-sm leading-5 text-[#D4D4D4]">
         {processedOutput.map((line, i) => (
           <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: terminal output lines are append-only and have no stable id
             key={`${i}-${line.slice(0, 20)}`}
             className="min-h-[6px]"
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: ansi-to-html escapes input (escapeXML: true); only its own color spans are injected
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted internal HTML source
             dangerouslySetInnerHTML={{
               __html: convert.toHtml(cleanAnsi(line)) || "&nbsp;",
             }}

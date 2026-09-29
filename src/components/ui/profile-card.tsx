@@ -34,7 +34,7 @@ export function ProfileCard({
 }: Partial<ProfileCardProps> = defaultProfile) {
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="rounded-2xl border border-zinc-200 bg-white/50 p-6 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/50">
+      <div className="rounded-2xl border border-zinc-200 bg-white/50 p-6 backdrop-blur-xs dark:border-zinc-800 dark:bg-zinc-900/50">
         <div className="flex items-start gap-5">
           <Image
             src={avatar}

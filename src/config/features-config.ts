@@ -98,7 +98,7 @@ function mirrorPublicEnvVariables(): Record<`NEXT_PUBLIC_${string}`, string> {
     }
   }
 
-  return mirrored as Record<`NEXT_PUBLIC_${string}`, string>;
+  return mirrored;
 }
 
 // Execute mirroring immediately so feature detection below can see NEXT_PUBLIC_* keys
@@ -151,6 +151,9 @@ buildTimeFeatures.BUILDER_ENABLED =
   hasEnv("NEXT_PUBLIC_BUILDER_API_KEY") && !envIsTrue("DISABLE_BUILDER");
 buildTimeFeatures.MDX_ENABLED = !envIsTrue("DISABLE_MDX");
 buildTimeFeatures.PWA_ENABLED = !envIsTrue("DISABLE_PWA");
+
+// evlog logging/audit trial (off by default; enable via ENABLE_EVLOG — LAC-3361)
+buildTimeFeatures.EVLOG_ENABLED = envIsTrue("ENABLE_EVLOG");
 
 // Developer tools (off by default; enable via ENABLE_DEVTOOLS)
 buildTimeFeatures.DEVTOOLS_ENABLED = envIsTrue("ENABLE_DEVTOOLS");
@@ -318,14 +321,10 @@ export const buildTimeFeatureFlags = Object.fromEntries(
 ) as Record<`NEXT_PUBLIC_FEATURE_${string}`, string>;
 
 // Always export AUTH_ENABLED regardless of its value for client-side checks
-if (!buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED) {
-  buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED = buildTimeFeatures.AUTH_ENABLED
-    ? "true"
-    : "false";
-}
+buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED ??= buildTimeFeatures.AUTH_ENABLED
+  ? "true"
+  : "false";
 
 // Always export AUTH_METHODS_ENABLED regardless of its value (used client-side)
-if (!buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED) {
-  buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED =
-    buildTimeFeatures.AUTH_METHODS_ENABLED ? "true" : "false";
-}
+buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED ??=
+  buildTimeFeatures.AUTH_METHODS_ENABLED ? "true" : "false";

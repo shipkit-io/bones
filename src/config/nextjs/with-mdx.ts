@@ -1,53 +1,42 @@
-import type { NextConfig } from "next";
+import path from "node:path";
 import createMDX from "@next/mdx";
+import type { NextConfig } from "next";
 
-// Webpack layer name for React Server Components (WEBPACK_LAYERS.reactServerComponents).
-const RSC_LAYER = "rsc";
-
-const matchesMdx = (test: unknown): boolean => test instanceof RegExp && test.test("page.mdx");
-
-const isSwcLoader = (entry: unknown): entry is { options: Record<string, unknown> } =>
-  !!entry &&
-  typeof entry === "object" &&
-  typeof (entry as { loader?: unknown }).loader === "string" &&
-  (entry as { loader: string }).loader.includes("next-swc-loader");
-
-/**
- * Since 16.2.0, webpack builds compile .mdx pages without an RSC bundle layer,
- * so `export const metadata` from a page.mdx fails with "attempting to export
- * metadata from a component marked with 'use client'". Restore the layer on the
- * MDX swc-loader rule in the server compiler.
- * Remove once https://github.com/vercel/next.js/issues/91735 is fixed.
+/*
+ * Directory owned by fumadocs-mdx (see source.config.ts).
+ *
+ * @next/mdx must not touch it: its remark-frontmatter/remark-mdx-frontmatter
+ * pair strips the YAML block and re-exports it as a `frontmatter` object, so
+ * fumadocs' loader would receive a file with no frontmatter and reject every
+ * page with "title: Required".
  */
-const patchMdxRscLayer = (rules: unknown[]): void => {
-  for (const rule of rules) {
-    if (!rule || typeof rule !== "object") continue;
-    const r = rule as Record<string, unknown>;
+const FUMADOCS_DIR = path.join(process.cwd(), "docs");
 
-    if (matchesMdx(r.test)) {
-      const uses = Array.isArray(r.use) ? r.use : [r.use];
-      for (const entry of uses) {
-        if (isSwcLoader(entry) && entry.options.bundleLayer == null) {
-          entry.options.bundleLayer = RSC_LAYER;
-        }
-      }
-    }
+const MDX_TEST = /\.mdx?$/;
 
-    if (Array.isArray(r.oneOf)) patchMdxRscLayer(r.oneOf);
-    if (Array.isArray(r.rules)) patchMdxRscLayer(r.rules);
-  }
-};
+/** Minimal shape of the webpack rules this plugin needs to touch. */
+interface WebpackRuleLike {
+  test?: unknown;
+  exclude?: unknown;
+}
+
+interface WebpackConfigLike {
+  module?: { rules?: unknown[] };
+}
 
 /**
- * Applies MDX configuration to the Next.js config.
+ * Applies MDX support to the Next.js config for app-level `.mdx` routes
+ * (e.g. the legal pages). Documentation under /docs is compiled by fumadocs-mdx
+ * instead and is explicitly excluded here.
  * @param nextConfig The existing Next.js configuration object.
  * @returns The modified Next.js configuration object with MDX support.
  */
-export function withMDXConfig(nextConfig: NextConfig): NextConfig {
+export default function withMDXConfig(nextConfig: NextConfig): NextConfig {
   const withMDX = createMDX({
-    extension: /\.mdx?$/,
+    extension: MDX_TEST,
     options: {
       remarkPlugins: [
+        "remark-gfm",
         [
           "remark-frontmatter",
           {
@@ -61,17 +50,28 @@ export function withMDXConfig(nextConfig: NextConfig): NextConfig {
     },
   });
 
-  const config = withMDX(nextConfig) as NextConfig;
+  const config = withMDX(nextConfig);
+  const previousWebpack = config.webpack;
 
-  const prevWebpack = config.webpack;
-  config.webpack = (webpackConfig, context) => {
-    const resolved = prevWebpack ? prevWebpack(webpackConfig, context) : webpackConfig;
+  config.webpack = (webpackConfig, options) => {
+    const result = (
+      previousWebpack ? previousWebpack(webpackConfig, options) : webpackConfig
+    ) as WebpackConfigLike;
 
-    if (context.isServer && Array.isArray(resolved.module?.rules)) {
-      patchMdxRscLayer(resolved.module.rules);
+    for (const entry of result.module?.rules ?? []) {
+      if (!entry || typeof entry !== "object") continue;
+      const rule = entry as WebpackRuleLike;
+      if (!(rule.test instanceof RegExp) || rule.test.source !== MDX_TEST.source) continue;
+
+      const existing = rule.exclude;
+      rule.exclude = Array.isArray(existing)
+        ? [...(existing as unknown[]), FUMADOCS_DIR]
+        : existing
+          ? [existing, FUMADOCS_DIR]
+          : FUMADOCS_DIR;
     }
 
-    return resolved;
+    return result;
   };
 
   return config;

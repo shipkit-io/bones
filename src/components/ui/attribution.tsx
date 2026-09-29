@@ -1,15 +1,14 @@
 "use client";
-import { LinkOrButton } from "@/components/primitives/link-or-button";
+import { cva, type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
+import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
 import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
-import { X } from "lucide-react";
-import Link from "next/link";
-import type React from "react";
-import { useState } from "react";
-import { useLocalStorage } from "usehooks-ts";
 
 // Add the CSS animation
 const styles = `
@@ -80,10 +79,10 @@ export function Attribution({
     return null;
   }
 
-  const renderContent = () => (
+  const _Content = () => (
     <>
       {(heading || description) && (
-        <div>
+        <div className="">
           {heading &&
             (href ? (
               <Link href={href}>
@@ -102,6 +101,12 @@ export function Attribution({
             ))}
         </div>
       )}
+      {onClose && (
+        <Button variant="ghost" size="icon" className="shrink-0" onClick={handleClose}>
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </Button>
+      )}
     </>
   );
 
@@ -111,14 +116,36 @@ export function Attribution({
         <style>{styles}</style>
         <div className={cn(builtByVariants({ variant }), className)} {...props}>
           <div className="container flex items-center justify-between gap-2">
-            {renderContent()}
-            {children}
+            {(heading || description) && (
+              <div>
+                {heading &&
+                  (href ? (
+                    <Link href={href}>
+                      <h3 className="font-semibold">{heading}</h3>
+                    </Link>
+                  ) : (
+                    <h3 className="font-semibold">{heading}</h3>
+                  ))}
+                {description &&
+                  (href ? (
+                    <Link href={href}>
+                      <p className="text-xs">{description}</p>
+                    </Link>
+                  ) : (
+                    <p className="text-xs">{description}</p>
+                  ))}
+              </div>
+            )}
             {onClose && (
               <Button variant="ghost" size="icon" className="shrink-0" onClick={handleClose}>
                 <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </Button>
             )}
+            {children}
+            <button onClick={handleClose} type="button" className="absolute top-1.5 right-1.5">
+              <X className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </>
@@ -130,38 +157,38 @@ export function Attribution({
       <>
         <style>{styles}</style>
         <Card className={cn(builtByVariants({ variant }), className)} {...props}>
-          <CardHeader className="flex flex-row items-start justify-between p-3">
-            {renderContent()}
+          <CardHeader className="p-3">
+            {(heading || description) && (
+              <div className="flex flex-col gap-2">
+                {heading && <h3 className="font-semibold">{heading}</h3>}
+                {description && <p className="text-xs">{description}</p>}
+              </div>
+            )}
             {onClose && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 shrink-0"
-                onClick={handleClose}
-              >
-                <X className="h-3 w-3" />
+              <Button variant="ghost" size="icon" className="shrink-0" onClick={handleClose}>
+                <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </Button>
             )}
           </CardHeader>
           {children && (
-            <CardContent className="mt-auto flex justify-end gap-2 p-3 pt-0">
-              {children}
-            </CardContent>
+            <CardContent className="mt-auto flex justify-end gap-2 p-3">{children}</CardContent>
           )}
           {href && (
-            <CardFooter className="mt-auto p-3 pt-0">
-              <LinkOrButton
+            <CardFooter className="mt-auto p-3">
+              <Link
                 href={href}
-                className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-full")}
-                variant="outline"
-                size="sm"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-full p-1")}
                 onClick={() => onClick?.()}
               >
-                Learn more
-              </LinkOrButton>
+                Learn more...
+              </Link>
             </CardFooter>
           )}
+
+          <button onClick={handleClose} type="button" className="absolute top-1.5 right-1.5">
+            <X className="size-3" />
+          </button>
         </Card>
       </>
     );

@@ -1,3 +1,4 @@
+import Script from "next/script";
 import { siteConfig } from "@/config/site-config";
 
 interface JsonLdProps {
@@ -148,15 +149,22 @@ export function JsonLd({
         inLanguage: "en-US",
       },
       product && {
-        "@type": "Product",
+        "@type": ["Product", "SoftwareApplication"],
         "@id": `${siteConfig.url}/#product`,
         name: product.name,
         description: product.description,
         image: product.image,
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "Any",
         offers: {
           "@type": "Offer",
           price: product.price,
           priceCurrency: product.priceCurrency,
+          availability: "https://schema.org/InStock",
+          url: siteConfig.url,
+        },
+        brand: {
+          "@id": `${siteConfig.url}/#organization`,
         },
       },
       faq && {
@@ -174,8 +182,8 @@ export function JsonLd({
       localBusiness && {
         "@type": localBusiness.type || "SoftwareApplication",
         "@id": `${siteConfig.url}/#local-business`,
-        name: localBusiness.name || siteConfig.title,
-        description: localBusiness.description || siteConfig.description,
+        name: localBusiness.name ?? siteConfig.title,
+        description: localBusiness.description ?? siteConfig.description,
         url: siteConfig.url,
         ...(localBusiness.telephone && { telephone: localBusiness.telephone }),
         ...(localBusiness.email && { email: localBusiness.email }),
@@ -198,10 +206,8 @@ export function JsonLd({
   };
 
   return (
-    <script
-      type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data must be inline for SEO
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
+    <Script id="json-ld" type="application/ld+json" strategy="lazyOnload">
+      {`${JSON.stringify(structuredData)}`}
+    </Script>
   );
 }

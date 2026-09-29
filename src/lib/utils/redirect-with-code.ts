@@ -1,8 +1,8 @@
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 import { BASE_URL } from "@/config/base-url";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
-import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
 
 interface RedirectWithCodeOptions {
   code?: string;

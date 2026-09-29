@@ -1,5 +1,9 @@
 "use client";
 
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { PlusCircle } from "lucide-react";
+import { type FormEvent, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,10 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import { PlusCircle } from "lucide-react";
-import { type FormEvent, useState } from "react";
 import { validateRegistry } from "../_lib/registry-service";
 import type { Registry } from "../_lib/types";
 
@@ -47,15 +47,12 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
       setOpen(false);
       setName("");
       setUrl("");
-      toast({
-        title: "Registry added",
+      toast.success("Registry added", {
         description: `Successfully added registry "${name}"`,
       });
     } catch (error) {
-      toast({
-        title: "Failed to add registry",
+      toast.error("Failed to add registry", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive",
       });
     } finally {
       setLoading(false);

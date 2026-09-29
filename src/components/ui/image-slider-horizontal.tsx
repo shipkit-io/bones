@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useState } from "react";
+import { useState } from "react";
 import "swiper/css";
 import "swiper/css/effect-creative";
 import "swiper/css/pagination";
@@ -95,6 +95,7 @@ const HoverExpand_001 = ({
         <div className="flex w-full items-center justify-center gap-1">
           {images.map((image, index) => (
             <motion.div
+              // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
               key={index}
               className="relative cursor-pointer overflow-hidden rounded-3xl"
               initial={{ width: "2.5rem", height: "20rem" }}
@@ -112,7 +113,7 @@ const HoverExpand_001 = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute h-full w-full bg-gradient-to-t from-black/40 to-transparent"
+                    className="absolute h-full w-full bg-linear-to-t from-black/40 to-transparent"
                   />
                 )}
               </AnimatePresence>

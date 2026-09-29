@@ -1,6 +1,6 @@
+import * as React from "react";
 import { LoaderAtoms } from "@/components/loaders/loader-atoms";
 import { cn } from "@/lib/utils";
-import * as React from "react";
 
 export interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -67,8 +67,8 @@ export const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
         className={cn(
           "flex items-center justify-center",
           fullPage && "fixed inset-0 z-50",
-          backdrop && "bg-background/80 backdrop-blur-sm",
-          fade && "duration-300 animate-in fade-in",
+          backdrop && "bg-background/80 backdrop-blur-xs",
+          fade && "animate-in duration-300 fade-in",
           className
         )}
         {...props}

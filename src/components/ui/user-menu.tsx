@@ -24,7 +24,7 @@ import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-sign-in-redirect-url";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
@@ -47,7 +47,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
   const signInRedirectUrl = useSignInRedirectUrl();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  const { toast } = useToast();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const isAdmin = Boolean(session?.user?.email && siteConfig.admin.isAdmin(session.user.email));
@@ -64,28 +63,23 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
         try {
           const result = await updateTheme(newTheme);
           if (!result.success) {
-            toast({
-              title: "Failed to save theme preference",
+            toast.error("Failed to save theme preference", {
               description: result.error || "Your theme preference will reset on next visit.",
-              variant: "destructive",
             });
             return;
           }
-          toast({
-            title: "Theme updated",
+          toast.success("Theme updated", {
             description: result.message,
           });
         } catch (error) {
           console.error("Failed to update theme:", error);
-          toast({
-            title: "Failed to save theme preference",
+          toast.error("Failed to save theme preference", {
             description: "Your theme preference will reset on next visit.",
-            variant: "destructive",
           });
         }
       }
     },
-    [session?.user, setTheme, toast]
+    [session?.user, setTheme]
   );
 
   /*
@@ -181,7 +175,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
       >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{session?.user?.name}</p>
+            <p className="text-sm leading-none font-medium">{session?.user?.name}</p>
             <p className="text-xs leading-none text-muted-foreground">{session?.user?.email}</p>
           </div>
         </DropdownMenuLabel>

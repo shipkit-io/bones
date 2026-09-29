@@ -3,31 +3,35 @@
  *
  * This list is a promise. `KeyboardShortcutProvider` binds each entry through
  * Mantine's `useHotkeys` and fans the press out to whatever registered
- * `useKeyboardShortcut` for that action, so an entry with no handler binds the
- * key, swallows the press (Mantine calls `preventDefault` for every match) and
- * does nothing, silently, with no build, lint or test failure anywhere. An
- * action belongs here only once something handles it; in development the
- * provider warns about the ones nothing claimed.
+ * `useKeyboardShortcut` for that action -- so an entry with no handler binds
+ * the key, swallows the press and does nothing, silently, with no build, lint
+ * or test failure anywhere. An action belongs here only once something
+ * handles it; in development the provider warns about the ones nothing
+ * claimed.
  *
- * That matters most downstream. Removing a component is the normal thing to do
- * to a boilerplate, and removing the component that handled a shortcut leaves
- * the key bound and the config still advertising it.
+ * That matters most downstream. Removing a component is the normal thing to
+ * do to a boilerplate, and removing the component that handled a shortcut
+ * leaves the key bound and the config still advertising it. Keepsake, a fork
+ * that dropped the command menu, the user menu and the popover, ran for
+ * months with ten of these eleven dead and no way to tell.
  *
- * Anything that shows a shortcut to a person, a menu row, a tooltip, a `<kbd>`,
- * must read it from here through `shortcutLabel`, never as a hand-written
- * string. The user menu printed eight hints as text and not one of them named a
- * key this config bound: ⌘A for what is bound to mod+shift+A, ⌘S for
- * mod+shift+S, ⇧⌘Q for mod+shift+X, and ⌘D and ⌘K for actions that do not exist.
+ * Anything that shows a shortcut to a person -- a menu row, a tooltip, a
+ * `<kbd>` -- must read it from here through `shortcutLabel`, never as a
+ * hand-written string. The user menus printed eight hints as text and six of
+ * them named the wrong key: ⌘A for what is bound to mod+shift+A, ⌘S for
+ * mod+shift+comma, ⌘B for mod+shift+Y, ⇧⌘Q for mod+shift+X, ⌘L for
+ * mod+shift+L, and ⌘D for an action that does not exist.
  */
 export const ShortcutAction = {
   OPEN_SEARCH: "open-search",
+  TOGGLE_SIDEBAR: "toggle-sidebar",
   LOGOUT_USER: "logout-user",
+  CLOSE_POPOVER: "close-popover",
   SET_THEME_LIGHT: "set-theme-light",
   SET_THEME_DARK: "set-theme-dark",
   SET_THEME_SYSTEM: "set-theme-system",
   GOTO_ADMIN: "goto-admin",
   GOTO_SETTINGS: "goto-settings",
-  CLOSE_POPOVER: "close-popover",
 } as const;
 
 export type ShortcutActionType = (typeof ShortcutAction)[keyof typeof ShortcutAction];
@@ -44,8 +48,8 @@ export interface ShortcutBinding {
    */
   preventDefault?: boolean;
   /**
-   * The handler mounts with something transient, an open popover or a visible
-   * dialog, so it is legitimately absent most of the time. Exempt from the
+   * The handler mounts with something transient -- an open popover, a visible
+   * dialog -- so it is legitimately absent most of the time. Exempt from the
    * unhandled-shortcut warning, which would otherwise name it on every page
    * and train everyone to ignore the warning.
    */
@@ -56,22 +60,27 @@ export interface ShortcutBinding {
  * Maps keyboard shortcuts (using Mantine's HotkeyItem format) to actions.
  * @see https://mantine.dev/hooks/use-hotkeys/
  *
- * Mantine ignores hotkeys raised from an INPUT, TEXTAREA, SELECT or a
- * contenteditable element, so none of these fire while someone is typing. That
- * is the right behaviour and is worth knowing before you file "mod+K does
- * nothing" as a bug.
+ * Mantine ignores hotkeys raised from an INPUT, TEXTAREA or SELECT, so none
+ * of these fire while someone is typing. That is the right behaviour and is
+ * worth knowing before you file "mod+K does nothing" as a bug.
  *
- * When an action has more than one binding the first one listed is the one the
- * UI advertises, so put the one you want shown first.
+ * **Never put shift with a punctuation key here.** Mantine matches on
+ * `event.key`, and shift rewrites what a punctuation key reports: holding
+ * shift and pressing the comma key gives `event.key === "<"`, never ",", so
+ * `mod+shift+,` could not fire and settings had no working shortcut. The
+ * label rendered correctly the whole time, which is why it survived review.
+ * `shortcutConfig` is tested for this; letters and digits are safe because
+ * shift leaves `event.key` alone apart from case, which `normalizeKey` folds.
  */
 export const shortcutConfig: readonly (readonly [string, ShortcutActionType, ShortcutBinding?])[] =
   [
-    // Universal search - handled by the header search dialog.
+    // Universal search - works with whatever search component is visible
     ["mod+K", ShortcutAction.OPEN_SEARCH],
     ["/", ShortcutAction.OPEN_SEARCH],
 
     // App Actions
     ["mod+shift+X", ShortcutAction.LOGOUT_USER],
+    ["mod+shift+B", ShortcutAction.TOGGLE_SIDEBAR],
     // Escape belongs to whatever is open, not to the app. It is not swallowed,
     // and its handler only exists while a popover is mounted.
     ["Escape", ShortcutAction.CLOSE_POPOVER, { preventDefault: false, onDemand: true }],
@@ -81,10 +90,7 @@ export const shortcutConfig: readonly (readonly [string, ShortcutActionType, Sho
     ["mod+shift+D", ShortcutAction.SET_THEME_DARK],
     ["mod+shift+Y", ShortcutAction.SET_THEME_SYSTEM],
 
-    // Navigation.
-    // Settings is not on comma, the usual Mac spot, because shift+comma reports
-    // event.key "<" and Mantine matches on event.key: "mod+shift+," can never
-    // fire. Plain "mod+," is Chrome's own settings shortcut.
+    // Navigation
     ["mod+shift+A", ShortcutAction.GOTO_ADMIN],
     ["mod+shift+S", ShortcutAction.GOTO_SETTINGS],
   ];
@@ -101,11 +107,10 @@ export function getShortcutDisplay(action: ShortcutActionType): string | null {
 }
 
 /**
- * A hotkey as a person reads it: "mod+shift+K" becomes a glyph run on a Mac and
- * "Ctrl+Shift+K" everywhere else.
+ * A hotkey as a person reads it: "mod+shift+," becomes "⇧⌘," on a Mac and
+ * "Ctrl+Shift+," everywhere else.
  *
- * Mac order is the platform's, modifiers ascending: control, option, shift,
- * command.
+ * Mac order is the platform's, modifiers ascending: ⌃ ⌥ ⇧ ⌘.
  */
 export function formatShortcut(hotkey: string, isMac: boolean): string {
   const parts = hotkey.split("+").map((part) => part.trim().toLowerCase());
@@ -122,7 +127,6 @@ export function formatShortcut(hotkey: string, isMac: boolean): string {
       printedKey
     );
   }
-
   const names = [
     has("mod") || has("ctrl") ? "Ctrl" : null,
     has("alt") ? "Alt" : null,

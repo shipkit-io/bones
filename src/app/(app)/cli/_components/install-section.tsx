@@ -1,15 +1,16 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { CopyButton } from "@/components/ui/copy-button";
-import { routes } from "@/config/routes";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { cn } from "@/lib/utils";
 import { motion, useAnimation } from "framer-motion";
 import { BookOpenTextIcon, Check, Copy, Terminal } from "lucide-react";
 import { Bungee_Shade as FontBungee } from "next/font/google";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { CopyButton } from "@/components/ui/copy-button";
+import { routes } from "@/config/routes";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils";
+
 const fontBungee = FontBungee({
   weight: ["400"],
   style: ["normal"],
@@ -61,7 +62,7 @@ export function InstallSection() {
         >
           <h1
             className={cn(
-              "mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
+              "mb-6 bg-linear-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
               fontBungee.className
             )}
           >
@@ -85,19 +86,19 @@ export function InstallSection() {
           {!isMobile && (
             <CopyButton
               value={installCommand}
-              className="absolute right-2 top-2"
+              className="absolute top-2 right-2"
               successTitle="Command Copied!"
               successDescription="Paste it in your terminal to install Bones CLI."
             />
           )}
           <div className="mb-4 hidden items-center justify-between md:flex">
-            <div className="flex space-x-1">
+            <div className="flex gap-x-1">
               <div className="h-2 w-2 rounded-full bg-gray-100/40" />
               <div className="h-2 w-2 rounded-full bg-gray-100/20" />
               <div className="h-2 w-2 rounded-full bg-gray-100/20" />
             </div>
           </div>
-          <div className="flex w-full flex-wrap items-center justify-center gap-2 break-all font-mono text-sm sm:text-base md:text-lg">
+          <div className="flex w-full flex-wrap items-center justify-center gap-2 font-mono text-sm break-all sm:text-base md:text-lg">
             {!isMobile && <Terminal className="mr-2 inline text-blue-400" />}
             <button
               ref={textRef}
@@ -109,7 +110,7 @@ export function InstallSection() {
             </button>
           </div>
           <motion.div
-            className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-600"
+            className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-blue-500 to-purple-600"
             animate={controls}
             initial={{ width: 0 }}
             style={{ width: "100%" }}

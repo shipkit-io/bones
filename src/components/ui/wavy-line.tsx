@@ -89,13 +89,14 @@ export function WavyLine({ className, ...props }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative h-px w-full", className)} {...props} ref={parentRef}>
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action */}
       <div
         className="relative -top-5 z-10 h-10 w-full"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       />
-      <svg className="absolute -top-[50px] h-[100px] w-full">
+      <svg className="absolute top-[-50px] h-[100px] w-full">
         <title>Wavy Line</title>
         <path
           ref={path}

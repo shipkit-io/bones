@@ -81,6 +81,9 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
             <button type="button" onClick={reset} style={styles.primary}>
               Try again
             </button>
+            {/* Plain <a>, not <Link>: this page renders outside the app router, and a
+                full reload is what we want after a root-layout failure. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a href="/" style={styles.secondary}>
               Go to homepage
             </a>

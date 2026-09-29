@@ -66,7 +66,7 @@ export const NumberInput = ({
         max={max}
         value={value}
         onChange={handleInputChange}
-        className="z-10 -mx-1 w-20 rounded-none border-x-0 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="z-10 -mx-1 w-20 [appearance:textfield] rounded-none border-x-0 text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         {...props}
       />
       <Button

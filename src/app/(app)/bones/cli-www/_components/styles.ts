@@ -6,7 +6,7 @@ export const containerStyles = cva(
     variants: {
       style: {
         brutalist:
-          "border-2 border-primary rounded-none shadow-[8px_8px_0px_0px_hsl(var(--primary)/.3)]",
+          "border-2 border-primary rounded-none shadow-[8px_8px_0px_0px_color-mix(in_oklab,var(--primary)_30%,transparent)]",
         modern: "border border-border rounded-lg shadow-md",
         minimalist: "",
       },
@@ -49,7 +49,7 @@ export const componentCardStyles = cva("cursor-pointer transition-all", {
   variants: {
     style: {
       brutalist:
-        "hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_hsl(var(--primary))] border-2 border-primary rounded-none",
+        "hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--primary)] border-2 border-primary rounded-none",
       modern: "hover:shadow-lg border border-border rounded-lg transition-shadow duration-300",
       minimalist: "hover:bg-accent border-b border-border",
     },

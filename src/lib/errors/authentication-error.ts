@@ -1,5 +1,5 @@
-import { STATUS_CODES } from "@/config/status-codes";
 import { AuthError } from "next-auth";
+import { STATUS_CODES } from "@/config/status-codes";
 
 /*
 Custom Error message for login

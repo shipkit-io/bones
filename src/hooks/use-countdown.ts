@@ -26,7 +26,7 @@ export const useCountdown = (targetDate: string | Date): CountdownResult => {
     const target = new Date(targetDate).getTime();
 
     const calculateTimeLeft = () => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const difference = target - now;
 
       if (difference <= 0) {
@@ -48,10 +48,9 @@ export const useCountdown = (targetDate: string | Date): CountdownResult => {
       };
     };
 
-    // Initial calculation
-    setCountdown(calculateTimeLeft());
+    // Defer initial setState so the effect does not synchronously cascade renders.
+    queueMicrotask(() => setCountdown(calculateTimeLeft()));
 
-    // Update every second
     const timer = setInterval(() => {
       setCountdown(calculateTimeLeft());
     }, 1000);

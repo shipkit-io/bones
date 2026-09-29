@@ -27,6 +27,7 @@
  */
 
 import { and, eq } from "drizzle-orm";
+import { buildTimeFeatures } from "@/config/features-config";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import type { User } from "@/server/db/schema";
@@ -34,7 +35,6 @@ import { projectMembers, teamMembers, userFiles, users } from "@/server/db/schem
 import { apiKeyService } from "./api-key-service";
 import { BaseService } from "./base-service";
 import { PaymentService } from "./payment-service";
-import { deleteFromS3 } from "./s3";
 import { teamService } from "./team-service";
 
 /**
@@ -434,11 +434,17 @@ export class UserService extends BaseService<typeof users> {
       throw new Error("File not found or access denied");
     }
 
-    // Delete from S3 first
+    // Delete from S3 first. The S3 client is imported lazily so this service
+    // does not statically depend on the AWS SDK when S3 is disabled.
     try {
       const fileName = file.location.split("/").pop();
       if (fileName) {
-        await deleteFromS3(fileName);
+        if (buildTimeFeatures.S3_ENABLED) {
+          const { deleteFromS3 } = await import("./s3");
+          await deleteFromS3(fileName);
+        } else {
+          logger.debug("S3 is disabled, skipping S3 file deletion", { fileId, fileName });
+        }
       }
     } catch (error) {
       logger.error("Failed to delete file from S3", {
