@@ -1,16 +1,11 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { toast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 import { CheckIcon, Cross2Icon, ReloadIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { CopyIcon, Download } from "lucide-react";
 import {
   type MouseEvent,
+  memo,
   type ReactNode,
   useCallback,
   useEffect,
@@ -18,6 +13,12 @@ import {
   useRef,
   useState,
 } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { installComponent } from "../_actions/install";
 import { getInstalledComponents } from "../_actions/registry";
 import { useRegistry } from "../_hooks/use-registry";
@@ -34,7 +35,6 @@ import { ComponentDetails } from "./component-details";
 import { buttonStyles, componentCardStyles, containerStyles } from "./styles";
 import { Terminal } from "./terminal";
 import type { InstallationProgress, StyleMode } from "./types";
-import { memo } from "react";
 
 interface ComponentCardProps {
   component: RegistryItem;
@@ -58,10 +58,9 @@ interface ComponentBrowserProps {
   currentStyle?: StyleMode;
 }
 
-const copyToClipboard = (text: string) => {
+const _copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
-  toast({
-    title: "Copied to clipboard",
+  toast.success("Copied to clipboard", {
     description: "The content has been copied to your clipboard.",
   });
 };
@@ -98,11 +97,11 @@ const ComponentCard = memo(
     isInstalled,
   }: ComponentCardProps) => {
     const registryColor = useMemo(
-      () => getColor(component.registry || "default"),
+      () => getColor(component.registry ?? "default"),
       [component.registry]
     );
     const categoryColor = useMemo(
-      () => getColor(component.categories?.[0] || "default"),
+      () => getColor(component.categories?.[0] ?? "default"),
       [component.categories]
     );
 
@@ -111,8 +110,7 @@ const ComponentCard = memo(
         e.stopPropagation();
         const installCommand = getInstallCommand(component, currentRegistry);
         navigator.clipboard.writeText(installCommand);
-        toast({
-          title: "Copied to clipboard",
+        toast.success("Copied to clipboard", {
           description: "Install command has been copied to your clipboard.",
         });
       },
@@ -141,7 +139,7 @@ const ComponentCard = memo(
         onClick={() => onOpenSidebar(component)}
       >
         <div
-          className="absolute left-0 top-0 h-0 w-0 border-8 border-transparent"
+          className="absolute top-0 left-0 h-0 w-0 border-8 border-transparent"
           style={{ borderTopColor: registryColor, borderLeftColor: registryColor }}
         />
         {/* <div className="absolute top-0 right-0 w-0 h-0 border-8 border-transparent" style={{ borderTopColor: categoryColor, borderRightColor: categoryColor }} /> */}
@@ -149,7 +147,7 @@ const ComponentCard = memo(
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="absolute bottom-0 right-0 h-0 w-0 cursor-help border-8 border-transparent border-b-emerald-500 border-r-emerald-500" />
+                <div className="absolute right-0 bottom-0 h-0 w-0 cursor-help border-8 border-transparent border-r-emerald-500 border-b-emerald-500" />
               </TooltipTrigger>
               <TooltipContent side="left">
                 <p className="text-xs">Installed</p>
@@ -202,12 +200,12 @@ ComponentCard.displayName = "ComponentCard";
 export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: ComponentBrowserProps) {
   const [currentStyle, setCurrentStyle] = useState<StyleMode>(initialStyle);
   const [selectedComponent, setSelectedComponent] = useState<RegistryItem | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [installationProgress, setInstallationProgress] = useState<InstallationProgress>({
     status: "idle",
   });
   const [installedComponents, setInstalledComponents] = useState<string[]>([]);
-  const [showInstallation, setShowInstallation] = useState(false);
+  const [_showInstallation, _setShowInstallation] = useState(false);
   const [overwrite, setOverwrite] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -230,7 +228,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
 
   // Wrap setCurrentRegistry to handle null case
   const setCurrentRegistry = (registry: Registry | null) => {
-    setCurrentRegistryBase(registry || undefined);
+    setCurrentRegistryBase(registry ?? undefined);
   };
 
   useEffect(() => {
@@ -279,20 +277,16 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
       // Find the registry for this component
       const registryName = component.registry;
       if (!registryName) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Component has no registry specified",
-          variant: "destructive",
         });
         return;
       }
 
       const registry = registries.find((r) => r.name === registryName);
       if (!registry) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Could not find registry for component",
-          variant: "destructive",
         });
         return;
       }
@@ -300,10 +294,8 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
       const installCommand = getInstallCommand(component, registry);
       const componentUrl = installCommand.split('"')[1]; // Extract URL from command
       if (!componentUrl) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Could not parse install command",
-          variant: "destructive",
         });
         return;
       }
@@ -345,7 +337,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
       setInstallationProgress({ status: "installing" });
 
       // Extract the component URL or name from the command
-      const match = command.match(/"([^"]+)"/) || command.match(/add\s+(\S+)$/);
+      const match = /"([^"]+)"/.exec(command) ?? /add\s+(\S+)$/.exec(command);
       const componentUrl = match ? match[1] : null;
 
       if (!componentUrl) {
@@ -391,7 +383,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
   }, []);
 
   const renderComponentGrid = useCallback(
-    (registry: string) => {
+    (_registry: string) => {
       const allFilteredItems = filteredItems();
       return (
         <div
@@ -447,10 +439,8 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
             setRegistries((prev: Registry[]) => [...prev, registryWithCustom]);
             setCurrentRegistry(registryWithCustom);
           } catch (error) {
-            toast({
-              title: "Failed to add registry",
+            toast.error("Failed to add registry", {
               description: error instanceof Error ? error.message : "Unknown error occurred",
-              variant: "destructive",
             });
           }
         }}
@@ -461,16 +451,14 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
             setRegistries(updatedRegistries);
             if (currentRegistry?.name === name) {
               const defaultRegistry =
-                updatedRegistries.find((r) => !r.custom) || updatedRegistries[0];
+                updatedRegistries.find((r) => !r.custom) ?? updatedRegistries[0];
               if (defaultRegistry) {
                 setCurrentRegistry(defaultRegistry);
               }
             }
           } catch (error) {
-            toast({
-              title: "Failed to remove registry",
+            toast.error("Failed to remove registry", {
               description: error instanceof Error ? error.message : "Unknown error occurred",
-              variant: "destructive",
             });
           }
         }}
@@ -506,7 +494,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-4 right-4 z-50 w-[500px]"
+          className="fixed right-4 bottom-4 z-50 w-[500px]"
         >
           <Card className="border-black/10 bg-[#1E1E1E] shadow-2xl">
             <div className="relative">
@@ -536,7 +524,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-1 top-1 z-10 h-6 w-6 p-0 text-zinc-400 hover:text-zinc-300"
+                  className="absolute top-1 right-1 z-10 h-6 w-6 p-0 text-zinc-400 hover:text-zinc-300"
                   onClick={hideInstallation}
                   disabled={installationProgress.status === "installing"}
                 >

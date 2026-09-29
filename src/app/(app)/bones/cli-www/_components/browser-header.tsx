@@ -1,5 +1,8 @@
 "use client";
 
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { Palette, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -14,9 +17,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { Palette, Trash2 } from "lucide-react";
-import { useState } from "react";
 import type { Registry } from "../_lib/types";
 import { AddRegistryDialog } from "./add-registry-dialog";
 import { getColor } from "./colors";
@@ -81,7 +81,7 @@ export function BrowserHeader({
                     style={{ backgroundColor: getColor(currentRegistry.name) }}
                   />
                 )}
-                {currentRegistry?.name || "All Registries"}
+                {currentRegistry?.name ?? "All Registries"}
               </div>
               <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -103,7 +103,7 @@ export function BrowserHeader({
                           !currentRegistry ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      <div className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-primary/50" />
+                      <div className="h-2 w-2 rounded-full bg-linear-to-r from-primary to-primary/50" />
                       All Registries
                     </div>
                   </CommandItem>
@@ -165,7 +165,7 @@ export function BrowserHeader({
                               if (currentRegistry?.name === registry.name) {
                                 const defaultRegistry = registries.find((r) => !r.custom);
                                 const fallbackRegistry = registries[0];
-                                const nextRegistry = defaultRegistry || fallbackRegistry;
+                                const nextRegistry = defaultRegistry ?? fallbackRegistry;
                                 if (nextRegistry) {
                                   handleRegistryChange(nextRegistry);
                                 }

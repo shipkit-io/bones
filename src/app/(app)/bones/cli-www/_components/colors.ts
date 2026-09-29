@@ -32,9 +32,7 @@ const colorCache: Record<string, string> = {};
 export function getColor(key: string): string {
   if (!key) return "#666666"; // Default color for empty keys
 
-  if (!colorCache[key]) {
-    colorCache[key] = generateColor(key);
-  }
+  colorCache[key] ??= generateColor(key);
   return colorCache[key];
 }
 

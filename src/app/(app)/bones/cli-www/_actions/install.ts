@@ -1,7 +1,7 @@
 "use server";
 
-import { spawn } from "child_process";
-import { type InstallOptions } from "../_lib/types";
+import { spawn } from "node:child_process";
+import type { InstallOptions } from "../_lib/types";
 
 /**
  * Install a component from a registry

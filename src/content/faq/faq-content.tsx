@@ -2,7 +2,7 @@ export const content = [
   {
     question: "What do I actually get?",
     answer:
-      "A full Next.js 15 codebase. Auth (Better Auth + OAuth), database (Postgres + Drizzle), payments (LemonSqueezy), CMS (Payload), email (Resend), 100+ UI components (shadcn/ui), AI integrations, and deployment configs. You clone the repo and own the code forever.",
+      "A full Next.js 16 codebase. Auth (Better Auth + OAuth), database (Postgres + Drizzle), payments (LemonSqueezy), CMS (Payload), email (Resend), 100+ UI components (shadcn/ui), AI integrations, and deployment configs. You clone the repo and own the code forever.",
     category: "general",
   },
   {

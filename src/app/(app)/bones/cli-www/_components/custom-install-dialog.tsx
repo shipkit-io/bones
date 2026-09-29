@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Terminal as TerminalIcon } from "lucide-react";
 import { type FormEvent, memo, useCallback, useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { formatUrlToCommand, isValidCommand, isValidUrl } from "../_lib/registry-service";
 import type { InstallationProgress } from "./types";
 
@@ -22,7 +22,7 @@ export const CustomInstallDialog = memo(({ onInstall }: CustomInstallDialogProps
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
-    async (e: FormEvent) => {
+    (e: FormEvent) => {
       e.preventDefault();
       setLoading(true);
 
@@ -40,16 +40,13 @@ export const CustomInstallDialog = memo(({ onInstall }: CustomInstallDialogProps
 
         setOpen(false);
         setInput("");
-        toast({
-          title: "Command accepted",
+        toast.success("Command accepted", {
           description: "Starting installation...",
         });
-        await onInstall(finalCommand);
+        onInstall(finalCommand);
       } catch (error) {
-        toast({
-          title: "Invalid input",
+        toast.error("Invalid input", {
           description: error instanceof Error ? error.message : "Please check the format",
-          variant: "destructive",
         });
       } finally {
         setLoading(false);
@@ -86,7 +83,7 @@ export const CustomInstallDialog = memo(({ onInstall }: CustomInstallDialogProps
       <PopoverContent className="w-[400px] p-4" onClick={(e) => e.stopPropagation()}>
         <div className="space-y-4">
           <div className="space-y-2">
-            <h4 className="font-medium leading-none">Install Component</h4>
+            <h4 className="leading-none font-medium">Install Component</h4>
             <p className="text-sm text-muted-foreground">
               Enter any component URL or install command.
             </p>

@@ -1,5 +1,12 @@
-import { siteConfig } from "@/config/site-config";
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site-config";
+
+/*
+ * LLM-discoverable content files:
+ * - /llms.txt       (short intro for LLMs)
+ * - /llms-full.txt  (comprehensive reference for LLMs)
+ * These are served as static files from the public/ directory.
+ */
 
 /* Robots.txt Configuration
  * This file controls how search engines and other web robots interact with your site
@@ -27,7 +34,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           // "/api/*", // Blocks access to API routes
           // "/static/*", // Blocks access to static assets directory
-          // routes.admin.root, // Blocks access to admin panel
+          // routes.admin.index, // Blocks access to admin panel
           // "*/private/*", // Blocks access to private content
           // "*/draft/*", // Blocks access to draft content
           // "*/preview/*", // Blocks access to preview content

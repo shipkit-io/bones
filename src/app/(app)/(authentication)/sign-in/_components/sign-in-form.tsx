@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
 import Link from "next/link";
@@ -26,7 +26,6 @@ import { useSearchParams } from "next/navigation";
 export const SignInForm = () => {
   const searchParams = useSearchParams();
   const nextUrl = searchParams.get(SEARCH_PARAM_KEYS.nextUrl);
-  const { toast } = useToast();
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -53,8 +52,7 @@ export const SignInForm = () => {
 
       await signInWithCredentialsAction(values, formData);
 
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: "Signed in successfully.",
       });
     } catch (error) {
@@ -64,23 +62,17 @@ export const SignInForm = () => {
           errorMessage.includes("invalid credentials") ||
           errorMessage.includes("user not found")
         ) {
-          toast({
-            title: "Error",
+          toast.error("Error", {
             description: "Invalid email or password. Please try again.",
-            variant: "destructive",
           });
         } else {
-          toast({
-            title: "Error",
+          toast.error("Error", {
             description: error.message,
-            variant: "destructive",
           });
         }
       } else {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Something went wrong. Please try again.",
-          variant: "destructive",
         });
       }
     }

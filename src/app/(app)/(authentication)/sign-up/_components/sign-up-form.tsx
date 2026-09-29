@@ -16,12 +16,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { routes } from "@/config/routes";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signUpWithCredentialsAction } from "@/server/actions/auth";
 
 export const SignUpForm = () => {
-  const { toast } = useToast();
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -42,8 +41,7 @@ export const SignUpForm = () => {
 
       await signUpWithCredentialsAction(values, formData);
 
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: "Account created successfully.",
       });
     } catch (error) {
@@ -54,17 +52,13 @@ export const SignUpForm = () => {
             message: "An account with this email already exists.",
           });
         } else {
-          toast({
-            title: "Error",
+          toast.error("Error", {
             description: error.message,
-            variant: "destructive",
           });
         }
       } else {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Something went wrong. Please try again.",
-          variant: "destructive",
         });
       }
     }

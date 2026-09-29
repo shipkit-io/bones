@@ -1,5 +1,10 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { BookOpen, Copy, FileJson, X } from "lucide-react";
+import type { KeyboardEvent, MouseEvent } from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionContent,
@@ -11,12 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { BookOpen, Copy, FileJson, X } from "lucide-react";
-import type { KeyboardEvent, MouseEvent } from "react";
-import { useState } from "react";
 import { getDocumentationUrl, getInstallCommand } from "../_lib/registry-service";
 import { getColor } from "./colors";
 import { ComponentStats } from "./component-stats";
@@ -26,8 +26,7 @@ import type { ComponentDetailsProps } from "./types";
 
 const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
-  toast({
-    title: "Copied to clipboard",
+  toast.success("Copied to clipboard", {
     description: "The content has been copied to your clipboard.",
   });
 };
@@ -43,7 +42,7 @@ export function ComponentDetails({
 }: ComponentDetailsProps) {
   const [selectedFile, setSelectedFile] = useState<string>();
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Escape") {
       onClose();
     }
@@ -59,19 +58,20 @@ export function ComponentDetails({
     copyToClipboard(json);
   };
 
-  const handleInstall = (e: MouseEvent<HTMLButtonElement>) => {
+  const _handleInstall = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     onInstall(component);
   };
 
   return (
     <>
-      <button
-        type="button"
-        aria-label="Close"
+      {/* biome-ignore lint/a11y/useSemanticElements: backdrop overlay - role/tabIndex used for keyboard close */}
+      <div
         className="absolute inset-0 z-40 bg-background/50"
         onClick={onClose}
         onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
       />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -79,7 +79,7 @@ export function ComponentDetails({
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
         className={cn(
-          "fixed bottom-4 right-4 top-4 z-50 w-[600px] bg-background shadow-2xl",
+          "fixed top-4 right-4 bottom-4 z-50 w-[600px] bg-background shadow-2xl",
           currentStyle === "brutalist" ? "border-2 border-primary" : "rounded-lg border"
         )}
       >
@@ -89,7 +89,7 @@ export function ComponentDetails({
               <div className="flex items-center gap-2">
                 <div
                   className="h-2 w-2 rounded-full"
-                  style={{ backgroundColor: getColor(component.registry || "") }}
+                  style={{ backgroundColor: getColor(component.registry ?? "") }}
                 />
                 <h2 className="text-lg font-bold">{component.name}</h2>
               </div>

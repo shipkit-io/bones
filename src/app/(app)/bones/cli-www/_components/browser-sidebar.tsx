@@ -1,5 +1,7 @@
 "use client";
 
+import { Search } from "lucide-react";
+import { memo, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,12 +14,10 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
-import { memo, useMemo } from "react";
 import type { RegistryFilters, RegistryItem } from "../_lib/types";
 import { getColor } from "./colors";
-import type { StyleMode, InstallationProgress } from "./types";
 import { CustomInstallDialog } from "./custom-install-dialog";
+import type { InstallationProgress, StyleMode } from "./types";
 
 export interface BrowserSidebarProps {
   currentStyle: StyleMode;
@@ -88,7 +88,7 @@ export const BrowserSidebar = memo(
               </Badge>
             </div>
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="search"
                 placeholder="Search components..."

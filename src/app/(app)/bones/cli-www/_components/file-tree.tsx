@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { File, Folder } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 interface FileTreeProps {
   files: {
@@ -40,15 +40,13 @@ function buildTree(files: FileTreeProps["files"]): TreeNode {
 
     for (const part of parts) {
       const path = parts.slice(0, parts.indexOf(part) + 1).join("/");
-      if (!current.children[part]) {
-        current.children[part] = {
-          name: part,
-          path,
-          type: part === parts[parts.length - 1] ? "file" : "directory",
-          content: part === parts[parts.length - 1] ? file.content : undefined,
-          children: {},
-        };
-      }
+      current.children[part] ??= {
+        name: part,
+        path,
+        type: part === parts[parts.length - 1] ? "file" : "directory",
+        content: part === parts[parts.length - 1] ? file.content : undefined,
+        children: {},
+      };
       current = current.children[part];
     }
   }

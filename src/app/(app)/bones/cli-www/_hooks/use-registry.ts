@@ -68,7 +68,7 @@ export function useRegistry() {
             setItems({});
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Silently handle any remaining errors
         setItems({});
       } finally {

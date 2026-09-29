@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import {
   Accordion,
   AccordionContent,
@@ -14,19 +14,19 @@ import type { Faq } from "@/payload-types";
 export const metadata: Metadata = routeMetadata.faq;
 
 // Define types for static content structure
-type StaticFaq = {
+interface StaticFaq {
   id?: string;
   question: string;
   answer: string;
   category: string;
   order?: number;
-};
+}
 
 const getAnswerText = (answer: unknown): string => {
   if (typeof answer === "string") return answer;
   if (typeof answer === "object" && answer && "root" in answer) {
     const richText = answer as { root: { children: { children?: { text: string }[] }[] } };
-    return richText.root.children.map((child) => child.children?.[0]?.text || "").join("\n");
+    return richText.root.children.map((child) => child.children?.[0]?.text ?? "").join("\n");
   }
   return "";
 };
@@ -57,15 +57,15 @@ export default async function FaqPage() {
     <section className="container mx-auto mt-header space-y-section py-16">
       <div className="grid w-full grid-cols-1 md:grid-cols-5">
         <div className="z-10 col-span-2 bg-neutral-50 p-12 dark:bg-neutral-900">
-          <h1 className="mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
             Frequently Asked Questions
-          </h1>
+          </h2>
           <p className="mb-8 text-neutral-600 dark:text-neutral-300">
             Here are some common questions about {siteConfig.title}. If you have any other
             questions, feel free to reach out to us.
           </p>
         </div>
-        <div className="col-span-3 space-y-8 border-t border-neutral-400/15 bg-white px-20 py-12 dark:bg-neutral-950 md:border-l md:border-t-0">
+        <div className="col-span-3 space-y-8 border-t border-neutral-400/15 bg-white px-20 py-12 md:border-t-0 md:border-l dark:bg-neutral-950">
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq) => {
               const id = "id" in faq && faq.id ? faq.id.toString() : faq.question;

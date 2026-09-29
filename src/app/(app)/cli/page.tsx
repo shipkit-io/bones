@@ -1,14 +1,14 @@
+import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { InstallSection } from "./_components/install-section";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="container grow">
-        <div className="mx-auto max-w-screen-sm">
+        <div className="mx-auto max-w-(--breakpoint-sm)">
           <InstallSection />
 
           <div className="mt-10 space-y-10">
