@@ -64,7 +64,7 @@ const eslintConfig = [
       "@typescript-eslint": ts,
     },
     rules: {
-      ...ts.configs.recommended.rules,
+      ...(ts.configs.recommended?.rules ?? {}),
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
