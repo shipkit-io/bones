@@ -25,6 +25,18 @@ No environment variables needed to start. Features turn on when you add their en
 
 > Bones is the root template. Payments, CMS, AI, storage and more are [ShipKit registry](https://shipkit.io/docs/features/registry) items you add one at a time with `npx shadcn add @shipkit/<item>`. [ShipKit](https://github.com/lacymorrow/shipkit) is the everything-included build of Bones that proves those integrations work together.
 
+## Install with your coding agent
+
+Paste this into Claude Code, Cursor or Codex. It reads [docs/agents/install.md](docs/agents/install.md), asks five questions, shows you the commands, and runs them after you say yes.
+
+```text
+Install ShipKit for me.
+
+Read https://raw.githubusercontent.com/shipkit-io/bones/main/docs/agents/install.md and follow it exactly. If a step is not in that file, do not do it.
+
+Ask me the five questions from the file one at a time, with the recommended answer first. If I say "defaults", skip straight to the plan. Show me the exact commands before you run anything and wait for my yes. Do not ask me to paste secrets into this chat: shadcn writes empty keys to .env.local, and you tell me where each value comes from. Touch only .env.local, the "shipkit" block in package.json, and files the CLI or shadcn created. When it is done, run the verify step and show me which features are on.
+```
+
 ## Quick Start Guide
 
 ### 1. Deploy to Vercel
