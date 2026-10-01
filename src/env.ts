@@ -350,6 +350,7 @@ export const env = createEnv({
     RESEND_API_KEY: process.env.RESEND_API_KEY, // Added for waitlist welcome email
     RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID,
     RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
+    AUTH_ALLOWED_EMAILS: process.env.AUTH_ALLOWED_EMAILS,
 
     // OAuth Providers
     AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
