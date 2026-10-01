@@ -4,6 +4,7 @@ import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
 import { providers } from "@/server/auth-js/auth-providers.config";
+import { isSignInEmailAllowed } from "@/server/auth-js/magic-link-allowlist";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { isAdmin } from "@/server/services/admin-service";
@@ -79,6 +80,21 @@ export const authOptions: NextAuthConfig = {
       // Handle guest user sign-in
       if (account?.provider === "guest") {
         return true; // Always allow guest sign-in
+      }
+
+      /*
+       * Magic link (Resend) allowlist. Auth.js runs this callback before
+       * sendVerificationRequest, so refusing here means no email is sent.
+       * AUTH_ALLOWED_EMAILS unset allows everyone, which keeps a fresh clone
+       * working; set it before deploying this publicly.
+       */
+      if (account?.provider === "resend") {
+        if (!user.email || !isSignInEmailAllowed(user.email)) {
+          logger.warn("Magic link sign-in refused: address not in AUTH_ALLOWED_EMAILS", {
+            email: user.email,
+          });
+          return false;
+        }
       }
 
       /*

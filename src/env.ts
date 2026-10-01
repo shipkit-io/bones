@@ -77,6 +77,9 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().optional(), // Added for waitlist welcome email
     RESEND_AUDIENCE_ID: z.string().optional(),
     RESEND_FROM_EMAIL: z.string().optional(),
+    // Comma-separated emails and/or domains ("alice@corp.io, @corp.io") allowed to
+    // sign in via magic link. Unset = everyone.
+    AUTH_ALLOWED_EMAILS: z.string().optional(),
 
     // OAuth Providers
     AUTH_DISCORD_ID: z.string().optional(),
