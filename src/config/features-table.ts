@@ -127,11 +127,18 @@ const table = {
     requires: ["PAYLOAD"],
   },
   AUTH_RESEND: {
-    // Development only so a stray key cannot send email from production.
+    // On in production. This was `devOnly` to stop a stray key emailing from
+    // production, but the cost was that anything forking this repo and setting
+    // RESEND_API_KEY got a working magic link in dev and a sign-in page with no
+    // way in once deployed. Abuse control moved to the allowlist in
+    // `src/server/auth-js/magic-link-allowlist.ts`, applied from the `signIn`
+    // callback, which Auth.js runs before `sendVerificationRequest`.
+    // RESEND_FROM_EMAIL is required as well — it has to be a sender on a
+    // Resend-verified domain, and without it the send fails at Resend anyway,
+    // so a missing one should read as "not configured" rather than a 500.
     label: "Magic link login (Resend)",
-    env: ["RESEND_API_KEY"],
+    env: ["RESEND_API_KEY", "RESEND_FROM_EMAIL"],
     disable: "DISABLE_AUTH_RESEND",
-    devOnly: true,
     docs: "https://resend.com/api-keys",
   },
   AUTH_BITBUCKET: {

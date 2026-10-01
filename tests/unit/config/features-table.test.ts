@@ -165,15 +165,30 @@ describe("buildTimeFeatures snapshots", () => {
     ]);
   });
 
-  it("magic link is development only", () => {
-    expectOn({ RESEND_API_KEY: "re_x" }, [
+  it("magic link needs a key and a verified sender, and works in production", () => {
+    const resendOn = [
       ...DEFAULT_ON,
       "AUTH_RESEND_ENABLED",
       "AUTH_JS_ENABLED",
       "AUTH_ENABLED",
       "AUTH_METHODS_ENABLED",
-    ]);
-    expectOn({ RESEND_API_KEY: "re_x", NODE_ENV: "production" }, DEFAULT_ON);
+    ];
+    const configured = { RESEND_API_KEY: "re_x", RESEND_FROM_EMAIL: "sign-in@example.com" };
+
+    // LAC-3800: this used to be devOnly, which handed anything forking this
+    // repo a working magic link in dev and a sign-in page with no way in once
+    // deployed. Abuse control moved to the AUTH_ALLOWED_EMAILS allowlist in
+    // magic-link-allowlist.ts, which can actually refuse a send.
+    expectOn({ ...configured, NODE_ENV: "production" }, resendOn);
+    expectOn(configured, resendOn);
+
+    // A key on its own is not enough: the send fails at Resend without a sender
+    // on a verified domain, so that reads as "not configured" rather than a 500.
+    expectOn({ RESEND_API_KEY: "re_x" }, DEFAULT_ON);
+    expectOn({ RESEND_FROM_EMAIL: "sign-in@example.com" }, DEFAULT_ON);
+
+    // The off switch still wins, in production as anywhere else.
+    expectOn({ ...configured, NODE_ENV: "production", DISABLE_AUTH_RESEND: "true" }, DEFAULT_ON);
   });
 
   it("guest login counts as auth but not as a sign-in method", () => {
