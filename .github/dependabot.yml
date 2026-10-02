@@ -5,7 +5,17 @@
 # batched into a single PR per ecosystem to avoid noise; major bumps open on their
 # own so they get individual review.
 #
-# pnpm note: the npm ecosystem drives pnpm projects — Dependabot reads pnpm-lock.yaml.
+# pnpm note: the npm ecosystem drives pnpm projects. Dependabot reads
+# pnpm-lock.yaml, which is the only JS lockfile this repo keeps. Do not commit a
+# second root lockfile: scripts/verify.sh picks its package manager by lockfile
+# presence, so a stray bun.lock makes the verify gate run bun in a pnpm repo.
+#
+# Release-age note (LAC-4109): the updater runs pnpm with a three-day
+# minimum-release-age gate. A range in package.json whose only satisfying
+# versions are younger than that gate cannot resolve, and the job then fails on
+# every dependency with ERR_PNPM_NO_MATURE_MATCHING_VERSION rather than on the
+# one package at fault. .npmrc pins pnpm to the same gate so we cannot write
+# such a range; keep the two numbers equal.
 version: 2
 updates:
   # App JavaScript dependencies (root package.json)
