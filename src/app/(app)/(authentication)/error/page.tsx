@@ -6,7 +6,7 @@ import { AuthErrorContent } from "./_components/auth-error-content";
 
 export const metadata: Metadata = constructMetadata({
   title: "Authentication Error",
-  description: `An error occurred during authentication. Please try again or contact ${siteConfig.name} support.`,
+  description: `Something went wrong while signing you in to ${siteConfig.name}. Try the sign-in step again, or contact support if the problem keeps happening.`,
   noIndex: true,
 });
 
