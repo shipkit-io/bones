@@ -9,7 +9,7 @@ import { env } from "@/env";
 
 export const metadata: Metadata = constructMetadata({
   title: "Sign In",
-  description: `Sign in to your ${siteConfig.name} account to access your dashboard, projects, and settings.`,
+  description: `Sign in to your ${siteConfig.name} account to access your dashboard, projects, team workspaces, billing, API keys, and account settings.`,
   noIndex: true,
 });
 

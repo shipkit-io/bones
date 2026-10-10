@@ -99,13 +99,19 @@ export const Header: React.FC<HeaderProps> = ({
   const isOpaque =
     variant === "floating" && typeof opaqueOnScroll === "number" && scrollY > opaqueOnScroll;
 
-  // Minimal variant: logo + a few text links + theme toggle
+  // Minimal variant: logo + a few text links + theme toggle. Callers can
+  // pass `navLinks` to override the defaults — Bones does this because it
+  // does not ship /blog or /docs, and linking to them would hit 404s
+  // (Ahrefs "Internal link to broken page", LAC-3922).
   if (variant === "minimal") {
-    const minimalLinks: NavLink[] = [
-      { href: routes.blog, label: "Blog" },
-      { href: "/changelog", label: "Changelog" },
-      { href: routes.docs, label: "Docs" },
-    ];
+    const minimalLinks: NavLink[] =
+      navLinks !== navigationDefaultNavLinks && navLinks.length > 0
+        ? navLinks
+        : [
+            { href: routes.blog, label: "Blog" },
+            { href: "/changelog", label: "Changelog" },
+            { href: routes.docs, label: "Docs" },
+          ];
 
     return (
       <header className={cn(headerVariants({ variant: "minimal" }), className)}>
