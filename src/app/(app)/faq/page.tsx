@@ -57,9 +57,9 @@ export default async function FaqPage() {
     <section className="container mx-auto mt-header space-y-section py-16">
       <div className="grid w-full grid-cols-1 md:grid-cols-5">
         <div className="z-10 col-span-2 bg-neutral-50 p-12 dark:bg-neutral-900">
-          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+          <h1 className="mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
             Frequently Asked Questions
-          </h2>
+          </h1>
           <p className="mb-8 text-neutral-600 dark:text-neutral-300">
             Here are some common questions about {siteConfig.title}. If you have any other
             questions, feel free to reach out to us.

@@ -8,7 +8,7 @@ import { AuthenticationCard } from "../_components/authentication-card";
 
 export const metadata: Metadata = constructMetadata({
   title: "Forgot Password",
-  description: `Reset your ${siteConfig.name} account password. Enter your email to receive a password reset link.`,
+  description: `Reset your ${siteConfig.name} account password. Enter the email on your account and we will send a secure link to pick a new password within minutes.`,
   noIndex: true,
 });
 

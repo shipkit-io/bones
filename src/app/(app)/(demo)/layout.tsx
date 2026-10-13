@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = constructMetadata({
   title: "Demo",
-  description: "Explore component demos and examples showcasing various UI patterns and features.",
+  description:
+    "Explore live component demos and examples that showcase UI patterns, data fetching, and features you can wire into your own app in minutes.",
   noIndex: true,
 });
 

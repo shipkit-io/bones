@@ -5,14 +5,11 @@ import { Link } from "@/components/primitives/link";
 import { Boxes } from "@/components/ui/background-boxes";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { constructMetadata } from "@/config/metadata";
+import { constructMetadata, routeMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
-export const metadata: Metadata = constructMetadata({
-  title: "Contact Us",
-  description: `Get in touch with the ${siteConfig.name} team. We'd love to hear from you and answer any questions.`,
-});
+export const metadata: Metadata = constructMetadata(routeMetadata.contact);
 
 export default function ContactPage() {
   return (
