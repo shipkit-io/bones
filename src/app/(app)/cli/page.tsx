@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { InstallSection } from "./_components/install-section";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Bones CLI: browse and install shadcn/ui registries",
+  description:
+    "Browse and install shadcn/ui registries without a terminal. Run npx shadcn@latest add https://cli.bones.sh in your Next.js project to get started.",
+});
 
 export default function Home() {
   return (
