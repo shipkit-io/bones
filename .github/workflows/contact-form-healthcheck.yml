@@ -19,9 +19,16 @@ on:
 
 jobs:
   healthcheck:
+    # Forks and CLI-scaffolded repos inherit this workflow. With SITE_URL
+    # hardcoded they all probed bones.sh daily and failed on a missing
+    # HEALTHCHECK_TOKEN, so the schedule was permanently red for them and the
+    # alert mail doubled up (LAC-4262). Only the canonical repo runs by
+    # default; a downstream opts in by setting the SITE_URL repository
+    # variable to its own deployment.
+    if: github.repository == 'shipkit-io/bones' || vars.SITE_URL != ''
     runs-on: ubuntu-latest
     env:
-      SITE_URL: https://bones.sh
+      SITE_URL: ${{ vars.SITE_URL || 'https://bones.sh' }}
       HEALTHCHECK_TOKEN: ${{ secrets.HEALTHCHECK_TOKEN }}
     steps:
       - name: Config health check (Resend credentials + email config)
@@ -60,4 +67,4 @@ jobs:
         run: |
           curl -s -X POST "$SLACK_WEBHOOK_URL" \
             -H 'Content-Type: application/json' \
-            -d '{"text":":rotating_light: bones.sh contact form health check FAILED. See GitHub Actions run '"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"}' || true
+            -d '{"text":":rotating_light: Contact form health check FAILED for '"$SITE_URL"'. See GitHub Actions run '"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"}' || true
