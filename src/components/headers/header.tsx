@@ -116,16 +116,16 @@ export const Header: React.FC<HeaderProps> = ({
     return (
       <header className={cn(headerVariants({ variant: "minimal" }), className)}>
         <nav className="container flex items-center justify-between gap-md">
-          <div className="flex shrink-0 items-center gap-2 md:gap-4">
+          <div className="flex min-w-0 items-center gap-2 md:gap-4">
             <Link
               href={logoHref}
-              className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+              className="flex min-w-0 items-center gap-2 text-lg font-semibold md:mr-6 md:text-base [&_svg]:shrink-0"
             >
               {logoIcon}
-              <span className="block whitespace-nowrap">{logoText}</span>
+              <span className="truncate">{logoText}</span>
             </Link>
 
-            <div className="flex items-center gap-md text-sm">
+            <div className="flex shrink-0 items-center gap-md text-sm">
               {minimalLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -138,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          <ThemeToggle variant="ghost" size="icon" className="rounded-full" />
+          <ThemeToggle variant="ghost" size="icon" className="shrink-0 rounded-full" />
         </nav>
       </header>
     );
@@ -168,7 +168,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div
           className={cn(
             "flex items-center gap-2 md:gap-4",
-            isLogoOnly ? "shrink-0 justify-center" : "min-w-0 flex-1 justify-start"
+            isLogoOnly ? "shrink-0 justify-center" : "min-w-0 flex-auto justify-start"
           )}
         >
           {!isLogoOnly && (
@@ -247,10 +247,10 @@ export const Header: React.FC<HeaderProps> = ({
 
           <Link
             href={logoHref}
-            className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+            className="flex min-w-0 items-center gap-2 text-lg font-semibold md:mr-6 md:text-base [&_svg]:shrink-0"
           >
             {logoIcon}
-            <span className="block whitespace-nowrap">{logoText}</span>
+            <span className="truncate">{logoText}</span>
           </Link>
 
           <div className="hidden min-w-0 flex-1 md:flex">
@@ -259,7 +259,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {!isLogoOnly && (
-          <div className="flex shrink-0 items-center gap-2 lg:gap-4">
+          <div className="flex min-w-0 items-center gap-2 lg:gap-4">
             {/* Search */}
             {searchVariant === "menu" && (
               <SearchMenu
@@ -277,9 +277,11 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
 
-            {!isLoggedIn && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
+            {!isLoggedIn && (
+              <ThemeToggle variant="ghost" size="icon" className="shrink-0 rounded-full" />
+            )}
 
-            <UserMenu user={user} />
+            <UserMenu user={user} className="shrink-0" />
 
             {!isLoggedIn &&
               (animatedCTAOnScroll ? (
@@ -324,7 +326,7 @@ export const Header: React.FC<HeaderProps> = ({
                   )}
                 </AnimatePresence>
               ) : (
-                <BuyButton />
+                <BuyButton className="min-w-0 shrink truncate" />
               ))}
           </div>
         )}
