@@ -300,7 +300,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 
   return (
     <Button onClick={handleClick} variant="default" className={cn(className)}>
-      Get {siteConfig.title}
+      Get {siteConfig.name}
     </Button>
   );
 };

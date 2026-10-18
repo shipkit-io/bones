@@ -60,7 +60,11 @@ interface HeaderProps {
 
 // Deprecated local defaultNavLinks; use navigationDefaultNavLinks from config instead.
 
-const headerVariants = cva("translate-z-0 z-50 p-md", {
+// Horizontal gutters come from the nav's `container`, which is what the rest
+// of the page uses. Adding p-md here stacked a second 20px gutter on top of
+// it, pushing the header 20px inboard of the page content and eating 40px of
+// a 320px viewport.
+const headerVariants = cva("translate-z-0 z-50 py-md", {
   variants: {
     variant: {
       default: "relative",
@@ -79,10 +83,10 @@ const headerVariants = cva("translate-z-0 z-50 p-md", {
 export const Header: React.FC<HeaderProps> = ({
   logoHref = routes.home,
   logoIcon = <Icon />,
-  logoText = siteConfig.title,
+  logoText = siteConfig.name,
   navLinks = navigationDefaultNavLinks,
   variant = "default",
-  searchPlaceholder = `Search ${siteConfig.title}...`,
+  searchPlaceholder = `Search ${siteConfig.name}...`,
   searchVariant = "menu",
   animatedCTAOnScroll,
   opaqueOnScroll,
@@ -195,6 +199,11 @@ export const Header: React.FC<HeaderProps> = ({
                   {searchVariant === "ai" && (
                     <SearchAi buttonText={searchPlaceholder} className="w-full" />
                   )}
+                  <div className="flex items-center justify-between md:hidden">
+                    <span className="text-muted-foreground">Theme</span>
+                    <ThemeToggle variant="ghost" size="icon" className="rounded-full" />
+                  </div>
+
                   {navLinks.map((link) => (
                     <Link
                       key={`${link.href}-${link.label}`}
@@ -216,7 +225,7 @@ export const Header: React.FC<HeaderProps> = ({
                           "w-full justify-center"
                         )}
                       >
-                        {`Get ${siteConfig.title}`}
+                        {`Get ${siteConfig.name}`}
                       </Link>
                       <Link
                         href={signInRedirectUrl}
@@ -278,10 +287,18 @@ export const Header: React.FC<HeaderProps> = ({
             )}
 
             {!isLoggedIn && (
-              <ThemeToggle variant="ghost" size="icon" className="shrink-0 rounded-full" />
+              <ThemeToggle
+                variant="ghost"
+                size="icon"
+                className="hidden shrink-0 rounded-full md:inline-flex"
+              />
             )}
 
-            <UserMenu user={user} className="shrink-0" />
+            {/* Signed out, the account icon only repeats the sheet's Login link,
+                so it waits until there is room for it. */}
+            <div className={cn("shrink-0", !isLoggedIn && "hidden md:block")}>
+              <UserMenu user={user} />
+            </div>
 
             {!isLoggedIn &&
               (animatedCTAOnScroll ? (
