@@ -306,6 +306,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {scrollY > animatedCTAOnScroll ? (
                     <motion.div
                       key="compact"
+                      className="min-w-0"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
@@ -314,8 +315,8 @@ export const Header: React.FC<HeaderProps> = ({
                       <TooltipProvider delayDuration={0}>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="relative -m-1 p-1">
-                              <BuyButton />
+                            <div className="relative -m-1 min-w-0 p-1">
+                              <BuyButton className="min-w-0 max-w-full shrink" />
                             </div>
                           </TooltipTrigger>
                           <TooltipContent
@@ -331,19 +332,24 @@ export const Header: React.FC<HeaderProps> = ({
                   ) : (
                     <motion.div
                       key="full"
+                      className="min-w-0"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.1 }}
                     >
-                      <LoginButton variant="outline" nextUrl={routes.app.dashboard}>
-                        Dashboard
+                      <LoginButton
+                        variant="outline"
+                        nextUrl={routes.app.dashboard}
+                        className="min-w-0 max-w-full shrink"
+                      >
+                        <span className="truncate">Dashboard</span>
                       </LoginButton>
                     </motion.div>
                   )}
                 </AnimatePresence>
               ) : (
-                <BuyButton className="min-w-0 shrink truncate" />
+                <BuyButton className="min-w-0 shrink" />
               ))}
           </div>
         )}

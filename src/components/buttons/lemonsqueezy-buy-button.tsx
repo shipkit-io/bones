@@ -300,7 +300,11 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 
   return (
     <Button onClick={handleClick} variant="default" className={cn(className)}>
-      Get {siteConfig.name}
+      {/* `truncate` cannot work on the Button itself: it is `inline-flex`, and
+          text-overflow does not apply to a flex container's anonymous text
+          item, so it hard-cuts instead of ellipsizing. The label needs its own
+          block-level child. */}
+      <span className="truncate">Get {siteConfig.name}</span>
     </Button>
   );
 };
