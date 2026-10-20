@@ -4,9 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "@/lib/auth/use-session";
 import type React from "react";
-
 import { Icon } from "@/components/assets/icon";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { SearchAi } from "@/components/modules/search/search-ai";
@@ -23,6 +21,7 @@ import { defaultNavLinks as navigationDefaultNavLinks } from "@/config/navigatio
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
+import { useSession } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 import styles from "@/styles/header.module.css";
 import type { User } from "@/types/user";
@@ -186,13 +185,21 @@ export const Header: React.FC<HeaderProps> = ({
                     close button and for SheetHeader/SheetFooter, so the rows
                     line up with the X rather than with the panel border.
 
+                    `grid-cols-[minmax(0,1fr)]` because a grid's auto column is
+                    sized by its widest child's min-content: the 215px CTA string
+                    sized the column for every row, so at 320 each row ate 6.6px
+                    of its right gutter and read 16px left against 9.4px right.
+                    Capping the column keeps the gutter even whatever the strings
+                    are, and drops the 8px of sideways overflow that
+                    `overflow-x-hidden` was hiding rather than preventing.
+
                     `min-h-0` + `overflow-y-auto` because the inset costs 32px of
                     height and a flex child will not scroll without it: on a
                     short viewport the last rows would be cut off with no way to
                     reach them. `overflow-x-hidden` keeps the pair explicit --
                     naming one axis makes the browser compute the other as
                     `auto`, which would hand the sheet a stray sideways scroll. */}
-                <nav className="grid min-h-0 gap-6 overflow-x-hidden overflow-y-auto p-4 font-medium">
+                <nav className="grid min-h-0 grid-cols-[minmax(0,1fr)] gap-6 overflow-x-hidden overflow-y-auto p-4 font-medium">
                   <Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
                     {logoIcon}
                     <span className="sr-only">{logoText}</span>
