@@ -180,7 +180,19 @@ export const Header: React.FC<HeaderProps> = ({
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-                <nav className="grid gap-6 font-medium">
+                {/* The panel is 3/4 of the viewport, so at 320px every row had
+                    240px to sit in and sat flush against the left edge of it
+                    (LAC-4999). 16px is the inset the sheet already uses for its
+                    close button and for SheetHeader/SheetFooter, so the rows
+                    line up with the X rather than with the panel border.
+
+                    `min-h-0` + `overflow-y-auto` because the inset costs 32px of
+                    height and a flex child will not scroll without it: on a
+                    short viewport the last rows would be cut off with no way to
+                    reach them. `overflow-x-hidden` keeps the pair explicit --
+                    naming one axis makes the browser compute the other as
+                    `auto`, which would hand the sheet a stray sideways scroll. */}
+                <nav className="grid min-h-0 gap-6 overflow-x-hidden overflow-y-auto p-4 font-medium">
                   <Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
                     {logoIcon}
                     <span className="sr-only">{logoText}</span>

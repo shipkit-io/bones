@@ -123,8 +123,8 @@ export function SearchMenu({
       <Button
         variant={buttonVariant}
         className={cn(
-          "relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
-          collapsible ? "justify-center lg:justify-start lg:pr-12" : "justify-start sm:pr-12",
+          "bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
+          collapsible ? "justify-center lg:justify-start" : "justify-start",
           buttonClassName
         )}
         size="sm"
@@ -137,14 +137,23 @@ export function SearchMenu({
         >
           {buttonText}
         </span>
-        {showShortcut && (
+        {/* In flow, not absolutely positioned over the label. Pinning the badge
+            and reserving room for it with `pr-12` looked right and never was:
+            Button's own `has-[>svg]:px-2.5` outranks a `lg:` padding utility,
+            so the reservation was dead and the badge sat 23px inside the
+            placeholder, eating the tail of it (LAC-5000). A flex sibling needs
+            no reserved width and cannot be out-specified.
+
+            Rendered only once the platform is known. `useIsMac` is false on the
+            server, so the first paint spells the key "Ctrl+K" (57px) where a Mac
+            will spell it "⌘K" (28px); in flow that difference is a visible jump,
+            and the old opacity fade only hid the wrong glyphs, not the width. */}
+        {showShortcut && isClient && (
           <ShortcutDisplay
             action={ShortcutAction.OPEN_SEARCH}
             className={cn(
-              "pointer-events-none absolute top-[0.3rem] right-[0.3rem] text-xs",
-              "transition-opacity duration-300",
-              collapsible ? "hidden xl:flex" : "hidden lg:flex",
-              isClient ? "opacity-100" : "opacity-0"
+              "pointer-events-none ml-auto shrink-0 text-xs",
+              collapsible ? "hidden xl:flex" : "hidden lg:flex"
             )}
           />
         )}
