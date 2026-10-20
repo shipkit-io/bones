@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
 import { docsConfig } from "@/components/modules/search/example";
-import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
+import { ShortcutSlot } from "@/components/primitives/shortcut-display";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,7 +89,6 @@ export function SearchMenu({
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const { setTheme } = useTheme();
-  const [isClient, setIsClient] = React.useState(false);
 
   useKeyboardShortcut(
     ShortcutAction.OPEN_SEARCH,
@@ -114,10 +113,6 @@ export function SearchMenu({
     command();
   }, []);
 
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
     <>
       <Button
@@ -133,27 +128,27 @@ export function SearchMenu({
       >
         {collapsible && <MagnifyingGlassIcon className="h-4 w-4 shrink-0 lg:mr-2" />}
         <span
-          className={cn("truncate text-xs", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
+          /* `block`, not `inline-flex`: `truncate` only draws its ellipsis on a
+             block container, and a flex one cuts the word off mid-letter. */
+          className={cn("truncate text-xs", collapsible ? "hidden lg:block" : "block")}
         >
           {buttonText}
         </span>
-        {/* In flow, not absolutely positioned over the label. Pinning the badge
-            and reserving room for it with `pr-12` looked right and never was:
-            Button's own `has-[>svg]:px-2.5` outranks a `lg:` padding utility,
-            so the reservation was dead and the badge sat 23px inside the
-            placeholder, eating the tail of it (LAC-5000). A flex sibling needs
-            no reserved width and cannot be out-specified.
-
-            Rendered only once the platform is known. `useIsMac` is false on the
-            server, so the first paint spells the key "Ctrl+K" (57px) where a Mac
-            will spell it "⌘K" (28px); in flow that difference is a visible jump,
-            and the old opacity fade only hid the wrong glyphs, not the width. */}
-        {showShortcut && isClient && (
-          <ShortcutDisplay
+        {/* The hint sits in flow, in a slot that reserves its own width, rather
+            than pinned over the label with `pr-12` reserving room for it.  That
+            reservation was dead: Button's own `has-[>svg]:px-2.5` matches the
+            magnifier icon and `:has()` carries its argument's specificity, so it
+            outranked a `lg:` padding utility and computed padding-right stayed
+            10px.  The hint landed 23px inside the placeholder and ate the tail
+            of it (LAC-5000).  A sibling needs no reservation to out-specify, and
+            `ShortcutSlot` keeps the button one width from the first frame on
+            whatever platform is reading it. */}
+        {showShortcut && (
+          <ShortcutSlot
             action={ShortcutAction.OPEN_SEARCH}
             className={cn(
-              "pointer-events-none ml-auto shrink-0 text-xs",
-              collapsible ? "hidden xl:flex" : "hidden lg:flex"
+              "ml-auto text-xs",
+              collapsible ? "hidden xl:inline-flex" : "hidden lg:inline-flex"
             )}
           />
         )}

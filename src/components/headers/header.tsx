@@ -279,19 +279,24 @@ export const Header: React.FC<HeaderProps> = ({
 
         {!isLogoOnly && (
           <div className="flex shrink-0 items-center gap-2 lg:gap-4">
-            {/* Search */}
+            {/* Search. Capped at 15rem from `xl` up, where the shortcut hint
+                appears: the trigger is sized by its placeholder, and the
+                placeholder is whatever the site is called, so an uncapped
+                trigger lets a long name push nav links into "More" at 1280.
+                The cap holds the trigger at the width it has without the hint
+                and the placeholder truncates instead. */}
             {searchVariant === "menu" && (
               <SearchMenu
                 buttonText={searchPlaceholder}
                 minimal={true}
-                buttonClassName="hidden md:flex min-w-[40px]"
+                buttonClassName="hidden min-w-[40px] md:flex xl:max-w-60"
                 collapsible
               />
             )}
             {searchVariant === "ai" && (
               <SearchAi
                 buttonText={searchPlaceholder}
-                className="hidden min-w-[40px] md:flex"
+                className="hidden min-w-[40px] md:flex xl:max-w-60"
                 collapsible
               />
             )}
