@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
 import { docsConfig } from "@/components/modules/search/example";
-import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
+import { ShortcutSlot } from "@/components/primitives/shortcut-display";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,7 +89,6 @@ export function SearchMenu({
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const { setTheme } = useTheme();
-  const [isClient, setIsClient] = React.useState(false);
 
   useKeyboardShortcut(
     ShortcutAction.OPEN_SEARCH,
@@ -114,17 +113,13 @@ export function SearchMenu({
     command();
   }, []);
 
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
     <>
       <Button
         variant={buttonVariant}
         className={cn(
-          "relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
-          collapsible ? "justify-center lg:justify-start lg:pr-12" : "justify-start sm:pr-12",
+          "bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
+          collapsible ? "justify-center lg:justify-start" : "justify-start",
           buttonClassName
         )}
         size="sm"
@@ -133,18 +128,27 @@ export function SearchMenu({
       >
         {collapsible && <MagnifyingGlassIcon className="h-4 w-4 shrink-0 lg:mr-2" />}
         <span
-          className={cn("truncate text-xs", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
+          /* `block`, not `inline-flex`: `truncate` only draws its ellipsis on a
+             block container, and a flex one cuts the word off mid-letter. */
+          className={cn("truncate text-xs", collapsible ? "hidden lg:block" : "block")}
         >
           {buttonText}
         </span>
+        {/* The hint sits in flow, in a slot that reserves its own width, rather
+            than pinned over the label with `pr-12` reserving room for it.  That
+            reservation was dead: Button's own `has-[>svg]:px-2.5` matches the
+            magnifier icon and `:has()` carries its argument's specificity, so it
+            outranked a `lg:` padding utility and computed padding-right stayed
+            10px.  The hint landed 23px inside the placeholder and ate the tail
+            of it (LAC-5000).  A sibling needs no reservation to out-specify, and
+            `ShortcutSlot` keeps the button one width from the first frame on
+            whatever platform is reading it. */}
         {showShortcut && (
-          <ShortcutDisplay
+          <ShortcutSlot
             action={ShortcutAction.OPEN_SEARCH}
             className={cn(
-              "pointer-events-none absolute top-[0.3rem] right-[0.3rem] text-xs",
-              "transition-opacity duration-300",
-              collapsible ? "hidden xl:flex" : "hidden lg:flex",
-              isClient ? "opacity-100" : "opacity-0"
+              "ml-auto text-xs",
+              collapsible ? "hidden xl:inline-flex" : "hidden lg:inline-flex"
             )}
           />
         )}
