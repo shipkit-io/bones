@@ -9,8 +9,8 @@ import { isBetterAuthActive } from "@/lib/auth/auth-strategy";
 import { resend } from "@/lib/resend";
 import { forgotPasswordSchema, resetPasswordSchema, signInActionSchema } from "@/lib/schemas/auth";
 import type { ActionState } from "@/lib/utils/validated-action";
-import { AuthService } from "@/server/services/auth-service";
 import { betterAuthCredentials } from "@/server/better-auth/facade";
+import { AuthService } from "@/server/services/auth-service";
 import type { UserRole } from "@/types/user";
 
 export interface AuthOptions {

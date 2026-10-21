@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { logger } from "@/lib/logger";
 import { adminConfig } from "@/config/admin-config";
+import { logger } from "@/lib/logger";
 import { getPayloadClient } from "@/lib/payload/payload";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";

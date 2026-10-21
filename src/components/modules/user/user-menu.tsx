@@ -2,7 +2,6 @@
 
 import { UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut, useSession } from "@/lib/auth/use-session";
 import * as React from "react";
 import { toast } from "sonner";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
@@ -17,6 +16,7 @@ import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useSubscription } from "@/hooks/use-subscription";
+import { signOut, useSession } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 import type { User } from "@/types/user";

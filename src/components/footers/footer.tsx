@@ -1,12 +1,12 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import Link from "next/link";
+import type { FC, HTMLAttributes, ReactNode } from "react";
+import { v4 as uuid } from "uuid";
 import { buttonVariants } from "@/components/ui/button";
 import { bonesRoutes } from "@/config/bones-routes";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
-import Link from "next/link";
-import type { FC, HTMLAttributes, ReactNode } from "react";
-import { v4 as uuid } from "uuid";
 
 interface LinkItem {
   label: string;

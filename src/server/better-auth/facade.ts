@@ -1,13 +1,13 @@
 import { APIError } from "better-auth/api";
-import type { Auth } from "@/server/better-auth/config";
-import type { Session } from "next-auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { Session } from "next-auth";
 import { BASE_URL } from "@/config/base-url";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { type BetterAuthSessionResult, mapBetterAuthSession } from "@/lib/auth/session-mapping";
 import { logger } from "@/lib/logger";
+import type { Auth } from "@/server/better-auth/config";
 
 export { type BetterAuthSessionResult, mapBetterAuthSession };
 

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  computeBuildTimeFeatures,
   FEATURE_DEFINITIONS,
   FEATURE_KEYS,
-  computeBuildTimeFeatures,
   featureFlagNames,
 } from "../../../src/config/features-config";
 

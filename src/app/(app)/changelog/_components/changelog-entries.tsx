@@ -34,7 +34,7 @@ export async function ChangelogEntries() {
 
       {hidden.length > 0 && (
         <details className="group">
-          <summary className="relative list-none cursor-pointer select-none pb-10 pl-8 text-sm text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+          <summary className="relative cursor-pointer list-none pb-10 pl-8 text-sm text-muted-foreground transition-colors select-none hover:text-foreground [&::-webkit-details-marker]:hidden">
             <span className="absolute top-1.5 left-0 h-[15px] w-[15px] rounded-full border-2 border-muted-foreground/40 bg-background" />
             <span className="group-open:hidden">
               Show {hidden.length} older release{hidden.length === 1 ? "" : "s"}

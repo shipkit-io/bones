@@ -17,10 +17,10 @@
  * All arguments are optional. If not provided, the script will prompt for them.
  */
 
-import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
-import readline from "readline";
+import { execSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import readline from "node:readline";
 
 // Create readline interface for prompting
 const rl = readline.createInterface({

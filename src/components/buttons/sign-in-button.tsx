@@ -1,13 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { signOut, useSession } from "@/lib/auth/use-session";
 import type React from "react";
 import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { useSignInRedirectUrl, useSignOutRedirectUrl } from "@/hooks/use-auth-redirect";
+import { signOut, useSession } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 
 export const SignInButton = ({

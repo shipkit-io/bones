@@ -1,20 +1,20 @@
+import { IconBrandGithub } from "@tabler/icons-react";
+import type { Metadata } from "next";
+import { Space_Grotesk } from "next/font/google";
+import Link from "next/link";
 import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
+import { JsonLd } from "@/components/primitives/json-ld";
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/primitives/page-header";
-import { JsonLd } from "@/components/primitives/json-ld";
 import { Attribution } from "@/components/ui/attribution";
 import { buttonVariants } from "@/components/ui/button";
 import { TextLoop } from "@/components/ui/text-loop";
-import { routes } from "@/config/routes";
 import { routeMetadata } from "@/config/metadata";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
-import { IconBrandGithub } from "@tabler/icons-react";
-import { Space_Grotesk } from "next/font/google";
-import Link from "next/link";
 
 const font = Space_Grotesk({
   weight: ["400"],

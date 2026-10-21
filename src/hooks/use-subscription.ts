@@ -1,8 +1,8 @@
 "use client";
 
-import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
+import { useSession } from "@/lib/auth/use-session";
 
 type SubscriptionProvider = "lemonsqueezy" | "polar";
 
