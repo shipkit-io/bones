@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 import { format } from "date-fns";
 
 /**

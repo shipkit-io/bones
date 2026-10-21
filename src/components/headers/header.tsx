@@ -4,9 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "@/lib/auth/use-session";
 import type React from "react";
-
 import { Icon } from "@/components/assets/icon";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { SearchAi } from "@/components/modules/search/search-ai";
@@ -23,6 +21,7 @@ import { defaultNavLinks as navigationDefaultNavLinks } from "@/config/navigatio
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
+import { useSession } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 import styles from "@/styles/header.module.css";
 import type { User } from "@/types/user";

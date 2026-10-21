@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { metrics, metricsService } from "./metrics-service";
 import { redisClient as redis } from "./redis-service"; // Import the shared client

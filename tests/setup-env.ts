@@ -29,9 +29,9 @@ if (typeof window === "undefined") {
     } catch {
       // Map bare import "next/server" to our JS shim so next-auth/env can import it safely
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const Module = require("module");
+      const Module = require("node:module");
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const path = require("path");
+      const path = require("node:path");
       const originalResolve = Module._resolveFilename;
       const shimPath = path.resolve(__dirname, "./shims/next-server.js");
       Module._resolveFilename = function (

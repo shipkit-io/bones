@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { useSession } from "@/lib/auth/use-session";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
 

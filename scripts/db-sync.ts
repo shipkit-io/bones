@@ -1,7 +1,7 @@
-import { exec, spawn } from "child_process";
+import { exec, spawn } from "node:child_process";
+import path from "node:path";
+import { promisify } from "node:util";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
-import path from "path";
-import { promisify } from "util";
 // import "../scripts/env-config.js";
 import { getPayloadClient } from "@/lib/payload/payload";
 import { seed } from "@/lib/payload/seed";

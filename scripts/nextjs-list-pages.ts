@@ -3,8 +3,8 @@
 // Usage:  node scripts/list-static.js
 // (make sure you ran `next build` first!)
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 const projectRoot = process.cwd();
 const nextDir = path.join(projectRoot, ".next");
@@ -18,7 +18,7 @@ try {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   ssgRoutes = Object.keys(manifest.routes);
   dynamicSsgRoutes = Object.keys(manifest.dynamicRoutes);
-} catch (err) {
+} catch {
   console.error("❌ Can’t read prerender‑manifest.json – did you run `next build`?");
   process.exit(1);
 }

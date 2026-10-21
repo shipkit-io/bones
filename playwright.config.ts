@@ -1,6 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig, devices } from "@playwright/test";
-import path from "path";
-import { fileURLToPath } from "url";
 
 // Get the directory name in an ES module context
 const __filename = fileURLToPath(import.meta.url);

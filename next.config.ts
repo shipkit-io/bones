@@ -1,14 +1,10 @@
-import {
-  buildTimeFeatureFlags,
-  buildTimeFeatures,
-  buildTimePublicEnv,
-} from "@/config/features-config";
-import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
+import type { NextConfig } from "next";
 import { noIndexHeaders } from "@/config/bones-routes";
+import { buildTimeFeatureFlags, buildTimePublicEnv } from "@/config/features-config";
+import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/redirects";
 import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
-import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // evlog reads node:fs/node:module. src/instrumentation.ts imports it at
