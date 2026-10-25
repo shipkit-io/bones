@@ -215,14 +215,14 @@ function groupCommits(commits: GitHubCommit[], tagMap: Map<string, string>): Com
 // Render a group into a changelog entry
 // ---------------------------------------------------------------------------
 function renderEntry(group: CommitGroup): ChangelogEntry {
-  const meaningful = group.commits.filter((c) => !isNoise(c.commit.message.split("\n")[0]!));
+  const meaningful = group.commits.filter((c) => !isNoise(c.commit.message.split("\n")[0] ?? ""));
 
   // Bucket by conventional commit type
   const buckets = new Map<string, string[]>();
   const uncategorized: string[] = [];
 
   for (const c of meaningful) {
-    const firstLine = c.commit.message.split("\n")[0]!;
+    const firstLine = c.commit.message.split("\n")[0] ?? "";
     const parsed = parseConventional(firstLine);
     if (parsed) {
       const label = TYPE_LABELS[parsed.type] ?? "Other";

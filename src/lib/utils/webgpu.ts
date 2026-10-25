@@ -3,7 +3,7 @@ import * as React from "react";
 declare global {
   interface Navigator {
     gpu?: {
-      requestAdapter?: () => Promise<any>;
+      requestAdapter?: () => Promise<unknown>;
     };
   }
 }

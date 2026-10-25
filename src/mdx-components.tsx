@@ -36,13 +36,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { siteConfig } from "@/config/site-config";
 
 // Filter the icon libraries to only include valid React components
-function filterForMDXComponents(module: Record<string, any>): MDXComponents {
+function filterForMDXComponents(module: Record<string, unknown>): MDXComponents {
   return Object.fromEntries(
     Object.entries(module).filter(([_key, value]) => {
       // Only include valid React component types
       return isValidElementType(value);
     })
-  );
+  ) as MDXComponents;
 }
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (

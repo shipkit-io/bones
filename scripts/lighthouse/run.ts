@@ -79,7 +79,7 @@ async function runSingle(
     const categories: Record<string, number | null> = {};
     if (lhr?.categories) {
       for (const [key, cat] of Object.entries(lhr.categories)) {
-        const score = (cat as any)?.score;
+        const score = (cat as { score?: number | null } | undefined)?.score;
         categories[key] = typeof score === "number" ? Math.round(score * 100) : null;
       }
     }

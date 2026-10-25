@@ -3,7 +3,7 @@ import { z } from "zod";
 /**
  * GitHub reserved names that cannot be used as repository names
  */
-const GITHUB_RESERVED_NAMES = [
+const GITHUB_RESERVED_NAMES: readonly string[] = [
   ".git",
   ".github",
   "api",
@@ -80,7 +80,7 @@ const projectNameValidation = z
   .refine((name) => !name.includes(".."), {
     message: "Project name cannot contain consecutive dots",
   })
-  .refine((name) => !GITHUB_RESERVED_NAMES.includes(name.toLowerCase() as any), {
+  .refine((name) => !GITHUB_RESERVED_NAMES.includes(name.toLowerCase()), {
     message: "This project name is reserved and cannot be used",
   })
   .refine(

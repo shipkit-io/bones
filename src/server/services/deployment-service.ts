@@ -1,6 +1,6 @@
 import { and, desc, eq, lt } from "drizzle-orm";
 import { siteConfig } from "@/config/site-config";
-import { createGitHubTemplateService } from "@/lib/github-template";
+import { createGitHubTemplateService, type RepoCreationDetails } from "@/lib/github-template";
 import { logger } from "@/lib/logger";
 import { createVercelAPIService, type VercelAPIService } from "@/lib/vercel-api";
 import { db } from "@/server/db";
@@ -565,7 +565,10 @@ class DeploymentService {
       const repoInfo = {
         url: repoResult.repoUrl ?? "",
         name: projectName,
-        cloneUrl: repoResult.details?.cloneUrl ?? repoResult.repoUrl ?? "",
+        cloneUrl:
+          (repoResult.details as RepoCreationDetails | undefined)?.cloneUrl ??
+          repoResult.repoUrl ??
+          "",
       };
 
       // Update deployment with GitHub info

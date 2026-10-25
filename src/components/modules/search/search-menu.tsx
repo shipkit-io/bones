@@ -162,7 +162,9 @@ export function SearchMenu({
                   key={navItem.href}
                   value={navItem.title}
                   onSelect={() => {
-                    runCommand(() => router.push(navItem.href!));
+                    runCommand(() => {
+                      if (navItem.href) router.push(navItem.href);
+                    });
                   }}
                 >
                   <FileIcon className="mr-2 h-4 w-4" />
