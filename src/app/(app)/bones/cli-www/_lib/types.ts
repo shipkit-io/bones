@@ -39,7 +39,7 @@ export interface RegistryItem {
   meta?: {
     library?: string;
     hasPreview?: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

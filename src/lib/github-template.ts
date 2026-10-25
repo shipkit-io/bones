@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import { getErrorMessage, getErrorResponseData, getErrorStatus } from "@/lib/utils/error-shape";
 
 /**
  * GitHub Template Repository Service
@@ -20,12 +21,36 @@ export interface TemplateRepoConfig {
   includeAllBranches?: boolean;
 }
 
+/**
+ * Thrown when the template repository is unreachable only because the user has
+ * not accepted their invitation yet. Carries the invitation URL so the caller
+ * can point the user at it.
+ */
+export class PendingInvitationError extends Error {
+  readonly isPendingInvitation = true;
+  readonly invitationUrl: string;
+
+  constructor(message: string, invitationUrl: string) {
+    super(message);
+    this.name = "PendingInvitationError";
+    this.invitationUrl = invitationUrl;
+  }
+}
+
+/** Repository facts returned alongside a successful creation. */
+export interface RepoCreationDetails {
+  cloneUrl: string;
+  sshUrl: string;
+  fullName: string;
+  defaultBranch: string;
+}
+
 export interface RepoCreationResult {
   success: boolean;
   repoUrl?: string;
   repoId?: number;
   error?: string;
-  details?: any;
+  details?: unknown;
   isPendingInvitation?: boolean;
   invitationUrl?: string;
 }
@@ -76,17 +101,17 @@ export class GitHubTemplateService {
           defaultBranch: response.data.default_branch,
         },
       };
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to create repository from template:", error);
 
       const result: RepoCreationResult = {
         success: false,
         error: this.formatErrorMessage(error),
-        details: error.response?.data,
+        details: getErrorResponseData(error),
       };
 
       // Include pending invitation info if available
-      if (error.isPendingInvitation) {
+      if (error instanceof PendingInvitationError) {
         result.isPendingInvitation = true;
         result.invitationUrl = error.invitationUrl;
       }
@@ -108,19 +133,16 @@ export class GitHubTemplateService {
       if (!response.data.is_template) {
         throw new Error(`Repository ${owner}/${repo} is not configured as a template repository`);
       }
-    } catch (error: any) {
-      if (error.status === 404) {
+    } catch (error) {
+      if (getErrorStatus(error) === 404) {
         // Check if the user has a pending invitation to this repository
         const invitationCheck = await this.checkPendingInvitation(owner, repo);
 
         if (invitationCheck.hasPendingInvitation) {
-          const invitationError = new Error(
-            `You have a pending invitation to ${owner}/${repo}. Please accept the invitation to continue.`
-          ) as any;
-          invitationError.isPendingInvitation = true;
-          invitationError.invitationUrl =
-            invitationCheck.invitationUrl ?? `https://github.com/${owner}/${repo}/invitations`;
-          throw invitationError;
+          throw new PendingInvitationError(
+            `You have a pending invitation to ${owner}/${repo}. Please accept the invitation to continue.`,
+            invitationCheck.invitationUrl ?? `https://github.com/${owner}/${repo}/invitations`
+          );
         }
 
         throw new Error(
@@ -157,7 +179,7 @@ export class GitHubTemplateService {
           topics: response.data.topics,
         },
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -194,7 +216,7 @@ export class GitHubTemplateService {
           topics: repo.topics,
         })),
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -242,8 +264,7 @@ export class GitHubTemplateService {
       return { hasPendingInvitation: false };
     } catch (error) {
       // 401 means the token is expired/revoked — not an unexpected failure
-      const status = (error as { status?: number })?.status;
-      if (status !== 401) {
+      if (getErrorStatus(error) !== 401) {
         console.warn("Failed to check pending invitations:", error);
       }
       return { hasPendingInvitation: false };
@@ -264,7 +285,7 @@ export class GitHubTemplateService {
         success: true,
         username,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -282,8 +303,8 @@ export class GitHubTemplateService {
         repo: repoName,
       });
       return false; // Repository exists
-    } catch (error: any) {
-      if (error.status === 404) {
+    } catch (error) {
+      if (getErrorStatus(error) === 404) {
         return true; // Repository does not exist, name is available
       }
       throw error; // Some other error occurred
@@ -316,7 +337,7 @@ export class GitHubTemplateService {
       });
 
       return { success: true };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -350,7 +371,7 @@ export class GitHubTemplateService {
           });
 
           results.push({ name, success: true });
-        } catch (error: any) {
+        } catch (error) {
           results.push({
             name,
             success: false,
@@ -363,7 +384,7 @@ export class GitHubTemplateService {
         success: true,
         results,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -393,11 +414,11 @@ export class GitHubTemplateService {
 
       console.log(`Successfully triggered workflow ${workflowId} on ${owner}/${repo}`);
       return { success: true };
-    } catch (error: any) {
+    } catch (error) {
       console.error(`Failed to trigger workflow ${workflowId}:`, error);
 
       // 404 means the workflow file doesn't exist yet (repo might still be initializing)
-      if (error.status === 404) {
+      if (getErrorStatus(error) === 404) {
         return {
           success: false,
           error: `Workflow ${workflowId} not found. The repository may still be initializing.`,
@@ -460,18 +481,21 @@ export class GitHubTemplateService {
   /**
    * Format error messages for user-friendly display
    */
-  private formatErrorMessage(error: any): string {
-    if (error.status === 401) {
+  private formatErrorMessage(error: unknown): string {
+    const status = getErrorStatus(error);
+
+    if (status === 401) {
       return "GitHub authentication failed. Please check your access token.";
     }
-    if (error.status === 403) {
+    if (status === 403) {
       return "GitHub API rate limit exceeded or insufficient permissions.";
     }
-    if (error.status === 404) {
+    if (status === 404) {
       return "Repository not found or not accessible.";
     }
-    if (error.status === 422) {
-      const message = error.response?.data?.message ?? error.message ?? "";
+    if (status === 422) {
+      const responseData = getErrorResponseData(error) as { message?: string } | undefined;
+      const message = responseData?.message ?? getErrorMessage(error) ?? "";
       // Check for "already exists" error specifically
       if (
         message.toLowerCase().includes("already exists") ||
@@ -482,7 +506,7 @@ export class GitHubTemplateService {
       return message ?? "Invalid repository configuration.";
     }
 
-    return error.message ?? "An unexpected error occurred.";
+    return getErrorMessage(error) ?? "An unexpected error occurred.";
   }
 }
 

@@ -72,11 +72,12 @@ describe("changelog slugs", () => {
 
     fetchSpy.mockRestore();
     mockGitHub(AFTER_MERGE);
-    const after = await getChangelogEntry(before!.slug);
+    if (!before) throw new Error("expected an unreleased entry before the merge");
+    const after = await getChangelogEntry(before.slug);
 
-    expect(before?.slug).toBe(UNRELEASED_SLUG);
+    expect(before.slug).toBe(UNRELEASED_SLUG);
     expect(after?.slug).toBe(UNRELEASED_SLUG);
-    expect(after?.commitCount).toBe(before!.commitCount + 1);
+    expect(after?.commitCount).toBe(before.commitCount + 1);
     expect(after?.publishedAt).toBe("2026-09-12");
   });
 
@@ -110,7 +111,9 @@ describe("changelog slugs", () => {
 
     // The unit inside unstable_cache must reject, so the failure is not
     // stored for an hour; the public getter still degrades to an empty list.
-    await expect(cache.fn!()).rejects.toThrow(/GitHub API 403/);
+    const cachedFn = cache.fn;
+    if (!cachedFn) throw new Error("expected unstable_cache to have captured the unit");
+    await expect(cachedFn()).rejects.toThrow(/GitHub API 403/);
     expect(await getChangelogEntries()).toEqual([]);
   });
 });

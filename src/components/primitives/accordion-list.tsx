@@ -11,9 +11,12 @@ export interface AccordionListItem {
   content: React.ReactNode;
 }
 
+/** The single-value variant, which is the one this list renders. */
+type SingleAccordionProps = Extract<React.ComponentProps<typeof Accordion>, { type: "single" }>;
+
 interface AccordionListProps {
   items: AccordionListItem[];
-  accordionProps?: any; // TODO: fix type
+  accordionProps?: Partial<Omit<SingleAccordionProps, "type" | "children">>;
 }
 
 export const AccordionList: React.FC<AccordionListProps> = ({ items, accordionProps }) => {

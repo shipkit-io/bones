@@ -15,7 +15,7 @@ export interface FeedbackResult {
   success: boolean;
   requiresEmailFallback?: boolean;
   mailtoLink?: string;
-  data?: any;
+  data?: unknown;
   error?: string;
 }
 

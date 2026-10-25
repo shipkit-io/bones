@@ -3,10 +3,18 @@
  * Handles automated project creation and deployment configuration
  */
 
+import {
+  getErrorMessage,
+  getErrorResponseData,
+  getErrorStatus,
+} from "@/lib/utils/error-shape";
+
 export interface VercelConfig {
   accessToken: string;
   teamId?: string;
 }
+
+export type VercelEnvTarget = "production" | "preview" | "development";
 
 export interface VercelProjectConfig {
   name: string;
@@ -22,10 +30,110 @@ export interface VercelProjectConfig {
   environmentVariables?: {
     key: string;
     value: string;
-    target: readonly ("production" | "preview" | "development")[];
+    target: readonly VercelEnvTarget[];
   }[];
   domains?: string[];
 }
+
+/** Error thrown when the Vercel API answers with a non-2xx status. */
+export class VercelApiError extends Error {
+  readonly status: number;
+  readonly response: { data: unknown };
+
+  constructor(message: string, status: number, data: unknown) {
+    super(message);
+    this.name = "VercelApiError";
+    this.status = status;
+    this.response = { data };
+  }
+}
+
+/** Error body Vercel returns alongside a failed request. */
+export interface VercelErrorPayload {
+  error?: {
+    code?: string;
+    message?: string;
+  };
+}
+
+/**
+ * Deployment summary as it appears in project and deployment list responses.
+ * Every field is optional: Vercel returns a different subset per endpoint.
+ */
+export interface VercelDeploymentSummary {
+  id?: string;
+  uid?: string;
+  url?: string;
+  /** Vercel returns `state` on some endpoints and `readyState` on others. */
+  state?: string;
+  readyState?: string;
+  createdAt?: number;
+}
+
+export interface VercelProjectResponse {
+  id: string;
+  name: string;
+  accountId?: string;
+  framework?: string | null;
+  createdAt?: number;
+  updatedAt?: number;
+  targets?: Record<string, VercelDeploymentSummary | null> | null;
+  latestDeployments?: VercelDeploymentSummary[];
+}
+
+interface VercelProjectListResponse {
+  projects: VercelProjectResponse[];
+}
+
+interface VercelDeploymentListResponse {
+  deployments?: VercelDeploymentSummary[];
+}
+
+interface VercelDeploymentResponse {
+  id: string;
+  url: string;
+  readyState?: string;
+}
+
+interface VercelEnvVarResponse {
+  id: string;
+}
+
+interface VercelTeamResponse {
+  slug?: string;
+  name?: string;
+}
+
+interface VercelUserResponse {
+  user?: { username?: string };
+}
+
+interface VercelCreateProjectPayload {
+  name: string;
+  framework?: string;
+  gitRepository?: { type: "github" | "gitlab" | "bitbucket"; repo: string };
+  buildCommand?: string;
+  outputDirectory?: string;
+  installCommand?: string;
+  devCommand?: string;
+  environmentVariables?: {
+    key: string;
+    value: string;
+    type: "encrypted";
+    target: readonly VercelEnvTarget[];
+  }[];
+}
+
+interface VercelCreateDeploymentPayload {
+  name: string;
+  target: "production";
+  gitSource?: { type: "github"; ref: string; repoId: number };
+}
+
+/** Vercel accepts a single target or a list; callers may pass either. */
+const toEnvTargets = (
+  target: VercelEnvTarget | readonly VercelEnvTarget[]
+): readonly VercelEnvTarget[] => (typeof target === "string" ? [target] : target);
 
 export interface VercelProjectResult {
   success: boolean;
@@ -33,7 +141,7 @@ export interface VercelProjectResult {
   projectUrl?: string;
   deploymentUrl?: string;
   error?: string;
-  details?: any;
+  details?: unknown;
 }
 
 export interface VercelDeploymentResult {
@@ -41,7 +149,7 @@ export interface VercelDeploymentResult {
   deploymentId?: string;
   deploymentUrl?: string;
   error?: string;
-  details?: any;
+  details?: unknown;
 }
 
 export class VercelAPIService {
@@ -61,7 +169,7 @@ export class VercelAPIService {
     try {
       console.log(`Creating Vercel project: ${config.name}`);
 
-      const projectData: any = {
+      const projectData: VercelCreateProjectPayload = {
         name: config.name,
         framework: this.detectFramework(config.framework),
       };
@@ -85,15 +193,15 @@ export class VercelAPIService {
         projectData.environmentVariables = config.environmentVariables.map((env) => ({
           key: env.key,
           value: env.value,
-          type: "encrypted" as const,
-          target: Array.isArray(env.target) ? env.target : [env.target],
+          type: "encrypted",
+          target: toEnvTargets(env.target),
         }));
       }
 
       // Log the request payload for debugging
       console.log("Vercel API Request Payload:", JSON.stringify(projectData, null, 2));
 
-      const response = await this.makeRequest("/v10/projects", {
+      const response = await this.makeRequest<VercelProjectResponse>("/v10/projects", {
         method: "POST",
         body: JSON.stringify(projectData),
       });
@@ -115,17 +223,18 @@ export class VercelAPIService {
         projectUrl: accountPath ? `https://vercel.com/${accountPath}/${response.name}` : undefined,
         details: response,
       };
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to create Vercel project:", error);
       // Log the full error details for debugging
-      if (error.response?.data) {
-        console.error("Vercel API Error Details:", JSON.stringify(error.response.data, null, 2));
+      const errorData = getErrorResponseData(error);
+      if (errorData) {
+        console.error("Vercel API Error Details:", JSON.stringify(errorData, null, 2));
       }
 
       return {
         success: false,
         error: this.formatErrorMessage(error),
-        details: error.response?.data,
+        details: getErrorResponseData(error),
       };
     }
   }
@@ -143,7 +252,7 @@ export class VercelAPIService {
       console.log(`Creating deployment for project: ${projectId}`);
 
       // Try using project name instead of ID, as the API might expect that
-      const deploymentData: any = {
+      const deploymentData: VercelCreateDeploymentPayload = {
         name: projectName ?? projectId,
         target: "production" as const,
       };
@@ -162,7 +271,7 @@ export class VercelAPIService {
       // Log the deployment request for debugging
       console.log("Vercel Deployment Request:", JSON.stringify(deploymentData, null, 2));
 
-      const response = await this.makeRequest("/v13/deployments", {
+      const response = await this.makeRequest<VercelDeploymentResponse>("/v13/deployments", {
         method: "POST",
         body: JSON.stringify(deploymentData),
       });
@@ -175,20 +284,18 @@ export class VercelAPIService {
         deploymentUrl: response.url,
         details: response,
       };
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to create deployment:", error);
       // Log the full error details for debugging
-      if (error.response?.data) {
-        console.error(
-          "Vercel Deployment Error Details:",
-          JSON.stringify(error.response.data, null, 2)
-        );
+      const errorData = getErrorResponseData(error);
+      if (errorData) {
+        console.error("Vercel Deployment Error Details:", JSON.stringify(errorData, null, 2));
       }
 
       return {
         success: false,
         error: this.formatErrorMessage(error),
-        details: error.response?.data,
+        details: getErrorResponseData(error),
       };
     }
   }
@@ -198,13 +305,15 @@ export class VercelAPIService {
    */
   async getProject(projectId: string) {
     try {
-      const response = await this.makeRequest(`/v10/projects/${projectId}`);
+      const response = await this.makeRequest<VercelProjectResponse>(
+        `/v10/projects/${projectId}`
+      );
 
       return {
         success: true,
         data: response,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -225,7 +334,7 @@ export class VercelAPIService {
         devCommand: updates.devCommand,
       };
 
-      const response = await this.makeRequest(`/v10/projects/${projectId}`, {
+      const response = await this.makeRequest<VercelProjectResponse>(`/v10/projects/${projectId}`, {
         method: "PATCH",
         body: JSON.stringify(updateData),
       });
@@ -234,7 +343,7 @@ export class VercelAPIService {
         success: true,
         data: response,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -258,7 +367,7 @@ export class VercelAPIService {
 
       for (const variable of variables) {
         try {
-          const response = await this.makeRequest(`/v10/projects/${projectId}/env`, {
+          const response = await this.makeRequest<VercelEnvVarResponse>(`/v10/projects/${projectId}/env`, {
             method: "POST",
             body: JSON.stringify({
               key: variable.key,
@@ -273,7 +382,7 @@ export class VercelAPIService {
             success: true,
             id: response.id,
           });
-        } catch (error: any) {
+        } catch (error) {
           results.push({
             key: variable.key,
             success: false,
@@ -286,7 +395,7 @@ export class VercelAPIService {
         success: true,
         results,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -302,7 +411,7 @@ export class VercelAPIService {
     gitRepo: { type: "github" | "gitlab" | "bitbucket"; repo: string }
   ) {
     try {
-      const response = await this.makeRequest(`/v10/projects/${projectId}/git-repository`, {
+      const response = await this.makeRequest<unknown>(`/v10/projects/${projectId}/git-repository`, {
         method: "POST",
         body: JSON.stringify(gitRepo),
       });
@@ -311,11 +420,11 @@ export class VercelAPIService {
         success: true,
         details: response,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
-        details: error.response?.data,
+        details: getErrorResponseData(error),
       };
     }
   }
@@ -329,7 +438,7 @@ export class VercelAPIService {
 
       for (const domain of domains) {
         try {
-          const response = await this.makeRequest(`/v10/projects/${projectId}/domains`, {
+          const response = await this.makeRequest<unknown>(`/v10/projects/${projectId}/domains`, {
             method: "POST",
             body: JSON.stringify({
               name: domain,
@@ -341,7 +450,7 @@ export class VercelAPIService {
             success: true,
             details: response,
           });
-        } catch (error: any) {
+        } catch (error) {
           results.push({
             domain,
             success: false,
@@ -354,7 +463,7 @@ export class VercelAPIService {
         success: true,
         results,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -367,7 +476,9 @@ export class VercelAPIService {
    */
   async getDeploymentStatus(deploymentId: string) {
     try {
-      const response = await this.makeRequest(`/v13/deployments/${deploymentId}`);
+      const response = await this.makeRequest<VercelDeploymentResponse>(
+        `/v13/deployments/${deploymentId}`
+      );
 
       return {
         success: true,
@@ -375,7 +486,7 @@ export class VercelAPIService {
         url: response.url,
         details: response,
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -388,11 +499,11 @@ export class VercelAPIService {
    */
   async listProjects() {
     try {
-      const response = await this.makeRequest("/v10/projects");
+      const response = await this.makeRequest<VercelProjectListResponse>("/v10/projects");
 
       return {
         success: true,
-        projects: response.projects.map((project: any) => ({
+        projects: response.projects.map((project) => ({
           id: project.id,
           name: project.name,
           framework: project.framework,
@@ -401,7 +512,7 @@ export class VercelAPIService {
           targets: project.targets,
         })),
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         error: this.formatErrorMessage(error),
@@ -419,7 +530,7 @@ export class VercelAPIService {
       if (!projects.success) return false;
 
       return !projects.projects.some(
-        (project: any) => project.name.toLowerCase() === name.toLowerCase()
+        (project) => project.name.toLowerCase() === name.toLowerCase()
       );
     } catch (_error) {
       return false;
@@ -431,12 +542,12 @@ export class VercelAPIService {
    */
   async getDeployments(projectId: string, limit = 10) {
     try {
-      const response = await this.makeRequest(
+      const response = await this.makeRequest<VercelDeploymentListResponse>(
         `/v6/deployments?projectId=${projectId}&limit=${limit}`
       );
 
       return response.deployments ?? [];
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to get deployments:", error);
       return [];
     }
@@ -445,11 +556,11 @@ export class VercelAPIService {
   /**
    * Make authenticated request to Vercel API
    */
-  private async makeRequest(
+  private async makeRequest<T>(
     endpoint: string,
     options: RequestInit = {},
     config?: { skipTeamId?: boolean }
-  ) {
+  ): Promise<T> {
     const url = new URL(`${this.baseUrl}${endpoint}`);
     if (this.teamId && !config?.skipTeamId) {
       url.searchParams.append("teamId", this.teamId);
@@ -465,21 +576,22 @@ export class VercelAPIService {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const error = new Error(`Vercel API error: ${response.status} ${response.statusText}`);
-      (error as any).status = response.status;
-      (error as any).response = { data: errorData };
-      throw error;
+      const errorData: unknown = await response.json().catch(() => ({}));
+      throw new VercelApiError(
+        `Vercel API error: ${response.status} ${response.statusText}`,
+        response.status,
+        errorData
+      );
     }
 
-    return response.json();
+    return (await response.json()) as T;
   }
 
   private async resolveAccountSlug(accountId?: string) {
     if (!accountId) return undefined;
 
     try {
-      const teamResponse = await this.makeRequest(
+      const teamResponse = await this.makeRequest<VercelTeamResponse>(
         `/v2/teams/${accountId}`,
         {},
         { skipTeamId: true }
@@ -491,7 +603,11 @@ export class VercelAPIService {
     }
 
     try {
-      const userResponse = await this.makeRequest("/v2/user", {}, { skipTeamId: true });
+      const userResponse = await this.makeRequest<VercelUserResponse>(
+        "/v2/user",
+        {},
+        { skipTeamId: true }
+      );
       return userResponse?.user?.username;
     } catch {
       return undefined;
@@ -513,10 +629,12 @@ export class VercelAPIService {
   /**
    * Format error messages for user-friendly display
    */
-  private formatErrorMessage(error: any): string {
-    if (error.status === 400) {
+  private formatErrorMessage(error: unknown): string {
+    const status = getErrorStatus(error);
+    const errorData = getErrorResponseData(error) as VercelErrorPayload | undefined;
+
+    if (status === 400) {
       // Handle specific 400 errors
-      const errorData = error.response?.data;
       if (errorData?.error?.code === "missing_github_integration") {
         return "GitHub integration not connected to your Vercel account. Please connect GitHub in your Vercel dashboard first.";
       }
@@ -528,26 +646,26 @@ export class VercelAPIService {
       }
       return "Invalid request to Vercel API. Please check your configuration.";
     }
-    if (error.status === 401) {
+    if (status === 401) {
       return "Vercel authentication failed. Please check your access token.";
     }
-    if (error.status === 403) {
+    if (status === 403) {
       return "Insufficient permissions for Vercel operation.";
     }
-    if (error.status === 404) {
+    if (status === 404) {
       return "Vercel project or resource not found.";
     }
-    if (error.status === 409) {
+    if (status === 409) {
       return "A project with this name already exists.";
     }
-    if (error.status === 422) {
-      return error.response?.data?.error?.message ?? "Invalid project configuration.";
+    if (status === 422) {
+      return errorData?.error?.message ?? "Invalid project configuration.";
     }
-    if (error.status === 429) {
+    if (status === 429) {
       return "Vercel API rate limit exceeded. Please try again later.";
     }
 
-    return error.message ?? "An unexpected error occurred with Vercel API.";
+    return getErrorMessage(error) ?? "An unexpected error occurred with Vercel API.";
   }
 }
 

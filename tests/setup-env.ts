@@ -38,13 +38,13 @@ if (typeof window === "undefined") {
         request: string,
         parent: unknown,
         isMain: boolean,
-        options: any
+        options: unknown
       ) {
         if (request === "next/server") {
           return shimPath;
         }
         return originalResolve.call(this, request, parent, isMain, options);
-      } as any;
+      };
     }
   } catch (error) {
     console.warn("Error importing @next/env:", error);
