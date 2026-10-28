@@ -43,11 +43,11 @@ export const resolveContactRecipient = (
     return { to: fallbackTo, isTest: false };
   }
 
-  return {
-    to:
-      process.env.CONTACT_TEST_RECIPIENT ||
-      process.env.ADMIN_EMAIL ||
-      DEFAULT_TEST_RECIPIENT,
-    isTest: true,
-  };
+  // `??` would accept an env var set to the empty string and mail the test
+  // to nobody, so fall through on anything blank rather than on nullish only.
+  const configured = [process.env.CONTACT_TEST_RECIPIENT, process.env.ADMIN_EMAIL]
+    .map((value) => value?.trim())
+    .find((value) => value);
+
+  return { to: configured ?? DEFAULT_TEST_RECIPIENT, isTest: true };
 };

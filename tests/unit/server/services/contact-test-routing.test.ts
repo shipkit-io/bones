@@ -69,3 +69,26 @@ describe("resolveContactRecipient", () => {
     }
   });
 });
+
+describe("resolveContactRecipient env fallbacks", () => {
+  const saved = {
+    recipient: process.env.CONTACT_TEST_RECIPIENT,
+    admin: process.env.ADMIN_EMAIL,
+  };
+
+  afterEach(() => {
+    if (saved.recipient === undefined) delete process.env.CONTACT_TEST_RECIPIENT;
+    else process.env.CONTACT_TEST_RECIPIENT = saved.recipient;
+    if (saved.admin === undefined) delete process.env.ADMIN_EMAIL;
+    else process.env.ADMIN_EMAIL = saved.admin;
+  });
+
+  it("falls through a blank env var instead of mailing nobody", () => {
+    process.env.CONTACT_TEST_RECIPIENT = "   ";
+    process.env.ADMIN_EMAIL = "admin@site.test";
+    expect(resolveContactRecipient("test@test.com", SUPPORT).to).toBe("admin@site.test");
+
+    process.env.ADMIN_EMAIL = "";
+    expect(resolveContactRecipient("test@test.com", SUPPORT).to).toBe(DEFAULT_TEST_RECIPIENT);
+  });
+});
