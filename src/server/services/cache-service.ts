@@ -1,3 +1,4 @@
+import type { Redis } from "@upstash/redis";
 import { logger } from "@/lib/logger";
 import { metrics, metricsService } from "./metrics-service";
 import { redisClient as redis } from "./redis-service"; // Import the shared client
@@ -15,18 +16,26 @@ export interface CacheEntry<T> {
 
 export class CacheService {
   private readonly prefix = "cache";
-  private readonly enabled = !!redis;
+
+  /**
+   * Returns the shared Redis client, or null when caching is disabled because
+   * Redis was never configured. Callers narrow on the result instead of asserting.
+   */
+  private get client(): Redis | null {
+    return redis;
+  }
 
   /**
    * Gets a value from cache
    */
   async get<T>(key: string): Promise<T | null> {
-    if (!this.enabled) return null;
+    const client = this.client;
+    if (!client) return null;
 
     let rawData: string | Record<string, unknown> | null = null;
     try {
       const startTime = Date.now();
-      rawData = await redis!.get(`${this.prefix}:${key}`);
+      rawData = await client.get(`${this.prefix}:${key}`);
       await metricsService.recordTiming(metrics.cache.latency, startTime);
 
       if (rawData === null) {
@@ -75,7 +84,8 @@ export class CacheService {
    * Sets a value in cache
    */
   async set<T>(key: string, value: T, config: CacheConfig = {}): Promise<void> {
-    if (!this.enabled) return;
+    const client = this.client;
+    if (!client) return;
 
     try {
       const entry: CacheEntry<T> = {
@@ -85,9 +95,9 @@ export class CacheService {
       };
 
       if (config.ttl) {
-        await redis!.setex(`${this.prefix}:${key}`, config.ttl, JSON.stringify(entry));
+        await client.setex(`${this.prefix}:${key}`, config.ttl, JSON.stringify(entry));
       } else {
-        await redis!.set(`${this.prefix}:${key}`, JSON.stringify(entry));
+        await client.set(`${this.prefix}:${key}`, JSON.stringify(entry));
       }
     } catch (error) {
       logger.error("Failed to set cache", { key, error });
@@ -99,10 +109,11 @@ export class CacheService {
    * Deletes a value from cache
    */
   async delete(key: string): Promise<void> {
-    if (!this.enabled) return;
+    const client = this.client;
+    if (!client) return;
 
     try {
-      await redis!.del(`${this.prefix}:${key}`);
+      await client.del(`${this.prefix}:${key}`);
     } catch (error) {
       logger.error("Failed to delete from cache", { key, error });
       await metricsService.incrementCounter(metrics.cache.errors);
@@ -114,7 +125,7 @@ export class CacheService {
    */
   async getOrSet<T>(key: string, factory: () => Promise<T>, config: CacheConfig = {}): Promise<T> {
     // If caching is disabled, just compute the value
-    if (!this.enabled) {
+    if (!this.client) {
       return factory();
     }
 

@@ -44,7 +44,8 @@ import type { UserRole } from "@/types/user";
  * - No adapter is used when in guest-only mode
  */
 // Determine if we should use database adapter
-const shouldUseDatabaseAdapter = env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED && db && !isGuestOnlyMode;
+const shouldUseDatabaseAdapter =
+  Boolean(env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) && db !== undefined && !isGuestOnlyMode;
 
 const {
   auth: nextAuthAuth,
@@ -63,8 +64,8 @@ const {
         strategy: shouldUseDatabaseAdapter ? "database" : "jwt",
       },
       // Use database adapter only when not in guest-only mode and database is available
-      adapter: shouldUseDatabaseAdapter
-        ? DrizzleAdapter(db as any, {
+      adapter: db && shouldUseDatabaseAdapter
+        ? DrizzleAdapter(db, {
             usersTable: users,
             accountsTable: accounts,
             sessionsTable: sessions,
@@ -120,7 +121,7 @@ const {
       },
       signIn: () => Promise.resolve(),
       signOut: () => Promise.resolve(),
-      unstable_update: () => Promise.resolve({} as any),
+      unstable_update: () => Promise.resolve(null),
     };
 /**
  * Strategy dispatch. `getAuthStrategy()` picks Clerk, Better Auth or Auth.js
