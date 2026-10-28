@@ -8,6 +8,7 @@ import { env } from "@/env";
 import { isBetterAuthActive } from "@/lib/auth/auth-strategy";
 import { resend } from "@/lib/resend";
 import { forgotPasswordSchema, resetPasswordSchema, signInActionSchema } from "@/lib/schemas/auth";
+import { asErrorRecord, getErrorMessage } from "@/lib/utils/error-shape";
 import type { ActionState } from "@/lib/utils/validated-action";
 import { betterAuthCredentials } from "@/server/better-auth/facade";
 import { AuthService } from "@/server/services/auth-service";
@@ -97,19 +98,22 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
     }
 
     return { ok: true, url: result.url };
-  } catch (error: any) {
+  } catch (error) {
+    const caught = asErrorRecord(error);
+    const message = getErrorMessage(error);
+
     // Check if it's an AuthError from next-auth
-    if (error.type === "CredentialsSignin" || error.code === "CredentialsSignin") {
+    if (caught?.type === "CredentialsSignin" || caught?.code === "CredentialsSignin") {
       return { ok: false, error: STATUS_CODES.CREDENTIALS.message };
     }
 
     // Known credential errors don't need extra logging
-    if (error.message === STATUS_CODES.CREDENTIALS.message) {
-      return { ok: false, error: error.message };
+    if (message === STATUS_CODES.CREDENTIALS.message) {
+      return { ok: false, error: message };
     }
 
     console.error("Error in signInWithCredentialsAction:", error);
-    return { ok: false, error: error.message ?? "Sign in failed" };
+    return { ok: false, error: message ?? "Sign in failed" };
   }
 };
 
@@ -154,9 +158,9 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
     }
 
     return { ok: true, user: result.user }; // Only return necessary info
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in signUpWithCredentialsAction:", error);
-    return { ok: false, error: error.message ?? "Sign up failed" };
+    return { ok: false, error: getErrorMessage(error) ?? "Sign up failed" };
   }
 };
 

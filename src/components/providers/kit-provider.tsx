@@ -10,8 +10,9 @@ import { TRPCReactProvider } from "@/lib/trpc/react";
 // import ConsentProvider from "@/components/providers/consent-provider";
 
 import HolyLoader from "holy-loader";
+import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Suspense } from "react";
 import { FontProvider } from "@/components/providers/font-provider";
 import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
@@ -23,11 +24,11 @@ interface KitProviderProps {
   /**
    * Session data for Next Auth
    */
-  session?: any;
+  session?: Session | null;
   /**
    * Page props for TRPC
    */
-  pageProps?: any;
+  pageProps?: Record<string, unknown>;
 }
 
 /**
@@ -36,14 +37,19 @@ interface KitProviderProps {
  */
 export function KitProvider({ children, session, pageProps }: KitProviderProps) {
   const authEnabled = isAuthenticationAvailable();
-  const sessionProviderProps = authEnabled
+  const sessionProviderProps: Omit<ComponentProps<typeof SessionProvider>, "children"> = authEnabled
     ? { session }
     : {
+        /*
+         * Auth is off: hand SessionProvider a null session and stop every
+         * refetch, so it never calls /api/auth/session. `refetchOnMount` used
+         * to be in this list behind an `as any`; it is a react-query option,
+         * not a next-auth one, and SessionProvider has never read it.
+         */
         session: null,
         refetchOnWindowFocus: false,
         refetchInterval: 0,
         refetchWhenOffline: false,
-        refetchOnMount: false,
       };
 
   return (
@@ -51,7 +57,7 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
       <JsonLd organization website />
       <HolyLoader showSpinner height={"4px"} color={"var(--loader-color)"} />
       <ShipkitThemeProvider>
-        <SessionProvider {...(sessionProviderProps as any)}>
+        <SessionProvider {...sessionProviderProps}>
           <TRPCReactProvider {...pageProps}>
             <TooltipProvider delayDuration={100}>
               <AnalyticsProvider>

@@ -22,6 +22,30 @@ interface PayloadUser {
   [key: string]: unknown;
 }
 
+/** User object this service builds from a Payload CMS login response. */
+interface CMSSessionUser {
+  id: string;
+  name: string;
+  email: string;
+  token: string;
+}
+
+/*
+ * Auth.js types the `redirect: false` return of `signIn` as `any`. v5 resolves
+ * it to the redirect URL string; the branches below were written against the
+ * v4 object shape. Read both rather than change behavior in a typing pass.
+ */
+type CredentialsSignInResult =
+  | { ok?: boolean; url?: string | null; error?: string }
+  | string
+  | null
+  | undefined;
+
+const asSignInResultObject = (
+  result: CredentialsSignInResult
+): { ok?: boolean; url?: string | null; error?: string } | undefined =>
+  typeof result === "object" && result !== null ? result : undefined;
+
 interface AuthOptions {
   redirectTo?: string;
   redirect?: boolean;
@@ -140,7 +164,7 @@ export const AuthService = {
             data: {
               // For Payload, we need to handle both string and number IDs
               // Some Payload configurations might expect number IDs
-              id: id as any, // Use type assertion to bypass type checking
+              id,
               email,
               // Generate a random password that won't be used
               // User will need to use "forgot password" to set a real password
@@ -230,7 +254,7 @@ export const AuthService = {
   ): Promise<{ id: string; email?: string }> {
     try {
       // Update in Payload CMS
-      const payloadUpdateData: Record<string, any> = {};
+      const payloadUpdateData: Record<string, unknown> = {};
       if (userData.email) payloadUpdateData.email = userData.email;
 
       const payload = await getPayloadClient();
@@ -248,7 +272,7 @@ export const AuthService = {
       }
 
       // Update in Shipkit
-      const shipkitUpdateData: Record<string, any> = {};
+      const shipkitUpdateData: Record<string, unknown> = {};
       if (userData.email) shipkitUpdateData.email = userData.email;
       if (userData.name) shipkitUpdateData.name = userData.name;
       if (userData.image) shipkitUpdateData.image = userData.image;
@@ -381,13 +405,14 @@ export const AuthService = {
         password,
         redirect: false,
         callbackUrl: redirectTo,
-      })) as any;
+      })) as CredentialsSignInResult;
+      const resultObject = asSignInResultObject(result);
 
-      if (!result || result.ok === false) {
-        return { ok: false, error: result?.error ?? STATUS_CODES.CREDENTIALS.message };
+      if (!result || resultObject?.ok === false) {
+        return { ok: false, error: resultObject?.error ?? STATUS_CODES.CREDENTIALS.message };
       }
 
-      return { ok: true, url: result.url ?? redirectTo };
+      return { ok: true, url: resultObject?.url ?? redirectTo };
     } catch (error) {
       // Only log unexpected errors; credential/auth errors are already logged at origin
       if (!(
@@ -447,7 +472,7 @@ export const AuthService = {
         data: {
           // For Payload, we need to handle both string and number IDs
           // Some Payload configurations might expect number IDs
-          id: userId as any, // Use type assertion to bypass type checking
+          id: userId,
           email,
           password,
         },
@@ -487,10 +512,11 @@ export const AuthService = {
         password,
         redirect: false,
         callbackUrl: redirectTo,
-      })) as any;
+      })) as CredentialsSignInResult;
+      const resultObject = asSignInResultObject(result);
 
-      if (!result || result.ok === false) {
-        return { ok: false, error: result?.error ?? "Sign-up failed" };
+      if (!result || resultObject?.ok === false) {
+        return { ok: false, error: resultObject?.error ?? "Sign-up failed" };
       }
 
       return { ok: true, user: newUser };
@@ -527,7 +553,7 @@ export const AuthService = {
    * @param options Options for updating the session
    * @returns The updated session
    */
-  async updateSession({ userId, data }: { userId: string; data: Record<string, any> }) {
+  async updateSession({ userId, data }: { userId: string; data: Record<string, unknown> }) {
     try {
       // Import the update function from auth.ts
       const { update } = await import("@/server/auth");
@@ -802,7 +828,7 @@ export const AuthService = {
       }
 
       // Prepare the data for Payload CMS update
-      const payloadUpdateData: Record<string, any> = {};
+      const payloadUpdateData: Record<string, unknown> = {};
       if (updates.email) payloadUpdateData.email = updates.email;
       if (updates.name) payloadUpdateData.name = updates.name;
 
@@ -891,7 +917,7 @@ export const AuthService = {
     email: string;
     password: string;
     name?: string;
-  }): Promise<{ user?: any; error?: string }> {
+  }): Promise<{ user?: PayloadUser; error?: string }> {
     const payload = await getPayloadClient();
     if (!payload) {
       return { error: "Payload not available" };
@@ -915,7 +941,7 @@ export const AuthService = {
       const newUser = await payload.create({
         collection: "users",
         data: {
-          id: userId as any,
+          id: userId,
           email: userData.email,
           password: userData.password,
         },
@@ -998,7 +1024,10 @@ export const AuthService = {
     }
   },
 
-  async signInViaCMS(email: string, password: string): Promise<{ user?: any; error?: string }> {
+  async signInViaCMS(
+    email: string,
+    password: string
+  ): Promise<{ user?: CMSSessionUser; error?: string }> {
     const payload = await getPayloadClient();
     if (!payload) {
       return { error: "Authentication not available" };
