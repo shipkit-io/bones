@@ -60,7 +60,8 @@ export async function submitContactForm(formData: FormData) {
       from: `Contact Form <${siteConfig.email.noreply}>`,
       to: [to],
       subject: `${isTest ? "[TEST] " : ""}New Contact Form Submission`,
-      replyTo: validatedData.contactInfo,
+      // Never reply-to a reserved sentinel domain; it would bounce.
+      replyTo: isTest ? to : validatedData.contactInfo,
       html: `
                 <h2>New Contact Form Submission</h2>
                 <p><strong>From:</strong> ${validatedData.name}</p>
