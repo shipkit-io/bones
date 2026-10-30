@@ -5,6 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { JsonLd } from "@/components/primitives/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { constructMetadata } from "@/config/metadata";
@@ -59,8 +60,25 @@ export default async function ChangelogEntryPage({ params }: Props) {
   const displayDate = formatDate(entry.publishedAt);
   const entrySize = describeEntrySize(entry);
 
+  const entryUrl = `${siteConfig.url}/changelog/${slug}`;
+
   return (
     <div className="mx-auto w-full max-w-3xl">
+      <JsonLd
+        siteWide={false}
+        id="json-ld-changelog-entry"
+        url={entryUrl}
+        article={{
+          headline: entry.title,
+          description: entry.description,
+          image: `${siteConfig.url}/og`,
+          // Changelog entries are published once and not revised in place, so
+          // both dates come from the same timestamp.
+          datePublished: dateTimeAttr,
+          dateModified: dateTimeAttr,
+          author: siteConfig.creator.name,
+        }}
+      />
       <Link
         href="/changelog"
         className={cn(

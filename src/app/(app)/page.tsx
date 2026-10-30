@@ -29,9 +29,8 @@ export default function Page() {
   return (
     <>
       <JsonLd
-        organization
-        website
-        softwareSourceCode
+        siteWide={false}
+        id="json-ld-home"
         product={{
           name: "Bones - Next.js SaaS Boilerplate",
           description:
