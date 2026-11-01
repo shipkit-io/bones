@@ -78,7 +78,7 @@ jobs:
       # Report status back to Vercel via commit status
       - name: Report check result
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
