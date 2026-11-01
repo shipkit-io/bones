@@ -94,15 +94,10 @@ function SidebarProvider({
   }, [isMobile, setOpen, setOpenMobile]);
 
   // Use the central hook for the shortcut
-  useKeyboardShortcut(
-    ShortcutAction.TOGGLE_SIDEBAR,
-    (event) => {
-      event.preventDefault(); // Keep preventDefault
-      toggleSidebar();
-    },
-    undefined, // No specific active condition
-    [toggleSidebar] // Dependency array
-  );
+  useKeyboardShortcut(ShortcutAction.TOGGLE_SIDEBAR, (event) => {
+    event.preventDefault(); // Keep preventDefault
+    toggleSidebar();
+  });
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
   // This makes it easier to style the sidebar with Tailwind classes.

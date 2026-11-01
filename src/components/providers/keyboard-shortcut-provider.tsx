@@ -167,13 +167,20 @@ export function useKeyboardShortcutContext(): KeyboardShortcutContextProps {
  * @param callback The function to execute when the shortcut is triggered.
  * @param isActive Optional function to determine if the shortcut is currently active.
  *                 Useful for shortcuts that should only work in specific contexts (e.g., modal open).
- * @param deps Optional dependency array for the callback function.
+ *
+ * There is deliberately no dependency array, and adding one back would be a
+ * regression. `callback` and `isActive` live in refs that refresh after every
+ * render, so the latest closure is always the one that runs and a stale one is
+ * not reachable. Wiring deps into the handler memo below would unregister and
+ * re-register on every change of a dependency -- two provider state updates per
+ * popover open, per theme toggle -- to buy behaviour the refs already give for
+ * free. The hook used to take a fourth `_deps` parameter that it never read,
+ * which looked like this contract existed. It did not.
  */
 export function useKeyboardShortcut(
   action: ShortcutActionType,
   callback: (event: KeyboardEvent) => void,
-  isActive?: () => boolean,
-  _deps: React.DependencyList = []
+  isActive?: () => boolean
 ): void {
   const { registerShortcut } = useKeyboardShortcutContext();
 
@@ -181,7 +188,7 @@ export function useKeyboardShortcut(
   const callbackRef = useRef(callback);
   const isActiveRef = useRef(isActive);
 
-  // Update refs when dependencies change
+  // No dependency array: refresh after every render so the refs are never stale
   useEffect(() => {
     callbackRef.current = callback;
     isActiveRef.current = isActive;

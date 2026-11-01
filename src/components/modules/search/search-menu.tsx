@@ -91,23 +91,18 @@ export function SearchMenu({
   const { setTheme } = useTheme();
   const [isClient, setIsClient] = React.useState(false);
 
-  useKeyboardShortcut(
-    ShortcutAction.OPEN_SEARCH,
-    (event) => {
-      const target = event.target as HTMLElement;
-      if (
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target.isContentEditable
-      ) {
-        return;
-      }
-      event.preventDefault();
-      setOpen((prevOpen) => !prevOpen);
-    },
-    undefined,
-    []
-  );
+  useKeyboardShortcut(ShortcutAction.OPEN_SEARCH, (event) => {
+    const target = event.target as HTMLElement;
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+    event.preventDefault();
+    setOpen((prevOpen) => !prevOpen);
+  });
 
   const runCommand = React.useCallback((command: () => unknown) => {
     setOpen(false);

@@ -149,41 +149,29 @@ export const UserMenu = ({
 
   const isAuthenticated = status === "authenticated";
 
-  useKeyboardShortcut(
-    ShortcutAction.SET_THEME_LIGHT,
-    (event) => handleShortcut(event, ShortcutAction.SET_THEME_LIGHT),
-    undefined,
-    [handleShortcut]
+  useKeyboardShortcut(ShortcutAction.SET_THEME_LIGHT, (event) =>
+    handleShortcut(event, ShortcutAction.SET_THEME_LIGHT)
   );
-  useKeyboardShortcut(
-    ShortcutAction.SET_THEME_DARK,
-    (event) => handleShortcut(event, ShortcutAction.SET_THEME_DARK),
-    undefined,
-    [handleShortcut]
+  useKeyboardShortcut(ShortcutAction.SET_THEME_DARK, (event) =>
+    handleShortcut(event, ShortcutAction.SET_THEME_DARK)
   );
-  useKeyboardShortcut(
-    ShortcutAction.SET_THEME_SYSTEM,
-    (event) => handleShortcut(event, ShortcutAction.SET_THEME_SYSTEM),
-    undefined,
-    [handleShortcut]
+  useKeyboardShortcut(ShortcutAction.SET_THEME_SYSTEM, (event) =>
+    handleShortcut(event, ShortcutAction.SET_THEME_SYSTEM)
   );
   useKeyboardShortcut(
     ShortcutAction.GOTO_ADMIN,
     (event) => handleShortcut(event, ShortcutAction.GOTO_ADMIN),
-    () => isAuthenticated && isAdmin,
-    [handleShortcut, isAuthenticated, isAdmin]
+    () => isAuthenticated && isAdmin
   );
   useKeyboardShortcut(
     ShortcutAction.GOTO_SETTINGS,
     (event) => handleShortcut(event, ShortcutAction.GOTO_SETTINGS),
-    () => isAuthenticated,
-    [handleShortcut, isAuthenticated]
+    () => isAuthenticated
   );
   useKeyboardShortcut(
     ShortcutAction.LOGOUT_USER,
     (event) => handleShortcut(event, ShortcutAction.LOGOUT_USER),
-    () => isAuthenticated,
-    [handleShortcut, isAuthenticated]
+    () => isAuthenticated
   );
 
   return (
