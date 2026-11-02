@@ -14,11 +14,9 @@ const client = env.DATABASE_URL
       connect_timeout: 30, // Longer timeout for heavy operations
       idle_timeout: 30, // Longer idle timeout
       max_lifetime: 60 * 30, // 30 minutes max lifetime
-      ...(process.env.NODE_ENV === "development"
-        ? {
-            ssl: { rejectUnauthorized: false }, // Needed for some Neon connections
-          }
-        : {}),
+      // No `ssl` option on purpose: postgres-js resolves an explicit `ssl` key
+      // ahead of the URL, so setting one here discards the connection string's
+      // `sslmode`. Unset, `sslmode=verify-full` verifies cert chain + hostname.
       transform: {
         undefined: null, // Transform undefined values to null
         ...({} as Record<string, never>), // Empty transform object
