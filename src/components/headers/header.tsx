@@ -59,7 +59,11 @@ interface HeaderProps {
 
 // Deprecated local defaultNavLinks; use navigationDefaultNavLinks from config instead.
 
-const headerVariants = cva("translate-z-0 z-50 p-md", {
+// Horizontal gutters come from the nav's `container`, which is what the rest
+// of the page uses. Adding p-md here stacked a second 20px gutter on top of
+// it, pushing the header 20px inboard of the page content and eating 40px of
+// a 320px viewport.
+const headerVariants = cva("translate-z-0 z-50 py-md", {
   variants: {
     variant: {
       default: "relative",
@@ -78,10 +82,10 @@ const headerVariants = cva("translate-z-0 z-50 p-md", {
 export const Header: React.FC<HeaderProps> = ({
   logoHref = routes.home,
   logoIcon = <Icon />,
-  logoText = siteConfig.title,
+  logoText = siteConfig.name,
   navLinks = navigationDefaultNavLinks,
   variant = "default",
-  searchPlaceholder = `Search ${siteConfig.title}...`,
+  searchPlaceholder = `Search ${siteConfig.name}...`,
   searchVariant = "menu",
   animatedCTAOnScroll,
   opaqueOnScroll,
@@ -115,16 +119,16 @@ export const Header: React.FC<HeaderProps> = ({
     return (
       <header className={cn(headerVariants({ variant: "minimal" }), className)}>
         <nav className="container flex items-center justify-between gap-md">
-          <div className="flex shrink-0 items-center gap-2 md:gap-4">
+          <div className="flex min-w-0 items-center gap-2 md:gap-4">
             <Link
               href={logoHref}
-              className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+              className="flex min-w-0 items-center gap-2 text-lg font-semibold md:mr-6 md:text-base [&_svg]:shrink-0"
             >
               {logoIcon}
-              <span className="block whitespace-nowrap">{logoText}</span>
+              <span className="truncate">{logoText}</span>
             </Link>
 
-            <div className="flex items-center gap-md text-sm">
+            <div className="flex shrink-0 items-center gap-md text-sm">
               {minimalLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -137,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          <ThemeToggle variant="ghost" size="icon" className="rounded-full" />
+          <ThemeToggle variant="ghost" size="icon" className="shrink-0 rounded-full" />
         </nav>
       </header>
     );
@@ -167,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div
           className={cn(
             "flex items-center gap-2 md:gap-4",
-            isLogoOnly ? "shrink-0 justify-center" : "min-w-0 flex-1 justify-start"
+            isLogoOnly ? "shrink-0 justify-center" : "min-w-0 flex-auto justify-start"
           )}
         >
           {!isLogoOnly && (
@@ -194,6 +198,11 @@ export const Header: React.FC<HeaderProps> = ({
                   {searchVariant === "ai" && (
                     <SearchAi buttonText={searchPlaceholder} className="w-full" />
                   )}
+                  <div className="flex items-center justify-between md:hidden">
+                    <span className="text-muted-foreground">Theme</span>
+                    <ThemeToggle variant="ghost" size="icon" className="rounded-full" />
+                  </div>
+
                   {navLinks.map((link) => (
                     <Link
                       key={`${link.href}-${link.label}`}
@@ -215,7 +224,7 @@ export const Header: React.FC<HeaderProps> = ({
                           "w-full justify-center"
                         )}
                       >
-                        {`Get ${siteConfig.title}`}
+                        {`Get ${siteConfig.name}`}
                       </Link>
                       <Link
                         href={signInRedirectUrl}
@@ -246,10 +255,10 @@ export const Header: React.FC<HeaderProps> = ({
 
           <Link
             href={logoHref}
-            className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+            className="flex min-w-0 items-center gap-2 text-lg font-semibold md:mr-6 md:text-base [&_svg]:shrink-0"
           >
             {logoIcon}
-            <span className="block whitespace-nowrap">{logoText}</span>
+            <span className="truncate">{logoText}</span>
           </Link>
 
           <div className="hidden min-w-0 flex-1 md:flex">
@@ -258,7 +267,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {!isLogoOnly && (
-          <div className="flex shrink-0 items-center gap-2 lg:gap-4">
+          <div className="flex min-w-0 items-center gap-2 lg:gap-4">
             {/* Search */}
             {searchVariant === "menu" && (
               <SearchMenu
@@ -276,9 +285,19 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
 
-            {!isLoggedIn && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
+            {!isLoggedIn && (
+              <ThemeToggle
+                variant="ghost"
+                size="icon"
+                className="hidden shrink-0 rounded-full md:inline-flex"
+              />
+            )}
 
-            <UserMenu user={user} />
+            {/* Signed out, the account icon only repeats the sheet's Login link,
+                so it waits until there is room for it. */}
+            <div className={cn("shrink-0", !isLoggedIn && "hidden md:block")}>
+              <UserMenu user={user} />
+            </div>
 
             {!isLoggedIn &&
               (animatedCTAOnScroll ? (
@@ -286,6 +305,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {scrollY > animatedCTAOnScroll ? (
                     <motion.div
                       key="compact"
+                      className="min-w-0"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
@@ -294,8 +314,8 @@ export const Header: React.FC<HeaderProps> = ({
                       <TooltipProvider delayDuration={0}>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="relative -m-1 p-1">
-                              <BuyButton />
+                            <div className="relative -m-1 min-w-0 p-1">
+                              <BuyButton className="min-w-0 max-w-full shrink" />
                             </div>
                           </TooltipTrigger>
                           <TooltipContent
@@ -311,19 +331,24 @@ export const Header: React.FC<HeaderProps> = ({
                   ) : (
                     <motion.div
                       key="full"
+                      className="min-w-0"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.1 }}
                     >
-                      <LoginButton variant="outline" nextUrl={routes.app.dashboard}>
-                        Dashboard
+                      <LoginButton
+                        variant="outline"
+                        nextUrl={routes.app.dashboard}
+                        className="min-w-0 max-w-full shrink"
+                      >
+                        <span className="truncate">Dashboard</span>
                       </LoginButton>
                     </motion.div>
                   )}
                 </AnimatePresence>
               ) : (
-                <BuyButton />
+                <BuyButton className="min-w-0 shrink" />
               ))}
           </div>
         )}
