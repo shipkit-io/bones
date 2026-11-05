@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- chore(vercel): Vercel preview builds are now opt-in. Put `[preview]` in a commit message to get one. Production always builds. (LAC-6903)
+
 ## v0.2.2 - 2026-05-15
 
 - feat: backfill 63 UI components from shipkit
