@@ -1,0 +1,76 @@
+# Runs scripts/test-pre-commit-hook.sh, the regression suite for
+# .githooks/pre-commit (the local gitleaks secret scan).
+#
+# Why this file exists at all, and not just the scripts/verify.sh step: a suite
+# that runs only when someone remembers to type the command is not a gate. The
+# sibling arm for scripts/test-vercel-ignore-step.sh was added for exactly that
+# reason (LAC-6905), after the policy it guards broke twice in three days. The
+# same thing is already happening here: the contract this suite pins was
+# established on 2026-11-06 by LAC-7261 (#143) and a PR opened seven minutes
+# later (#144) rewrote the dispatch so a scanner that could not run warns and
+# lets the commit through. Nothing in CI would have caught that.
+#
+# Why a separate workflow instead of a step inside another job: GitHub has no
+# job-level `paths` filter, so putting this in a shared workflow would either
+# run it on every PR or gate unrelated jobs behind these paths. A dedicated
+# workflow runs it only when the hook or its suite changes, which is what keeps
+# it free.
+#
+# Cost: one runner for a few seconds on a PR that touches one of the paths
+# below. Pure bash, no dependency install, no checkout of node_modules. The
+# suite stubs `gitleaks`, so the job needs no gitleaks binary and no network.
+#
+# The `if` below, rather than a per-repo edit, is what lets this file be copied
+# verbatim to the sibling repos that carry the same hook. Actions minutes are
+# never paid on this account (LAC-2960): on a private repo every job refuses to
+# start with steps=0 and renders red rather than neutral (LAC-4925), so there
+# the suite is covered by scripts/verify.sh instead. bones is public, so this
+# runs here.
+#
+# This workflow file is in `paths` so a change to it tests itself.
+
+name: Pre-commit hook
+
+on:
+  pull_request:
+    paths:
+      - .githooks/pre-commit
+      - scripts/test-pre-commit-hook.sh
+      - .github/workflows/pre-commit-hook.yml
+  push:
+    branches: [main]
+    paths:
+      - .githooks/pre-commit
+      - scripts/test-pre-commit-hook.sh
+      - .github/workflows/pre-commit-hook.yml
+
+concurrency:
+  group: pre-commit-hook-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Hook regression suite
+    if: ${{ github.event.repository.private == false || vars.ACTIONS_BILLING_OK == 'true' }}
+    # DELIBERATELY NOT PINNED, and this differs from the sibling arm on
+    # purpose. scripts/test-vercel-ignore-step.sh pins ubuntu-24.04 because a
+    # real bash 5.3.9 behaviour change on 26.04 breaks one of its asserts, and
+    # `ubuntu-latest` already resolves to 26.04 on this repo (LAC-7224 fixes
+    # that guard and lifts its pin). This suite was verified green on the newer
+    # image, 17/17, so pinning it here would buy nothing and would hide exactly
+    # the drift worth seeing: the bones hook is `#!/usr/bin/env sh`, which is
+    # dash on a runner and bash on a Mac, so this arm is the only place that
+    # difference is exercised at all. If this job ever reds on an image bump,
+    # read it as a finding about the hook before reaching for a pin.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      # Prints one `ok` line per assertion and exits non-zero on any failure,
+      # so the job log is the evidence that the suite actually ran rather than
+      # that it was skipped.
+      - name: Run the hook regression suite
+        run: bash scripts/test-pre-commit-hook.sh
