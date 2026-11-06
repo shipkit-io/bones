@@ -55,6 +55,16 @@ jobs:
   test:
     name: Hook regression suite
     if: ${{ github.event.repository.private == false || vars.ACTIONS_BILLING_OK == 'true' }}
+    # DELIBERATELY NOT PINNED, and this differs from the sibling arm on
+    # purpose. scripts/test-vercel-ignore-step.sh pins ubuntu-24.04 because a
+    # real bash 5.3.9 behaviour change on 26.04 breaks one of its asserts, and
+    # `ubuntu-latest` already resolves to 26.04 on this repo (LAC-7224 fixes
+    # that guard and lifts its pin). This suite was verified green on the newer
+    # image, 17/17, so pinning it here would buy nothing and would hide exactly
+    # the drift worth seeing: the bones hook is `#!/usr/bin/env sh`, which is
+    # dash on a runner and bash on a Mac, so this arm is the only place that
+    # difference is exercised at all. If this job ever reds on an image bump,
+    # read it as a finding about the hook before reaching for a pin.
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
