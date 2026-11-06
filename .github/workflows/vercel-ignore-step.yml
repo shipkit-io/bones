@@ -1,0 +1,73 @@
+# Runs scripts/test-vercel-ignore-step.sh, the regression suite for the guard
+# that decides whether Vercel builds a given commit. Before this file nothing
+# executed that suite: it ran only when a human remembered to type the command
+# (LAC-6905). The policy it guards had already been broken twice in three days.
+#
+# Why a separate workflow instead of a step inside ci.yml:
+# GitHub has no job-level `paths` filter, and ci.yml's trigger is
+# workflow-level, so adding `paths` there would also gate typecheck, lint and
+# the test suites. A dedicated workflow is the only way to run this *only* when
+# the guard changes, which is what keeps it free. This is the second choice
+# named in LAC-6905, taken because the first choice is not expressible.
+#
+# Cost: one ubuntu runner for a few seconds, and only on a PR that touches one
+# of the paths below. Pure bash, no checkout of dependencies, no install step.
+#
+# The `if` below, not a per-repo edit, is what keeps this file byte-identical in
+# every repo that carries the guard. Actions minutes are never paid on this
+# account (LAC-2960), so on a *private* repo every job refuses to start with
+# steps=0 and renders red rather than neutral, which is why ci.yml gates every
+# job there (LAC-4925). On a public repo minutes are free and this runs. Private
+# repos are covered instead by scripts/verify.sh, which runs the same suite
+# locally and publishes the `local-verify` commit status.
+#
+# The workflow file itself is in `paths` so a change to this file tests itself.
+
+name: Vercel ignore step
+
+on:
+  pull_request:
+    paths:
+      - scripts/vercel-ignore-step.sh
+      - scripts/test-vercel-ignore-step.sh
+      - vercel.json
+      - .github/workflows/vercel-ignore-step.yml
+  push:
+    branches: [main]
+    paths:
+      - scripts/vercel-ignore-step.sh
+      - scripts/test-vercel-ignore-step.sh
+      - vercel.json
+      - .github/workflows/vercel-ignore-step.yml
+
+concurrency:
+  group: vercel-ignore-step-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Guard test suite
+    if: ${{ github.event.repository.private == false || vars.ACTIONS_BILLING_OK == 'true' }}
+    # PINNED DELIBERATELY, and the pin is containment for a real defect, not a
+    # preference. `ubuntu-latest` is mid-rollout: it still resolves to 24.04 on
+    # lacymorrow/* but already to 26.04 on shipkit-io/bones. On 26.04 (bash
+    # 5.3.9) the guard's write-failure fail-safe stops holding, so the suite
+    # reports 38/1 on byte-identical bytes that score 39/0 on 24.04 (bash
+    # 5.2.21). The assert is a TRUE POSITIVE: a write failure on the skip path
+    # yields exit 0 (skip) where it must yield exit 1 (build).
+    #
+    # So this pin keeps the arm meaningful today without papering over the bug.
+    # LAC-7224 fixes the guard and lifts this back to `ubuntu-latest`. Do not
+    # bump this line to a newer image before that lands: it would turn all 12
+    # repos red at once. Do not delete the pin to make CI green either.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      # Prints one `ok` line per assertion and exits non-zero on any failure,
+      # so the job log is the evidence that the suite actually ran.
+      - name: Run the guard regression suite
+        run: bash scripts/test-vercel-ignore-step.sh
