@@ -13,18 +13,49 @@
 # Chain to the hooks path this repo displaced ---------------------------------
 # `core.hooksPath` holds one value, so the repo-local one set by postinstall
 # REPLACES a global one instead of stacking with it, and a developer's global
-# pre-commit hook is silently dropped in this repo. git >= 2.54 also honours
-# `hook.<name>.command` config, which does still fire here (measured: it runs
-# before this file), but older git has no such mechanism and loses the hook
-# outright. Run the displaced hook ourselves so it works on every git version.
+# pre-commit hook is silently dropped in this repo. Nothing installed globally
+# can recover it: once a repo sets its own `core.hooksPath`, git never looks at
+# the outer one again, so the repo is the only place this can be fixed.
+#
+# git >= 2.54 also honours `hook.<name>.command` config, which DOES still fire
+# when core.hooksPath is displaced (measured on 2.54.0 Apple Git-157: the
+# identity guard's named hook runs before this file). Chaining anyway means a
+# hook registered BOTH ways runs twice. That is the deliberate direction: a
+# pre-commit hook is veto-shaped, so a second run is idempotent, whereas
+# suppressing the chain would silently drop a hook git never ran at all.
+# See LAC-7263.
+displaced_hooks_path() {
+  # Which value would core.hooksPath have had without this repo's override?
+  # `--global --get` is the wrong question in two ways: it ignores the system
+  # scope, and it does NOT follow an `[include]` from the global file.
+  # Measured on git 2.54.0, with core.hooksPath set in ~/.gitconfig.local and
+  # included from ~/.gitconfig: an unscoped read returns the value and reports
+  # its scope as `global`, while `git config --global --get core.hooksPath`
+  # exits 1 and prints nothing. The first version of this function used that
+  # read, which made it dead code on the one machine it was written for.
+  #
+  # So ask every scope in precedence order, drop the ones that belong to this
+  # checkout, and keep the last survivor.
+  raw=$(git config --show-scope --get-all core.hooksPath 2>/dev/null) || raw=""
+  [ -n "$raw" ] || return 0
+  printf '%s\n' "$raw" | awk -F'\t' '
+    $1 != "local" && $1 != "worktree" && $1 != "command" { outer = $2 }
+    END { if (outer != "") print outer }
+  '
+}
 chain_displaced_pre_commit() {
-  outer=$(git config --global --get core.hooksPath 2>/dev/null) || return 0
+  outer=$(displaced_hooks_path)
+  if [ -z "$outer" ]; then
+    # `--show-scope` landed in git 2.26. On older git this loses an included
+    # or system-scoped value, which is still better than losing the chain.
+    outer=$(git config --global --get core.hooksPath 2>/dev/null) || outer=""
+  fi
   [ -n "$outer" ] || return 0
   case "$outer" in
     "~/"*) outer="$HOME/${outer#"~/"}" ;;
   esac
   [ -x "$outer/pre-commit" ] || return 0
-  # Never re-enter this file: a global hooksPath pointing at this directory
+  # Never re-enter this file: a displaced path pointing at this directory
   # would recurse until the shell runs out of processes.
   here=$(cd -- "$(dirname -- "$0")" 2>/dev/null && pwd -P) || return 0
   there=$(cd -- "$outer" 2>/dev/null && pwd -P) || return 0

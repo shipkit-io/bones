@@ -1,5 +1,13 @@
-# Runs scripts/test-pre-commit-hook.sh, the regression suite for
-# .githooks/pre-commit (the local gitleaks secret scan).
+# Runs the two regression suites for .githooks/pre-commit:
+#
+#   scripts/test-pre-commit-hook.sh   the gitleaks scan's exit-code contract
+#   scripts/test-pre-commit-chain.sh  the chaining of a displaced global hook
+#
+# Two files rather than one because they need incompatible fixtures: the first
+# stubs gitleaks and ignores git config, the second stubs git config scopes and
+# ignores gitleaks. Keeping them apart is also what let the second one be
+# written at all -- the chain bug it guards (LAC-7263) survived a green run of
+# the first.
 #
 # Why this file exists at all, and not just the scripts/verify.sh step: a suite
 # that runs only when someone remembers to type the command is not a gate. The
@@ -36,12 +44,14 @@ on:
     paths:
       - .githooks/pre-commit
       - scripts/test-pre-commit-hook.sh
+      - scripts/test-pre-commit-chain.sh
       - .github/workflows/pre-commit-hook.yml
   push:
     branches: [main]
     paths:
       - .githooks/pre-commit
       - scripts/test-pre-commit-hook.sh
+      - scripts/test-pre-commit-chain.sh
       - .github/workflows/pre-commit-hook.yml
 
 concurrency:
@@ -74,3 +84,8 @@ jobs:
       # that it was skipped.
       - name: Run the hook regression suite
         run: bash scripts/test-pre-commit-hook.sh
+      # Separate step so the job log says which suite failed without reading
+      # the assertion text. This one is the slower of the two: its recursion
+      # case is bounded by a watchdog rather than by the hook returning.
+      - name: Run the hook chaining suite
+        run: bash scripts/test-pre-commit-chain.sh
