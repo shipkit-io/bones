@@ -51,7 +51,19 @@ jobs:
   test:
     name: Guard test suite
     if: ${{ github.event.repository.private == false || vars.ACTIONS_BILLING_OK == 'true' }}
-    runs-on: ubuntu-latest
+    # PINNED DELIBERATELY, and the pin is containment for a real defect, not a
+    # preference. `ubuntu-latest` is mid-rollout: it still resolves to 24.04 on
+    # lacymorrow/* but already to 26.04 on shipkit-io/bones. On 26.04 (bash
+    # 5.3.9) the guard's write-failure fail-safe stops holding, so the suite
+    # reports 38/1 on byte-identical bytes that score 39/0 on 24.04 (bash
+    # 5.2.21). The assert is a TRUE POSITIVE: a write failure on the skip path
+    # yields exit 0 (skip) where it must yield exit 1 (build).
+    #
+    # So this pin keeps the arm meaningful today without papering over the bug.
+    # LAC-7224 fixes the guard and lifts this back to `ubuntu-latest`. Do not
+    # bump this line to a newer image before that lands: it would turn all 12
+    # repos red at once. Do not delete the pin to make CI green either.
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
