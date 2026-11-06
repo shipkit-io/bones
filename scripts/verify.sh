@@ -56,6 +56,16 @@ if [ -f scripts/test-vercel-ignore-step.sh ]; then
   step "vercel ignore step" bash scripts/test-vercel-ignore-step.sh
 fi
 
+# The regression suite for .githooks/pre-commit, the local secret scan. It
+# stubs `gitleaks` rather than owning a secret, so it needs no network, no
+# credential and no gitleaks binary, and runs in well under a second. Guards
+# the case that cannot be seen by eye: a scanner that could not run must refuse
+# the commit rather than warn and fall through, or the staged diff reaches the
+# remote unscanned (LAC-7261, LAC-7269).
+if [ -f scripts/test-pre-commit-hook.sh ]; then
+  step "pre-commit hook" bash scripts/test-pre-commit-hook.sh
+fi
+
 if [ "$DO_BUILD" = 1 ] && has_script build; then step "build" $PM build; fi
 
 SMOKE_ROWS=()
