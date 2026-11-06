@@ -30,6 +30,12 @@
 #   bash scripts/test-pre-commit-hook.sh                      # this repo
 #   bash scripts/test-pre-commit-hook.sh ../shipkit/.githooks/pre-commit
 #
+# What it does NOT cover, so that a green run is not read as more than it is:
+# the shipkit variant rejects a staged git directory before it scans at all
+# (LAC-4689, the renamed `.gittt/` leak), and this suite only ever stages one
+# ordinary file. Point it at the shipkit copy and that branch passes through
+# untested while the run still reads 16/16.
+#
 # Run: bash scripts/test-pre-commit-hook.sh
 set -u
 
@@ -74,11 +80,14 @@ STUB="$SANDBOX/bin"
 mkdir -p "$STUB"
 cat > "$STUB/gitleaks" <<'STUBEOF'
 #!/usr/bin/env bash
-for arg in "$@"; do
-  if [ "$arg" = "--help" ]; then
-    exit "${STUB_PROBE_RC:-0}"
-  fi
-done
+# The probe is matched EXACTLY, not by looking for --help anywhere in the
+# arguments. A loose match means any future invocation that happened to carry
+# --help would be answered as a probe and never logged, and the argv asserts
+# would then grep an empty log and blame the hook for a missing flag. Anything
+# that is not the probe is a scan, gets logged, and returns the scan code.
+if [ "$*" = "git --help" ]; then
+  exit "${STUB_PROBE_RC:-0}"
+fi
 printf '%s\n' "$*" >> "$STUB_LOG"
 exit "${STUB_SCAN_RC:-0}"
 STUBEOF
@@ -112,6 +121,41 @@ run() {
 
 scan_argv() { cat "$SANDBOX/scan.log" 2>/dev/null; }
 
+# argv_has <extended-regex> <description>
+#
+# Asserts the scanner was invoked with something matching <regex>. Checks the
+# log is non-empty FIRST: a grep against nothing fails the same way a grep
+# against the wrong flags does, so without this guard a stub that never logged
+# would read as a missing flag and send the next reader after the hook instead
+# of the harness.
+argv_has() {
+  pattern="$1"; desc="$2"
+  argv="$(scan_argv)"
+  if [ -z "$argv" ]; then
+    bad "$desc" "the stub was never invoked for a scan, so there is no argv to assert on. The probe discriminator or the hook's dispatch changed."
+  elif printf '%s' "$argv" | grep -qE -- "$pattern"; then
+    ok "$desc"
+  else
+    bad "$desc" "scanned with: $argv"
+  fi
+}
+
+# The two refusal messages must stay mutually exclusive, and these are the
+# sentences that separate them. Asserting on them in BOTH directions is the
+# whole point: a reviewer's mutants (LAC-7273) swapped the two branches' text
+# and the suite stayed green, because one assert grepped the bare word "secret"
+# (which "the secret scan did NOT run" also contains) and the other grepped
+# only the exact phrase "found a potential secret" (which an accusation worded
+# any other way slips past). A hook that tells you the scanner broke when it
+# found a credential sends you to fix your config instead of rotating it; a
+# hook that accuses your diff when the tool merely failed is the LAC-7261 bug.
+FINDING_SIG='found a potential secret|rotate the credential'
+FAILURE_SIG='did NOT run|NOT scanned|could not run'
+# Any wording that tells the developer the diff itself is at fault. The real
+# failure text must match none of it, including paraphrases, which is what the
+# literal-phrase grep missed.
+ACCUSATION_SIG='potential secret|leaked credential|contains a .*credential|rotate the credential|secret in (your|the) diff'
+
 echo "testing: $SUT"
 
 # ---- 1. a clean scan allows the commit -------------------------------------
@@ -125,9 +169,13 @@ run 0 0
 run 0 2
 [ "$RC" -ne 0 ] && ok "a finding (exit 2) refuses the commit" \
   || bad "a finding (exit 2) refuses the commit" "want rc!=0, got rc=$RC"
-printf '%s' "$OUT" | grep -qi 'secret' \
+printf '%s' "$OUT" | grep -qE "$FINDING_SIG" \
   && ok "a finding says a secret was found" \
-  || bad "a finding says a secret was found" "output was: $OUT"
+  || bad "a finding says a secret was found" "nothing in the output tells the developer to rotate a credential. Output: $OUT"
+printf '%s' "$OUT" | grep -qE "$FAILURE_SIG" \
+  && bad "a finding is not reported as a broken scanner" \
+         "a real finding told the developer the scan did not run, so they will chase config instead of rotating the credential. Output: $OUT" \
+  || ok "a finding is not reported as a broken scanner"
 
 # ---- 3. a scan that did not run refuses the commit -------------------------
 # THE case. `gitleaks` exits 1 for an unknown subcommand and for an unreadable
@@ -139,12 +187,12 @@ for broken_rc in 1 126; do
   [ "$RC" -ne 0 ] && ok "a failed scan (exit $broken_rc) refuses the commit" \
     || bad "a failed scan (exit $broken_rc) refuses the commit" \
            "want rc!=0, got rc=$RC. The scanner never read the diff and the commit was ALLOWED: this is a fail-open secret scan. Output: $OUT"
-  printf '%s' "$OUT" | grep -qi 'not .*scan\|scan .*not\|could not' \
+  printf '%s' "$OUT" | grep -qE "$FAILURE_SIG" \
     && ok "a failed scan (exit $broken_rc) blames the tool, not the diff" \
     || bad "a failed scan (exit $broken_rc) blames the tool, not the diff" "output was: $OUT"
-  printf '%s' "$OUT" | grep -qi 'found a potential secret' \
+  printf '%s' "$OUT" | grep -qE "$ACCUSATION_SIG" \
     && bad "a failed scan (exit $broken_rc) does not accuse the diff of a secret" \
-           "a tool failure was reported as a secret finding, which is the LAC-7261 bug" \
+           "a tool failure was reported as a secret in the diff, which is the LAC-7261 bug in any wording. Output: $OUT" \
     || ok "a failed scan (exit $broken_rc) does not accuse the diff of a secret"
 done
 
@@ -153,14 +201,10 @@ done
 # The hook must pick by probing, not by a version string, and must still work
 # on a gitleaks old enough to lack `git`.
 run 0 0
-printf '%s' "$(scan_argv)" | grep -q '^git --staged' \
-  && ok "a modern gitleaks is scanned with 'git --staged'" \
-  || bad "a modern gitleaks is scanned with 'git --staged'" "scanned with: $(scan_argv)"
+argv_has '^git --staged' "a modern gitleaks is scanned with 'git --staged'"
 
 run 1 0
-printf '%s' "$(scan_argv)" | grep -q '^protect --staged' \
-  && ok "a gitleaks without 'git' falls back to 'protect --staged'" \
-  || bad "a gitleaks without 'git' falls back to 'protect --staged'" "scanned with: $(scan_argv)"
+argv_has '^protect --staged' "a gitleaks without 'git' falls back to 'protect --staged'"
 
 [ "$RC" -eq 0 ] && ok "the fallback path still allows a clean commit" \
   || bad "the fallback path still allows a clean commit" "want rc=0, got rc=$RC: $OUT"
@@ -172,12 +216,8 @@ printf '%s' "$(scan_argv)" | grep -q '^protect --staged' \
 # says it does. It is a root persistent flag present since v8.0.0, so the
 # fallback path above honours it too.
 run 0 0
-printf '%s' "$(scan_argv)" | grep -q -- '--exit-code 2' \
-  && ok "the scan is invoked with --exit-code 2" \
-  || bad "the scan is invoked with --exit-code 2" "scanned with: $(scan_argv)"
-printf '%s' "$(scan_argv)" | grep -q -- '--redact' \
-  && ok "the scan is invoked with --redact" \
-  || bad "the scan is invoked with --redact" "scanned with: $(scan_argv)"
+argv_has '--exit-code 2' "the scan is invoked with --exit-code 2"
+argv_has '--redact' "the scan is invoked with --redact"
 
 # ---- 6. gitleaks not installed ---------------------------------------------
 # The one place the two variants of this hook legitimately disagree. bones and
@@ -205,9 +245,9 @@ else
   # A foreign copy, so the policy is whatever that repo chose. Assert only that
   # it made a decision and reported it: 0 or 1, never a crash, and never silent.
   case "$RC" in
-    0) printf '  --    foreign copy policy: warn and continue (rc=0)\n'; ok "no gitleaks on PATH: decided (rc=0)" ;;
-    1) printf '  --    foreign copy policy: refuse the commit (rc=1)\n'; ok "no gitleaks on PATH: decided (rc=1)" ;;
-    *) bad "no gitleaks on PATH: decided" "rc=$RC is neither allow (0) nor refuse (1), so the hook crashed: $OUT" ;;
+    0) printf '  --    foreign copy policy: warn and continue (rc=0)\n'; ok "no gitleaks on PATH: did not crash (rc=0)" ;;
+    1) printf '  --    foreign copy policy: refuse the commit (rc=1)\n'; ok "no gitleaks on PATH: did not crash (rc=1)" ;;
+    *) bad "no gitleaks on PATH: did not crash" "rc=$RC is neither allow (0) nor refuse (1), so the hook crashed: $OUT" ;;
   esac
 fi
 printf '%s' "$OUT" | grep -qi 'gitleaks' \
