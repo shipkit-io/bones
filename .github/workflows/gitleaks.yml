@@ -35,8 +35,16 @@ jobs:
         run: |
           set -euo pipefail
           VERSION="8.21.2"
+          # sha256 of gitleaks_${VERSION}_linux_x64.tar.gz, read from that
+          # release's own gitleaks_${VERSION}_checksums.txt and confirmed by
+          # hashing the downloaded bytes (LAC-7263). Pinned here rather than
+          # fetched at build time on purpose: the checksums file travels the
+          # same unauthenticated path as the tarball, so whoever can swap one
+          # can swap the other. Bump both lines together.
+          SHA256="5bc41815076e6ed6ef8fbecc9d9b75bcae31f39029ceb55da08086315316e3ba"
           curl -sSfL -o /tmp/gitleaks.tgz \
             "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz"
+          echo "${SHA256}  /tmp/gitleaks.tgz" | sha256sum -c -
           tar -xzf /tmp/gitleaks.tgz -C /tmp gitleaks
           sudo mv /tmp/gitleaks /usr/local/bin/gitleaks
           gitleaks version

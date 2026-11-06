@@ -10,6 +10,29 @@
 #   macOS   → brew install gitleaks
 #   linux   → https://github.com/gitleaks/gitleaks/releases
 
+# Chain to the hooks path this repo displaced ---------------------------------
+# `core.hooksPath` holds one value, so the repo-local one set by postinstall
+# REPLACES a global one instead of stacking with it, and a developer's global
+# pre-commit hook is silently dropped in this repo. git >= 2.54 also honours
+# `hook.<name>.command` config, which does still fire here (measured: it runs
+# before this file), but older git has no such mechanism and loses the hook
+# outright. Run the displaced hook ourselves so it works on every git version.
+chain_displaced_pre_commit() {
+  outer=$(git config --global --get core.hooksPath 2>/dev/null) || return 0
+  [ -n "$outer" ] || return 0
+  case "$outer" in
+    "~/"*) outer="$HOME/${outer#"~/"}" ;;
+  esac
+  [ -x "$outer/pre-commit" ] || return 0
+  # Never re-enter this file: a global hooksPath pointing at this directory
+  # would recurse until the shell runs out of processes.
+  here=$(cd -- "$(dirname -- "$0")" 2>/dev/null && pwd -P) || return 0
+  there=$(cd -- "$outer" 2>/dev/null && pwd -P) || return 0
+  [ "$here" != "$there" ] || return 0
+  "$outer/pre-commit" "$@"
+}
+chain_displaced_pre_commit "$@" || exit $?
+
 if command -v gitleaks >/dev/null 2>&1; then
   # `gitleaks protect` is deprecated upstream and will be removed; `gitleaks git`
   # replaces it (v8.19.0+). Probe for the subcommand once, so that losing it can
