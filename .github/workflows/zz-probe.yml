@@ -1,0 +1,20 @@
+name: zz probe
+on: pull_request
+jobs:
+  probe:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-26.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: characterise
+        run: |
+          echo "IMAGE=${{ matrix.os }}"
+          bash --version | head -1
+          set +e
+          bash -c 'set -eu; echo hi; exit 0' >&- 2>&-
+          echo "CLOSED_STDOUT_RC=$?"
+          bash scripts/test-vercel-ignore-step.sh 2>&1 | tail -2
+          echo "SUITE_RC=${PIPESTATUS[0]}"
