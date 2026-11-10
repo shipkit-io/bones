@@ -3,7 +3,7 @@
  */
 import { z } from "zod";
 export const getSchemaDefaults = <T extends z.ZodTypeAny>(
-  schema: z.AnyZodObject | z.ZodEffects<any>
+  schema: z.AnyZodObject | z.ZodEffects<z.AnyZodObject>
 ): z.infer<T> => {
   // Check if it's a ZodEffect
   if (schema instanceof z.ZodEffects) {

@@ -138,8 +138,7 @@ export function PopoverContent({ children, className, align = "start" }: Popover
       event.preventDefault();
       closePopover();
     },
-    () => isOpen,
-    [closePopover, isOpen]
+    () => isOpen
   );
 
   const closeOnEscape = (event: React.KeyboardEvent) => {

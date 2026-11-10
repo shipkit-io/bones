@@ -17,10 +17,10 @@
  * All arguments are optional. If not provided, the script will prompt for them.
  */
 
-import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
-import readline from "readline";
+import { execSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import readline from "node:readline";
 
 // Create readline interface for prompting
 const rl = readline.createInterface({
@@ -43,13 +43,15 @@ const argMap: Record<string, string> = {};
 const flags: Record<string, boolean> = {};
 
 for (let i = 0; i < args.length; i++) {
-  if (args[i] && args[i]!.startsWith("--")) {
-    const arg = args[i]!.substring(2);
+  const current = args[i];
+  if (current?.startsWith("--")) {
+    const arg = current.substring(2);
+    const next = args[i + 1];
     // Check if it's a flag (no value)
-    if (i + 1 >= args.length || (args[i + 1] && args[i + 1]!.startsWith("--"))) {
+    if (i + 1 >= args.length || next?.startsWith("--")) {
       flags[arg] = true;
-    } else if (args[i + 1]) {
-      argMap[arg] = args[i + 1]!;
+    } else if (next) {
+      argMap[arg] = next;
       i++;
     }
   }

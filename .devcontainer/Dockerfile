@@ -3,11 +3,10 @@ FROM mcr.microsoft.com/devcontainers/javascript-node:22
 # Set the working directory in the container
 WORKDIR /workspace
 
-# WARNING: Setting NODE_TLS_REJECT_UNAUTHORIZED to 0 disables SSL certificate verification.
-# This is a security risk and should only be used if you understand the implications
-# and have no other alternative (e.g., in a controlled corporate environment with a custom CA).
-# Consider resolving the underlying certificate issue instead.
-ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+# No NODE_TLS_REJECT_UNAUTHORIZED here on purpose: it is process-wide, so it turns
+# off certificate verification for every Node TLS connection in the container, the
+# Postgres client included. A custom CA belongs in the trust store, or scoped to
+# the single RUN line that needs it.
 ENV NODE_ENV=development
 
 # Copy package manager files. These are copied first to leverage Docker cache

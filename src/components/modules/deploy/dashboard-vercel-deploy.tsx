@@ -3,7 +3,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2, Loader2, Rocket } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icons } from "@/components/assets/icons";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
@@ -23,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { useSession } from "@/lib/auth/use-session";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { cn } from "@/lib/utils";
 import { initiateDeployment } from "@/server/actions/deployment-actions";

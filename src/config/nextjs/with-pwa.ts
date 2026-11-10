@@ -15,7 +15,10 @@ export function withPWAConfig(nextConfig: NextConfig): NextConfig {
     disable: process.env.NODE_ENV === "development" || !buildTimeFeatures.PWA_ENABLED,
   };
 
-  // The 'withPWA' type might be complex, using 'any' for simplicity here.
-  // Ensure 'next-pwa' types are correctly installed if issues arise.
-  return (withPWA as any)(pwaConfig)(nextConfig) as NextConfig;
+  // next-pwa ships its config type as a loose object; re-declare the shape we
+  // use so the call site stays typed without widening to `any`.
+  const applyPWA = withPWA as unknown as (
+    config: typeof pwaConfig
+  ) => (config: NextConfig) => NextConfig;
+  return applyPWA(pwaConfig)(nextConfig);
 }

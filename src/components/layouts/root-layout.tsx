@@ -1,16 +1,16 @@
-import { Analytics } from "@/components/primitives/analytics";
-import { Providers } from "@/config/providers";
-import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
-import { Toaster as SonnerToaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { TRPCReactProvider } from "@/lib/trpc/react";
-import { cn } from "@/lib/utils";
+import { Space_Grotesk as FontSans, Noto_Serif as FontSerif } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ViewTransitions } from "next-view-transitions";
-import { Space_Grotesk as FontSans, Noto_Serif as FontSerif } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
+import { Analytics } from "@/components/primitives/analytics";
+import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Providers } from "@/config/providers";
+import { TRPCReactProvider } from "@/lib/trpc/react";
+import { cn } from "@/lib/utils";
 
 import "@/styles/globals.css";
 

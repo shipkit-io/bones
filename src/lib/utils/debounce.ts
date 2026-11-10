@@ -48,8 +48,9 @@ export function debounce<T extends unknown[], R>(
       timeout = setTimeout(later, remainingWait);
     } else {
       timeout = null;
-      if (!immediate) {
-        result = func.apply(context, args!);
+      // `debounced` always assigns `args` before scheduling `later`.
+      if (!immediate && args) {
+        result = func.apply(context, args);
       }
       if (!timeout) {
         args = undefined;

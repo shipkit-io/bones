@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import { copyFile, mkdir, readdir, rm } from "fs/promises";
-import { join, relative } from "path";
+import { execSync } from "node:child_process";
+import { copyFile, mkdir, readdir, rm } from "node:fs/promises";
+import { join, relative } from "node:path";
 
 const EXCLUDED_DIRS = ["node_modules", ".next", ".git", "dist", "build", "temp"];
 

@@ -240,16 +240,17 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    // globalThis.MouseEvent: this file imports React's MouseEvent type.
+    const handleClickOutside = (event: globalThis.MouseEvent) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
         setSelectedComponent(null);
         setIsSidebarOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside as any);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside as any);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 

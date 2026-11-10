@@ -9,7 +9,7 @@ const rootDir = process.cwd();
 function runCommand(command: string) {
   try {
     execSync(command, { stdio: "inherit" });
-  } catch (error) {}
+  } catch {}
 }
 
 function removeDirectory(dir: string) {

@@ -1,5 +1,5 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 interface BlockConfig {
   // The name of the block (e.g., "login-01")
@@ -46,7 +46,7 @@ async function readFileContent(filePath: string): Promise<string> {
   }
 }
 
-async function writeJsonFile(filePath: string, content: any): Promise<void> {
+async function writeJsonFile(filePath: string, content: unknown): Promise<void> {
   try {
     await fs.mkdir(path.dirname(filePath), { recursive: true });
     await fs.writeFile(filePath, JSON.stringify(content, null, 2), "utf-8");

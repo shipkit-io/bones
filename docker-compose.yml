@@ -15,7 +15,6 @@ services:
       # It also isolates container's node_modules from the host.
       - /workspace/node_modules
     # The command is now defined in the Dockerfile's CMD instruction.
-    # command: sh -c "chmod +x /workspace/node_modules/.bin/* 2>/dev/null || true && NODE_TLS_REJECT_UNAUTHORIZED=0 pnpm install --child-concurrency=4 && pnpm run dev"
     environment:
       # DATABASE_URL is required by the application at runtime to connect to the database.
       # It's kept here as it depends on other services (db) and might use host environment variables.

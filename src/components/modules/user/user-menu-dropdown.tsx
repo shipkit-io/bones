@@ -11,9 +11,9 @@ import {
 } from "@radix-ui/react-icons";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
-import { signOut } from "@/lib/auth/use-session";
 import type * as React from "react";
 import { RestartOnboardingButton } from "@/components/modules/onboarding/onboarding-check";
+import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,9 +29,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
 import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
+import { signOut } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 import type { User } from "@/types/user";
 export interface MenuItemProps {

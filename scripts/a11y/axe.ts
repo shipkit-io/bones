@@ -19,6 +19,14 @@ interface AxeIssue {
   nodes: { html: string; target: string[]; failureSummary?: string }[];
 }
 
+/** Subset of axe-core's run result this script reads. */
+interface AxeRunResults {
+  violations?: AxeIssue[];
+  passes?: unknown[];
+  incomplete?: unknown[];
+  inapplicable?: unknown[];
+}
+
 interface AxeReportSummary {
   url: string;
   violations: AxeIssue[];
@@ -60,7 +68,11 @@ async function runAxeOnUrl(url: string, outBaseDir: string): Promise<AxeReportSu
   await page.goto(url, { waitUntil: "load" });
   await page.addScriptTag({ content: axeSource.source });
   const results = await page.evaluate(async () => {
-    return await (window as any).axe.run({
+    // axe is injected via addScriptTag above, so it is not on the page's own types.
+    const { axe } = window as unknown as {
+      axe: { run: (options: unknown) => Promise<AxeRunResults> };
+    };
+    return await axe.run({
       runOnly: { type: "tag", values: ["wcag2a", "wcag2aa"] },
       resultTypes: ["violations", "passes", "incomplete", "inapplicable"],
     });

@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  isSignInEmailAllowed,
-  parseSignInAllowlist,
-} from "@/server/auth-js/magic-link-allowlist";
+import { isSignInEmailAllowed, parseSignInAllowlist } from "@/server/auth-js/magic-link-allowlist";
 
 describe("parseSignInAllowlist", () => {
   it("returns an empty list for unset or blank values", () => {

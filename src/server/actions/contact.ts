@@ -3,6 +3,7 @@
 import { siteConfig } from "@/config/site-config";
 import { resend } from "@/lib/resend";
 import { addContactToAudience } from "@/server/actions/subscribe";
+import { resolveContactRecipient } from "@/server/services/contact-test-routing";
 import { contactFormSchema } from "@/types/contact";
 
 export async function submitContactForm(formData: FormData) {
@@ -23,12 +24,21 @@ export async function submitContactForm(formData: FormData) {
       return { success: false, error: "Email service not configured" };
     }
 
+    const { to, isTest } = resolveContactRecipient(
+      validatedData.contactInfo,
+      siteConfig.email.support
+    );
+    if (isTest) {
+      console.log(`[submitContactForm] Test submission detected, routing to ${to}`);
+    }
+
     // Send email
     const result = await resend.emails.send({
       from: `Contact Form <${siteConfig.email.noreply}>`,
-      to: [siteConfig.email.support],
-      subject: "New Contact Form Submission",
-      replyTo: validatedData.contactInfo,
+      to: [to],
+      subject: `${isTest ? "[TEST] " : ""}New Contact Form Submission`,
+      // Never reply-to a reserved sentinel domain; it would bounce.
+      replyTo: isTest ? to : validatedData.contactInfo,
       html: `
                 <h2>New Contact Form Submission</h2>
                 <p><strong>From:</strong> ${validatedData.name}</p>
@@ -39,8 +49,10 @@ export async function submitContactForm(formData: FormData) {
             `,
     });
 
-    // Handle newsletter subscription if requested
-    if (validatedData.newsletter && validatedData.contactInfo?.includes("@")) {
+    // Handle newsletter subscription if requested. Skip for test senders:
+    // their addresses are reserved domains that should never receive mail
+    // and should not pollute the live audience.
+    if (!isTest && validatedData.newsletter && validatedData.contactInfo?.includes("@")) {
       try {
         await addContactToAudience(validatedData.contactInfo);
       } catch (error) {

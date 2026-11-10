@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { useSession } from "@/lib/auth/use-session";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
 
@@ -300,7 +300,11 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 
   return (
     <Button onClick={handleClick} variant="default" className={cn(className)}>
-      Get {siteConfig.title}
+      {/* `truncate` cannot work on the Button itself: it is `inline-flex`, and
+          text-overflow does not apply to a flex container's anonymous text
+          item, so it hard-cuts instead of ellipsizing. The label needs its own
+          block-level child. */}
+      <span className="truncate">Get {siteConfig.name}</span>
     </Button>
   );
 };

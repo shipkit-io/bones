@@ -97,8 +97,8 @@ export async function getInstalledComponents(): Promise<string[]> {
         .map((file) => file.replace(".tsx", ""));
 
       return components;
-    } catch (error: any) {
-      if (error.code === "ENOENT") {
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code === "ENOENT") {
         console.error("UI components directory does not exist:", componentsDir);
       } else {
         console.error("Error reading UI components directory:", error);

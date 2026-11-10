@@ -16,4 +16,4 @@ export function cookies(): { get: (name: string) => undefined } {
   return { get: () => undefined };
 }
 
-export default {} as any;
+export default {};

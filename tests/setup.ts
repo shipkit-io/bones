@@ -5,7 +5,6 @@ import { afterEach, beforeAll, expect, vi } from "vitest";
 
 // Augment the global namespace for TypeScript
 declare global {
-  // biome-ignore lint/suspicious/noVar: global augmentation requires var
   var IS_REACT_ACT_ENVIRONMENT: boolean;
 }
 
@@ -26,7 +25,7 @@ afterEach(() => {
 vi.mock("@/server/db", () => ({
   db: undefined,
   isDatabaseInitialized: async () => false,
-  safeDbExecute: async (callback: Function, defaultValue: any) => defaultValue,
+  safeDbExecute: async (_callback: () => unknown, defaultValue: unknown) => defaultValue,
 }));
 
 // Suppress specific console errors during tests

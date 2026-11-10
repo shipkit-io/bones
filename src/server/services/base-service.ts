@@ -1,5 +1,5 @@
 import { and, asc, type Column, desc, eq, type SQL, sql } from "drizzle-orm";
-import type { PgTable } from "drizzle-orm/pg-core";
+import type { PgTable, PgUpdateSetSource } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { db } from "@/server/db";
 
@@ -14,6 +14,17 @@ export class BaseService<T extends PgTable> {
   protected table: T;
   protected idField: keyof T["_"]["columns"];
   protected softDelete: boolean;
+
+  /**
+   * drizzle resolves its "empty selection" guard against a concrete table, so a
+   * generic `T extends PgTable` leaves that conditional unresolved and the query
+   * builder rejects the argument. Widening to `PgTable` satisfies the builder;
+   * each call site restores the row type with an explicit cast, which is what
+   * the previous `as any` was doing implicitly.
+   */
+  private get queryTable(): PgTable {
+    return this.table;
+  }
 
   constructor(options: BaseServiceOptions<T>) {
     this.db = db;
@@ -32,7 +43,7 @@ export class BaseService<T extends PgTable> {
       throw new Error("Database connection not available");
     }
 
-    const id = (data as any)[this.idField] ?? nanoid();
+    const id = (data as Record<string, unknown>)[this.idField as string] ?? nanoid();
     const now = new Date();
 
     const values = {
@@ -71,13 +82,13 @@ export class BaseService<T extends PgTable> {
       }
     }
 
-    const [record] = await this.db
+    const rows = (await this.db
       .select()
-      .from(this.table as any)
+      .from(this.queryTable)
       .where(and(...conditions.filter((c): c is SQL<unknown> => !!c)))
-      .limit(1);
+      .limit(1)) as T["_"]["inferSelect"][];
 
-    return record ?? null;
+    return rows[0] ?? null;
   }
 
   /**
@@ -105,13 +116,13 @@ export class BaseService<T extends PgTable> {
     const finalConditions = conditions.filter((c): c is SQL<unknown> => !!c);
 
     if (finalConditions.length === 0) {
-      return this.db.select().from(this.table as any);
+      return (await this.db.select().from(this.queryTable)) as T["_"]["inferSelect"][];
     }
 
-    const records = await this.db
+    const records = (await this.db
       .select()
-      .from(this.table as any)
-      .where(and(...finalConditions));
+      .from(this.queryTable)
+      .where(and(...finalConditions))) as T["_"]["inferSelect"][];
 
     return records;
   }
@@ -160,7 +171,7 @@ export class BaseService<T extends PgTable> {
       if (deletedAtColumn) {
         const [record] = await this.db
           .update(this.table)
-          .set({ deletedAt: new Date() } as any)
+          .set({ deletedAt: new Date() } as PgUpdateSetSource<T>)
           .where(eq(idColumn, id))
           .returning();
         return !!record;
@@ -197,7 +208,7 @@ export class BaseService<T extends PgTable> {
 
     const result = await this.db
       .select({ count: sql<number>`count(*)` })
-      .from(this.table as any)
+      .from(this.queryTable)
       .where(finalConditions.length > 0 ? and(...finalConditions) : undefined);
 
     return Number(result[0]?.count ?? 0);
@@ -252,15 +263,17 @@ export class BaseService<T extends PgTable> {
 
     const recordsQuery = this.db
       .select()
-      .from(this.table as any)
+      .from(this.queryTable)
       .where(whereClause)
       .limit(limit)
       .offset(offset)
-      .orderBy(orderDir === "desc" ? desc(orderByColumn) : asc(orderByColumn));
+      .orderBy(orderDir === "desc" ? desc(orderByColumn) : asc(orderByColumn)) as Promise<
+      T["_"]["inferSelect"][]
+    >;
 
     const countQuery = this.db
       .select({ count: sql<number>`count(*)` })
-      .from(this.table as any)
+      .from(this.queryTable)
       .where(whereClause);
 
     const [records, countResult] = await Promise.all([recordsQuery, countQuery]);

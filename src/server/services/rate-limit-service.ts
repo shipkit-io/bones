@@ -41,7 +41,9 @@ export class RateLimitService {
    * Gets or creates a rate limiter for a specific key
    */
   private getLimiter(key: string, config: RateLimitConfig): Ratelimit {
-    if (!this.enabled) {
+    // Checking `redis` rather than `this.enabled` (which is `!!redis`) also
+    // narrows it for the Ratelimit constructor below.
+    if (!redis) {
       throw new Error("Rate limiting is not enabled");
     }
 
@@ -51,7 +53,7 @@ export class RateLimitService {
     }
 
     const limiter = new Ratelimit({
-      redis: redis!,
+      redis,
       limiter: Ratelimit.slidingWindow(config.requests, `${config.duration}s`),
       analytics: true,
       prefix: `ratelimit:${key}`,

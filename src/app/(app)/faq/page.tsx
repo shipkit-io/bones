@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/primitives/json-ld";
 import {
   Accordion,
   AccordionContent,
@@ -53,38 +54,53 @@ export default async function FaqPage() {
     return notFound();
   }
 
-  return (
-    <section className="container mx-auto mt-header space-y-section py-16">
-      <div className="grid w-full grid-cols-1 md:grid-cols-5">
-        <div className="z-10 col-span-2 bg-neutral-50 p-12 dark:bg-neutral-900">
-          <h1 className="mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-            Frequently Asked Questions
-          </h1>
-          <p className="mb-8 text-neutral-600 dark:text-neutral-300">
-            Here are some common questions about {siteConfig.title}. If you have any other
-            questions, feel free to reach out to us.
-          </p>
-        </div>
-        <div className="col-span-3 space-y-8 border-t border-neutral-400/15 bg-white px-20 py-12 md:border-t-0 md:border-l dark:bg-neutral-950">
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq) => {
-              const id = "id" in faq && faq.id ? faq.id.toString() : faq.question;
-              const answerText = getAnswerText(faq.answer);
+  // Mirrors the accordion below so the markup and the schema cannot drift.
+  const faqQuestions = faqs
+    .map((faq) => ({ question: faq.question, answer: getAnswerText(faq.answer) }))
+    .filter((entry) => entry.question && entry.answer);
 
-              return (
-                <AccordionItem key={id} value={id}>
-                  <AccordionTrigger className="text-xl font-medium tracking-tight text-neutral-800 dark:text-neutral-100">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="mt-2 leading-6 text-neutral-700 dark:text-neutral-400">
-                    <p className="whitespace-pre-line">{answerText}</p>
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
+  return (
+    <>
+      {faqQuestions.length > 0 && (
+        <JsonLd
+          siteWide={false}
+          id="json-ld-faq"
+          url={`${siteConfig.url}/faq`}
+          faq={{ questions: faqQuestions }}
+        />
+      )}
+      <section className="container mx-auto mt-header space-y-section py-16">
+        <div className="grid w-full grid-cols-1 md:grid-cols-5">
+          <div className="z-10 col-span-2 bg-neutral-50 p-12 dark:bg-neutral-900">
+            <h1 className="mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+              Frequently Asked Questions
+            </h1>
+            <p className="mb-8 text-neutral-600 dark:text-neutral-300">
+              Here are some common questions about {siteConfig.title}. If you have any other
+              questions, feel free to reach out to us.
+            </p>
+          </div>
+          <div className="col-span-3 space-y-8 border-t border-neutral-400/15 bg-white px-20 py-12 md:border-t-0 md:border-l dark:bg-neutral-950">
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq) => {
+                const id = "id" in faq && faq.id ? faq.id.toString() : faq.question;
+                const answerText = getAnswerText(faq.answer);
+
+                return (
+                  <AccordionItem key={id} value={id}>
+                    <AccordionTrigger className="text-xl font-medium tracking-tight text-neutral-800 dark:text-neutral-100">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="mt-2 leading-6 text-neutral-700 dark:text-neutral-400">
+                      <p className="whitespace-pre-line">{answerText}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

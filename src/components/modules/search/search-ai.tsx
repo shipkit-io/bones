@@ -229,15 +229,10 @@ export const SearchAi = ({
   };
 
   // Use the central hook to open the AI search dialog
-  useKeyboardShortcut(
-    ShortcutAction.OPEN_SEARCH,
-    (event) => {
-      event.preventDefault();
-      setOpen(true);
-    },
-    undefined,
-    []
-  );
+  useKeyboardShortcut(ShortcutAction.OPEN_SEARCH, (event) => {
+    event.preventDefault();
+    setOpen(true);
+  });
 
   const handleModalToggle = () => {
     setOpen(!open);

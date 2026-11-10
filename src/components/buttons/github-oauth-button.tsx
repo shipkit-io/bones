@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/auth/use-session";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Icons } from "@/components/assets/icons";
@@ -11,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { STATUS_CODES } from "@/config/status-codes";
+import { signIn } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 import { createRedirectUrl } from "@/lib/utils/redirect";
 import { disconnectGitHub } from "@/server/actions/github";

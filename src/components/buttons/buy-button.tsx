@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useSession } from "@/lib/auth/use-session";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { useSession } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 
 export const BuyButton = () => {

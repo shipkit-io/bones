@@ -3,8 +3,8 @@
  * Run before `next build` so content is statically imported into the bundle,
  * avoiding runtime fs.readdir which Turbopack doesn't trace.
  */
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 const ROOT = process.cwd();
 const GENERATED_DIR = path.join(ROOT, "src/lib/generated");

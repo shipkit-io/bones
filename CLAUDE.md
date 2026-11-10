@@ -40,6 +40,12 @@ bun run lint:fix       # Fix all linting issues
 bun run typecheck      # Run TypeScript type checking
 ```
 
+Prettier is the formatter of record (it sorts Tailwind classes via
+`prettier-plugin-tailwindcss`). Biome's formatter is disabled in `biome.json`
+on purpose — the two disagree on union-type line breaking, so leaving both on
+makes `lint:fix` rewrite files back and forth. Biome owns linting and import
+organization only.
+
 ### Database Operations
 
 ```bash

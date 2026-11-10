@@ -254,13 +254,25 @@ export const authOptions: NextAuthConfig = {
         return true;
       }
 
-      // For OAuth providers, use profile data to ensure user exists and is up to date
-      // This handles cases where a user was created through OAuth but profile info changed
-      if (account?.provider && profile) {
+      /*
+       * ensureUserExists requires an address and throws without one, and both
+       * branches below already swallow that error and let the sign-in through.
+       * Skip the sync explicitly rather than asserting the address is present.
+       */
+      const signInEmail = user.email;
+
+      if (!signInEmail) {
+        logger.warn("Sign-in user has no email address, skipping Shipkit user sync", {
+          userId: user.id,
+          provider: account?.provider,
+        });
+      } else if (account?.provider && profile) {
+        // For OAuth providers, use profile data to ensure user exists and is up to date
+        // This handles cases where a user was created through OAuth but profile info changed
         try {
           await userService.ensureUserExists({
             id: user.id,
-            email: user.email!,
+            email: signInEmail,
             name: profile.name ?? user.name, // Use profile name if available
             image: profile.image ?? profile.picture ?? user.image, // Use profile image if available
           });
@@ -273,7 +285,7 @@ export const authOptions: NextAuthConfig = {
         try {
           await userService.ensureUserExists({
             id: user.id,
-            email: user.email!,
+            email: signInEmail,
             name: user.name,
             image: user.image,
           });

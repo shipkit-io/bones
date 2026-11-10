@@ -1,7 +1,7 @@
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "@/lib/auth/use-session";
 import { useEffect } from "react";
 import { routes } from "@/config/routes";
+import { useSession } from "@/lib/auth/use-session";
 import { createRedirectUrl } from "@/lib/utils/redirect";
 
 export function useRequireAuth(redirectTo: string = routes.auth.signIn) {

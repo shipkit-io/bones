@@ -376,7 +376,7 @@ async function checkActiveDeployments(githubUsername: string): Promise<boolean> 
     });
 
     const activeDeployments = deployments.filter(
-      (deployment: any) => deployment.creator?.login === githubUsername
+      (deployment) => deployment.creator?.login === githubUsername
     );
 
     return activeDeployments.length > 0;

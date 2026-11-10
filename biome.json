@@ -6,27 +6,19 @@
       "**",
       "!**/node_modules",
       "!**/.next",
+      "!**/.source",
+      "!**/.vercel",
       "!**/*.css",
       "!**/src/components/ui/**/*",
-      "!**/public/workers/**",
+      "!**/public/workers",
       "!**/public/**/*.js",
       "!**/public/**/*.mjs"
     ]
   },
   "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 100,
-    "formatWithErrors": true
+    "enabled": false
   },
   "javascript": {
-    "formatter": {
-      "quoteStyle": "double",
-      "semicolons": "always",
-      "trailingCommas": "es5",
-      "arrowParentheses": "always"
-    },
     "globals": ["React"]
   },
   "linter": {
@@ -61,5 +53,24 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "scripts/**",
+        "tests/**",
+        "src/lib/logger.ts",
+        "**/*.config.ts",
+        "**/*.config.mjs",
+        "**/*.config.js"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    }
+  ]
 }

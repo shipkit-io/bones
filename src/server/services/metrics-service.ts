@@ -38,7 +38,14 @@ export interface MetricQuery {
 
 export class MetricsService {
   private readonly prefix = "metrics";
-  private readonly enabled = !!redis;
+
+  /**
+   * Returns the Redis client, or null when metrics are disabled because Redis
+   * was never configured. Callers narrow on the result instead of asserting.
+   */
+  private get client(): Redis | null {
+    return redis;
+  }
 
   /**
    * Records a metric value
@@ -48,7 +55,8 @@ export class MetricsService {
     value: number,
     metadata?: Record<string, unknown>
   ): Promise<void> {
-    if (!this.enabled) return;
+    const client = this.client;
+    if (!client) return;
 
     const metric: MetricData = {
       value,
@@ -57,7 +65,7 @@ export class MetricsService {
     };
 
     try {
-      await redis!.zadd(`${this.prefix}:${name}`, {
+      await client.zadd(`${this.prefix}:${name}`, {
         score: metric.timestamp,
         member: JSON.stringify(metric),
       });
@@ -79,7 +87,7 @@ export class MetricsService {
     startTime: number,
     metadata?: Record<string, unknown>
   ): Promise<void> {
-    if (!this.enabled) return;
+    if (!this.client) return;
     const duration = Date.now() - startTime;
     await this.recordMetric(name, duration, metadata);
   }
@@ -92,11 +100,12 @@ export class MetricsService {
     value = 1,
     metadata?: Record<string, unknown>
   ): Promise<void> {
-    if (!this.enabled) return;
+    const client = this.client;
+    if (!client) return;
 
     try {
       const key = `${this.prefix}:counter:${name}`;
-      await redis!
+      await client
         .pipeline()
         .incrby(key, value)
         .zadd(`${this.prefix}:${name}`, {
@@ -122,12 +131,13 @@ export class MetricsService {
    * Gets metrics for a specific name and time range
    */
   async getMetrics(name: string, query: MetricQuery = {}): Promise<MetricData[]> {
-    if (!this.enabled) return [];
+    const client = this.client;
+    if (!client) return [];
 
     const { from = 0, to = Date.now(), limit } = query;
 
     try {
-      const metrics = await redis!.zrange(`${this.prefix}:${name}`, from, to, { byScore: true });
+      const metrics = await client.zrange(`${this.prefix}:${name}`, from, to, { byScore: true });
 
       return metrics.map((metric) => JSON.parse(String(metric)) as MetricData).slice(0, limit);
     } catch (error) {
@@ -140,10 +150,11 @@ export class MetricsService {
    * Gets the current value of a counter
    */
   async getCounter(name: string): Promise<number> {
-    if (!this.enabled) return 0;
+    const client = this.client;
+    if (!client) return 0;
 
     try {
-      const value = await redis!.get(`${this.prefix}:counter:${name}`);
+      const value = await client.get(`${this.prefix}:counter:${name}`);
       return Number(value) || 0;
     } catch (error) {
       logger.error("Failed to get counter", { name, error });
@@ -155,10 +166,11 @@ export class MetricsService {
    * Resets a counter to zero
    */
   async resetCounter(name: string): Promise<void> {
-    if (!this.enabled) return;
+    const client = this.client;
+    if (!client) return;
 
     try {
-      await redis!.del(`${this.prefix}:counter:${name}`);
+      await client.del(`${this.prefix}:counter:${name}`);
     } catch (error) {
       logger.error("Failed to reset counter", { name, error });
     }
@@ -168,15 +180,16 @@ export class MetricsService {
    * Cleans up old metrics data
    */
   async cleanup(retentionDays = 30): Promise<void> {
-    if (!this.enabled) return;
+    const client = this.client;
+    if (!client) return;
 
     const cutoff = Date.now() - retentionDays * 24 * 60 * 60 * 1000;
 
     try {
-      const keys = await redis!.keys(`${this.prefix}:*`);
+      const keys = await client.keys(`${this.prefix}:*`);
       for (const key of keys) {
         if (key.includes("counter")) continue;
-        await redis!.zremrangebyscore(key, 0, cutoff);
+        await client.zremrangebyscore(key, 0, cutoff);
       }
     } catch (error) {
       logger.error("Failed to cleanup metrics", { error });

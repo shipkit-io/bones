@@ -90,23 +90,18 @@ export function SearchMenu({
   const [open, setOpen] = React.useState(false);
   const { setTheme } = useTheme();
 
-  useKeyboardShortcut(
-    ShortcutAction.OPEN_SEARCH,
-    (event) => {
-      const target = event.target as HTMLElement;
-      if (
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target.isContentEditable
-      ) {
-        return;
-      }
-      event.preventDefault();
-      setOpen((prevOpen) => !prevOpen);
-    },
-    undefined,
-    []
-  );
+  useKeyboardShortcut(ShortcutAction.OPEN_SEARCH, (event) => {
+    const target = event.target as HTMLElement;
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+    event.preventDefault();
+    setOpen((prevOpen) => !prevOpen);
+  });
 
   const runCommand = React.useCallback((command: () => unknown) => {
     setOpen(false);
@@ -166,7 +161,9 @@ export function SearchMenu({
                   key={navItem.href}
                   value={navItem.title}
                   onSelect={() => {
-                    runCommand(() => router.push(navItem.href!));
+                    runCommand(() => {
+                      if (navItem.href) router.push(navItem.href);
+                    });
                   }}
                 >
                   <FileIcon className="mr-2 h-4 w-4" />

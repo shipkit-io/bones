@@ -56,7 +56,7 @@ function patchFile(filePath) {
   }
 
   let content = fs.readFileSync(filePath, "utf-8");
-  let originalContent = content;
+  const originalContent = content;
 
   for (const pattern of problematicImportPatterns) {
     pattern.lastIndex = 0;

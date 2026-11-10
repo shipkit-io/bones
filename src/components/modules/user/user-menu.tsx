@@ -2,7 +2,6 @@
 
 import { UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut, useSession } from "@/lib/auth/use-session";
 import * as React from "react";
 import { toast } from "sonner";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
@@ -17,6 +16,7 @@ import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useSubscription } from "@/hooks/use-subscription";
+import { signOut, useSession } from "@/lib/auth/use-session";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 import type { User } from "@/types/user";
@@ -149,41 +149,29 @@ export const UserMenu = ({
 
   const isAuthenticated = status === "authenticated";
 
-  useKeyboardShortcut(
-    ShortcutAction.SET_THEME_LIGHT,
-    (event) => handleShortcut(event, ShortcutAction.SET_THEME_LIGHT),
-    undefined,
-    [handleShortcut]
+  useKeyboardShortcut(ShortcutAction.SET_THEME_LIGHT, (event) =>
+    handleShortcut(event, ShortcutAction.SET_THEME_LIGHT)
   );
-  useKeyboardShortcut(
-    ShortcutAction.SET_THEME_DARK,
-    (event) => handleShortcut(event, ShortcutAction.SET_THEME_DARK),
-    undefined,
-    [handleShortcut]
+  useKeyboardShortcut(ShortcutAction.SET_THEME_DARK, (event) =>
+    handleShortcut(event, ShortcutAction.SET_THEME_DARK)
   );
-  useKeyboardShortcut(
-    ShortcutAction.SET_THEME_SYSTEM,
-    (event) => handleShortcut(event, ShortcutAction.SET_THEME_SYSTEM),
-    undefined,
-    [handleShortcut]
+  useKeyboardShortcut(ShortcutAction.SET_THEME_SYSTEM, (event) =>
+    handleShortcut(event, ShortcutAction.SET_THEME_SYSTEM)
   );
   useKeyboardShortcut(
     ShortcutAction.GOTO_ADMIN,
     (event) => handleShortcut(event, ShortcutAction.GOTO_ADMIN),
-    () => isAuthenticated && isAdmin,
-    [handleShortcut, isAuthenticated, isAdmin]
+    () => isAuthenticated && isAdmin
   );
   useKeyboardShortcut(
     ShortcutAction.GOTO_SETTINGS,
     (event) => handleShortcut(event, ShortcutAction.GOTO_SETTINGS),
-    () => isAuthenticated,
-    [handleShortcut, isAuthenticated]
+    () => isAuthenticated
   );
   useKeyboardShortcut(
     ShortcutAction.LOGOUT_USER,
     (event) => handleShortcut(event, ShortcutAction.LOGOUT_USER),
-    () => isAuthenticated,
-    [handleShortcut, isAuthenticated]
+    () => isAuthenticated
   );
 
   return (

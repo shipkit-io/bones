@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm";
-import { logger } from "@/lib/logger";
 import { adminConfig } from "@/config/admin-config";
-import { getPayloadClient } from "@/lib/payload/payload";
+import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { rbacService } from "@/server/services/rbac";
@@ -13,10 +12,13 @@ import { rbacService } from "@/server/services/rbac";
 
 /**
  * Check if a user is an admin based on:
- * 1. Email configuration (admin emails and domains)
+ * 1. Email configuration (admin emails and domains), for a verified account
  * 2. Database role check
  * 3. RBAC permissions
- * 4. Payload CMS admin status
+ *
+ * There used to be a fourth check: existence in Payload's `users` collection.
+ * It is gone, and it must not come back in that shape. See the note at the
+ * bottom of this function (LAC-5048).
  *
  * @param email The email address to check
  * @param userId Optional user ID for RBAC check
@@ -74,32 +76,25 @@ export async function isAdmin({
     }
   }
 
-  // 4. Check Payload CMS admin status
-  try {
-    const payload = await getPayloadClient();
-    if (payload) {
-      // Try to find the user in Payload by email
-      const payloadUser = await payload.find({
-        collection: "users",
-        where: {
-          email: {
-            equals: email,
-          },
-        },
-      });
-
-      // If the user exists in Payload and has admin role or collection access
-      if (payloadUser?.docs?.length > 0) {
-        // In Payload CMS, all authenticated users with admin panel access are considered admins
-        // No additional role check needed as the existence in Payload users collection
-        // with valid authentication implies admin panel access
-        return true;
-      }
-    }
-  } catch (error) {
-    console.error("Error checking Payload CMS admin status:", error);
-  }
-
+  // Deliberately no Payload check (LAC-5048).
+  //
+  // This used to end with "the email exists in Payload's `users` collection,
+  // therefore admin", on the theory that membership implied admin panel
+  // access. It does not imply anything of the sort. `auth-service` writes an
+  // ordinary account into that same collection on normal credentials
+  // registration (`signUpWithCredentials`, `createUserViaCMS`,
+  // `ensureUserSynchronized`), so on any deployment with Payload enabled
+  // every registered user cleared this gate and reached the whole admin
+  // surface, including the GitHub collaborator actions.
+  //
+  // Nothing on the Payload side can currently tell an admin from a signup:
+  // `lib/payload/collections/Users.ts` carries no role field and no access
+  // control, so every member of the collection has identical rights. Until
+  // that collection grows a real admin signal, membership proves nothing and
+  // there is nothing here to check. Checks 1-3 cover the real cases, and an
+  // admin who exists only in Payload is better locked out of `(admin)` than
+  // every user let in. Payload's own `/cms` panel is unaffected either way:
+  // it authenticates against Payload, not against this function.
   return false;
 }
 
