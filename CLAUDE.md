@@ -191,7 +191,7 @@ Shipkit uses environment variables for feature toggles:
 GitHub Actions minutes are billed on private repos, and automated upstream syncs and agent-authored PRs burn them on checks that were already run locally.
 
 - **Run `verify` before opening a PR** - `scripts/verify.sh` runs typecheck, lint, unit and node tests, a production build, and a `next start` smoke (`--routes "/ /blog /nope-404=404"` to customize). Paste its Markdown summary in the PR body.
-- **Skip Actions when you verified locally** - put `[skip ci]` in the commit message (GitHub-native; also skips CodeQL and gitleaks, so run `gitleaks protect --staged` locally). Vercel still builds, and the Deployment Check smoke still runs because it triggers off the Vercel deployment.
+- **Skip Actions when you verified locally** - put `[skip ci]` in the commit message (GitHub-native; also skips CodeQL and gitleaks, so run `gitleaks protect --staged` locally). Vercel is a separate switch: production always builds, and a preview builds only when a commit message contains `[preview]` (`scripts/vercel-ignore-step.sh` decides). An unmarked commit gets no preview URL and no `Deployment Check | smoke-test`, so add `[preview]` to a commit when you want both.
 - **Ask for the full suite when it matters** - add the `ci:full` label to a PR (shipkit and downstreams gate the expensive jobs behind it; pushes to `main` always run everything).
 - **Suspense and loading files** - never add `loading.tsx` or `<Suspense>` above a page that calls `notFound()`; the shell streams a 200 first (see `tests/node/app/no-loading-above-not-found.test.ts`).
 
@@ -201,7 +201,7 @@ Actions are not paid for on these repos, so jobs can stop running at any time. N
 
 - **Vercel deploys through its own Git integration.** A push deploys whether or not any workflow ran. Verified: shipkit-www shipped two production deployments while every one of its Actions jobs was failing on billing.
 - **No repo requires status checks.** Branch protection needs GitHub Pro on private repos, so there is nothing to satisfy. A red check cannot block a merge; only a person can.
-- **`ignoreCommand` never skips production.** `scripts/vercel-ignore-step.sh` exits 1 for `VERCEL_ENV=production`, so a live site can never be left stale by a skipped build. Only preview builds skip, and only on `[skip ci]`.
+- **`ignoreCommand` never skips production.** `scripts/vercel-ignore-step.sh` exits 1 for `VERCEL_ENV=production`, so a live site can never be left stale by a skipped build. Preview and development builds skip unless a commit message contains `[preview]`; put `[preview]` in the commit message to opt a PR in. Production always builds.
 - **Recognise a job that never ran.** Read the annotation, never the duration: `gh api repos/<owner>/<repo>/check-runs/<id>/annotations`. A blocked job carries "The job was not started because recent account payments have failed or your spending limit needs to be increased". That is not a code failure, it carries no signal, and it must not hold up a merge or a release. Duration is useless as a tell: blocked jobs usually fail in a few seconds, but one was observed reporting 38s, which looks exactly like a real lint failure.
 - **So what actually gates a release?** Local `verify` plus the Vercel build. If those are green, ship. If Actions are also green, that is a bonus, not a requirement.
 
