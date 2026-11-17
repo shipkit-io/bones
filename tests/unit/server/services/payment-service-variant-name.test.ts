@@ -33,6 +33,12 @@ describe("extractVariantName", () => {
     expect(extractVariantName({ first_order_item: {}, variant_name: "Team" })).toBe("Team");
   });
 
+  it("falls through a non-string nested name to a valid top-level string", () => {
+    expect(extractVariantName({ first_order_item: { variant_name: 42 }, variant_name: "Pro" })).toBe(
+      "Pro"
+    );
+  });
+
   it("ignores a non-string value instead of storing it as a name", () => {
     expect(extractVariantName({ variant_name: 42 })).toBeNull();
     expect(extractVariantName({ first_order_item: null, variant_name: { a: 1 } })).toBeNull();

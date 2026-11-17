@@ -47,8 +47,9 @@ export function extractVariantName(attributes: Record<string, unknown> | undefin
     nested && typeof nested === "object"
       ? (nested as { variant_name?: unknown }).variant_name
       : undefined;
-  const name = nestedName ?? attributes.variant_name;
-  return typeof name === "string" ? name : null;
+  if (typeof nestedName === "string") return nestedName;
+  const topLevel = attributes.variant_name;
+  return typeof topLevel === "string" ? topLevel : null;
 }
 
 // Define PaymentData interface for frontend use
