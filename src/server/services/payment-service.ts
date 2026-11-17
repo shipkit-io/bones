@@ -35,6 +35,22 @@ import {
   type ProductData,
 } from "@/server/providers";
 
+/**
+ * Pull a variant name out of provider order attributes. LemonSqueezy nests it
+ * under `first_order_item`; other providers put it at the top level. A value
+ * that is not a string is ignored rather than stored as the variant name.
+ */
+export function extractVariantName(attributes: Record<string, unknown> | undefined): string | null {
+  if (!attributes) return null;
+  const nested = attributes.first_order_item;
+  const nestedName =
+    nested && typeof nested === "object"
+      ? (nested as { variant_name?: unknown }).variant_name
+      : undefined;
+  const name = nestedName ?? attributes.variant_name;
+  return typeof name === "string" ? name : null;
+}
+
 // Define PaymentData interface for frontend use
 export interface PaymentData {
   id: string;
@@ -186,7 +202,7 @@ const PaymentService = {
           .from(users)
           .where(eq(users.id, userId))
           .limit(1)
-          .then((rows: any[]) => rows[0] ?? null);
+          .then((rows) => rows[0] ?? null);
 
         if (!user) {
           return false;
@@ -196,7 +212,7 @@ const PaymentService = {
         const userPayments = await db.select().from(payments).where(eq(payments.userId, userId));
 
         // Check if any payment metadata contains the variant ID
-        return userPayments.some((payment: any) => {
+        return userPayments.some((payment) => {
           try {
             const metadata = JSON.parse(payment.metadata ?? "{}");
             // Check various ways the variant might be identified
@@ -224,8 +240,8 @@ const PaymentService = {
         if (paymentProvider && isProviderEnabled(provider)) {
           logger.debug(`Checking variant purchase with specific provider: ${provider}`);
           // Check if the provider has a specific method for variants
-          if (typeof (paymentProvider as any).hasUserPurchasedVariant === "function") {
-            return await (paymentProvider as any).hasUserPurchasedVariant(userId, variantId);
+          if (typeof paymentProvider.hasUserPurchasedVariant === "function") {
+            return await paymentProvider.hasUserPurchasedVariant(userId, variantId);
           }
           // Fall back to product check
           return await paymentProvider.hasUserPurchasedProduct(userId, variantId);
@@ -239,8 +255,8 @@ const PaymentService = {
         logger.debug(`Checking variant purchase with provider: ${provider.id}`);
 
         // Check if the provider has a specific method for variants
-        if (typeof (provider as any).hasUserPurchasedVariant === "function") {
-          const purchased = await (provider as any).hasUserPurchasedVariant(userId, variantId);
+        if (typeof provider.hasUserPurchasedVariant === "function") {
+          const purchased = await provider.hasUserPurchasedVariant(userId, variantId);
           if (purchased) {
             logger.debug(`User ${userId} has purchased variant ${variantId} via ${provider.id}`);
             return true;
@@ -288,7 +304,7 @@ const PaymentService = {
           .from(users)
           .where(eq(users.id, userId))
           .limit(1)
-          .then((rows: any[]) => rows[0] ?? null);
+          .then((rows) => rows[0] ?? null);
 
         if (!user) {
           return false;
@@ -299,7 +315,7 @@ const PaymentService = {
         const userPayments = await db.select().from(payments).where(eq(payments.userId, userId));
 
         // Check if any payment metadata contains the product ID
-        return userPayments.some((payment: any) => {
+        return userPayments.some((payment) => {
           try {
             const metadata = JSON.parse(payment.metadata ?? "{}");
             // Check various ways the product might be identified
@@ -376,7 +392,7 @@ const PaymentService = {
           .from(users)
           .where(eq(users.id, userId))
           .limit(1)
-          .then((rows: any[]) => rows[0] ?? null);
+          .then((rows) => rows[0] ?? null);
 
         if (!user) {
           return false;
@@ -428,7 +444,7 @@ const PaymentService = {
           .from(users)
           .where(eq(users.id, userId))
           .limit(1)
-          .then((rows: any[]) => rows[0] ?? null);
+          .then((rows) => rows[0] ?? null);
 
         if (!user) {
           return [];
@@ -550,7 +566,7 @@ const PaymentService = {
           .from(payments)
           .where(eq(payments.orderId, data.orderId))
           .limit(1)
-          .then((rows: any[]) => rows[0] ?? null);
+          .then((rows) => rows[0] ?? null);
 
         if (existingPayment) {
           logger.debug("Payment already exists", { orderId: data.orderId });
@@ -573,7 +589,7 @@ const PaymentService = {
             updatedAt: new Date(),
           })
           .returning()
-          .then((rows: any[]) => rows[0] ?? null);
+          .then((rows) => rows[0] ?? null);
 
         logger.info("Payment created", {
           paymentId: newPayment?.id,
@@ -763,12 +779,8 @@ const PaymentService = {
                 existingEntry.amount = order.amount;
                 existingEntry.productName = order.productName || existingEntry.productName;
                 // Try to extract variant name from order attributes if available
-                if ((order as any).attributes) {
-                  const orderAttributes = (order as any).attributes;
-                  const variantName =
-                    orderAttributes.first_order_item?.variant_name ??
-                    orderAttributes.variant_name ??
-                    null;
+                if (order.attributes) {
+                  const variantName = extractVariantName(order.attributes);
                   if (variantName && !existingEntry.variantName) {
                     existingEntry.variantName = variantName;
                   }
@@ -782,8 +794,8 @@ const PaymentService = {
                  * completed the checkout process, even if the final amount was $0.
                  */
                 existingEntry.isFreeProduct =
-                  (order as any).isFreeProduct !== undefined
-                    ? (order as any).isFreeProduct
+                  order.isFreeProduct !== undefined
+                    ? order.isFreeProduct
                     : order.status !== "paid" && order.amount === 0;
               }
             } else {
@@ -800,18 +812,14 @@ const PaymentService = {
                * completed the checkout process, even if the final amount was $0.
                */
               const isFreeProduct =
-                (order as any).isFreeProduct !== undefined
-                  ? (order as any).isFreeProduct
+                order.isFreeProduct !== undefined
+                  ? order.isFreeProduct
                   : order.status !== "paid" && order.amount === 0;
 
               // Try to extract variant name from order attributes if available
               let variantName: string | null = null;
-              if ((order as any).attributes) {
-                const orderAttributes = (order as any).attributes;
-                variantName =
-                  orderAttributes.first_order_item?.variant_name ??
-                  orderAttributes.variant_name ??
-                  null;
+              if (order.attributes) {
+                variantName = extractVariantName(order.attributes);
               }
 
               combinedPayments.set(compositeKey, {
@@ -884,12 +892,12 @@ const PaymentService = {
           const userPayments = allPayments.filter((payment) => payment.userId === user.id);
 
           // Sort payments by date (newest first)
-          userPayments.sort((a: any, b: any) => {
+          userPayments.sort((a, b) => {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
           });
 
           // Map payments to Purchase format
-          const purchases: Purchase[] = userPayments.map((payment: any) => {
+          const purchases: Purchase[] = userPayments.map((payment) => {
             let productName = "Unknown Product";
             let variantName: string | null = null;
 
@@ -1015,11 +1023,11 @@ const PaymentService = {
    * Imports payments from all providers into the database
    * @returns Stats about the import process for each provider
    */
-  async importAllPayments(): Promise<Record<string, any>> {
+  async importAllPayments(): Promise<Record<string, unknown>> {
     logger.info("Starting import of all payments");
 
     const providers = getEnabledProviders();
-    const results: Record<string, any> = {};
+    const results: Record<string, unknown> = {};
 
     if (providers.length === 0) {
       logger.warn("No payment providers are enabled");
@@ -1030,7 +1038,7 @@ const PaymentService = {
     const importPromises = providers.map(async (provider) => {
       const providerResult = {
         provider: provider.id,
-        stats: null as any,
+        stats: null as ImportStats | null,
         error: null as string | null,
         duration: 0,
       };
@@ -1108,7 +1116,7 @@ const PaymentService = {
       productId: string;
       email?: string;
       userId?: string;
-      metadata?: Record<string, any>;
+      metadata?: Record<string, unknown>;
       successUrl?: string;
       cancelUrl?: string;
     },

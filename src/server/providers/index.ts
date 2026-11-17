@@ -89,10 +89,9 @@ export async function initializePaymentProviders(): Promise<void> {
           // Initialize Stripe with the API key from environment variables
           stripeProvider.initialize({
             apiKey: env.STRIPE_SECRET_KEY,
-            publishableKey: env.STRIPE_PUBLISHABLE_KEY,
             webhookSecret: env.STRIPE_WEBHOOK_SECRET,
             // Pass other config like sandbox if needed
-          } as any); // Cast to any since StripeProviderConfig extends ProviderConfig
+          });
           console.info("✅ Stripe Provider Initialized");
         } catch (error) {
           console.error("❌ Failed to initialize Stripe Provider", { error });

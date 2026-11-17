@@ -25,7 +25,7 @@ interface PolarOrder {
   productName: string;
   purchaseDate: Date;
   discountCode: string | null;
-  attributes: Record<string, any>;
+  attributes: Record<string, unknown>;
 }
 
 export interface PolarOrderAttributes {
@@ -50,13 +50,13 @@ export const fetchPolarProducts = async () => [];
 
 export const getOrderById = async (_orderId: string): Promise<PolarOrder | null> => null;
 
-export const processPolarWebhook = async (_event: any) => {};
+export const processPolarWebhook = async (_event: unknown) => {};
 
 export const createCheckoutUrl = async (_options: {
   productId: string;
   email?: string;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }): Promise<string | null> => null;
 
 export const hasUserPurchasedProduct = async (
@@ -66,4 +66,4 @@ export const hasUserPurchasedProduct = async (
 
 export const hasUserActiveSubscription = async (_userId: string): Promise<boolean> => false;
 
-export const getUserPurchasedProducts = async (_userId: string): Promise<any[]> => [];
+export const getUserPurchasedProducts = async (_userId: string): Promise<never[]> => [];
