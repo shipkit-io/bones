@@ -94,7 +94,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   abstract getOrdersByEmail(email: string): Promise<OrderData[]>;
   abstract getOrderById(orderId: string): Promise<OrderData | null>;
   abstract importPayments(): Promise<ImportStats>;
-  abstract handleWebhookEvent(event: any): Promise<void>;
+  abstract handleWebhookEvent(event: unknown): Promise<void>;
   abstract createCheckoutUrl(options: CheckoutOptions): Promise<string | null>;
   abstract listProducts(): Promise<ProductData[]>;
 

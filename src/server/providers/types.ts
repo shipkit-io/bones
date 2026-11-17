@@ -17,7 +17,7 @@ export interface OrderData {
   processor: string;
   discountCode?: string | null;
   isFreeProduct?: boolean;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
 }
 
 /**
@@ -30,7 +30,7 @@ export interface ProductData {
   description?: string;
   isSubscription?: boolean;
   provider: string;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
 }
 
 /**
@@ -51,7 +51,7 @@ export interface CheckoutOptions {
   productId: string;
   email?: string;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   successUrl?: string;
   cancelUrl?: string;
 }
@@ -65,7 +65,7 @@ export interface ProviderConfig {
   enabled?: boolean;
   sandbox?: boolean;
   baseUrl?: string;
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 }
 
 /**
@@ -92,8 +92,11 @@ export interface PaymentProvider {
   // Import functionality
   importPayments(): Promise<ImportStats>;
 
+  // Optional: providers that can check a specific variant implement this
+  hasUserPurchasedVariant?(userId: string, variantId: string): Promise<boolean>;
+
   // Webhook handling
-  handleWebhookEvent(event: any): Promise<void>;
+  handleWebhookEvent(event: unknown): Promise<void>;
 
   // Product/checkout functionality
   createCheckoutUrl(options: CheckoutOptions): Promise<string | null>;

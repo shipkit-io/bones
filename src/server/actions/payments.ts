@@ -226,7 +226,7 @@ export async function createPolarCheckoutUrl(
     userId?: string;
     userEmail?: string;
     userName?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }
 ): Promise<{ success: boolean; url?: string; message?: string }> {
   try {
@@ -275,7 +275,7 @@ export async function createPolarCheckoutUrl(
  */
 export async function importPayments(
   provider: ImportProvider
-): Promise<ImportStats | Record<string, any>> {
+): Promise<ImportStats | Record<string, unknown>> {
   const session = await requireAdmin();
   const userId = session.user.id;
 
@@ -296,7 +296,7 @@ export async function importPayments(
       // Handle import based on the provider argument
       if (provider === "all") {
         // Import from all enabled providers
-        // This returns Record<string, any>
+        // This returns Record<string, unknown>
         const result = await PaymentService.importAllPayments();
 
         // Revalidate the admin users page to reflect the new imported data
@@ -432,7 +432,7 @@ export async function deleteAllPayments(): Promise<{
 export async function refreshAllPayments(): Promise<{
   success: boolean;
   deletedCount: number;
-  importResults: Record<string, any>;
+  importResults: Record<string, unknown>;
   message?: string;
 }> {
   let userId: string | undefined;
