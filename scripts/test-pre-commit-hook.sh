@@ -34,7 +34,7 @@
 # the shipkit variant rejects a staged git directory before it scans at all
 # (LAC-4689, the renamed `.gittt/` leak), and this suite only ever stages one
 # ordinary file. Point it at the shipkit copy and that branch passes through
-# untested while the run still reads 16/16.
+# untested while the run still reports every assert it ran as passing.
 #
 # Run: bash scripts/test-pre-commit-hook.sh
 set -u
